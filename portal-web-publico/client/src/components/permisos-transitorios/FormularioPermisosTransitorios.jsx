@@ -33,8 +33,8 @@ const FormularioPermisosTransitorios = () => {
         permissionStartTime: "",
         permissionEndDate: "",
         permissionEndTime: "",
-        permissionAlcohol: "",
-        permissionFood: "",
+        permissionAlcohol: false,
+        permissionFood: false,
         permissionDescription: "",
         permissionPurpose: ""
     })

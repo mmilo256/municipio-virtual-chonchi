@@ -1,3 +1,5 @@
+import RadioGroup from "./RadioGroup";
+
 const Input = ({ label, type, options, value, onChange, placeholder, disabled, min, max }) => {
 
     // Define estilos comunes para todos los tipos de entrada
@@ -9,7 +11,25 @@ const Input = ({ label, type, options, value, onChange, placeholder, disabled, m
     // Selecciona el tipo de entrada basado en la prop `type`
     switch (type) {
         case "phone":
-            input = <input minLength={min} maxLength={max} max={max} disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={inputStyles} type="number" />
+            input = <input
+                minLength={min}
+                maxLength={max}
+                max={max}
+                disabled={disabled}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                className={inputStyles}
+                type="number"
+            />
+            break;
+        case "radio":
+            input = <RadioGroup
+                options={options}
+                selectedValue={value}
+                onChange={onChange}
+                name={label}
+            />
             break;
         case "textarea":
             // Renderiza un textarea si el tipo es "textarea"

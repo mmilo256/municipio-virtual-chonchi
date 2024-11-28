@@ -33,8 +33,8 @@ const FormularioPermisosTransitorios = () => {
         permissionStartTime: "",
         permissionEndDate: "",
         permissionEndTime: "",
-        permissionAlcohol: false,
-        permissionFood: false,
+        permissionAlcohol: "",
+        permissionFood: "",
         permissionDescription: "",
         permissionPurpose: ""
     })
@@ -77,6 +77,7 @@ const FormularioPermisosTransitorios = () => {
         }
     }
     const onClickNext = () => {
+        console.log(formData)
         if (step < LAST_STEP) {
             setStep(prev => prev + 1)
         } else {
@@ -84,19 +85,13 @@ const FormularioPermisosTransitorios = () => {
         }
     }
 
-    // Asignar valor al estado del input
-    const handleOnChange = (name, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-    }
+
 
     return (
         <Form
             title="SOLICITUD DE AUTORIZACIÓN ESPECIAL TRANSITORIA"
             formData={formData}
-            handleOnChange={handleOnChange}
+            onChange={setFormData}
             step={step}
             currentInputs={currentInputs}
             currentFormTitle={currentFormTitle}

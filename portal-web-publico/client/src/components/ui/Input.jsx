@@ -1,9 +1,7 @@
-import RadioGroup from "./RadioGroup";
-
-const Input = ({ label, type, options, value, onChange, placeholder, disabled, min, max }) => {
+const Input = ({ label, name, type, options, value, onChange, placeholder, disabled, min, max, required }) => {
 
     // Define estilos comunes para todos los tipos de entrada
-    const inputStyles = "border border-slate-400 p-1 w-full focus:outline-blue-400"
+    const inputStyles = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
 
     // Variable para almacenar el componente de entrada que se renderizará
     let input;
@@ -12,6 +10,7 @@ const Input = ({ label, type, options, value, onChange, placeholder, disabled, m
     switch (type) {
         case "phone":
             input = <input
+                name={name}
                 minLength={min}
                 maxLength={max}
                 max={max}
@@ -23,38 +22,30 @@ const Input = ({ label, type, options, value, onChange, placeholder, disabled, m
                 type="number"
             />
             break;
-        case "radio":
-            input = <RadioGroup
-                options={options}
-                selectedValue={value}
-                onChange={onChange}
-                name={label}
-            />
-            break;
         case "textarea":
             // Renderiza un textarea si el tipo es "textarea"
-            input = <textarea minLength={min} maxLength={max} disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={inputStyles} />
+            input = <textarea minLength={min} name={name} maxLength={max} disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={inputStyles} />
             break;
         case "select":
             // Renderiza un select si el tipo es "select"
-            input = <select disabled={disabled} value={value} onChange={onChange} className={inputStyles}>
-                <option value="">Seleccione una opción</option>
+            input = <select disabled={disabled} value={value} name={name} onChange={onChange} className={inputStyles}>
+                <option disabled value="">Seleccione una opción</option>
                 {/* Mapea las opciones para crear elementos <option> */}
                 {options.map((op, index) => (
-                    <option key={index} value={op}>{op}</option>
+                    <option key={index} value={op.value}>{op.label}</option>
                 ))}
             </select>
             break;
         default:
             // Renderiza un input de tipo genérico si no es ninguno de los anteriores
-            input = <input minLength={min} maxLength={max} disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={inputStyles} type={type} />
+            input = <input name={name} minLength={min} maxLength={max} disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={inputStyles} type={type} />
             break;
     }
 
     // Renderiza la etiqueta y el componente de entrada
     return (
         <label>
-            <span>{label}</span>
+            <span>{label} {!required && <span className="text-slate-400 ml-1">(opcional)</span>} </span>
             {input}
         </label>
     )

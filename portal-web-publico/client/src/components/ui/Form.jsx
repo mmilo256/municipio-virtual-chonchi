@@ -3,7 +3,16 @@ import Heading from "./Heading"
 import Input from "./Input"
 import Button from "./buttons/Button"
 
-const Form = ({ title, formData, handleOnChange, step, currentInputs, currentFormTitle, onClickPrev, onClickNext, lastStep }) => {
+const Form = ({ title, formData, onChange, step, currentInputs, currentFormTitle, onClickPrev, onClickNext, lastStep }) => {
+
+    // Asignar valor al estado del input
+    const handleOnChange = (name, value) => {
+        onChange(prev => ({
+            ...prev,
+            [name]: value
+        }))
+
+    }
 
     return (
         <Container>
@@ -14,10 +23,11 @@ const Form = ({ title, formData, handleOnChange, step, currentInputs, currentFor
                     return (
                         <Input
                             key={input.id}
+                            name={input.nombre}
                             min={input.min}
                             max={input.max}
-                            value={formData[input.name]}
-                            onChange={(e) => { handleOnChange(input.nombre, e.target.value) }}
+                            value={formData[input.nombre]}
+                            onChange={input.tipo !== "radio" ? (e) => { handleOnChange(input.nombre, e.target.value) } : onChange}
                             label={input.etiqueta}
                             options={input.opciones}
                             required={input.es_requerido}

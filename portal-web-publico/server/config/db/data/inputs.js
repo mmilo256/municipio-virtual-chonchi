@@ -1,5 +1,16 @@
-const ORG_TYPES = ["Junta de Vecinos", "Comunidad Indígena", "Club Deportivo", "Fundación", "Empresa", "Agrupación", "Otro"]
-const BOOLEAN_OP = [true, false]
+const ORG_TYPES = [
+    { label: "Junta de Vecinos", value: "junta de vecinos" },
+    { label: "Comunidad Indígena", value: "comunidad indigena" },
+    { label: "Club Deportivo", value: "club deportivo" },
+    { label: "Fundación", value: "fundacion" },
+    { label: "Empresa", value: "empresa" },
+    { label: "Agrupación", value: "agrupacion" },
+    { label: "Otro", value: "otro" },
+];
+const BOOLEAN_OP = [
+    { label: "Si", value: true },
+    { label: "No", value: false },
+]
 
 export const permisosTransitoriosInputs = [
     {
@@ -157,14 +168,14 @@ export const permisosTransitoriosInputs = [
     }, {
         nombre: "permissionAlcohol",
         etiqueta: "¿Con venta y/o consumo de alcohol?",
-        tipo: "radio",
+        tipo: "select",
         es_requerido: true,
         opciones: BOOLEAN_OP,
         placeholder: null
     }, {
         nombre: "permissionFood",
         etiqueta: "¿Con venta y/o consumo de alimentos?",
-        tipo: "radio",
+        tipo: "select",
         es_requerido: true,
         opciones: BOOLEAN_OP,
         placeholder: null

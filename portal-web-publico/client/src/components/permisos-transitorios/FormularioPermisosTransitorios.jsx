@@ -15,28 +15,28 @@ const FormularioPermisosTransitorios = () => {
 
     // Estado local del formulario
     const [formData, setFormData] = useState({
-        orgName: "",
-        orgRut: "",
-        orgAddress: "",
-        orgEmail: "",
-        orgPhone: "",
-        orgType: "",
-        presidentName: "",
-        presidentRut: "",
-        presidentAddress: "",
-        presidentEmail: "",
-        presidentPhone: "",
-        presidentPhone2: "",
-        permissionName: "",
-        permissionPlace: "",
-        permissionStartDate: "",
-        permissionStartTime: "",
-        permissionEndDate: "",
-        permissionEndTime: "",
-        permissionAlcohol: "",
-        permissionFood: "",
-        permissionDescription: "",
-        permissionPurpose: ""
+        orgName: { value: "", isValid: false },
+        orgRut: { value: "", isValid: false },
+        orgAddress: { value: "", isValid: false },
+        orgEmail: { value: "", isValid: false },
+        orgPhone: { value: "", isValid: false },
+        orgType: { value: "", isValid: false },
+        presidentName: { value: "", isValid: false },
+        presidentRut: { value: "", isValid: false },
+        presidentAddress: { value: "", isValid: false },
+        presidentEmail: { value: "", isValid: false },
+        presidentPhone: { value: "", isValid: false },
+        presidentPhone2: { value: "", isValid: false },
+        permissionName: { value: "", isValid: false },
+        permissionPlace: { value: "", isValid: false },
+        permissionStartDate: { value: "", isValid: false },
+        permissionStartTime: { value: "", isValid: false },
+        permissionEndDate: { value: "", isValid: false },
+        permissionEndTime: { value: "", isValid: false },
+        permissionAlcohol: { value: "", isValid: false },
+        permissionFood: { value: "", isValid: false },
+        permissionDescription: { value: "", isValid: false },
+        permissionPurpose: { value: "", isValid: false }
     })
 
     // Inputs
@@ -79,7 +79,7 @@ const FormularioPermisosTransitorios = () => {
     const onClickNext = () => {
         console.log(formData)
         if (step < LAST_STEP) {
-            setStep(prev => prev + 1)
+            // setStep(prev => prev + 1)
         } else {
             alert("Formulario enviado!")
         }

@@ -29,8 +29,8 @@ export const permisosTransitoriosInputs = [
         es_requerido: true,
         opciones: null,
         placeholder: "77.777.777-7",
-        min: 11,
-        max: 12
+        min: 9,
+        max: 10
     }, {
         nombre: "orgAddress",
         etiqueta: "Dirección",
@@ -81,8 +81,8 @@ export const permisosTransitoriosInputs = [
         es_requerido: true,
         opciones: null,
         placeholder: "55.555.555-5",
-        min: 11,
-        max: 12
+        min: 9,
+        max: 10
     }, {
         nombre: "presidentAddress",
         etiqueta: "Dirección",

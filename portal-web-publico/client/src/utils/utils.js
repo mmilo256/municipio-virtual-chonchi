@@ -1,10 +1,3 @@
-// VALIDACIONES DE CAMPOS
-export const validateInput = (type, value) => {
-    console.log("Tipo:", type)
-    console.log("Valor:", value)
-}
-
-
 // Formatear rut
 export const formatRut = (value) => {
     // Remover todos los caracteres que no sean dígitos o 'k'/'K'
@@ -20,27 +13,8 @@ export const formatRut = (value) => {
     const numericPart = parts[0];
     const verifier = parts[1] ? `-${parts[1]}` : "";
 
-    // Agregar puntos cada tres dígitos a la parte numérica desde el final
-    let result = "";
-    let count = 0;
-    for (let i = numericPart.length - 1; i >= 0; i--) {
-        result = numericPart[i] + result;
-        count++;
-        if (count === 3 && i > 0) {
-            result = "." + result;
-            count = 0;
-        }
-    }
-
-    return result + verifier;
+    return numericPart + verifier;
 };
-
-export const onlyNumberInput = (value) => {
-    // Remover todos los caracteres que no sean dígitos
-    let cleanValue = value.replace(/[^0-9]/g, "");
-    return cleanValue
-}
-
 
 export const formatDate = (date, format) => {
 
@@ -72,19 +46,11 @@ export const formatDate = (date, format) => {
 }
 
 
-export const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email)
-}
-
 // Verificación del RUT con el algoritmo Modulo 11
 function validarRut(number, dv) {
-    if (number.length === 0 || number.length > 8) {
-        console.error("El número del RUT debe tener entre 1 y 8 dígitos.");
-        return false;
-    } else {
-        return getDV(number) == dv;
-    }
+
+    return getDV(number) == dv;
+
 }
 
 function getDV(number) {
@@ -102,20 +68,9 @@ function getDV(number) {
 }
 
 export const verifyRut = (rut) => {
-    if (!rut.includes("-")) {
-        console.error(
-            "El RUT debe tener un guion para separar el número del dígito verificador."
-        );
-        return false;
-    }
 
     const [number, dv] = rut.split("-");
     const cleanedNumber = number.replace(/\./g, "");
 
-    if (isNaN(cleanedNumber) || dv.length !== 1) {
-        console.error("Formato de RUT inválido.");
-        return false;
-    }
-
-    return validarRut(cleanedNumber, dv.toUpperCase());
+    return validarRut(cleanedNumber, dv);
 };

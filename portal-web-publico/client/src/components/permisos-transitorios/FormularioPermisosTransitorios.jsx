@@ -9,7 +9,7 @@ const LAST_STEP = 3
 const FormularioPermisosTransitorios = () => {
     // ESTADOS
     // Pasos del formulario
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(3)
     const [currentInputs, setCurrentInputs] = useState([])
     const [currentFormTitle, setCurrentFormTitle] = useState("")
 

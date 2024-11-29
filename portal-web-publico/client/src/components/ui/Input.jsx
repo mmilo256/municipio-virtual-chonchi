@@ -1,39 +1,35 @@
+import { validateEmailInput, validatePhoneInput, validateRutInput, validateTextInput } from "../../utils/validations"
+
+// Define estilos comunes para todos los tipos de entrada
+const INPUT_STYLES = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
+
 const Input = ({ label, name, type, options, value, onChange, placeholder, disabled, min, max, required }) => {
 
-    // Validación para los input de números telefónicos
-    const validatePhoneInput = (e) => {
+    // Obtener fecha actual para establecerla como atributo min a los inputs date
+    let today
+    if (type === "date") {
+        today = new Date().toISOString().split("T")[0]
+    }
+
+    console.log(`${name}: ${required}`)
+
+    const onInputChange = (e) => {
         const currentValue = e.target.value
-        if (/^$|^[0-9]+$/.test(currentValue)) {
-            handleOnChange(currentValue)
+        switch (type) {
+            case "phone":
+                validatePhoneInput(currentValue, name, min, onChange, required)
+                break;
+            case "email":
+                validateEmailInput(currentValue, name, min, onChange, required)
+                break;
+            case "rut":
+                validateRutInput(currentValue, name, min, onChange, required)
+                break;
+            default:
+                validateTextInput(currentValue, name, min, onChange, required)
+                break;
         }
     }
-
-    // Sin validación extra más que el míninmo y el máximo de longitud
-    const genericValidation = (e) => {
-        const currentValue = e.target.value
-        handleOnChange(currentValue)
-    }
-
-    // Cambiar el valor del input teniendo en cuenta las validaciones
-    const handleOnChange = (currentValue, typeValidation = true) => {
-        let isValid = false
-        if (typeValidation && currentValue.length >= min) {
-            isValid = true
-        } else {
-            isValid = false
-        }
-        onChange(prev => ({
-            ...prev,
-            [name]: {
-                isValid,
-                value: currentValue
-            }
-        }))
-
-    }
-
-    // Define estilos comunes para todos los tipos de entrada
-    const inputStyles = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
 
     // Variable para almacenar el componente de entrada que se renderizará
     let input;
@@ -49,8 +45,8 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 disabled={disabled}
                 placeholder={placeholder}
                 value={value[name].value}
-                onChange={validatePhoneInput}
-                className={inputStyles}
+                onChange={onInputChange}
+                className={INPUT_STYLES}
                 type="text"
             />
             break;
@@ -63,8 +59,8 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 disabled={disabled}
                 placeholder={placeholder}
                 value={value[name].value}
-                onChange={genericValidation}
-                className={inputStyles}
+                onChange={onInputChange}
+                className={INPUT_STYLES}
             />
             break;
         case "select":
@@ -73,8 +69,8 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 disabled={disabled}
                 value={value[name].value}
                 name={name}
-                onChange={genericValidation}
-                className={inputStyles}
+                onChange={onInputChange}
+                className={INPUT_STYLES}
             >
                 <option disabled value="">Seleccione una opción</option>
                 {/* Mapea las opciones para crear elementos <option> */}
@@ -86,6 +82,17 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 ))}
             </select>
             break;
+        case "date":
+            input = <input
+                name={name}
+                disabled={disabled}
+                value={value[name].value}
+                onChange={onInputChange}
+                className={INPUT_STYLES}
+                type="date"
+                min={today}
+            />
+            break;
         default:
             // Renderiza un input de tipo genérico si no es ninguno de los anteriores
             input = <input
@@ -95,8 +102,8 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 disabled={disabled}
                 placeholder={placeholder}
                 value={value[name].value}
-                onChange={genericValidation}
-                className={inputStyles}
+                onChange={onInputChange}
+                className={INPUT_STYLES}
                 type={type}
             />
             break;
@@ -107,7 +114,7 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
         <label>
             <span>{label} {!required && <span className="text-slate-400 ml-1">(opcional)</span>} </span>
             {input}
-            {type === "textarea" && <span className="text-slate-500 text-xs">{`${value.length}/${max}`}</span>}
+            {type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span>}
         </label >
     )
 

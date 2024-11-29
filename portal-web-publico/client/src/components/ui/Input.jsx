@@ -3,15 +3,13 @@ import { validateEmailInput, validatePhoneInput, validateRutInput, validateTextI
 // Define estilos comunes para todos los tipos de entrada
 const INPUT_STYLES = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
 
-const Input = ({ label, name, type, options, value, onChange, placeholder, disabled, min, max, required }) => {
+const Input = ({ label, name, type, options, value, onChange, placeholder, disabled, min, max, required, className }) => {
 
     // Obtener fecha actual para establecerla como atributo min a los inputs date
     let today
     if (type === "date") {
         today = new Date().toISOString().split("T")[0]
     }
-
-    console.log(`${name}: ${required}`)
 
     const onInputChange = (e) => {
         const currentValue = e.target.value
@@ -36,17 +34,33 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
 
     // Selecciona el tipo de entrada basado en la prop `type`
     switch (type) {
+        case "file":
+            input = <input
+                name={name}
+                minLength={min}
+                maxLength={max}
+                max={max}
+                required={required}
+                disabled={disabled}
+                placeholder={placeholder}
+                value={value[name].value}
+                onChange={onInputChange}
+                className={`${INPUT_STYLES} border-none text-slate-500`}
+                type="file"
+            />
+            break;
         case "phone":
             input = <input
                 name={name}
                 minLength={min}
                 maxLength={max}
                 max={max}
+                required={required}
                 disabled={disabled}
                 placeholder={placeholder}
                 value={value[name].value}
                 onChange={onInputChange}
-                className={INPUT_STYLES}
+                className={`${INPUT_STYLES} ${className}`}
                 type="text"
             />
             break;
@@ -56,11 +70,12 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 minLength={min}
                 name={name}
                 maxLength={max}
+                required={required}
                 disabled={disabled}
                 placeholder={placeholder}
                 value={value[name].value}
                 onChange={onInputChange}
-                className={INPUT_STYLES}
+                className={`${INPUT_STYLES} col-span-2`}
             />
             break;
         case "select":
@@ -68,9 +83,10 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
             input = <select
                 disabled={disabled}
                 value={value[name].value}
+                required={required}
                 name={name}
                 onChange={onInputChange}
-                className={INPUT_STYLES}
+                className={`${INPUT_STYLES} ${className}`}
             >
                 <option disabled value="">Seleccione una opción</option>
                 {/* Mapea las opciones para crear elementos <option> */}
@@ -86,9 +102,10 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
             input = <input
                 name={name}
                 disabled={disabled}
+                required={required}
                 value={value[name].value}
                 onChange={onInputChange}
-                className={INPUT_STYLES}
+                className={`${INPUT_STYLES} ${className}`}
                 type="date"
                 min={today}
             />
@@ -101,9 +118,10 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
                 maxLength={max}
                 disabled={disabled}
                 placeholder={placeholder}
+                required={required}
                 value={value[name].value}
                 onChange={onInputChange}
-                className={INPUT_STYLES}
+                className={`${INPUT_STYLES} ${className}`}
                 type={type}
             />
             break;
@@ -117,7 +135,5 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
             {type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span>}
         </label >
     )
-
 }
-
 export default Input

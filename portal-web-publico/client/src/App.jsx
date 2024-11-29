@@ -7,7 +7,7 @@ import PermisosTransitorios from "./components/permisos-transitorios/PermisosTra
 function App() {
 
   return (
-    < main className="font-roboto" >
+    < main className="font-roboto " >
       <Routes>
         <Route index element={<Login />} />
         <Route path="/inicio" element={<PrivateRoute><Home /></PrivateRoute>} />

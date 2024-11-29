@@ -197,5 +197,68 @@ export const permisosTransitoriosInputs = [
         placeholder: "los fondos recaudados serán destinados a la compra de suministros",
         min: 3,
         max: 200
+    }, {
+        nombre: "docCI",
+        etiqueta: "Cédula de identidad",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
+    }, {
+        nombre: "docRutTributario",
+        etiqueta: "RUT Tributario",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
+    }, {
+        nombre: "docVigencia",
+        etiqueta: "Certificado de vigencia de persona jurídica",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
+    }, {
+        nombre: "docOcupacionRecinto",
+        etiqueta: "Documento que acredite la ocupación legal del recinto",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
+    }, {
+        nombre: "docDeclaracionJurada",
+        etiqueta: "Declaración jurada simple que el presidente de la organización no está afecto a prohibiciones del artículo n°4 ley 19.925 de alcoholes",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
+    }, {
+        nombre: "docCertificadoAntecedentes",
+        etiqueta: "Certificado de antecedentes para fines especiales",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
+    }, {
+        nombre: "docFirmaPresidente",
+        etiqueta: "Documento con la firma del presidente de la organización",
+        tipo: "file",
+        es_requerido: true,
+        opciones: null,
+        placeholder: null,
+        min: 1,
+        max: 1
     }
 ]

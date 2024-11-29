@@ -3,7 +3,17 @@ import Heading from "./Heading"
 import Input from "./Input"
 import Button from "./buttons/Button"
 
-const Form = ({ title, formData, onChange, step, currentInputs, currentFormTitle, onClickPrev, onClickNext, lastStep }) => {
+const Form = ({
+    title,
+    formData,
+    onChange,
+    step,
+    currentInputs,
+    currentFormTitle,
+    onClickPrev,
+    onClickNext,
+    lastStep
+}) => {
 
     // Asignar valor al estado del input
     /* const handleOnChange = (name, value) => {
@@ -11,23 +21,24 @@ const Form = ({ title, formData, onChange, step, currentInputs, currentFormTitle
             ...prev,
             [name]: value
         }))
-
     } */
+    const formattedCurrentInputs = currentInputs.map(input => ({
+        ...input,
+        colSpan: input.tipo == "textarea" ? "col-span-2" : "col-span-1"
+    }))
 
     return (
         <Container>
             <Heading level={2} align="left">{title}</Heading>
             <Heading align="left" level={3}>{step}. {currentFormTitle}</Heading>
-            <form name="permisos-transitorios-form" className="grid grid-cols-2 gap-4">
-                {currentInputs.map(input => {
+            <form name="permisos-transitorios-form" className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-6">
+                {formattedCurrentInputs.map(input => {
                     return (
                         <Input
                             key={input.id}
                             name={input.nombre}
                             min={input.min}
                             max={input.max}
-                            /* value={formData[input.nombre]}
-                            onChange={(e) => { handleOnChange(input.nombre, e.target.value) }} */
                             value={formData}
                             onChange={onChange}
                             label={input.etiqueta}

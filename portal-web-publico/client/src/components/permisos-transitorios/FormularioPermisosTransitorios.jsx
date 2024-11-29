@@ -4,16 +4,16 @@ import useFormsStore from "../../stores/useFormsStore"
 import Form from "../ui/Form"
 
 const FIRST_STEP = 1
-const LAST_STEP = 3
+const LAST_STEP = 4
 
 const FormularioPermisosTransitorios = () => {
     // ESTADOS
     // Pasos del formulario
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
     const [currentInputs, setCurrentInputs] = useState([])
     const [currentFormTitle, setCurrentFormTitle] = useState("")
 
-    // Estado local del formulario
+    // Estado local del formulario. Iniciar false los obligatorios y true los opcionales
     const [formData, setFormData] = useState({
         orgName: { value: "", isValid: false },
         orgRut: { value: "", isValid: false },
@@ -26,7 +26,7 @@ const FormularioPermisosTransitorios = () => {
         presidentAddress: { value: "", isValid: false },
         presidentEmail: { value: "", isValid: false },
         presidentPhone: { value: "", isValid: false },
-        presidentPhone2: { value: "", isValid: false },
+        presidentPhone2: { value: "", isValid: true },
         permissionName: { value: "", isValid: false },
         permissionPlace: { value: "", isValid: false },
         permissionStartDate: { value: "", isValid: false },
@@ -36,7 +36,14 @@ const FormularioPermisosTransitorios = () => {
         permissionAlcohol: { value: "", isValid: false },
         permissionFood: { value: "", isValid: false },
         permissionDescription: { value: "", isValid: false },
-        permissionPurpose: { value: "", isValid: false }
+        permissionPurpose: { value: "", isValid: false },
+        docCI: { value: "", isValid: false },
+        docRutTributario: { value: "", isValid: false },
+        docVigencia: { value: "", isValid: false },
+        docOcupacionRecinto: { value: "", isValid: false },
+        docDeclaracionJurada: { value: "", isValid: false },
+        docCertificadoAntecedentes: { value: "", isValid: false },
+        docFirmaPresidente: { value: "", isValid: false },
     })
 
     // Inputs
@@ -58,6 +65,10 @@ const FormularioPermisosTransitorios = () => {
                 filteredInputs = inputs.slice(12, 22)
                 formTitle = "Detalles del permiso"
                 break;
+            case 4:
+                filteredInputs = inputs.slice(22, 29)
+                formTitle = "Antecedentes"
+                break;
             default:
                 break;
         }
@@ -77,15 +88,12 @@ const FormularioPermisosTransitorios = () => {
         }
     }
     const onClickNext = () => {
-        console.log(formData)
         if (step < LAST_STEP) {
-            // setStep(prev => prev + 1)
+            setStep(prev => prev + 1)
         } else {
             alert("Formulario enviado!")
         }
     }
-
-
 
     return (
         <Form

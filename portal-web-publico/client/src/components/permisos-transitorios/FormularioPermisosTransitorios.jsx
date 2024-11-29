@@ -4,50 +4,24 @@ import useFormsStore from "../../stores/useFormsStore"
 import Form from "../ui/Form"
 
 const FIRST_STEP = 1
-const LAST_STEP = 4
+const LAST_STEP = 5
 
 const FormularioPermisosTransitorios = () => {
     // ESTADOS
-    // Pasos del formulario
-    const [step, setStep] = useState(1)
-    const [currentInputs, setCurrentInputs] = useState([])
-    const [currentFormTitle, setCurrentFormTitle] = useState("")
-
-    // Estado local del formulario. Iniciar false los obligatorios y true los opcionales
-    const [formData, setFormData] = useState({
-        orgName: { value: "", isValid: false },
-        orgRut: { value: "", isValid: false },
-        orgAddress: { value: "", isValid: false },
-        orgEmail: { value: "", isValid: false },
-        orgPhone: { value: "", isValid: false },
-        orgType: { value: "", isValid: false },
-        presidentName: { value: "", isValid: false },
-        presidentRut: { value: "", isValid: false },
-        presidentAddress: { value: "", isValid: false },
-        presidentEmail: { value: "", isValid: false },
-        presidentPhone: { value: "", isValid: false },
-        presidentPhone2: { value: "", isValid: true },
-        permissionName: { value: "", isValid: false },
-        permissionPlace: { value: "", isValid: false },
-        permissionStartDate: { value: "", isValid: false },
-        permissionStartTime: { value: "", isValid: false },
-        permissionEndDate: { value: "", isValid: false },
-        permissionEndTime: { value: "", isValid: false },
-        permissionAlcohol: { value: "", isValid: false },
-        permissionFood: { value: "", isValid: false },
-        permissionDescription: { value: "", isValid: false },
-        permissionPurpose: { value: "", isValid: false },
-        docCI: { value: "", isValid: false },
-        docRutTributario: { value: "", isValid: false },
-        docVigencia: { value: "", isValid: false },
-        docOcupacionRecinto: { value: "", isValid: false },
-        docDeclaracionJurada: { value: "", isValid: false },
-        docCertificadoAntecedentes: { value: "", isValid: false },
-        docFirmaPresidente: { value: "", isValid: false },
-    })
-
     // Inputs
     const inputs = useFormsStore(state => state.inputs)
+
+    // Pasos del formulario
+    const [step, setStep] = useState(1)
+
+    // Inputs que se renderizan en el paso actual
+    const [currentInputs, setCurrentInputs] = useState([])
+
+    // Título del paso actual
+    const [currentFormTitle, setCurrentFormTitle] = useState("")
+
+    // Hook para navegación
+    const navigate = useNavigate()
 
     useEffect(() => {
         let filteredInputs
@@ -69,6 +43,10 @@ const FormularioPermisosTransitorios = () => {
                 filteredInputs = inputs.slice(22, 29)
                 formTitle = "Antecedentes"
                 break;
+            case 5:
+                filteredInputs = []
+                formTitle = "Confirmar envío del formulario"
+                break;
             default:
                 break;
         }
@@ -76,9 +54,7 @@ const FormularioPermisosTransitorios = () => {
         setCurrentFormTitle(formTitle)
     }, [inputs, step])
 
-    // Hook para navegación
-    const navigate = useNavigate()
-
+    // FUNCIONES
     // Función para navegar a la página anterior
     const onClickPrev = () => {
         if (step > FIRST_STEP) {
@@ -87,6 +63,8 @@ const FormularioPermisosTransitorios = () => {
             navigate("/permisos-transitorios")
         }
     }
+
+    // Función para navegar a la página siguiente
     const onClickNext = () => {
         if (step < LAST_STEP) {
             setStep(prev => prev + 1)
@@ -98,8 +76,6 @@ const FormularioPermisosTransitorios = () => {
     return (
         <Form
             title="SOLICITUD DE AUTORIZACIÓN ESPECIAL TRANSITORIA"
-            formData={formData}
-            onChange={setFormData}
             step={step}
             currentInputs={currentInputs}
             currentFormTitle={currentFormTitle}

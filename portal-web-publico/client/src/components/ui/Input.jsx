@@ -1,32 +1,14 @@
-import { validateEmailInput, validatePhoneInput, validateRutInput, validateTextInput } from "../../utils/validations"
+import { setErrorMessages } from "../../data/inputsErrorMessages";
 
 // Define estilos comunes para todos los tipos de entrada
 const INPUT_STYLES = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
 
-const Input = ({ label, name, type, options, value, onChange, placeholder, disabled, min, max, required, className }) => {
+const Input = ({ register, label, name, type, options, placeholder, disabled, min, max, required, className, error }) => {
 
     // Obtener fecha actual para establecerla como atributo min a los inputs date
     let today
     if (type === "date") {
         today = new Date().toISOString().split("T")[0]
-    }
-
-    const onInputChange = (e) => {
-        const currentValue = e.target.value
-        switch (type) {
-            case "phone":
-                validatePhoneInput(currentValue, name, min, onChange, required)
-                break;
-            case "email":
-                validateEmailInput(currentValue, name, min, onChange, required)
-                break;
-            case "rut":
-                validateRutInput(currentValue, name, min, onChange, required)
-                break;
-            default:
-                validateTextInput(currentValue, name, min, onChange, required)
-                break;
-        }
     }
 
     // Variable para almacenar el componente de entrada que se renderizará
@@ -36,30 +18,26 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
     switch (type) {
         case "file":
             input = <input
+                {...register(name, setErrorMessages(required, min))}
                 name={name}
                 minLength={min}
                 maxLength={max}
                 max={max}
-                required={required}
                 disabled={disabled}
                 placeholder={placeholder}
-                value={value[name].value}
-                onChange={onInputChange}
                 className={`${INPUT_STYLES} border-none text-slate-500`}
                 type="file"
             />
             break;
         case "phone":
             input = <input
+                {...register(name, setErrorMessages(required, min))}
                 name={name}
                 minLength={min}
                 maxLength={max}
                 max={max}
-                required={required}
                 disabled={disabled}
                 placeholder={placeholder}
-                value={value[name].value}
-                onChange={onInputChange}
                 className={`${INPUT_STYLES} ${className}`}
                 type="text"
             />
@@ -67,28 +45,24 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
         case "textarea":
             // Renderiza un textarea si el tipo es "textarea"
             input = <textarea
+                {...register(name, setErrorMessages(required, min))}
                 minLength={min}
                 name={name}
                 maxLength={max}
-                required={required}
                 disabled={disabled}
                 placeholder={placeholder}
-                value={value[name].value}
-                onChange={onInputChange}
                 className={`${INPUT_STYLES} col-span-2`}
             />
             break;
         case "select":
             // Renderiza un select si el tipo es "select"
             input = <select
+                {...register(name, setErrorMessages(required, min))}
                 disabled={disabled}
-                value={value[name].value}
-                required={required}
                 name={name}
-                onChange={onInputChange}
                 className={`${INPUT_STYLES} ${className}`}
             >
-                <option disabled value="">Seleccione una opción</option>
+                <option value="">Seleccione una opción</option>
                 {/* Mapea las opciones para crear elementos <option> */}
                 {options.map((op, index) => (
                     <option
@@ -100,11 +74,9 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
             break;
         case "date":
             input = <input
+                {...register(name, setErrorMessages(required, min))}
                 name={name}
                 disabled={disabled}
-                required={required}
-                value={value[name].value}
-                onChange={onInputChange}
                 className={`${INPUT_STYLES} ${className}`}
                 type="date"
                 min={today}
@@ -113,14 +85,12 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
         default:
             // Renderiza un input de tipo genérico si no es ninguno de los anteriores
             input = <input
+                {...register(name, setErrorMessages(required, min))}
                 name={name}
                 minLength={min}
                 maxLength={max}
                 disabled={disabled}
                 placeholder={placeholder}
-                required={required}
-                value={value[name].value}
-                onChange={onInputChange}
                 className={`${INPUT_STYLES} ${className}`}
                 type={type}
             />
@@ -129,11 +99,14 @@ const Input = ({ label, name, type, options, value, onChange, placeholder, disab
 
     // Renderiza la etiqueta y el componente de entrada
     return (
+
         <label>
             <span>{label} {!required && <span className="text-slate-400 ml-1">(opcional)</span>} </span>
             {input}
-            {type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span>}
+            {/* type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span> */}
+            {error && <span className="text-red-500 text-sm">{error.message}</span>}
         </label >
+
     )
 }
 export default Input

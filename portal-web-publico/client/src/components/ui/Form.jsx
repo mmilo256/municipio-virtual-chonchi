@@ -16,7 +16,7 @@ const Form = ({
 
     // ESTADOS
     // Formulario
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm()
     // FUNCIONES
     const onSubmit = handleSubmit((data) => {
         console.log(data)
@@ -36,14 +36,14 @@ const Form = ({
                             <Input
                                 key={input.id}
                                 register={register}
+                                error={errors[input.nombre]}
+                                setValue={setValue}
                                 name={input.nombre}
                                 min={input.min}
-                                error={errors[input.nombre]}
                                 max={input.max}
                                 label={input.etiqueta}
                                 options={input.opciones}
-                                // required={input.es_requerido}
-                                required={true}
+                                required={input.es_requerido}
                                 placeholder={input.placeholder}
                                 type={input.tipo} />
                         )

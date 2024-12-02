@@ -28,7 +28,7 @@ export const permisosTransitoriosInputs = [
         tipo: "rut",
         es_requerido: true,
         opciones: null,
-        placeholder: "77.777.777-7",
+        placeholder: "77777777-7",
         min: 9,
         max: 10
     }, {
@@ -80,7 +80,7 @@ export const permisosTransitoriosInputs = [
         tipo: "rut",
         es_requerido: true,
         opciones: null,
-        placeholder: "55.555.555-5",
+        placeholder: "55555555-5",
         min: 9,
         max: 10
     }, {

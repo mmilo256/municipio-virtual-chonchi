@@ -1,9 +1,23 @@
-import { setErrorMessages } from "../../data/inputsErrorMessages";
+import { setInputOptions } from "../../data/inputOptions";
 
 // Define estilos comunes para todos los tipos de entrada
 const INPUT_STYLES = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
 
-const Input = ({ register, label, name, type, options, placeholder, disabled, min, max, required, className, error }) => {
+const Input = ({
+    register,
+    label,
+    name,
+    type,
+    options,
+    placeholder,
+    disabled,
+    min,
+    max,
+    required,
+    className,
+    error,
+    setValue
+}) => {
 
     // Obtener fecha actual para establecerla como atributo min a los inputs date
     let today
@@ -18,7 +32,7 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
     switch (type) {
         case "file":
             input = <input
-                {...register(name, setErrorMessages(required, min))}
+                {...register(name, setInputOptions(required, min, type, setValue, name))}
                 name={name}
                 minLength={min}
                 maxLength={max}
@@ -31,7 +45,7 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
             break;
         case "phone":
             input = <input
-                {...register(name, setErrorMessages(required, min))}
+                {...register(name, setInputOptions(required, min, type, setValue, name))}
                 name={name}
                 minLength={min}
                 maxLength={max}
@@ -45,7 +59,7 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
         case "textarea":
             // Renderiza un textarea si el tipo es "textarea"
             input = <textarea
-                {...register(name, setErrorMessages(required, min))}
+                {...register(name, setInputOptions(required, min, type, setValue, name))}
                 minLength={min}
                 name={name}
                 maxLength={max}
@@ -57,7 +71,7 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
         case "select":
             // Renderiza un select si el tipo es "select"
             input = <select
-                {...register(name, setErrorMessages(required, min))}
+                {...register(name, setInputOptions(required, min, type, setValue, name))}
                 disabled={disabled}
                 name={name}
                 className={`${INPUT_STYLES} ${className}`}
@@ -74,7 +88,7 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
             break;
         case "date":
             input = <input
-                {...register(name, setErrorMessages(required, min))}
+                {...register(name, setInputOptions(required, min, type, setValue, name))}
                 name={name}
                 disabled={disabled}
                 className={`${INPUT_STYLES} ${className}`}
@@ -85,7 +99,7 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
         default:
             // Renderiza un input de tipo genérico si no es ninguno de los anteriores
             input = <input
-                {...register(name, setErrorMessages(required, min))}
+                {...register(name, setInputOptions(required, min, type, setValue, name))}
                 name={name}
                 minLength={min}
                 maxLength={max}
@@ -100,11 +114,11 @@ const Input = ({ register, label, name, type, options, placeholder, disabled, mi
     // Renderiza la etiqueta y el componente de entrada
     return (
 
-        <label>
+        <label className="relative">
             <span>{label} {!required && <span className="text-slate-400 ml-1">(opcional)</span>} </span>
             {input}
             {/* type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span> */}
-            {error && <span className="text-red-500 text-sm">{error.message}</span>}
+            {error && <span className="absolute left-0 -bottom-4 text-red-500 text-xs">{error.message}</span>}
         </label >
 
     )

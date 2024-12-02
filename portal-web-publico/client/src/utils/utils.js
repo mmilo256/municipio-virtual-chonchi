@@ -1,3 +1,11 @@
+// Formatear campo numérico
+export const formatNumber = (value) => {
+    // Remover todos los caracteres que no sean dígitos o 'k'/'K'
+    let cleanValue = value.replace(/[^0-9]/g, "").toUpperCase();
+
+    return cleanValue
+};
+
 // Formatear rut
 export const formatRut = (value) => {
     // Remover todos los caracteres que no sean dígitos o 'k'/'K'

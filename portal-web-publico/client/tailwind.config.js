@@ -17,6 +17,7 @@ export default {
       },
       animation: {
         'bg-change': 'bgChange 1s infinite', // Animación personalizada
+        'fade-out': 'fadeOut 5s'
       },
       keyframes: {
         bgChange: {
@@ -24,6 +25,11 @@ export default {
           '50%': { backgroundColor: '#eee' }, // Azul a la mitad
           '100%': { backgroundColor: '#ddd' }, // Rojo al final
         },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '80%': { opacity: '1' },
+          '100%': { opacity: '0' }
+        }
       },
     },
     plugins: [],

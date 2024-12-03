@@ -12,6 +12,7 @@ export const setInputOptions = (required, minLength, type = "text", setValue, na
         },
     }
 
+    // Validación de campos numéricos
     if (type === "phone" || type === "number") {
         inputOptions.valueAsNumber = true
         inputOptions.onChange = (e) => {
@@ -30,16 +31,11 @@ export const setInputOptions = (required, minLength, type = "text", setValue, na
 
     // Validación del campo RUT
     if (type === "rut") {
-        inputOptions.pattern = {
-            value: /^\d{7,8}-[kK\d]$/,
-            message: "Debe ingresar el RUT sin puntos y con guión"
-        }
+        inputOptions.minLength = null
         inputOptions.onChange = (e) => {
             const value = formatRut(e.target.value)
             setValue(name, value)
         }
     }
-
-
     return inputOptions
 }

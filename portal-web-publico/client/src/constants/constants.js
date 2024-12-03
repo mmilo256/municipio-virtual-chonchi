@@ -3,4 +3,5 @@
 // export const API_URL = "https://municipio-virtual.onrender.com"
 export const API_URL = "http://localhost:10000"
 export const ORG_TYPES = ["Junta de Vecinos", "Comunidad Indígena", "Club Deportivo", "Fundación", "Empresa", "Agrupación", "Otro"]
+export const LOGOUT_URL = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout"
 // export const REQUEST_AUTH_URL = "http://localhost:10000/solicitar-autorizacion"

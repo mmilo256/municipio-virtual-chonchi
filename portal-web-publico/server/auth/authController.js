@@ -3,7 +3,7 @@ import 'dotenv/config'
 import crypto from 'node:crypto'
 import Jwt from 'jsonwebtoken'
 import logger from '../config/winstonConfig.js'
-import { userInfoLogFormat } from '../utils/utils.js'
+import User from '../Models/userModel.js'
 
 // Cerrar sesión
 export const logout = async (req, res) => {
@@ -18,7 +18,6 @@ export const logout = async (req, res) => {
             return res.status(500).json({ message: "No se pudo destruir la sesión" })
         }
     })
-    logger.info(`${userInfoLogFormat(user.name.nombres, user.name.apellidos, user.run)} | Se ha cerrado la sesión`)
     res.send("Se ha destruido la sesión")
 }
 
@@ -113,6 +112,31 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
             return res.send("No se pudo obtener la información del usuario.")
         }
 
+        // Guardar información del usuario en la base de datos si es la primera vez que ingresa
+        let userNames = ""
+        let userLastNames = ""
+        userData.name.nombres.map(name => {
+            userNames += `${name} `
+        })
+        userData.name.apellidos.map(lastName => {
+            userLastNames += `${lastName} `
+        })
+        const userRut = `${userData.RolUnico.numero}-${userData.RolUnico.DV}`
+
+        const newUserData = {
+            nombres: userNames,
+            apellidos: userLastNames,
+            run: userRut
+        }
+
+        const userExists = await User.findOne({ where: { run: userRut } })
+
+        if (!userExists) {
+            await User.create(newUserData)
+            logger.info("Se ha agregado el usuario a la base de datos")
+        }
+
+
         // Crear JSON Web Token
         const payload = {
             run: userData.RolUnico,
@@ -130,7 +154,7 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
     } catch (error) {
         console.log(error)
         logger.error("No se pudo generar el token JWT.", error.message)
-        res.json({ message: "No se pudo generar el token JWT.", error })
+        res.send("No se pudo generar el token JWT.")
     }
 }
 

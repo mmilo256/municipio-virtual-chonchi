@@ -1,5 +1,5 @@
 import axios from "axios"
-import { API_URL } from "../constants/constants"
+import { API_URL, LOGOUT_URL } from "../constants/constants"
 
 export const verifyToken = async () => {
     try {
@@ -9,4 +9,22 @@ export const verifyToken = async () => {
     } catch (error) {
         throw new Error(error)
     }
+}
+
+export const logout = async () => {
+    try {
+        await fetch(`${API_URL}/logout`, {
+            method: "POST",
+            credentials: 'include'
+        })
+    } catch (error) {
+        console.log(error)
+    } finally {
+        sessionStorage.removeItem('session')
+        window.location.href = LOGOUT_URL
+        setTimeout(() => {
+            window.location.href = "http://localhost:5173"
+        }, 1000);
+    }
+
 }

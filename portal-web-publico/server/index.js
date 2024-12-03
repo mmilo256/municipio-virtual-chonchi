@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import 'dotenv/config'
 import logger from "./config/winstonConfig.js";
 import initializeDB from "./config/db/init.js";
+import { verifyToken } from "./auth/authMIddleware.js";
 
 const port = 10000
 const app = e()
@@ -46,7 +47,7 @@ app.use(session({
 }));
 
 app.use('/', authRouter)
-app.use("/procedures", proceduresRouter)
+app.use("/procedures", verifyToken, proceduresRouter)
 
 app.listen(port, () => {
     console.log("Servidor levantado...")

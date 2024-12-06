@@ -4,7 +4,7 @@ import Input from '../ui/Input'
 
 const Login = () => {
     return (
-        <div className='min-h-dvh' style={{ backgroundImage: `url(${bg})` }}>
+        <div className='min-h-dvh' style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "top" }}>
             <div className='bg-slate-900 min-h-dvh bg-opacity-85 flex items-center justify-center'>
                 <form name='login-form' className='bg-cyan-200 bg-opacity-20 text-white p-8 rounded-xl'>
                     <h1 className='text-2xl text-center font-bold mb-1'>Municipio Virtual Chonchi</h1>
@@ -15,9 +15,7 @@ const Login = () => {
                         <Input label="Contraseña" type='password' />
                     </div>
                     <Button wFull type='submit' text="Iniciar sesión" variant="secondary" />
-
                     <p className='mt-4 text-center text-sm text-slate-300' >¿Problemas para acceder? <br /> Contacte al administrador del sistema</p>
-
                 </form>
             </div >
         </div >

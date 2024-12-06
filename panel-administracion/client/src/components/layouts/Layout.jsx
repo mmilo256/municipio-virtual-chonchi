@@ -15,6 +15,7 @@ const Layout = () => {
                     </Container>
                 </div>
             </div>
+            <footer>xD</footer>
         </>
     )
 }

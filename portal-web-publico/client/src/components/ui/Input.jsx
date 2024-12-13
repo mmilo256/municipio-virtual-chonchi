@@ -33,7 +33,7 @@ const Input = ({
         case "file":
             input = <input
                 {...register(name, setInputOptions(required, min, type, setValue, name))}
-                name={name}
+                name={'requestDoc'}
                 minLength={min}
                 maxLength={max}
                 max={max}
@@ -115,7 +115,7 @@ const Input = ({
     return (
 
         <label className="relative">
-            <span>{label} {!required && <span className="text-slate-400 ml-1">(opcional)</span>} </span>
+            <span className="text-slate-600 font-medium">{label} {!required && <span className="text-slate-400 ml-1">(opcional)</span>} </span>
             {input}
             {/* type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span> */}
             {error && <span className="absolute left-0 -bottom-4 text-red-500 text-xs">{error.message}</span>}

@@ -1,6 +1,8 @@
 import e from "express";
 import authRouter from './auth/authRoutes.js'
 import proceduresRouter from './Routes/proceduresRoutes.js'
+import requestsRouter from './Routes/requestsRoutes.js'
+import usersRouter from './Routes/usersRoutes.js'
 import session from "express-session";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
@@ -8,15 +10,13 @@ import 'dotenv/config'
 import logger from "./config/winstonConfig.js";
 import initializeDB from "./config/db/init.js";
 import { verifyToken } from "./auth/authMIddleware.js";
+import multer from "multer";
 
 const port = 10000
 const app = e()
 
-
 // Inicializar base de datos
 await initializeDB()
-
-
 
 // Middleware para registrar solicitudes HTTP
 app.use((req, res, next) => {
@@ -27,6 +27,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(e.json())
 app.use(cookieParser())
 
 app.use(cors({
@@ -34,6 +35,9 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS']
 }))
+
+// Configurar multer
+export const upload = multer({ dest: "uploads/" })
 
 // Configuración del middleware de sesión
 app.use(session({
@@ -48,6 +52,8 @@ app.use(session({
 
 app.use('/', authRouter)
 app.use("/procedures", verifyToken, proceduresRouter)
+app.use("/requests", upload.array('requestDoc', 8), requestsRouter)
+app.use("/users", usersRouter)
 
 app.listen(port, () => {
     console.log("Servidor levantado...")

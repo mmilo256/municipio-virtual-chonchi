@@ -5,6 +5,7 @@ import { fetchFormInputs, fetchProcedureById } from "../../services/proceduresSe
 import useFormsStore from "../../stores/useFormsStore"
 import ProcedureDetails from "../ui/ProcedureDetails"
 import FormularioPermisosTransitorios from "./FormularioPermisosTransitorios"
+import { PROCEDURES_ID } from "../../constants/constants"
 
 const PermisosTransitorios = () => {
 
@@ -18,8 +19,8 @@ const PermisosTransitorios = () => {
     // Obtener toda la información del trámite, incluyendo campos
     useEffect(() => {
         const loadProcedureData = async () => {
-            const procedure = await fetchProcedureById(1)
-            const inputs = await fetchFormInputs(1)
+            const procedure = await fetchProcedureById(PROCEDURES_ID.permisosTrasitorios)
+            const inputs = await fetchFormInputs(PROCEDURES_ID.permisosTrasitorios)
             setProcedure(procedure)
             setInputs(inputs)
         }

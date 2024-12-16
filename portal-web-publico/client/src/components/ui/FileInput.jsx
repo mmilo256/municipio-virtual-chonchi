@@ -20,7 +20,7 @@ const FileInput = ({ label, file, setFile, name }) => {
             <div className="border-b pb-2 flex items-center justify-between">
                 <div>
                     <button className="px-4 py-2 underline bg-primary hover:bg-primaryHover text-white mr-3" type="button" onClick={handleButtonClick}>Subir archivo</button>
-                    <span className="max-w-[80%] text-sm">{file ? file.name : "Sin archivo seleccionado"}</span>
+                    <span className={`max-w-[80%] text-sm ${file ? "text-black" : "text-slate-500"}`}>{file ? file.name : "Sin archivo seleccionado"}</span>
                 </div>
                 <div>
                     {file && <button onClick={clearFile} type="button" className="text-3xl">&times;</button>}

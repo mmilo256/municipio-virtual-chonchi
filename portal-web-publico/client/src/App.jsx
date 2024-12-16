@@ -3,7 +3,6 @@ import Login from "./components/login/Login"
 import PrivateRoute from "./components/PrivateRoute"
 import Home from "./components/home/Home"
 import PermisosTransitorios from "./components/permisos-transitorios/PermisosTransitorios"
-import FileInput from "./components/ui/FileInput"
 
 function App() {
 
@@ -13,7 +12,6 @@ function App() {
         <Route index element={<Login />} />
         <Route path="/inicio" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/permisos-transitorios/*" element={<PrivateRoute><PermisosTransitorios /></PrivateRoute>} />
-        <Route path="/file-input" element={<FileInput />} />
       </Routes>
     </main >
 

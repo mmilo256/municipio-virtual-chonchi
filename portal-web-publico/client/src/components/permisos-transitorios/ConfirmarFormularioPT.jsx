@@ -5,8 +5,12 @@ import Accordion from "../ui/Accordion"
 import Button from "../ui/buttons/Button"
 import Container from "../ui/Container"
 import Heading from "../ui/Heading"
+import { useState } from "react"
+import FormCompleted from "../FormCompleted"
 
 const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) => {
+
+    const [sendedRequest, setSendedRequest] = useState(false)
 
     const organizationData = {
         orgName: data.orgName,
@@ -55,12 +59,15 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
         }
         try {
             await sendRequest(data)
-            alert("¡Solcitud enviada!")
+            setSendedRequest(true)
         } catch (error) {
             alert("No se pudo enviar la solicitud")
             console.log(error.message)
         }
+    }
 
+    if (sendedRequest) {
+        return <FormCompleted text="Tu solicitud de permiso ha sido enviada exitosamente a la Municipalidad de Chonchi. Nos pondremos en contacto para informar si la solicitud fue aprobada o rechazada." />
     }
 
     return (

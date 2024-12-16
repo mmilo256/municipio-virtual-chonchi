@@ -5,3 +5,4 @@ db.sqlite
 .logs
 *.logs
 dist/
+uploads/*

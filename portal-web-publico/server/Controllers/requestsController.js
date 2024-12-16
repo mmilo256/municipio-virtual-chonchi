@@ -4,14 +4,15 @@ export const createRequest = async (req, res) => {
     try {
         const data = req.body
         const files = req.files
-        const request = {
+        const requestData = {
             estado: "pendiente",
+            documentos: files,
             ...data
         }
-        await Request.create(request)
-        console.log({ request, files })
-        res.send(files)
+        const request = await Request.create(requestData)
+        res.send("Solicitud enviada exitosamente")
     } catch (error) {
-        throw new Error(error.message);
+        console.log(error)
+        throw new Error(`Hubo un error: ${error.message}`);
     }
 }

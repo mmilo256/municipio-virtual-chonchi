@@ -36,8 +36,18 @@ app.use(cors({
     methods: ['GET', 'POST', 'OPTIONS']
 }))
 
-// Configurar multer
-export const upload = multer({ dest: "uploads/" })
+// Configuración de multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/')
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`)
+    }
+})
+
+// Instanciar Multer
+export const upload = multer({ storage })
 
 // Configuración del middleware de sesión
 app.use(session({
@@ -52,7 +62,7 @@ app.use(session({
 
 app.use('/', authRouter)
 app.use("/procedures", verifyToken, proceduresRouter)
-app.use("/requests", upload.array('requestDoc', 8), requestsRouter)
+app.use("/requests", upload.any('requestDoc', 8), requestsRouter)
 app.use("/users", usersRouter)
 
 app.listen(port, () => {

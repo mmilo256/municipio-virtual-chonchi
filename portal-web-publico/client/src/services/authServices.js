@@ -1,5 +1,5 @@
 import axios from "axios"
-import { API_URL, LOGOUT_URL } from "../constants/constants"
+import { API_URL, HOME_URL, LOGOUT_URL } from "../constants/constants"
 
 export const verifyToken = async () => {
     try {
@@ -23,7 +23,7 @@ export const logout = async () => {
         sessionStorage.removeItem('session')
         window.location.href = LOGOUT_URL
         setTimeout(() => {
-            window.location.href = "http://localhost:5173"
+            window.location.href = HOME_URL
         }, 1000);
     }
 

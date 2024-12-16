@@ -31,7 +31,14 @@ app.use(e.json())
 app.use(cookieParser())
 
 app.use(cors({
-    origin: ['https://municipio-virtual.onrender.com', 'https://municipio-virtual-chonchi.onrender.com', 'http://localhost:10000', 'http://localhost:5173', 'https://accounts.claveunica.gob.cl/'],
+    origin: [
+        'https://municipio-virtual.onrender.com',
+        'https://municipio-virtual-chonchi.onrender.com',
+        'http://localhost:10000',
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'https://accounts.claveunica.gob.cl/'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS']
 }))

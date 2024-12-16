@@ -15,7 +15,7 @@ const Layout = () => {
                     </Container>
                 </div>
             </div>
-            <footer>xD</footer>
+            <footer className="bg-primary py-10">xD</footer>
         </>
     )
 }

@@ -1,48 +1,21 @@
 import { Link } from "react-router-dom"
 import BaseTable from "../ui/BaseTable"
 import StatusTag from '../ui/StatusTag'
-const RequestsTablePT = () => {
+import { formatDate } from "../../utils/format"
+const RequestsTablePT = ({ data }) => {
+
+    const formattedData = data.map(request => ({
+        id: request.id, // Cambiar por n° de folio
+        name: `${request.usuario.nombres} ${request.usuario.apellidos}`,
+        procedure: request.tramite.titulo,
+        createdAt: formatDate(request.createdAt, 1),
+        status: <StatusTag status={request.estado} />,
+        action: <Link to={`${request.id}`} className="text-blue-500 underline">Revisar</Link>
+    }))
 
     const tableData = {
         columns: ["ID", "Nombre del solicitante", "Trámite", "Fecha de solicitud", "Estado", ""],
-        data: [
-            {
-                id: 351,
-                name: "María López",
-                procedure: "Permiso transitorio",
-                createdAt: "04/08/2024 13:34",
-                status: <StatusTag status="pendiente" />,
-                action: <Link to="1" className="text-blue-500 underline" href="#">Revisar</Link>
-            }, {
-                id: 382,
-                name: "Juan López",
-                procedure: "Permiso transitorio",
-                createdAt: "04/08/2024 13:34",
-                status: <StatusTag status="en revision" />,
-                action: <Link to="1" className="text-blue-500 underline" href="#">Revisar</Link>
-            }, {
-                id: 472,
-                name: "Juan López",
-                procedure: "Permiso transitorio",
-                createdAt: "04/08/2024 13:34",
-                status: <StatusTag status="rechazada" />,
-                action: <Link to="1" className="text-blue-500 underline" href="#">Revisar</Link>
-            }, {
-                id: 382,
-                name: "Juan López",
-                procedure: "Permiso transitorio",
-                createdAt: "04/08/2024 13:34",
-                status: <StatusTag status="aprobada" />,
-                action: <Link to="1" className="text-blue-500 underline" href="#">Revisar</Link>
-            }, {
-                id: 382,
-                name: "Juan López",
-                procedure: "Permiso transitorio",
-                createdAt: "04/08/2024 13:34",
-                status: <StatusTag status="finalizada" />,
-                action: <Link to="1" className="text-blue-500 underline" href="#">Revisar</Link>
-            }
-        ]
+        data: formattedData
     }
 
     return (

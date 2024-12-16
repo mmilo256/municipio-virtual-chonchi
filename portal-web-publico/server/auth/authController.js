@@ -150,7 +150,7 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
             httpOnly: true
         })
         logger.info("Se creo el token JWT")
-        res.redirect("http://localhost:5173/inicio")
+        res.redirect(process.env.HOME_URL)
     } catch (error) {
         console.log(error)
         logger.error("No se pudo generar el token JWT.", error.message)

@@ -30,7 +30,7 @@ const StatusTag = ({ status }) => {
     }
 
     return (
-        <span className={`${statusBgColor} ${statusTextColor} capitalize text-sm px-3 py-1 rounded-full`}>{status}</span>
+        <span className={`${statusBgColor} ${statusTextColor} whitespace-nowrap capitalize text-sm px-3 py-1 rounded-full`}>{status}</span>
     )
 }
 

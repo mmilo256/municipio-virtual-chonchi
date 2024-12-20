@@ -48,7 +48,7 @@ app.use(cors({ // Modificar origenes permitidos en producción
         'https://accounts.claveunica.gob.cl/'
     ],
     credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS']
+    methods: ['GET', 'POST', 'OPTIONS', 'PATCH']
 }))
 
 // Configuración del middleware de sesión

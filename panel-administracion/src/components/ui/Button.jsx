@@ -1,4 +1,4 @@
-const Button = ({ text, type = "button", variant, wFull = false }) => {
+const Button = ({ text, type = "button", variant, wFull = false, onClick }) => {
 
     // Color del botón
     let buttonVariant = ""
@@ -17,7 +17,7 @@ const Button = ({ text, type = "button", variant, wFull = false }) => {
     }
 
     return (
-        <button className={`block p-2 rounded ${wFull && "w-full"} ${buttonVariant}`} type={type}>{text}</button>
+        <button onClick={onClick} className={`block p-2 rounded ${wFull && "w-full"} ${buttonVariant}`} type={type}>{text}</button>
     )
 }
 

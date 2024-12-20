@@ -2,6 +2,18 @@ import Procedure from "../Models/procedureModel.js"
 import Request from "../Models/requestModel.js"
 import User from "../Models/userModel.js"
 
+export const updateRequestStatus = async (req, res) => {
+    const { id } = req.params
+    const { estado } = req.body
+    try {
+        await Request.update({ estado }, { where: { id } })
+        res.status(200).json({ message: "Estado de la solicitud actualizado" })
+    } catch (error) {
+        console.log(error)
+        throw new Error(`Ha ocurrido un error: ${error.message}`);
+    }
+}
+
 export const getRequestById = async (req, res) => {
     const { id } = req.params
     try {

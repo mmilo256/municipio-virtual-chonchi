@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import Accordion from "../ui/Accordion";
-import { fetchRequestById } from "../../services/requestsServices";
+import { fetchRequestById, updateRequestStatus } from "../../services/requestsServices";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../utils/format";
 import { API_URL } from "../../constants/constants";
+import Modal from "../ui/Modal";
+import StatusTag from "../ui/StatusTag";
 const RequestDetailPT = () => {
 
     const { id } = useParams()
 
     const [request, setRequest] = useState({})
     const [loading, setLoading] = useState(true)
+    const [rejectModal, setRejectModal] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -18,6 +21,17 @@ const RequestDetailPT = () => {
             setLoading(false)
         })()
     }, [id])
+
+    // Cambiar a estado 'en revision' si el estado actual es 'pendiente'
+    useEffect(() => {
+        if (request.estado === "pendiente") {
+            (async () => {
+                await updateRequestStatus(request.id, "en revision")
+            })()
+        }
+    }, [request.estado, request.id])
+
+    console.log(request)
 
 
     // Obtener un documento por el nombre del campo
@@ -28,7 +42,10 @@ const RequestDetailPT = () => {
         }
     }
 
-    console.log(request)
+    // Rechazar solicitud de permiso
+    const handleRejectRequest = () => {
+        setRejectModal(true)
+    }
 
     if (loading) {
         return
@@ -36,13 +53,19 @@ const RequestDetailPT = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold">Solicitud de permiso transitorio #{request.id}</h1>
-            <p className="text-slate-500"><strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}</p>
-
-            <div className="flex items-center gap-4 my-4">
-                <button className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
-                <button className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
+            <Modal title="Rechazar solicitud" modal={rejectModal} setModal={setRejectModal}>
+                <p className="mb-1">Escriba el motivo por el cual rechaza la solicitud</p>
+                <textarea className="p-1 border border-slate-600 rounded w-full resize-none" />
+            </Modal>
+            <div className="flex items-center gap-5">
+                <h1 className="text-2xl font-bold">Solicitud de permiso transitorio #{request.id}</h1>
+                <StatusTag status={request.estado} />
             </div>
+            <p className="text-slate-500"><strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}</p>
+            {(request.estado === "pendiente" || request.estado === "en revision") && <div className="flex items-center gap-4 my-4">
+                <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
+                <button className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
+            </div>}
             <div className="mt-4">
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>
                 <div className=" bg-[#fff] p-4 shadow rounded">

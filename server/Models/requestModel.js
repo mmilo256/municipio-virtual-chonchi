@@ -7,7 +7,7 @@ const Request = sequelize.define('solicitudes', {
         primaryKey: true,
         autoIncrement: true
     },
-    estado: DataTypes.STRING,
+    estado: DataTypes.ENUM('pendiente', 'en revision', 'rechazada', 'aprobada', 'finalizada'),
     folio: DataTypes.INTEGER,
     respuestas: DataTypes.JSON,
     documentos: DataTypes.JSON

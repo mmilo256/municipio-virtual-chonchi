@@ -6,33 +6,28 @@ import { formatDate } from "../../utils/format";
 import { API_URL } from "../../constants/constants";
 import Modal from "../ui/Modal";
 import StatusTag from "../ui/StatusTag";
+import { sendEmail } from "../../services/emailServices";
+import { renderNotificationTemplate } from "../../email-templates/notification";
 const RequestDetailPT = () => {
 
     const { id } = useParams()
 
     const [request, setRequest] = useState({})
+    const [status, setStatus] = useState("")
     const [loading, setLoading] = useState(true)
     const [rejectModal, setRejectModal] = useState(false)
+    const [confirmRejectModal, setConfirmRejectModal] = useState(false)
+
+    const [modalInput, setModalInput] = useState("")
 
     useEffect(() => {
         (async () => {
             const request = await fetchRequestById(id)
             setRequest(request)
+            setStatus(request.estado)
             setLoading(false)
         })()
     }, [id])
-
-    // Cambiar a estado 'en revision' si el estado actual es 'pendiente'
-    useEffect(() => {
-        if (request.estado === "pendiente") {
-            (async () => {
-                await updateRequestStatus(request.id, "en revision")
-            })()
-        }
-    }, [request.estado, request.id])
-
-    console.log(request)
-
 
     // Obtener un documento por el nombre del campo
     const getDocByFieldname = (fieldname) => {
@@ -42,9 +37,40 @@ const RequestDetailPT = () => {
         }
     }
 
-    // Rechazar solicitud de permiso
+    // Abrir modal para rechazar solicitud de permiso
     const handleRejectRequest = () => {
         setRejectModal(true)
+    }
+
+    // Abrir modal de confirmación
+    const openConfirmModal = () => {
+        if (modalInput.trim().length > 3) {
+            setRejectModal(false)
+            setConfirmRejectModal(true)
+        } else {
+            alert("Debe ingresar un motivo para rechazar la solicitud")
+        }
+    }
+
+    // Confirmar rechazo de solicitud
+    const confirmReject = async () => {
+        if (modalInput.trim().length > 3) {
+            const emails = [request.respuestas.orgEmail, request.respuestas.presidentEmail]
+            const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`
+            try {
+                await updateRequestStatus(request.id, "rechazada")
+                await sendEmail(emails, "Solicitud de permiso transitorio: RECHAZADA", renderNotificationTemplate(userName, modalInput))
+                alert("Se ha rechazado la solicitud")
+            } catch (error) {
+                console.log(error)
+                throw new Error(`Ha ocurrido un error: ${error.message}`);
+
+            }
+            setStatus("rechazada")
+            setConfirmRejectModal(false)
+        } else {
+            alert("Debe ingresar un motivo para rechazar la solicitud")
+        }
     }
 
     if (loading) {
@@ -53,16 +79,30 @@ const RequestDetailPT = () => {
 
     return (
         <div>
-            <Modal title="Rechazar solicitud" modal={rejectModal} setModal={setRejectModal}>
+            <Modal
+                title="Rechazar solicitud"
+                modal={confirmRejectModal}
+                setModal={setConfirmRejectModal}
+                onClick={confirmReject}
+            >
+                <p>Se notificará al usuario por correo electrónico el motivo del rechazo</p>
+                <p>¿Seguro que desea rechazar esta solicitud?</p>
+            </Modal>
+            <Modal
+                title="Rechazar solicitud"
+                modal={rejectModal}
+                setModal={setRejectModal}
+                onClick={openConfirmModal}
+            >
                 <p className="mb-1">Escriba el motivo por el cual rechaza la solicitud</p>
-                <textarea className="p-1 border border-slate-600 rounded w-full resize-none" />
+                <textarea value={modalInput} onChange={(e) => { setModalInput(e.target.value) }} className="p-1 border border-slate-600 rounded w-full resize-none" />
             </Modal>
             <div className="flex items-center gap-5">
                 <h1 className="text-2xl font-bold">Solicitud de permiso transitorio #{request.id}</h1>
-                <StatusTag status={request.estado} />
+                <StatusTag status={status} />
             </div>
             <p className="text-slate-500"><strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}</p>
-            {(request.estado === "pendiente" || request.estado === "en revision") && <div className="flex items-center gap-4 my-4">
+            {(status === "pendiente" || status === "en revision") && <div className="flex items-center gap-4 my-4">
                 <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
                 <button className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
             </div>}

@@ -3,6 +3,7 @@ import authRouter from './auth/authRoutes.js'
 import proceduresRouter from './Routes/proceduresRoutes.js'
 import requestsRouter from './Routes/requestsRoutes.js'
 import usersRouter from './Routes/usersRoutes.js'
+import emailRouter from './Routes/emailRoutes.js'
 import session from "express-session";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
@@ -63,9 +64,10 @@ app.use(session({
 }));
 
 app.use('/', authRouter)
-app.use("/procedures", verifyToken, proceduresRouter)
+app.use("/procedures", proceduresRouter)
 app.use("/requests", requestsRouter)
 app.use("/users", usersRouter)
+app.use("/email", emailRouter)
 
 app.listen(port, () => {
     console.log("Servidor levantado...")

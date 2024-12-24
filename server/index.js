@@ -2,15 +2,15 @@ import e from "express";
 import authRouter from './auth/authRoutes.js'
 import proceduresRouter from './Routes/proceduresRoutes.js'
 import requestsRouter from './Routes/requestsRoutes.js'
-import usersRouter from './Routes/usersRoutes.js'
-import emailRouter from './Routes/emailRoutes.js'
+import usersRouter from './routes/portal/usersRoutes.js'
+import emailRouter from './Routes/admin/emailRoutes.js'
 import session from "express-session";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import 'dotenv/config'
-import logger from "./config/winstonConfig.js";
+import logger from "./config/winston.js";
 import initializeDB from "./config/db/init.js";
-import { verifyToken } from "./auth/authMIddleware.js";
+import { verifyToken } from "./middlewares/authMIddleware.js";
 import { fileURLToPath } from 'node:url'
 import path from 'path'
 

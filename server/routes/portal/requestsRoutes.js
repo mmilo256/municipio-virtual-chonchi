@@ -1,6 +1,6 @@
 import e from "express";
-import { createRequest, getAllRequestsByProcedure, getRequestById, updateRequestStatus } from "../Controllers/requestsController.js";
-import { upload } from "../config/multer.js";
+import { createRequest, getAllRequestsByProcedure, getRequestById, updateRequestStatus } from "../../Controllers/requestsController.js";
+import { upload } from "../../config/multer.js";
 
 
 

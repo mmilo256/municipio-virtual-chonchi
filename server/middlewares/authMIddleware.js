@@ -1,5 +1,5 @@
 import Jwt from 'jsonwebtoken'
-import logger from '../config/winstonConfig.js'
+import logger from '../config/winston.js'
 import { userInfoLogFormat } from '../utils/utils.js';
 
 export const verifyToken = (req, res, next) => {

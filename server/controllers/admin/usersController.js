@@ -1,4 +1,4 @@
-import User from "../Models/userModel.js"
+import User from "../../models/userModel.js"
 
 export const getUserIdByRut = async (req, res) => {
     const { run } = req.query

@@ -1,6 +1,6 @@
 import Input from "../../Models/inputModel.js";
 import Procedure from "../../Models/procedureModel.js";
-import logger from "../winstonConfig.js";
+import logger from "../winston.js";
 import defineAssociations from "./associations.js";
 import { sequelize } from "./config.js";
 import { permisosTransitoriosInputs } from "./data/inputs.js";

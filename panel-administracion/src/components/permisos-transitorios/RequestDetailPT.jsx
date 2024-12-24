@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Accordion from "../ui/Accordion";
 import { fetchRequestById, updateRequestStatus } from "../../services/requestsServices";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/format";
 import { API_URL } from "../../constants/constants";
 import Modal from "../ui/Modal";
@@ -17,6 +17,8 @@ const RequestDetailPT = () => {
     const [loading, setLoading] = useState(true)
     const [rejectModal, setRejectModal] = useState(false)
     const [confirmRejectModal, setConfirmRejectModal] = useState(false)
+
+    const navigate = useNavigate()
 
     const [modalInput, setModalInput] = useState("")
 
@@ -35,6 +37,22 @@ const RequestDetailPT = () => {
             const doc = request.documentos.find(doc => doc.fieldname === `documentos[${fieldname}]`)
             return doc
         }
+    }
+
+    const approveRequest = () => {
+        const requestInfo = {
+            id: request.id,
+            activity: request.respuestas.permissionName,
+            orgName: request.respuestas.orgName,
+            orgRut: request.respuestas.orgRut,
+            presidentName: request.respuestas.presidentName,
+            presidentRut: request.respuestas.presidentRut,
+            startDate: request.respuestas.permissionStartDate,
+            startTime: request.respuestas.permissionStartTime,
+            endTime: request.respuestas.permissionEndTime,
+            place: request.respuestas.permissionPlace
+        }
+        navigate("aprobar-solicitud", { state: requestInfo })
     }
 
     // Abrir modal para rechazar solicitud de permiso
@@ -104,7 +122,7 @@ const RequestDetailPT = () => {
             <p className="text-slate-500"><strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}</p>
             {(status === "pendiente" || status === "en revision") && <div className="flex items-center gap-4 my-4">
                 <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
-                <button className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
+                <button onClick={approveRequest} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
             </div>}
             <div className="mt-4">
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>

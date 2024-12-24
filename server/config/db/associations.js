@@ -4,6 +4,7 @@ import Log from "../../Models/logModel.js"
 import Request from "../../Models/requestModel.js"
 import Procedure from "../../Models/procedureModel.js"
 import User from "../../Models/UserModel.js"
+import Document from "../../Models/documentModel.js"
 
 
 const defineAssociations = async () => {
@@ -22,6 +23,9 @@ const defineAssociations = async () => {
     // Employee - Log
     Log.belongsTo(Employee, { foreignKey: 'funcionario_id' })
     Employee.hasMany(Log, { foreignKey: 'funcionario_id' })
+    // Solicitud - Documento
+    Document.belongsTo(Request, { foreignKey: 'solicitud_id' })
+    Request.hasMany(Document, { foreignKey: 'solicitud_id', as: 'documentosAsociados' })
 
 }
 

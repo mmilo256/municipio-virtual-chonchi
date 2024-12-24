@@ -1,5 +1,5 @@
 import e from "express";
-import { generarDecretoPT, getAllProcedures, getFormInputs, getProcedureById } from "../Controllers/proceduresController.js";
+import { generarDecretoPT, getAllProcedures, getFormInputs, getProcedureById } from "../../Controllers/proceduresController.js";
 
 const router = e.Router()
 

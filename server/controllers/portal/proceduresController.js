@@ -4,28 +4,27 @@ import Procedure from "../Models/procedureModel.js"
 import { generateAct } from "../utils/generarDecretoPT.js"
 
 // Generar decreto de permiso transitorio
-export const generarDecretoPT = async (req, res) => {
-    const { org_name, org_rut, activity_name, owner_name, owner_rut, start_date, place, start_time, end_time } = req.body
-    const formattedData = {
-        n_dec: 3,
+export const generarDecretoPT = (req, res) => {
+    const data = {
+        n_dec: req.body.data.n_dec,
         fecha_dec: new Date(),
-        org_name: org_name.toUpperCase(),
-        org_rut: org_rut.toUpperCase(),
-        activity_name: activity_name.toUpperCase(),
-        owner_name: owner_name.toUpperCase(),
-        owner_rut: owner_rut.toUpperCase(),
-        start_date: start_date,
-        place: place.toUpperCase(),
-        start_time,
-        end_time
+        org_name: req.body.data.org_name,
+        org_rut: req.body.data.org_rut,
+        activity_name: req.body.data.activity_name,
+        owner_name: req.body.data.owner_name,
+        owner_rut: req.body.data.owner_rut,
+        start_date: req.body.data.start_date,
+        place: req.body.data.place,
+        start_time: req.body.data.start_time,
+        end_time: req.body.data.end_time
     }
     try {
-        generateAct(formattedData)
+        console.log(req.body)
+        generateAct(data)
         res.status(200).json({ message: "Decreto generado exitosamente" })
     } catch (error) {
         console.log(error)
         throw new Error(`Ha ocurrido un error: ${error.message}`);
-
     }
 }
 

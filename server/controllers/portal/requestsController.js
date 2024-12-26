@@ -1,6 +1,6 @@
-import Procedure from "../Models/procedureModel.js"
-import Request from "../Models/requestModel.js"
-import User from "../Models/userModel.js"
+import Procedure from "../../models/procedureModel.js"
+import Request from "../../models/requestModel.js"
+import User from "../../models/userModel.js"
 
 export const updateRequestStatus = async (req, res) => {
     const { id } = req.params

@@ -1,7 +1,7 @@
-import logger from "../config/winstonConfig.js"
-import Input from "../Models/inputModel.js"
-import Procedure from "../Models/procedureModel.js"
-import { generateAct } from "../utils/generarDecretoPT.js"
+import logger from "../../config/winston.js"
+import Input from "../../models/inputModel.js"
+import Procedure from "../../models/procedureModel.js"
+import { generateAct } from "../../utils/generarDecretoPT.js"
 
 // Generar decreto de permiso transitorio
 export const generarDecretoPT = (req, res) => {

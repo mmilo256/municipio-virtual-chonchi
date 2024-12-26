@@ -1,11 +1,10 @@
-import Employee from "../../Models/employeeModel.js"
-import Input from "../../Models/inputModel.js"
-import Log from "../../Models/logModel.js"
-import Request from "../../Models/requestModel.js"
-import Procedure from "../../Models/procedureModel.js"
-import User from "../../Models/UserModel.js"
-import Document from "../../Models/documentModel.js"
-
+import Employee from "../../models/employeeModel.js"
+import Input from "../../models/inputModel.js"
+import Log from "../../models/logModel.js"
+import Request from "../../models/requestModel.js"
+import Procedure from "../../models/procedureModel.js"
+import User from "../../models/userModel.js"
+import Document from "../../models/documentModel.js"
 
 const defineAssociations = async () => {
     // Campo - Trámite

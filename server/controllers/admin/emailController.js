@@ -1,4 +1,4 @@
-import { sendEmail } from "../config/nodemailer.js"
+import { sendEmail } from "../../config/nodemailer.js"
 
 export const sendMail = async (req, res) => {
     const { to, subject, html } = req.body

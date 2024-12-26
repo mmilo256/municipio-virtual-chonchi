@@ -2,8 +2,8 @@ import axios from 'axios'
 import 'dotenv/config'
 import crypto from 'node:crypto'
 import Jwt from 'jsonwebtoken'
-import logger from '../../config/winstonConfig.js'
-import User from '../../Models/userModel.js'
+import logger from '../../config/winston.js'
+import User from '../../models/userModel.js'
 
 // Cerrar sesión
 export const logout = async (req, res) => {

@@ -1,6 +1,6 @@
 import e from "express";
-import { callback, login, logout, protectedRoute } from "../controllers/portal/authController.js";
-import { verifyToken } from "./authMIddleware.js";
+import { callback, login, logout, protectedRoute } from "../../controllers/portal/authController.js";
+import { verifyToken } from "../../middlewares/authMIddleware.js";
 
 const router = e.Router()
 

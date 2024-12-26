@@ -1,9 +1,9 @@
 import e from "express";
-import authRouter from './auth/authRoutes.js'
-import proceduresRouter from './Routes/proceduresRoutes.js'
-import requestsRouter from './Routes/requestsRoutes.js'
+import portalAuthRouter from './routes/portal/authRoutes.js'
+import proceduresRouter from './routes/portal/proceduresRoutes.js'
+import requestsRouter from './routes/portal/requestsRoutes.js'
 import usersRouter from './routes/portal/usersRoutes.js'
-import emailRouter from './Routes/admin/emailRoutes.js'
+import emailRouter from './routes/admin/emailRoutes.js'
 import session from "express-session";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
@@ -63,7 +63,7 @@ app.use(session({
     }
 }));
 
-app.use('/', authRouter)
+app.use('/', portalAuthRouter)
 app.use("/procedures", proceduresRouter)
 app.use("/requests", requestsRouter)
 app.use("/users", usersRouter)

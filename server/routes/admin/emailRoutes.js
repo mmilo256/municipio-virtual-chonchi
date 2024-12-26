@@ -1,5 +1,5 @@
 import e from "express";
-import { sendMail } from "../../Controllers/emailController.js";
+import { sendMail } from "../../controllers/admin/emailController.js";
 
 const router = e.Router()
 

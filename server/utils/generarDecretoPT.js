@@ -46,8 +46,6 @@ export const generateAct = (data) => {
         path: `decretos\\${filename}`
     }
 
-    console.log(__dirname)
-
     // 6. Convertir el buffer en un archivo
     writeFileSync(resolve(resolve(__dirname, '../decretos'), fileData.filename), buf);
     // Instead of writing it to a file, you could also

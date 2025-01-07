@@ -1,3 +1,16 @@
+import jwt from 'jsonwebtoken'
+// Generar JWT
+const JWT_SECRET = process.env.ADMIN_JWT_SECRET
+const EXPIRES_IN = process.env.ADMIN_JWT_EXPIRES_IN
+export const generateToken = (user) => {
+    return jwt.sign(user, JWT_SECRET, { expiresIn: EXPIRES_IN })
+}
+
+// Verificar JWT
+export const verifyTokenJWT = (token) => {
+    return jwt.verify(token, JWT_SECRET)
+}
+
 // Información del usuario autenticado para mostrar en los logs
 export const userInfoLogFormat = (
     namesArray,

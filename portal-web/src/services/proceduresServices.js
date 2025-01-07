@@ -4,7 +4,7 @@ import { logout } from "./authServices"
 
 export const fetchFormInputs = async (id) => {
     try {
-        const response = await axios.get(`${API_URL}/procedures/${id}/forms`, { withCredentials: true })
+        const response = await axios.get(`${API_URL}/portal/procedures/${id}/forms`, { withCredentials: true })
         const data = response.data
         return data.inputs
     } catch (error) {
@@ -15,7 +15,7 @@ export const fetchFormInputs = async (id) => {
 
 export const fetchAllProcedures = async () => {
     try {
-        const response = await axios.get(`${API_URL}/procedures`, { withCredentials: true })
+        const response = await axios.get(`${API_URL}/portal/procedures`, { withCredentials: true })
         const data = response.data.procedures
         return data
     } catch (error) {
@@ -26,7 +26,7 @@ export const fetchAllProcedures = async () => {
 
 export const fetchProcedureById = async (id) => {
     try {
-        const response = await axios.get(`${API_URL}/procedures/${id}`, { withCredentials: true })
+        const response = await axios.get(`${API_URL}/portal/procedures/${id}`, { withCredentials: true })
         const data = response.data.procedure
         return data
     } catch (error) {

@@ -9,7 +9,7 @@ const BotonClaveUnica = ({ className }) => {
     const onClickHandler = async () => {
         setLoading(true)
         try {
-            window.location.href = `${API_URL}/login`
+            window.location.href = `${API_URL}/portal/auth/login`
         } catch (error) {
             console.log(error.message)
         }

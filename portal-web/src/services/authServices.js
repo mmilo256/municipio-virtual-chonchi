@@ -3,7 +3,7 @@ import { API_URL, HOME_URL, LOGOUT_URL } from "../constants/constants"
 
 export const verifyToken = async () => {
     try {
-        const response = await axios.get(`${API_URL}/protected`, { withCredentials: true })
+        const response = await axios.get(`${API_URL}/portal/auth/protected`, { withCredentials: true })
         const data = response.data
         return data
     } catch (error) {
@@ -13,7 +13,7 @@ export const verifyToken = async () => {
 
 export const logout = async () => {
     try {
-        await fetch(`${API_URL}/logout`, {
+        await fetch(`${API_URL}/portal/auth/logout`, {
             method: "POST",
             credentials: 'include'
         })

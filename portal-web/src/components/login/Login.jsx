@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { API_URL } from "../../constants/constants"
 import { Navigate } from "react-router-dom"
 import { verifyToken } from "../../services/authServices"
 import BotonClaveUnica from "../ui/buttons/BotonClaveUnica"
@@ -59,7 +58,7 @@ const Login = () => {
                     </ol>
                 </div>
                 <div className="hidden md:block my-5">
-                    <BotonClaveUnica onClick={`${API_URL}/login`} type="link" className="w-full md:w-auto lg:w-full ml-auto" />
+                    <BotonClaveUnica type="link" className="w-full md:w-auto lg:w-full ml-auto" />
                 </div>
             </div>
         </div >

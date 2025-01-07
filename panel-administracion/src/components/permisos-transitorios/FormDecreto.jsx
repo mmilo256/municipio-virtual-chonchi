@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Input from "../ui/Input"
 import Button from "../ui/Button"
 import { useState } from "react"
@@ -20,6 +20,8 @@ const FormDecreto = () => {
     const [horaTermino, setHoraTermino] = useState(endTime || "")
     const [ubicacion, setUbicacion] = useState(place || "")
 
+    const navigate = useNavigate()
+
     const generarDecreto = async () => {
         const data = {
             n_dec: decreto,
@@ -34,14 +36,14 @@ const FormDecreto = () => {
             place: ubicacion
         }
         try {
-            await approveRequestPT(data)
+            await approveRequestPT(id, data)
             alert("Decreto generado con éxito")
+            navigate(`../${id}`)
         } catch (error) {
+            alert("No se pudo generar el decreto")
             console.log(error)
             throw new Error(`Ha ocurrido un error: ${error.message}`);
-
         }
-
     }
 
     return (

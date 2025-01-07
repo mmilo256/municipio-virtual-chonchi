@@ -1,9 +1,8 @@
-import axios from 'axios'
-import { API_URL } from '../constants/constants'
+import apiClient from './apiClient'
 
 export const updateRequestStatus = async (requestId, estado) => {
     try {
-        await axios.patch(`${API_URL}/requests/${requestId}`, { estado })
+        await apiClient.patch(`/admin/requests/${requestId}/estado`, { estado })
     } catch (error) {
         console.log(error)
         throw new Error(`Ha ocurrido un error: ${error.message}`)
@@ -12,7 +11,7 @@ export const updateRequestStatus = async (requestId, estado) => {
 
 export const fetchRequestById = async (requestId) => {
     try {
-        const response = await axios.get(`${API_URL}/requests/${requestId}`)
+        const response = await apiClient.get(`/admin/requests/${requestId}`)
         const data = response.data.request
         return data
     } catch (error) {
@@ -24,7 +23,7 @@ export const fetchRequestById = async (requestId) => {
 
 export const fetchRequestsByProcedure = async (procedureId) => {
     try {
-        const response = await axios.get(`${API_URL}/requests?tramiteId=${procedureId}`)
+        const response = await apiClient.get(`/admin/requests?tramiteId=${procedureId}`)
         const data = response.data.requests
         return data
     } catch (error) {

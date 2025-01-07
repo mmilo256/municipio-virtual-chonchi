@@ -12,7 +12,7 @@ import { dirname, resolve } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export const generateAct = (data) => {
+export const generarDecretoPT = (data) => {
     // 1. Cargar el docx como contenido binario
     const content = readFileSync(
         resolve(__dirname, "../templates/decreto_permisoTransitorio.docx"),

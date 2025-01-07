@@ -1,32 +1,6 @@
 import logger from "../../config/winston.js"
 import Input from "../../models/inputModel.js"
 import Procedure from "../../models/procedureModel.js"
-import { generateAct } from "../../utils/generarDecretoPT.js"
-import { formatDate } from "../../utils/utils.js"
-
-// Generar decreto de permiso transitorio
-export const generarDecretoPT = (req, res) => {
-    const data = {
-        n_dec: req.body.data.n_dec,
-        fecha_dec: formatDate(new Date(), 1),
-        org_name: req.body.data.org_name.toUpperCase(),
-        org_rut: req.body.data.org_rut.toUpperCase(),
-        activity_name: req.body.data.activity_name.toUpperCase(),
-        owner_name: req.body.data.owner_name.toUpperCase(),
-        owner_rut: req.body.data.owner_rut.toUpperCase(),
-        start_date: formatDate(req.body.data.start_date, 1),
-        place: req.body.data.place.toUpperCase(),
-        start_time: req.body.data.start_time,
-        end_time: req.body.data.end_time
-    }
-    try {
-        generateAct(data)
-        res.status(200).json({ message: "Decreto generado exitosamente" })
-    } catch (error) {
-        console.log(error)
-        throw new Error(`Ha ocurrido un error: ${error.message}`);
-    }
-}
 
 // Obtener todos los trámites disponibles
 export const getAllProcedures = async (req, res) => {

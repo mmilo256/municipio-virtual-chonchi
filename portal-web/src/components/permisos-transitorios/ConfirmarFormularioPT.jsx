@@ -29,11 +29,11 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
         presidentPhone2: data.presidentPhone2
     }
     const permissionData = {
-        permissionAlcohol: data.permissionAlcohol,
+        permissionAlcohol: data.permissionAlcohol === "true" ? true : false,
         permissionDescription: data.permissionDescription,
         permissionEndDate: data.permissionEndDate,
         permissionEndTime: data.permissionEndTime,
-        permissionFood: data.permissionFood,
+        permissionFood: data.permissionFood === "true" ? true : false,
         permissionName: data.permissionName,
         permissionPlace: data.permissionPlace,
         permissionPurpose: data.permissionPurpose,
@@ -43,6 +43,8 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
     const docsData = {
         ...data.docs
     }
+
+    console.log(permissionData)
 
     const handleSubmit = async () => {
         const data = {
@@ -54,7 +56,7 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
             documentos: {
                 ...docsData
             },
-            tramite_id: PROCEDURES_ID.permisosTrasitorios,
+            tramite_id: PROCEDURES_ID.permisosTransitorios,
             usuario_id: userId
         }
         try {

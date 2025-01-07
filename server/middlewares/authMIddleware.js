@@ -1,6 +1,15 @@
 import Jwt from 'jsonwebtoken'
 import logger from '../config/winston.js'
-import { userInfoLogFormat } from '../utils/utils.js';
+import { userInfoLogFormat, verifyTokenJWT } from '../utils/utils.js';
+
+export const verifyAdminToken = (req, res, next) => {
+    const token = req.cookies.tokenjwt
+    const isValid = verifyTokenJWT(token)
+    if (!isValid) {
+        return res.status(400).send("No has iniciado sesión")
+    }
+    next()
+}
 
 export const verifyToken = (req, res, next) => {
     const jwt = req.cookies.jwt

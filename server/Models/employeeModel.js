@@ -13,7 +13,8 @@ const Employee = sequelize.define('funcionarios', {
     password: DataTypes.STRING,
     email: DataTypes.STRING,
     run: DataTypes.STRING,
-    rol: DataTypes.STRING
+    rol: DataTypes.STRING,
+    salt: DataTypes.STRING
 })
 
 export default Employee

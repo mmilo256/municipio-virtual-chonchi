@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Accordion from "../ui/Accordion";
 import { fetchRequestById, updateRequestStatus } from "../../services/requestsServices";
+import { fetchFinalDocument } from "../../services/permisosTransitoriosServices";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/format";
 import { API_URL } from "../../constants/constants";
@@ -8,6 +9,7 @@ import Modal from "../ui/Modal";
 import StatusTag from "../ui/StatusTag";
 import { sendEmail } from "../../services/emailServices";
 import { renderNotificationTemplate } from "../../email-templates/notification";
+import Upload from "../ui/Upload";
 const RequestDetailPT = () => {
 
     const { id } = useParams()
@@ -17,6 +19,9 @@ const RequestDetailPT = () => {
     const [loading, setLoading] = useState(true)
     const [rejectModal, setRejectModal] = useState(false)
     const [confirmRejectModal, setConfirmRejectModal] = useState(false)
+    const [finalDoc, setFinalDoc] = useState(null)
+
+    const [signedDoc, setSignedDoc] = useState(null)
 
     const navigate = useNavigate()
 
@@ -24,12 +29,25 @@ const RequestDetailPT = () => {
 
     useEffect(() => {
         (async () => {
-            const request = await fetchRequestById(id)
-            setRequest(request)
-            setStatus(request.estado)
+            if (Object.values(request).length === 0) {
+                const request = await fetchRequestById(id)
+                setRequest(request)
+                setStatus(request.estado)
+            }
+            if (!finalDoc) {
+                const document = await fetchFinalDocument(id)
+                setFinalDoc(document)
+            }
             setLoading(false)
         })()
-    }, [id])
+    }, [id, finalDoc, request])
+
+    // Subir decreto firmado
+    useEffect(() => {
+        if (signedDoc) {
+            alert("Archivo subido correctamente")
+        }
+    })
 
     // Obtener un documento por el nombre del campo
     const getDocByFieldname = (fieldname) => {
@@ -53,6 +71,12 @@ const RequestDetailPT = () => {
             place: request.respuestas.permissionPlace
         }
         navigate("aprobar-solicitud", { state: requestInfo })
+    }
+
+    // Función para visualizar el decreto generado
+    const handlePreviewDoc = async () => {
+        window.open(`${API_URL}/${finalDoc.ruta}`, "_blank")
+        console.log(finalDoc)
     }
 
     // Abrir modal para rechazar solicitud de permiso
@@ -82,7 +106,6 @@ const RequestDetailPT = () => {
             } catch (error) {
                 console.log(error)
                 throw new Error(`Ha ocurrido un error: ${error.message}`);
-
             }
             setStatus("rechazada")
             setConfirmRejectModal(false)
@@ -124,6 +147,10 @@ const RequestDetailPT = () => {
                 <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
                 <button onClick={approveRequest} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
             </div>}
+            {(status === "aprobada" || status === "finalizada") && <div className="flex items-center gap-4 my-4">
+                <button onClick={handlePreviewDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto</button>
+                <Upload label="Subir decreto firmado" file={signedDoc} setFile={setSignedDoc} name="signedDoc" />
+            </div>}
             <div className="mt-4">
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>
                 <div className=" bg-[#fff] p-4 shadow rounded">
@@ -150,7 +177,7 @@ const RequestDetailPT = () => {
                         <p><strong>Domicilio:</strong> {request.respuestas.presidentAddress}</p>
                         <p><strong>Correo electrónico:</strong> {request.respuestas.presidentEmail}</p>
                         <p><strong>Teléfono:</strong> {request.respuestas.presidentPhone}</p>
-                        <p><strong>Teléfono 2:</strong> {request.respuestas.presidentPhone2}</p>
+                        <p><strong>Teléfono 2:</strong> {request.respuestas.presidentPhone2 === "NaN" ? "No indica" : request.respuestas.presidentPhone2}</p>
                     </div>
                 </Accordion>
                 <Accordion title="3. Detalles del permiso">
@@ -159,8 +186,8 @@ const RequestDetailPT = () => {
                         <p><strong>Lugar de realización:</strong> {request.respuestas.permissionPlace}</p>
                         <p><strong>Fecha de inicio:</strong> {formatDate(request.respuestas.permissionStartDate, 1)}, {request.respuestas.permissionStartTime}</p>
                         <p><strong>Fecha de término:</strong> {formatDate(request.respuestas.permissionEndDate, 1)}, {request.respuestas.permissionEndTime}</p>
-                        <p><strong>Consumo y/o venta de bebidas alcohólicas:</strong> {request.respuestas.permissionAlcohol ? "Si" : "No"}</p>
-                        <p><strong>Consumo y/o venta de alimentos:</strong> {request.respuestas.permissionFood ? "Si" : "No"}</p>
+                        <p><strong>Consumo y/o venta de bebidas alcohólicas:</strong> {request.respuestas.permissionAlcohol === "true" ? "Si" : "No"}</p>
+                        <p><strong>Consumo y/o venta de alimentos:</strong> {request.respuestas.permissionFood === "true" ? "Si" : "No"}</p>
                         <p><strong>Descripción de la actividad:</strong> {request.respuestas.permissionDescription}</p>
                         <p><strong>Destino de los fondos:</strong> {request.respuestas.permissionPurpose}</p>
                     </div>

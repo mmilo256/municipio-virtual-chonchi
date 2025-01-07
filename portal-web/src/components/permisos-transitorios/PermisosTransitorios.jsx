@@ -19,8 +19,8 @@ const PermisosTransitorios = () => {
     // Obtener toda la información del trámite, incluyendo campos
     useEffect(() => {
         const loadProcedureData = async () => {
-            const procedure = await fetchProcedureById(PROCEDURES_ID.permisosTrasitorios)
-            const inputs = await fetchFormInputs(PROCEDURES_ID.permisosTrasitorios)
+            const procedure = await fetchProcedureById(PROCEDURES_ID.permisosTransitorios)
+            const inputs = await fetchFormInputs(PROCEDURES_ID.permisosTransitorios)
             setProcedure(procedure)
             setInputs(inputs)
         }

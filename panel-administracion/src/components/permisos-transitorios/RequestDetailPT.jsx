@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import Accordion from "../ui/Accordion";
 import { fetchRequestById, updateRequestStatus } from "../../services/requestsServices";
 import { fetchFinalDocument } from "../../services/permisosTransitoriosServices";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/format";
 import { API_URL } from "../../constants/constants";
 import Modal from "../ui/Modal";
 import StatusTag from "../ui/StatusTag";
 import { sendEmail } from "../../services/emailServices";
-import { renderNotificationTemplate } from "../../email-templates/notification";
-import Upload from "../ui/Upload";
+import { renderTemplatePT } from "../../email-templates/permisosTransitorios";
 const RequestDetailPT = () => {
 
     const { id } = useParams()
@@ -19,8 +18,7 @@ const RequestDetailPT = () => {
     const [loading, setLoading] = useState(true)
     const [rejectModal, setRejectModal] = useState(false)
     const [confirmRejectModal, setConfirmRejectModal] = useState(false)
-    const [finalDoc, setFinalDoc] = useState(null)
-
+    const [unsignedDoc, setUnsignedDoc] = useState(null)
     const [signedDoc, setSignedDoc] = useState(null)
 
     const navigate = useNavigate()
@@ -34,20 +32,18 @@ const RequestDetailPT = () => {
                 setRequest(request)
                 setStatus(request.estado)
             }
-            if (!finalDoc) {
-                const document = await fetchFinalDocument(id)
-                setFinalDoc(document)
+            if (!unsignedDoc) {
+                const document = await fetchFinalDocument(id, 'sin firmar')
+                setUnsignedDoc(document)
+            }
+            if (!signedDoc) {
+                const document = await fetchFinalDocument(id, 'firmado')
+                setSignedDoc(document)
             }
             setLoading(false)
         })()
-    }, [id, finalDoc, request])
+    }, [id, unsignedDoc, request, signedDoc])
 
-    // Subir decreto firmado
-    useEffect(() => {
-        if (signedDoc) {
-            alert("Archivo subido correctamente")
-        }
-    })
 
     // Obtener un documento por el nombre del campo
     const getDocByFieldname = (fieldname) => {
@@ -74,9 +70,14 @@ const RequestDetailPT = () => {
     }
 
     // Función para visualizar el decreto generado
-    const handlePreviewDoc = async () => {
-        window.open(`${API_URL}/${finalDoc.ruta}`, "_blank")
-        console.log(finalDoc)
+    const handlePreviewUnsignedDoc = () => {
+        window.open(`${API_URL}/${unsignedDoc.ruta}`, "_blank")
+        console.log(unsignedDoc)
+    }
+    // Función para visualizar el decreto firmado
+    const handlePreviewSignedDoc = () => {
+        window.open(`${API_URL}/${signedDoc.ruta}`, "_blank")
+        console.log(signedDoc)
     }
 
     // Abrir modal para rechazar solicitud de permiso
@@ -101,7 +102,7 @@ const RequestDetailPT = () => {
             const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`
             try {
                 await updateRequestStatus(request.id, "rechazada")
-                await sendEmail(emails, "Solicitud de permiso transitorio: RECHAZADA", renderNotificationTemplate(userName, modalInput))
+                await sendEmail(emails, "Solicitud de permiso transitorio: RECHAZADA", renderTemplatePT(userName, modalInput, 'Solicitud rechazada', 'rechazado'))
                 alert("Se ha rechazado la solicitud")
             } catch (error) {
                 console.log(error)
@@ -147,9 +148,14 @@ const RequestDetailPT = () => {
                 <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
                 <button onClick={approveRequest} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
             </div>}
-            {(status === "aprobada" || status === "finalizada") && <div className="flex items-center gap-4 my-4">
-                <button onClick={handlePreviewDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto</button>
-                <Upload label="Subir decreto firmado" file={signedDoc} setFile={setSignedDoc} name="signedDoc" />
+            {status === "aprobada" && <div className="flex items-center gap-4 my-4">
+                <button onClick={handlePreviewUnsignedDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto</button>
+                <Link to="subir-decreto-firmado" className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded">Subir decreto firmado</Link>
+            </div>}
+            {status === "firmada" && <div className="flex items-center gap-4 my-4">
+                <button onClick={handlePreviewUnsignedDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto sin firma</button>
+                <button onClick={handlePreviewSignedDoc} className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded">Descargar decreto firmado</button>
+                <button onClick={handlePreviewSignedDoc} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Enviar decreto</button>
             </div>}
             <div className="mt-4">
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>

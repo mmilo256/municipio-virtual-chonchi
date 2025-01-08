@@ -44,8 +44,6 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
         ...data.docs
     }
 
-    console.log(permissionData)
-
     const handleSubmit = async () => {
         const data = {
             respuestas: {

@@ -1,11 +1,35 @@
-export const renderNotificationTemplate = (userName, reason) => {
-    return `
+export const renderTemplatePT = (userName, reason, title, type) => {
+
+  let body
+  if (type === 'rechazado') {
+    body = `
+<p>Estimado/a ${userName},</p>
+      <p>Lamentamos informarle que su solicitud para un permiso transitorio ha sido <strong>rechazada</strong>.</p>
+      <p>Motivo del rechazo:</p>
+      <p><em>${reason}</em></p>
+      <p>Si tiene alguna duda o desea más información, no dude en ponerse en contacto con nosotros.</p>
+      <p>Atentamente,</p>
+      <p><strong>Municipio de Chonchi</strong></p>
+`
+  }
+  if (type === 'aprobado') {
+    body = `
+<p>Estimado/a ${userName},</p>
+      <p>Nos complace informarle que su solicitud para un permiso transitorio ha sido <strong>aprobada</strong>.</p>
+      <p>Se adjunta el decreto firmado</p>
+      <p>Si tiene alguna duda o desea más información, no dude en ponerse en contacto con nosotros.</p>
+      <p>Atentamente,</p>
+      <p><strong>Municipio de Chonchi</strong></p>
+`
+  }
+
+  return `
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notificación de Solicitud Rechazada</title>
+  <title>${title}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -62,13 +86,7 @@ export const renderNotificationTemplate = (userName, reason) => {
       <h1>Municipio de Chonchi</h1>
     </div>
     <div class="content">
-      <p>Estimado/a ${userName},</p>
-      <p>Lamentamos informarle que su solicitud para un permiso transitorio ha sido <strong>rechazada</strong>.</p>
-      <p>Motivo del rechazo:</p>
-      <p><em>${reason}</em></p>
-      <p>Si tiene alguna duda o desea más información, no dude en ponerse en contacto con nosotros.</p>
-      <p>Atentamente,</p>
-      <p><strong>Municipio de Chonchi</strong></p>
+      ${body}
     </div>
     <div class="footer">
       <p>Este es un mensaje automático, por favor no responda a este correo.</p>
@@ -77,6 +95,5 @@ export const renderNotificationTemplate = (userName, reason) => {
   </div>
 </body>
 </html>
-
 `
 }

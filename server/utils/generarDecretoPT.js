@@ -43,11 +43,11 @@ export const generarDecretoPT = (data) => {
     const filename = `${Date.now()}_DECRETO_PT.docx`
     const fileData = {
         filename,
-        path: `decretos\\${filename}`
+        path: `decretos\\permisos-transitorios\\${filename}`
     }
 
     // 6. Convertir el buffer en un archivo
-    writeFileSync(resolve(resolve(__dirname, '../decretos'), fileData.filename), buf);
+    writeFileSync(resolve(resolve(__dirname, '../decretos/permisos-transitorios'), fileData.filename), buf);
     // Instead of writing it to a file, you could also
     // let the user download it, store it in a database,
     // on AWS S3, ...

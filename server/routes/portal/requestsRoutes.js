@@ -1,8 +1,8 @@
 import e from "express";
 import { createRequest } from "../../controllers/portal/requestsController.js";
-import { upload } from "../../config/multer.js";
+import { setUpload } from '../../config/multer.js'
 
-
+const upload = setUpload()
 
 // Router
 const router = e.Router()

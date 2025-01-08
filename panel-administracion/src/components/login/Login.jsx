@@ -29,7 +29,6 @@ const Login = () => {
             setAuth(data.token)
             alert("Sesión iniciada correctamente")
             navigate("/")
-            console.log(data)
         } catch (error) {
             alert("Error al conectar a la base de datos")
             console.log(error)

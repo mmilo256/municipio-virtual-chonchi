@@ -5,15 +5,19 @@ import Request from "../../models/requestModel.js"
 
 // Subir documento firmado
 export const uploadSignedDocument = async (req, res) => {
+    const { id } = req.params
     const file = req.file
+    // Guardar decreto en base de datos
+    await Document.create({ ruta: file.path, estado: "firmado", solicitud_id: id })
     res.send(file)
 }
 
 // Obtener documento final del trámite
 export const getFinalDocument = async (req, res) => {
     const { id } = req.params
+    const { estado_doc } = req.query
     try {
-        const document = await Document.findOne({ where: { solicitud_id: id } })
+        const document = await Document.findOne({ where: { solicitud_id: id, estado: estado_doc } })
         res.status(200).json({ document })
     } catch (error) {
         console.log(error)

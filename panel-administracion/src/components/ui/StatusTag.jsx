@@ -20,6 +20,10 @@ const StatusTag = ({ status }) => {
             statusBgColor = "bg-green-200"
             statusTextColor = "text-green-800"
             break;
+        case "firmada":
+            statusBgColor = "bg-violet-200"
+            statusTextColor = "text-violet-800"
+            break;
         case "finalizada":
             statusBgColor = "bg-slate-200"
             statusTextColor = "text-slate-800"

@@ -10,20 +10,9 @@ const NAVIGATION = [{
     name: "Inicio",
     href: "/inicio",
 }, {
-    name: "Noticias",
-    href: "https://municipalidadchonchi.cl/web/blog/"
-}, {
-    name: "Multimedia",
-    href: "https://municipalidadchonchi.cl/web/multimedia/"
-}, {
-    name: "Intranet",
-    href: "http://intranetchonchi.smc.cl/"
-}, {
-    name: "Contacto",
-    href: "https://municipalidadchonchi.cl/web/contacto/"
-}
-
-]
+    name: "Solicitudes",
+    href: "/solicitudes"
+}]
 
 const Navbar = () => {
 

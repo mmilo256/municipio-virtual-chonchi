@@ -18,6 +18,7 @@ const RequestDetailPT = () => {
     const [loading, setLoading] = useState(true)
     const [rejectModal, setRejectModal] = useState(false)
     const [confirmRejectModal, setConfirmRejectModal] = useState(false)
+    const [confirmApproveModal, setConfirmApproveModal] = useState(false)
     const [unsignedDoc, setUnsignedDoc] = useState(null)
     const [signedDoc, setSignedDoc] = useState(null)
 
@@ -95,6 +96,30 @@ const RequestDetailPT = () => {
         }
     }
 
+    const openApproveModal = () => {
+        setConfirmApproveModal(true)
+    }
+
+    // Enviar decreto firmado por correo electrónico
+    const sendSignedDoc = async () => {
+        const emails = [request.respuestas.orgEmail, request.respuestas.presidentEmail]
+        const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`
+        const attachments = {
+            filename: signedDoc?.nombre,
+            path: `${API_URL}/${signedDoc?.ruta}`
+        }
+        try {
+            await updateRequestStatus(request.id, "finalizada")
+            await sendEmail(emails, "Solicitud de permiso transitorio: APROBADA", renderTemplatePT(userName, modalInput, 'Solicitud aprobada', 'aprobado'), attachments)
+            alert("Se ha enviado el decreto")
+        } catch (error) {
+            console.log(error)
+            throw new Error(`Ha ocurrido un error: ${error.message}`);
+        }
+        setStatus("finalizada")
+        setConfirmApproveModal(false)
+    }
+
     // Confirmar rechazo de solicitud
     const confirmReject = async () => {
         if (modalInput.trim().length > 3) {
@@ -122,10 +147,21 @@ const RequestDetailPT = () => {
     return (
         <div>
             <Modal
+                title="Enviar decreto al solicitante"
+                modal={confirmApproveModal}
+                setModal={setConfirmApproveModal}
+                onClick={sendSignedDoc}
+                btnText="Enviar decreto"
+            >
+                <p>Se notificará al usuario por correo electrónico la aprobación de su solicitud y se adjuntará el decreto firmado.</p>
+                <p>¿Seguro que desea enviar el decreto?</p>
+            </Modal>
+            <Modal
                 title="Rechazar solicitud"
                 modal={confirmRejectModal}
                 setModal={setConfirmRejectModal}
                 onClick={confirmReject}
+                btnText="Rechazar solicitud"
             >
                 <p>Se notificará al usuario por correo electrónico el motivo del rechazo</p>
                 <p>¿Seguro que desea rechazar esta solicitud?</p>
@@ -135,6 +171,7 @@ const RequestDetailPT = () => {
                 modal={rejectModal}
                 setModal={setRejectModal}
                 onClick={openConfirmModal}
+                btnText="Rechazar solicitud"
             >
                 <p className="mb-1">Escriba el motivo por el cual rechaza la solicitud</p>
                 <textarea value={modalInput} onChange={(e) => { setModalInput(e.target.value) }} className="p-1 border border-slate-600 rounded w-full resize-none" />
@@ -155,7 +192,7 @@ const RequestDetailPT = () => {
             {status === "firmada" && <div className="flex items-center gap-4 my-4">
                 <button onClick={handlePreviewUnsignedDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto sin firma</button>
                 <button onClick={handlePreviewSignedDoc} className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded">Descargar decreto firmado</button>
-                <button onClick={handlePreviewSignedDoc} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Enviar decreto</button>
+                <button onClick={openApproveModal} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Enviar decreto</button>
             </div>}
             <div className="mt-4">
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>

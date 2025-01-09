@@ -9,7 +9,8 @@ const Document = sequelize.define('documentos', {
     },
     numero: DataTypes.INTEGER,
     ruta: DataTypes.STRING,
-    estado: DataTypes.ENUM("sin firmar", "firmado")
+    estado: DataTypes.ENUM("sin firmar", "firmado"),
+    nombre: DataTypes.STRING
 })
 
 export default Document

@@ -7,8 +7,9 @@ import Request from "../../models/requestModel.js"
 export const uploadSignedDocument = async (req, res) => {
     const { id } = req.params
     const file = req.file
+    console.log(file)
     // Guardar decreto en base de datos
-    await Document.create({ ruta: file.path, estado: "firmado", solicitud_id: id })
+    await Document.create({ ruta: file.path, nombre: file.filename, estado: "firmado", solicitud_id: id })
     res.send(file)
 }
 

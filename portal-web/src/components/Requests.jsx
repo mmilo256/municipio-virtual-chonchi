@@ -15,11 +15,10 @@ const Requests = () => {
     const [requests, setRequests] = useState([])
     const [loading, setLoading] = useState(true)
 
-    console.log(requests)
-
     useEffect(() => {
         (async () => {
             const data = await fetchRequestsByRut(rut)
+            console.log(data)
             const formattedData = data.solicitudes.map((solicitud) => ({
                 id: solicitud.id,
                 tramite: solicitud.tramite.titulo,

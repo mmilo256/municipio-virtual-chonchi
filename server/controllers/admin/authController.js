@@ -10,7 +10,6 @@ export const logout = async (req, res) => {
     })
     res.send("Se ha cerrado la sesión")
 }
-
 // Iniciar sesión
 export const login = async (req, res) => {
     const { username, password } = req.body

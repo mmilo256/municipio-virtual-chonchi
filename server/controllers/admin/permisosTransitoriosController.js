@@ -2,6 +2,7 @@ import { generarDecretoPT } from "../../utils/generarDecretoPT.js"
 import { formatDate } from "../../utils/utils.js"
 import Document from "../../models/documentModel.js"
 import Request from "../../models/requestModel.js"
+import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
 
 // Subir documento firmado
 export const uploadSignedDocument = async (req, res) => {
@@ -53,6 +54,7 @@ export const approveRequestPT = async (req, res) => {
 
         // Cambiar estado de solicitud a aprobada
         await Request.update({ estado: "aprobada" }, { where: { id } })
+        await RequestsStatusLog.create({ solicitud_id: id, estado: 'aprobada' })
         res.status(200).json({ message: "Decreto generado exitosamente" })
     } catch (error) {
         console.log(error)

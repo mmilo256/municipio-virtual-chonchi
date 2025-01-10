@@ -1,5 +1,5 @@
-import Input from "../../Models/inputModel.js";
-import Procedure from "../../Models/procedureModel.js";
+import Input from "../../models/inputModel.js";
+import Procedure from "../../models/procedureModel.js";
 import logger from "../winston.js";
 import defineAssociations from "./associations.js";
 import { sequelize } from "./config.js";

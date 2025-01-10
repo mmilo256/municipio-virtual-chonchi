@@ -194,6 +194,10 @@ const RequestDetailPT = () => {
                 <button onClick={handlePreviewSignedDoc} className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded">Descargar decreto firmado</button>
                 <button onClick={openApproveModal} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Enviar decreto</button>
             </div>}
+            {status === "finalizada" && <div className="flex items-center gap-4 my-4">
+                <button onClick={handlePreviewUnsignedDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto sin firma</button>
+                <button onClick={handlePreviewSignedDoc} className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded">Descargar decreto firmado</button>
+            </div>}
             <div className="mt-4">
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>
                 <div className=" bg-[#fff] p-4 shadow rounded">

@@ -21,14 +21,14 @@ const RequestTracking = () => {
             case "en revision":
                 message = "Su solicitud está siendo revisada por un funcionario."
                 break;
-            case "aprobada":
-                message = "Su solicitud ha sido aprobada y está lista para ser firmada."
+            case "por firmar":
+                message = "Se generó su decreto y está pendiente de firma"
                 break;
             case "rechazada":
                 message = "Su solicitud ha sido rechazada. Por favor, revise los motivos del rechazo."
                 break;
-            case "firmada":
-                message = "Su solicitud ha sido firmada por el funcionario correspondiente."
+            case "aprobada":
+                message = "Su solicitud ha sido aprobada y su decreto será enviado a la brevedad"
                 break;
             case "finalizada":
                 message = "Su solicitud ha sido completada y finalizada correctamente."

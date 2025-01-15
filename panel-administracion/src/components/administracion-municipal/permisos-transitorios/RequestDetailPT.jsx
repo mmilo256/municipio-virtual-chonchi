@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import Accordion from "../ui/Accordion";
-import { fetchRequestById, updateRequestStatus } from "../../services/requestsServices";
-import { fetchFinalDocument } from "../../services/permisosTransitoriosServices";
+import Accordion from "../../ui/Accordion";
+import { fetchRequestById, updateRequestStatus } from "../../../services/requestsServices";
+import { fetchFinalDocument } from "../../../services/permisosTransitoriosServices";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { formatDate } from "../../utils/format";
-import { API_URL } from "../../constants/constants";
-import Modal from "../ui/Modal";
-import StatusTag from "../ui/StatusTag";
-import { sendEmail } from "../../services/emailServices";
-import { renderTemplatePT } from "../../email-templates/permisosTransitorios";
+import { formatDate } from "../../../utils/format";
+import { API_URL } from "../../../constants/constants";
+import Modal from "../../ui/Modal";
+import StatusTag from "../../ui/StatusTag";
+import { sendEmail } from "../../../services/emailServices";
+import { renderTemplatePT } from "../../../email-templates/permisosTransitorios";
 const RequestDetailPT = () => {
 
     const { id } = useParams()
@@ -183,13 +183,14 @@ const RequestDetailPT = () => {
             <p className="text-slate-500"><strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}</p>
             {(status === "pendiente" || status === "en revision") && <div className="flex items-center gap-4 my-4">
                 <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
-                <button onClick={approveRequest} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Procesar solicitud</button>
+                <button onClick={approveRequest} className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded">Generar decreto</button>
             </div>}
-            {status === "aprobada" && <div className="flex items-center gap-4 my-4">
+            {status === "por firmar" && <div className="flex items-center gap-4 my-4">
+                <button onClick={handleRejectRequest} className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded">Rechazar solicitud</button>
                 <button onClick={handlePreviewUnsignedDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto</button>
                 <Link to="subir-decreto-firmado" className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded">Subir decreto firmado</Link>
             </div>}
-            {status === "firmada" && <div className="flex items-center gap-4 my-4">
+            {status === "aprobada" && <div className="flex items-center gap-4 my-4">
                 <button onClick={handlePreviewUnsignedDoc} className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded">Descargar decreto sin firma</button>
                 <button onClick={handlePreviewSignedDoc} className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded">Descargar decreto firmado</button>
                 <button onClick={openApproveModal} className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded">Enviar decreto</button>

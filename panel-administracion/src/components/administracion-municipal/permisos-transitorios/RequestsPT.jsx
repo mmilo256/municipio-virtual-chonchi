@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import RequestsTablePT from "./RequestsTablePT"
-import { fetchRequestsByProcedure } from "../../services/requestsServices"
-import { PROCEDURES_ID } from "../../constants/constants"
+import { fetchRequestsByProcedure } from "../../../services/requestsServices"
+import { PROCEDURES_ID } from "../../../constants/constants"
 
 const RequestsPT = () => {
 

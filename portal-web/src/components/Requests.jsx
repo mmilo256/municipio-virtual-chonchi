@@ -18,7 +18,6 @@ const Requests = () => {
     useEffect(() => {
         (async () => {
             const data = await fetchRequestsByRut(rut)
-            console.log(data)
             const formattedData = data.solicitudes.map((solicitud) => ({
                 id: solicitud.id,
                 tramite: solicitud.tramite.titulo,
@@ -26,6 +25,7 @@ const Requests = () => {
                 estado: <StatusTag status={solicitud.estado} />,
                 acciones: <Link to={`${solicitud.id}`} className="text-blue-500 underline">Seguimiento</Link>
             }))
+            formattedData.sort((a, b) => b.id - a.id)
             setRequests(formattedData)
             setLoading(false)
         })()

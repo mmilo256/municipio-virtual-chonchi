@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import Upload from '../ui/Upload'
+import Upload from '../../ui/Upload'
 import { useState } from 'react'
-import { uploadSignedDocument } from '../../services/permisosTransitoriosServices'
-import { updateRequestStatus } from '../../services/requestsServices'
-import Button from '../ui/Button'
+import { uploadSignedDocument } from '../../../services/permisosTransitoriosServices'
+import { updateRequestStatus } from '../../../services/requestsServices'
+import Button from '../../ui/Button'
 
 const SubirDecretoFirmado = () => {
 
@@ -20,7 +20,7 @@ const SubirDecretoFirmado = () => {
             data.append('signedDoc', signedDoc)
             try {
                 await uploadSignedDocument(id, data)
-                await updateRequestStatus(id, 'firmada')
+                await updateRequestStatus(id, 'aprobada')
                 alert("Archivo subido correctamente")
                 navigate(`../${id}`)
             } catch (error) {

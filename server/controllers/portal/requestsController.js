@@ -27,7 +27,6 @@ export const getAllRequestsByRut = async (req, res) => {
                 {
                     model: Request,
                     attributes: ['id', 'estado', 'createdAt'],
-                    order: [['createdAt', 'DESC']],
                     include: [{
                         model: Procedure,
                         attributes: ['id', 'nombre', 'titulo']

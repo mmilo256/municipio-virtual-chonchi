@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom"
-import BaseTable from "../ui/BaseTable"
-import StatusTag from '../ui/StatusTag'
-import { formatDate } from "../../utils/format"
-import { updateRequestStatus } from "../../services/requestsServices"
+import BaseTable from "../../ui/BaseTable"
+import StatusTag from '../../ui/StatusTag'
+import { formatDate } from "../../../utils/format"
+import { updateRequestStatus } from "../../../services/requestsServices"
 const RequestsTablePT = ({ data }) => {
 
     const navigate = useNavigate()

@@ -1,6 +1,6 @@
 import e from "express";
 import { getAllRequestsByProcedure, getRequestById, updateRequestStatus } from "../../controllers/admin/requestsController.js";
-import { approveRequestPT, getFinalDocument, uploadSignedDocument } from "../../controllers/admin/permisosTransitoriosController.js";
+import { approveRequestPT, getFinalDocument, uploadSignedDocument } from "../../controllers/admin/administracion-municipal/permisosTransitoriosController.js";
 import { setUpload } from "../../config/multer.js";
 
 const uploadPermisosTransitorios = setUpload('decretos/permisos-transitorios')

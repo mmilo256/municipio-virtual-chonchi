@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import Input from "../ui/Input"
-import Button from "../ui/Button"
+import Input from "../../ui/Input"
+import Button from "../../ui/Button"
 import { useState } from "react"
-import { approveRequestPT } from "../../services/permisosTransitoriosServices"
+import { approveRequestPT } from "../../../services/permisosTransitoriosServices"
 
 const FormDecreto = () => {
 

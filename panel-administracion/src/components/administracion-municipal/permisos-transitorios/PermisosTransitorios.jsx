@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom"
 import RequestsPT from "./RequestsPT"
-import RequestDetailPT from "./RequestDetailPT"
 import FormDecreto from "./FormDecreto"
 import SubirDecretoFirmado from "./SubirDecretoFirmado"
 import DetallesSolicitud from "../../ui/DetallesSolicitud"

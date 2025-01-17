@@ -1,13 +1,9 @@
 import Button from "./Button"
 
-const Modal = ({ children, title, btnText, modal, setModal, onClick }) => {
+const Modal = ({ children, title, btnText, modal, toggleModal, onClick }) => {
 
     if (!modal) {
         return null
-    }
-
-    const handleClose = () => {
-        setModal(false)
     }
 
     return (
@@ -16,7 +12,7 @@ const Modal = ({ children, title, btnText, modal, setModal, onClick }) => {
             <div className="bg-[#fff] p-4 mx-auto rounded">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl">{title}</h2>
-                    <button onClick={handleClose} className="text-2xl">&times;</button>
+                    <button onClick={toggleModal} className="text-2xl">&times;</button>
                 </div>
 
                 <div className="py-6 border-t">
@@ -24,7 +20,7 @@ const Modal = ({ children, title, btnText, modal, setModal, onClick }) => {
                 </div>
 
                 <div className="flex justify-end gap-4 mt-4">
-                    <Button onClick={() => { setModal(false) }} variant="tertiary" text="Cancelar" />
+                    <Button onClick={toggleModal} variant="tertiary" text="Cancelar" />
                     <Button onClick={onClick} variant="secondary" text={btnText} />
                 </div>
             </div>

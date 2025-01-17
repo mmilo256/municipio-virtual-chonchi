@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import useFormsStore from "../../stores/useFormsStore"
-import Form from "../ui/Form"
+import Form from "../ui/forms/Form"
 // import { sendRequest } from "../../services/requestsServices"
 // import { PROCEDURES_ID } from "../../constants/constants"
 import { fetchUserId } from "../../services/userServices"
 import AntecedentesPermisosTransitorios from "./AntecedentesPermisosTransitorios"
-import ConfirmarFormularioPT from "./ConfirmarFormularioPT"
+import ConfirmarFormularioPT from "../ui/forms/ConfirmarFormularioPT"
+import DatosSolicitante from "../ui/forms/DatosSolicitante"
 // import usePermisosTransitoriosStore from "../../stores/usePermisosTransitoriosStore"
 
 /* 
@@ -18,7 +19,7 @@ PASOS
 5. Confirmación de los datos
 */
 const FIRST_STEP = 1
-const LAST_STEP = 5
+const LAST_STEP = 6
 const TITLE = "Solicitud de Autorización Especial Transitoria"
 
 const FormularioPermisosTransitorios = () => {
@@ -26,8 +27,6 @@ const FormularioPermisosTransitorios = () => {
     const inputs = useFormsStore(state => state.inputs)
 
     // Respuestas formulario
-    /* const formData = usePermisosTransitoriosStore(state => state.formData)
-    const setFormData = usePermisosTransitoriosStore(state => state.setFormData) */
     const [formData, setFormData] = useState({})
 
     // ID del usuario
@@ -53,6 +52,7 @@ const FormularioPermisosTransitorios = () => {
 
     const nextStep = (data) => {
         setFormData(prev => ({ ...prev, ...data }))
+        console.log(formData)
         if (step < LAST_STEP) {
             setStep(prev => prev + 1)
         }
@@ -73,19 +73,18 @@ const FormularioPermisosTransitorios = () => {
     const inputsPermissionData = inputs.slice(12, 22)
 
     if (step === 1) {
-        return <Form
+        return <DatosSolicitante
             title={TITLE}
-            stepTitle="1. Datos de la organización"
-            inputs={inputsOrgData}
             onClickNext={nextStep}
             onClickPrev={prevStep}
         />
     }
+
     if (step === 2) {
         return <Form
             title={TITLE}
-            stepTitle="2. Datos del representante legal"
-            inputs={inputsPresidentData}
+            stepTitle="2. Datos de la organización"
+            inputs={inputsOrgData}
             onClickNext={nextStep}
             onClickPrev={prevStep}
         />
@@ -93,21 +92,30 @@ const FormularioPermisosTransitorios = () => {
     if (step === 3) {
         return <Form
             title={TITLE}
-            stepTitle="3. Detalles del permiso"
-            inputs={inputsPermissionData}
+            stepTitle="3. Datos del representante legal"
+            inputs={inputsPresidentData}
             onClickNext={nextStep}
             onClickPrev={prevStep}
         />
     }
     if (step === 4) {
-        return <AntecedentesPermisosTransitorios
+        return <Form
             title={TITLE}
-            stepTitle="4. Antecedentes"
+            stepTitle="4. Detalles del permiso"
+            inputs={inputsPermissionData}
             onClickNext={nextStep}
             onClickPrev={prevStep}
         />
     }
     if (step === 5) {
+        return <AntecedentesPermisosTransitorios
+            title={TITLE}
+            stepTitle="5. Antecedentes"
+            onClickNext={nextStep}
+            onClickPrev={prevStep}
+        />
+    }
+    if (step === 6) {
         return <ConfirmarFormularioPT
             title={TITLE}
             stepTitle="Confirmar formulario"

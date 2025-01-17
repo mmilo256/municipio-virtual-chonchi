@@ -1,16 +1,22 @@
-import { PROCEDURES_ID } from "../../constants/constants"  // Importa el ID del procedimiento desde las constantes
-import { sendRequest } from "../../services/requestsServices"  // Función para enviar la solicitud al backend
-import { formatDate } from "../../utils/utils"  // Función para formatear las fechas
-import Accordion from "../ui/Accordion"  // Componente para mostrar secciones desplegables
-import Button from "../ui/buttons/Button"  // Componente de botón
-import Container from "../ui/Container"  // Componente contenedor para el diseño
-import Heading from "../ui/Heading"  // Componente para títulos
+import { PROCEDURES_ID } from "../../../constants/constants"  // Importa el ID del procedimiento desde las constantes
+import { sendRequest } from "../../../services/requestsServices"  // Función para enviar la solicitud al backend
+import { formatDate } from "../../../utils/utils"  // Función para formatear las fechas
+import Accordion from "../Accordion"  // Componente para mostrar secciones desplegables
+import Button from "../buttons/Button"  // Componente de botón
+import Container from "../Container"  // Componente contenedor para el diseño
+import Heading from "../Heading"  // Componente para títulos
 import { useState } from "react"  // Importa el hook useState de React para gestionar el estado
-import FormCompleted from "../FormCompleted"  // Componente que muestra el mensaje de éxito al enviar la solicitud
+import FormCompleted from "./FormCompleted"  // Componente que muestra el mensaje de éxito al enviar la solicitud
 
 const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) => {
 
     const [sendedRequest, setSendedRequest] = useState(false)  // Estado para verificar si la solicitud ha sido enviada
+
+    // Datos del solicitante
+    const solicitanteData = {
+        solicitanteEmail: data.emailSolicitante,
+        solicitantePhone: data.telefonoSolicitante
+    }
 
     // Estructura para almacenar los datos de la organización
     const organizationData = {
@@ -55,6 +61,7 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
     const handleSubmit = async () => {
         const data = {
             respuestas: {
+                ...solicitanteData,
                 ...organizationData,
                 ...presidentData,
                 ...permissionData
@@ -86,7 +93,13 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
             <Heading align="left" level={3}>{stepTitle}</Heading>
             <div className="mt-4">
                 {/* Acordeones para mostrar los datos organizados */}
-                <Accordion title="1. Datos de la organización">
+                <Accordion title="1. Datos del solicitante">
+                    <div className="grid grid-cols-2 pl-8">
+                        <p><strong>Correo electrónico:</strong> {solicitanteData.solicitanteEmail}</p>
+                        <p><strong>Teléfono:</strong> {solicitanteData.solicitantePhone}</p>
+                    </div>
+                </Accordion>
+                <Accordion title="2. Datos de la organización">
                     <div className="grid grid-cols-2 pl-8">
                         <p><strong>Nombre o razón social:</strong> {organizationData.orgName}</p>
                         <p><strong>RUT de la organización:</strong> {organizationData.orgRut}</p>
@@ -96,7 +109,7 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
                         <p><strong>Tipo de organización:</strong> {organizationData.orgType}</p>
                     </div>
                 </Accordion>
-                <Accordion title="2. Datos del representante legal">
+                <Accordion title="3. Datos del representante legal">
                     <div className="grid grid-cols-2 pl-8">
                         <p><strong>Nombre Completo:</strong> {presidentData.presidentName}</p>
                         <p><strong>RUT:</strong> {presidentData.presidentRut}</p>
@@ -106,7 +119,7 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
                         <p><strong>Teléfono 2:</strong> {presidentData.presidentPhone2 || "No indica"}</p>
                     </div>
                 </Accordion>
-                <Accordion title="3. Detalles del permiso">
+                <Accordion title="4. Detalles del permiso">
                     <div className="grid grid-cols-2 pl-8">
                         <p><strong>Nombre de la actividad:</strong> {permissionData.permissionName}</p>
                         <p><strong>Lugar de realización:</strong> {permissionData.permissionPlace}</p>
@@ -118,7 +131,7 @@ const ConfirmarFormularioPT = ({ data, title, stepTitle, userId, onClickPrev }) 
                         <p><strong>Destino de los fondos:</strong> {permissionData.permissionPurpose}</p>
                     </div>
                 </Accordion>
-                <Accordion title="4. Antecedentes">
+                <Accordion title="5. Antecedentes">
                     <ul className="list-disc list-inside pl-8 text-blue-700 underline">
                         {/* Lista de documentos cargados por el usuario */}
                         {docsData.docCI && <li><a target="_blank" href={URL.createObjectURL(docsData.docCI)}>Cédula de identidad del representante legal</a></li>}

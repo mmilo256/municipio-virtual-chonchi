@@ -1,34 +1,42 @@
-import { updateRequestStatus } from "../../../services/requestsServices";
+import { useState } from "react";
+import { updateRequestStatus } from "../../services/requestsServices";
 import { useNavigate, useParams } from "react-router-dom";
-import { formatDate } from "../../../utils/format";
-import { API_URL } from "../../../constants/constants";
-import StatusTag from "../../ui/StatusTag";
-import { sendEmail } from "../../../services/emailServices";
-import { renderTemplatePT } from "../../../email-templates/permisosTransitorios";
-import DatosSolicitudPT from "./DatosSolicitudPT";
-import ModalesSolicitudPT from "./ModalesSolicitudPT";
-import useRequestDetails from "../../../hooks/useRequestDetails";
-import AccionesSolicitud from "./AccionesSolicitud";
-import useModals from "../../../hooks/useModals";
+import { formatDate } from "../../utils/format";
+import { API_URL } from "../../constants/constants";
+import StatusTag from "./StatusTag";
+import { sendEmail } from "../../services/emailServices";
+import { renderTemplatePT } from "../../email-templates/permisosTransitorios";
+import ModalesSolicitudPT from "../administracion-municipal/permisos-transitorios/ModalesSolicitudPT";
+import useRequestDetails from "../../hooks/useRequestDetails";
+import AccionesSolicitud from "../administracion-municipal/permisos-transitorios/AccionesSolicitud";
 
-const RequestDetailPT = () => {
+const DetallesSolicitud = () => {
 
     const { id } = useParams()
     const navigate = useNavigate()
 
     const { request, status, unsignedDoc, signedDoc, loading, setStatus } = useRequestDetails(id)
 
-    const {
-        rejectModal,
-        confirmRejectModal,
-        confirmApproveModal,
-        modalInput,
-        setModalInput,
-        openRejectModal,
-        closeRejectModal,
-        openConfirmRejectModal,
-        setConfirmApproveModal,
-    } = useModals
+    const [rejectModal, setRejectModal] = useState(false)
+    const [confirmRejectModal, setConfirmRejectModal] = useState(false)
+    const [confirmApproveModal, setConfirmApproveModal] = useState(false)
+
+    const [modalInput, setModalInput] = useState("")
+
+    // Abrir modal para rechazar solicitud de permiso
+    const handleRejectRequest = () => {
+        setRejectModal(true)
+    }
+
+    // Abrir modal de confirmación
+    const openConfirmModal = () => {
+        if (modalInput.trim().length > 3) {
+            setRejectModal(false)
+            setConfirmRejectModal(true)
+        } else {
+            alert("Debe ingresar un motivo para rechazar la solicitud")
+        }
+    }
 
     const openApproveModal = () => {
         setConfirmApproveModal(true)
@@ -96,7 +104,7 @@ const RequestDetailPT = () => {
                 throw new Error(`Ha ocurrido un error: ${error.message}`);
             }
             setStatus("rechazada")
-            closeRejectModal()
+            setConfirmRejectModal(false)
         } else {
             alert("Debe ingresar un motivo para rechazar la solicitud")
         }
@@ -115,8 +123,8 @@ const RequestDetailPT = () => {
                 confirmRejectModal={confirmRejectModal}
                 confirmReject={confirmReject}
                 rejectModal={rejectModal}
-                setRejectModal={closeRejectModal}
-                openConfirmModal={openConfirmRejectModal}
+                setRejectModal={setRejectModal}
+                openConfirmModal={openConfirmModal}
                 modalInput={modalInput}
                 setModalInput={setModalInput}
             />
@@ -127,7 +135,7 @@ const RequestDetailPT = () => {
             <p className="text-slate-500"><strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}</p>
             <AccionesSolicitud
                 status={status}
-                handleRejectRequest={openRejectModal}
+                handleRejectRequest={handleRejectRequest}
                 approveRequest={approveRequest}
                 handlePreviewUnsignedDoc={handlePreviewUnsignedDoc}
                 handlePreviewSignedDoc={handlePreviewSignedDoc}
@@ -144,10 +152,9 @@ const RequestDetailPT = () => {
             </div>
             <div className="mt-4">
                 <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
-                <DatosSolicitudPT request={request} loading={loading} />
             </div>
         </div>
     )
 }
 
-export default RequestDetailPT
+export default DetallesSolicitud

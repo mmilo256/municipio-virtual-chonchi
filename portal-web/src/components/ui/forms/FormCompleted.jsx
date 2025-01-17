@@ -1,6 +1,6 @@
-import Button from "./ui/buttons/Button"
-import Container from "./ui/Container"
-import Heading from "./ui/Heading"
+import Button from "../buttons/Button"
+import Container from "../Container"
+import Heading from "../Heading"
 
 const FormCompleted = ({ text }) => {
     return (

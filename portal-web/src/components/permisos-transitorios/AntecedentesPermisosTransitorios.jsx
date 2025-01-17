@@ -48,7 +48,7 @@ const AntecedentesPermisosTransitorios = ({ title, stepTitle, onClickNext, onCli
     }
 
     return (
-        <Container>
+        <Container className="max-w-[40rem]">
             {/* Títulos para la sección */}
             <Heading level={2} align="left">{title}</Heading>
             <Heading align="left" level={3}>{stepTitle}</Heading>

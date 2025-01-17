@@ -1,7 +1,7 @@
 import { setInputOptions } from "../../data/inputOptions";
 
 // Define estilos comunes para todos los tipos de entrada
-const INPUT_STYLES = 'border border-slate-400 p-1 w-full focus:outline-blue-400'
+const INPUT_STYLES = 'border border-slate-400 rounded disabled:text-slate-600 p-1 w-full focus:outline-blue-400'
 
 const Input = ({
     register,
@@ -16,7 +16,9 @@ const Input = ({
     required,
     className,
     error,
-    setValue
+    setValue,
+    defaultValue,
+    value
 }) => {
 
     // Obtener fecha actual para establecerla como atributo min a los inputs date
@@ -91,6 +93,7 @@ const Input = ({
                 {...register(name, setInputOptions(required, min, type, setValue, name))}
                 name={name}
                 disabled={disabled}
+                value={value}
                 className={`${INPUT_STYLES} ${className}`}
                 type="date"
                 min={today}
@@ -102,6 +105,7 @@ const Input = ({
                 {...register(name, setInputOptions(required, min, type, setValue, name))}
                 name={name}
                 minLength={min}
+                defaultValue={defaultValue}
                 maxLength={max}
                 disabled={disabled}
                 placeholder={placeholder}

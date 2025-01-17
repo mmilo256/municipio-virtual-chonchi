@@ -1,7 +1,7 @@
-import Container from "./Container"
-import Heading from "./Heading"
-import Input from "./Input"
-import Button from "./buttons/Button"
+import Container from "../Container"
+import Heading from "../Heading"
+import Input from "../Input"
+import Button from "../buttons/Button"
 import { useForm } from 'react-hook-form'
 
 const Form = ({
@@ -10,6 +10,7 @@ const Form = ({
     stepTitle,
     onClickPrev,
     onClickNext,
+    twoCols
 }) => {
 
     // ESTADOS
@@ -21,11 +22,11 @@ const Form = ({
     })
 
     return (
-        <Container>
+        <Container className="max-w-[30rem]">
             <Heading level={2} align="left">{title}</Heading>
             <Heading align="left" level={3}>{stepTitle}</Heading>
             <form onSubmit={onSubmit} name="permisos-transitorios-form">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-6">
+                <div className={`grid grid-cols-1 ${twoCols && "md:grid-cols-2"} gap-6`}>
                     {inputs.map(input => {
                         return (
                             <Input

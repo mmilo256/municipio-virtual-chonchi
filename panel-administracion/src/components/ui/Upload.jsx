@@ -29,7 +29,7 @@ const Upload = ({ label, files, setFiles, name }) => {
     } */
 
     return (
-        <>
+        <div>
             {/* Etiqueta del componente */}
             <label className="block mb-2">{label}</label>
             {/* Botón que simula el clic en el input de archivo */}
@@ -49,7 +49,7 @@ const Upload = ({ label, files, setFiles, name }) => {
                 </li>}
 
             </ul>
-        </>
+        </div>
     )
 }
 

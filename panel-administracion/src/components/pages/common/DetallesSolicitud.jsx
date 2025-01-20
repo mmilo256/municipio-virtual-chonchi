@@ -1,16 +1,17 @@
 // Importaciones necesarias para el componente
-import { updateRequestStatus } from "../../services/requestsServices"; // Servicio para actualizar el estado de la solicitud
+import { updateRequestStatus } from "../../../services/requestsServices"; // Servicio para actualizar el estado de la solicitud
 import { useNavigate, useParams } from "react-router-dom"; // Hooks de React Router para navegación y parámetros de URL
-import { formatDate } from "../../utils/format"; // Función para formatear fechas
-import { API_URL } from "../../constants/constants"; // URL base de la API
-import StatusTag from "./StatusTag"; // Componente para mostrar el estado de la solicitud
-import { sendEmail } from "../../services/emailServices"; // Servicio para enviar correos electrónicos
-import { renderTemplatePT } from "../../email-templates/permisosTransitorios"; // Plantilla para correos de permisos transitorios
-import ModalesSolicitudPT from "../administracion-municipal/permisos-transitorios/ModalesSolicitudPT"; // Componentes modales específicos de la solicitud
-import useRequestDetails from "../../hooks/useRequestDetails"; // Hook para obtener detalles de la solicitud
-import useModals from "../../hooks/useModals"; // Hook para gestionar estados de los modales
-import AccionesSolicitud from "../administracion-municipal/permisos-transitorios/AccionesSolicitud"; // Componente con las acciones disponibles para la solicitud
-import DatosSolicitudPT from "../administracion-municipal/permisos-transitorios/DatosSolicitudPT"; // Componente para mostrar los datos de la solicitud
+import { formatDate } from "../../../utils/format"; // Función para formatear fechas
+import { API_URL } from "../../../constants/constants"; // URL base de la API
+import StatusTag from "../../ui/StatusTag"; // Componente para mostrar el estado de la solicitud
+import { sendEmail } from "../../../services/emailServices"; // Servicio para enviar correos electrónicos
+import { renderTemplatePT } from "../../../email-templates/permisosTransitorios"; // Plantilla para correos de permisos transitorios
+import ModalesSolicitudPT from "../../administracion-municipal/permisos-transitorios/ModalesSolicitudPT"; // Componentes modales específicos de la solicitud
+import useRequestDetails from "../../../hooks/useRequestDetails"; // Hook para obtener detalles de la solicitud
+import useModals from "../../../hooks/useModals"; // Hook para gestionar estados de los modales
+import AccionesSolicitud from "../../administracion-municipal/permisos-transitorios/AccionesSolicitud"; // Componente con las acciones disponibles para la solicitud
+import DatosSolicitudPT from "../../administracion-municipal/permisos-transitorios/DatosSolicitudPT"; // Componente para mostrar los datos de la solicitud
+import TablaDocumentos from "../../common/TablaDocumentos";
 
 // Componente principal que muestra los detalles de una solicitud
 const DetallesSolicitud = () => {
@@ -176,6 +177,7 @@ const DetallesSolicitud = () => {
             <div className="mt-4">
                 <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
                 <DatosSolicitudPT request={request} loading={loading} />
+                <TablaDocumentos />
             </div>
         </div>
     );

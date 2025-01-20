@@ -3,5 +3,5 @@
 // export const API_URL = "https://municipio-virtual.onrender.com"
 export const API_URL = "http://localhost:10000"
 export const PROCEDURES_ID = {
-    permisosTrasitorios: 1
+    permisosTransitorios: 1
 }

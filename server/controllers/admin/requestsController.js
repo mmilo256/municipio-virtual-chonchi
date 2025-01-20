@@ -5,6 +5,14 @@ import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
 import User from "../../models/userModel.js"
 
 
+// Subir documento asociado
+export const subirDocumentoAsociado = async (req, res) => {
+    const { id } = req.params
+    const tipo = "subido"
+    const file = req.file
+    res.status(200).json(file)
+}
+
 // Actualizar el estado de una solicitud
 export const updateRequestStatus = async (req, res) => {
     const { id } = req.params // Obtiene el ID de la solicitud desde los parámetros de la URL

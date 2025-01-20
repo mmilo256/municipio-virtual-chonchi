@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom'
-import Home from './components/home/Home'
-import Login from './components/login/Login'
+import Home from './components/pages/Home'
+import Login from './components/pages/Login'
 import Layout from './components/layouts/Layout'
-import PermisosTransitorios from './components/administracion-municipal/permisos-transitorios/PermisosTransitorios'
-import Protected from './components/Protected'
+import RutasPermisosTransitorios from './components/routes/RutasPermisosTransitorios'
+import Protected from './components/common/Protected'
 import useAuthStore from './stores/useAuthStore'
 import { useEffect, useState } from 'react'
 
@@ -31,7 +31,7 @@ const App = () => {
         <Route path='login' element={<Login />} />
         <Route element={<Protected><Layout /></Protected>}>
           <Route index element={<Home />} />
-          <Route path='/permisos-transitorios/*' element={<PermisosTransitorios />} />
+          <Route path='/permisos-transitorios/*' element={<RutasPermisosTransitorios />} />
         </Route>
       </Routes>
     </div>

@@ -1,5 +1,5 @@
 import e from "express";
-import { getAllRequestsByProcedure, getRequestById, updateRequestStatus } from "../../controllers/admin/requestsController.js";
+import { getAllRequestsByProcedure, getRequestById, subirDocumentoAsociado, updateRequestStatus } from "../../controllers/admin/requestsController.js";
 import { approveRequestPT, getFinalDocument, uploadSignedDocument } from "../../controllers/admin/administracion-municipal/permisosTransitoriosController.js";
 import { setUpload } from "../../config/multer.js";
 
@@ -11,6 +11,7 @@ const router = e.Router()
 
 router.get("/", getAllRequestsByProcedure)
 router.get("/:id", getRequestById)
+router.post("/:id/documentoAsociado", subirDocumentoAsociado)
 router.patch("/:id/estado", updateRequestStatus)
 
 // Permisos transitorios

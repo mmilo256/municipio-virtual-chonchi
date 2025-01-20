@@ -11,7 +11,7 @@ export const uploadSignedDocument = async (req, res) => {
     console.log(file) // Imprime el archivo para fines de depuración
 
     // Guarda la información del decreto firmado en la base de datos
-    await Document.create({ ruta: file.path, nombre: file.filename, estado: "firmado", solicitud_id: id })
+    await Document.create({ ruta: file.path, nombre: file.filename, tipo: 'generado', estado: "firmado", solicitud_id: id })
     res.send(file) // Responde con el archivo subido
 }
 
@@ -53,13 +53,13 @@ export const approveRequestPT = async (req, res) => {
         const doc = generarDecretoPT(data)
 
         // Guarda el decreto en la base de datos con estado "sin firmar"
-        await Document.create({ ruta: doc.path, estado: "sin firmar", solicitud_id: id })
+        await Document.create({ ruta: doc.path, nombre: doc.filename, estado: "sin firmar", tipo: 'generado', solicitud_id: id })
 
         // Actualiza el estado de la solicitud a 'por firmar'
         await Request.update({ estado: "por firmar" }, { where: { id } })
         await RequestsStatusLog.create({ solicitud_id: id, estado: 'por firmar' }) // Registra el cambio de estado
 
-        res.status(200).json({ message: "Decreto generado exitosamente" }) // Responde con éxito
+        res.status(200).json({ message: "Decreto generado exitosamente", doc }) // Responde con éxito
     } catch (error) {
         console.log(error) // Imprime el error para fines de depuración
         throw new Error(`Ha ocurrido un error: ${error.message}`); // Lanza un error si algo falla

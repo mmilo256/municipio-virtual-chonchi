@@ -1,6 +1,6 @@
 //import Alert from "../ui/Alert"
-import HomeSection from "./HomeSection"
-import ProcedureButton from "./ProcedureButton"
+import HomeSection from "../home/HomeSection"
+import ProcedureButton from "../home/ProcedureButton"
 // import RecentActivity from "./RecentActivity"
 
 const Home = () => {

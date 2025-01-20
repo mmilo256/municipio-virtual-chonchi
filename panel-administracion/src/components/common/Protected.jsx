@@ -1,4 +1,4 @@
-import useAuthStore from "../stores/useAuthStore"
+import useAuthStore from "../../stores/useAuthStore"
 import { Navigate } from "react-router-dom"
 
 const Protected = ({ children }) => {

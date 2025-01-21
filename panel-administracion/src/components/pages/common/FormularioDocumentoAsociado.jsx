@@ -1,7 +1,13 @@
 import { useState } from "react"
 import FormLayout from "../../common/FormLayout"
+import { subirDocumentoAsociado } from "../../../services/requestsServices"
+import { useNavigate, useParams } from "react-router-dom"
 
 const FormDocumentoAsociado = () => {
+
+    const { id } = useParams()
+
+    const navigate = useNavigate()
 
     const [file, setFile] = useState({})
     const [filename, setFilename] = useState("")
@@ -18,9 +24,23 @@ const FormDocumentoAsociado = () => {
         setFile
     }]
 
+    const onSubmit = async () => {
+        const formData = new FormData()
+        formData.append('nombre', filename)
+        formData.append('docAsociado', file)
+        try {
+            await subirDocumentoAsociado(id, formData)
+            alert("Documento subido correctamente")
+            navigate(`../${id}`)
+        } catch (error) {
+            alert("No se ha podido subir el documento")
+            console.log(error)
+        }
+    }
+
     return (
         <div>
-            <FormLayout title="Subir documento asociado" inputs={inputs} />
+            <FormLayout uploadName="docAsociado" onSubmit={onSubmit} submitText="Subir documento" title="Subir documento asociado" inputs={inputs} />
         </div>
     )
 }

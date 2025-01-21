@@ -1,16 +1,65 @@
 import { sequelize } from "../../config/db/config.js"
+import Document from "../../models/documentModel.js"
 import Procedure from "../../models/procedureModel.js"
 import Request from "../../models/requestModel.js"
 import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
 import User from "../../models/userModel.js"
+import fs from 'fs/promises'
+import path from "path"
 
+// Borrar documento asociado
+export const borrarDocumentoAsociado = async (req, res) => {
+    const { docId } = req.params;
+    try {
+        // Buscar el documento en la base de datos
+        const doc = await Document.findByPk(docId);
+        // Verificar si el documento existe
+        if (!doc) {
+            return res.status(404).json({ message: "Documento no encontrado" });
+        }
+        // Convertir la ruta a absoluta
+        const rutaAbsoluta = path.resolve(doc.dataValues.ruta);
+        // Intentar borrar el archivo (si falla, se maneja el error pero no bloquea)
+        try {
+            await fs.unlink(rutaAbsoluta);
+        } catch (error) {
+            console.warn(`No se pudo borrar el archivo: ${error.message}`);
+        }
+        // Eliminar el registro de la base de datos
+        await doc.destroy();
+        // Responder al cliente
+        res.status(200).json({ message: "Documento eliminado" });
+    } catch (error) {
+        // Manejo genérico de errores
+        console.error(`Error al eliminar documento: ${error.message}`);
+        res.status(500).json({ message: `Error al eliminar el documento: ${error.message}` });
+    }
+};
+
+// Obtener todos los documentos asociados a una solicitud
+export const obtenerDocumentosAsociados = async (req, res) => {
+    const { id } = req.params
+    try {
+        const docs = await Document.findAll({ where: { solicitud_id: id, tipo: 'subido' } })
+        res.status(200).json(docs)
+    } catch (error) {
+        throw new Error(`Ha ocurrido un error: ${error.message}`)
+    }
+}
 
 // Subir documento asociado
 export const subirDocumentoAsociado = async (req, res) => {
     const { id } = req.params
+    const { nombre } = req.body
     const tipo = "subido"
     const file = req.file
-    res.status(200).json(file)
+    try {
+        const doc = await Document.create({ solicitud_id: id, nombre: nombre, ruta: file.path, tipo })
+        console.log(doc.dataValues)
+        res.status(200).json(doc.dataValues)
+    } catch (error) {
+        throw new Error(`Ha ocurrido un error: ${error.message}`)
+    }
 }
 
 // Actualizar el estado de una solicitud

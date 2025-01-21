@@ -28,6 +28,7 @@ export const __dirname = path.dirname(__filename);  // Obtener el directorio del
 // Se define que los archivos en 'uploads' y 'decretos/permisos-transitorios' se sirvan como archivos estáticos
 app.use('/uploads', e.static(path.join(__dirname, 'uploads')));
 app.use('/decretos/permisos-transitorios', e.static(path.join(__dirname, 'decretos/permisos-transitorios')));
+app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'documents/documentos-asociados')));
 
 // Inicializar base de datos (esto se realiza de forma asíncrona)
 await initializeDB();
@@ -56,7 +57,7 @@ app.use(cors({
         'https://accounts.claveunica.gob.cl/'
     ],
     credentials: true,  // Permitir el envío de cookies y credenciales en solicitudes
-    methods: ['GET', 'POST', 'OPTIONS', 'PATCH']  // Métodos HTTP permitidos
+    methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'DELETE']  // Métodos HTTP permitidos
 }));
 
 // Configuración del middleware de sesión

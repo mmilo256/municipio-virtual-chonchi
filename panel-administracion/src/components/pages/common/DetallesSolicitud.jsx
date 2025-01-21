@@ -177,7 +177,8 @@ const DetallesSolicitud = () => {
             <div className="mt-4">
                 <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
                 <DatosSolicitudPT request={request} loading={loading} />
-                <TablaDocumentos />
+                <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos asociados</h2>
+                <TablaDocumentos id={id} />
             </div>
         </div>
     );

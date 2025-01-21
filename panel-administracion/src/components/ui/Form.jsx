@@ -2,7 +2,7 @@ import Button from "./Button"
 import Input from "./Input"
 import Upload from "./Upload"
 
-const Form = ({ onSubmit, submitText, inputs, cols }) => {
+const Form = ({ onSubmit, submitText, inputs, cols, uploadName }) => {
     return (
 
         <form className="bg-[#fff] p-4 shadow rounded mb-4">
@@ -14,6 +14,7 @@ const Form = ({ onSubmit, submitText, inputs, cols }) => {
                             label={input.etiqueta}
                             files={input.file}
                             setFiles={input.setFile}
+                            name={uploadName}
                         />
                     } else {
                         return <Input
@@ -26,7 +27,7 @@ const Form = ({ onSubmit, submitText, inputs, cols }) => {
                     }
                 })}
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-4">
                 <Button variant="secondary" text={submitText} onClick={onSubmit} />
             </div>
         </form>

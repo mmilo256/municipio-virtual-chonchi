@@ -2,18 +2,16 @@ import axios from "axios"
 import { API_URL, HOME_URL, LOGOUT_URL } from "../constants/constants"
 
 // Función para verificar la validez del token de autenticación
-export const verifyToken = async () => {
+export const fetchSessionData = async () => {
     try {
         // Realiza una solicitud GET al endpoint '/portal/auth/protected' para verificar si el token es válido
         // La opción { withCredentials: true } permite enviar las cookies con la solicitud
-        const response = await axios.get(`${API_URL}/portal/auth/protected`, { withCredentials: true })
-
+        const response = await axios.get(`${API_URL}/portal/auth/session-data`, { withCredentials: true })
         // Si la solicitud es exitosa, devuelve los datos obtenidos (por ejemplo, el estado de autenticación)
         const data = response.data
         return data
     } catch (error) {
-        // Si ocurre un error (por ejemplo, token inválido), lanza una excepción con el mensaje del error
-        throw new Error(error)
+        throw error.response.data
     }
 }
 

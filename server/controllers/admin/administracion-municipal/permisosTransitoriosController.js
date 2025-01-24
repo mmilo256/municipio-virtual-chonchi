@@ -1,5 +1,5 @@
-import { generarDecretoPT } from "../../../utils/generarDecretoPT.js"
-import { formatDate } from "../../../utils/utils.js"
+import { generarDecretoPT } from "../../../utils/documents/generarDecretoPT.js"
+import { formatDate } from "../../../utils/format.js"
 import Document from "../../../models/documentModel.js"
 import Request from "../../../models/requestModel.js"
 import RequestsStatusLog from "../../../models/RequestsStatusLogModel.js"

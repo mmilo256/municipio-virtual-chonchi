@@ -6,16 +6,16 @@ import adminRequestsRouter from './routes/admin/requestsRoutes.js'  // Rutas par
 import portalUsersRouter from './routes/portal/usersRoutes.js'  // Rutas para usuarios del portal
 import adminEmailRouter from './routes/admin/emailRoutes.js'  // Rutas para emails del panel de administración
 import adminAuthRouter from './routes/admin/authRoutes.js'  // Rutas para autenticación del panel de administración
-import adminDocumentsRouter from './routes/admin/documentsRoutes.js'  // Rutas para documentos del panel de administración
 import session from "express-session";  // Middleware para sesiones
 import cors from 'cors';  // Middleware para configurar CORS
 import cookieParser from "cookie-parser";  // Middleware para parsear cookies
 import 'dotenv/config';  // Cargar variables de entorno
 import logger from "./config/winston.js";  // Logger para registrar logs
 import initializeDB from "./config/db/init.js";  // Inicializar la base de datos
-import { verifyAdminToken, verifyToken } from "./middlewares/authMIddleware.js";  // Middleware de autenticación
 import { fileURLToPath } from 'node:url';  // Utilidad para trabajar con rutas de archivos en módulos ES6
 import path from 'path';  // Utilidad para manipular rutas de archivos
+import { verifyAdminToken } from "./middlewares/admin/authMiddleware.js";
+// import { verifyToken } from "./middlewares/authMIddleware.js";
 
 const port = 10000;  // Definir puerto para el servidor
 const app = e();  // Crear la instancia de la aplicación Express
@@ -27,7 +27,7 @@ export const __dirname = path.dirname(__filename);  // Obtener el directorio del
 // Configuración para servir archivos estáticos
 // Se define que los archivos en 'uploads' y 'decretos/permisos-transitorios' se sirvan como archivos estáticos
 app.use('/uploads', e.static(path.join(__dirname, 'uploads')));
-app.use('/decretos/permisos-transitorios', e.static(path.join(__dirname, 'decretos/permisos-transitorios')));
+app.use('/documents/permisos-transitorios', e.static(path.join(__dirname, 'documents/permisos-transitorios')));
 app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'documents/documentos-asociados')));
 
 // Inicializar base de datos (esto se realiza de forma asíncrona)
@@ -75,15 +75,14 @@ app.use(session({
 // Rutas del portal web
 // Se definen las rutas para el portal con sus respectivos middleware de autenticación
 app.use('/portal/auth', portalAuthRouter);
-app.use("/portal/procedures", verifyToken, portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
+app.use("/portal/procedures", portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
 app.use("/portal/requests", portalRequestsRouter);
 app.use("/portal/users", portalUsersRouter);
 
 // Rutas del panel de administración
 // Se definen las rutas para el panel de administración con sus respectivos middleware de autenticación
 app.use("/admin/auth", adminAuthRouter);
-app.use("/admin/email", adminEmailRouter);
-app.use("/admin/documents", verifyAdminToken, adminDocumentsRouter);  // Ruta protegida por el middleware verifyAdminToken
+app.use("/admin/email", verifyAdminToken, adminEmailRouter);
 app.use("/admin/requests", verifyAdminToken, adminRequestsRouter);
 
 // Inicializar el servidor y escuchar en el puerto configurado

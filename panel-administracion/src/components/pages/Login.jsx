@@ -3,37 +3,35 @@ import bg from '../../assets/chonchi-aereo.jpg'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import { login } from '../../services/authServices'
+import { ToastContainer, toast } from 'react-toastify';
 import useAuthStore from '../../stores/useAuthStore'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 const Login = () => {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-
-    const [loading, setLoading] = useState(false)
-
-    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false)
 
     const isAuthenticated = useAuthStore(state => state.isAuthenticated)
-    const setAuth = useAuthStore(state => state.setAuth)
+    const loginUser = useAuthStore(state => state.loginUser)
 
     const handleLogin = async (e) => {
-        setLoading(true)
+        setIsLoading(true)
         e.preventDefault()
+        // Verificar que los campos no estén vacíos
+        if (!username || !password) {
+            toast.error("Debes completar todos los campos")
+            return setIsLoading(false)
+        }
         try {
-            const data = await login(username, password)
-            if (data.message) {
-                return alert(data.message)
-            }
-            setAuth(data.token)
-            alert("Sesión iniciada correctamente")
-            navigate("/")
+            const token = await login(username, password)
+            loginUser(token.payload)
+            toast.success("¡Has iniciado sesión!")
         } catch (error) {
-            alert("Error al conectar a la base de datos")
-            console.log(error)
+            toast.error(error.message)
         } finally {
-            setLoading(false)
+            setIsLoading(false)
         }
     }
 
@@ -52,10 +50,11 @@ const Login = () => {
                         <Input value={username} onChange={setUsername} label="Nombre de usuario" />
                         <Input value={password} onChange={setPassword} label="Contraseña" type='password' />
                     </div>
-                    {!loading && <Button type='submit' wFull text="Iniciar sesión" variant="secondary" />}
+                    <Button isLoading={isLoading} type='submit' wFull text="Iniciar sesión" variant="secondary" />
                     <p className='mt-4 text-center text-sm text-slate-300' >¿Problemas para acceder? <br /> Contacte al administrador del sistema</p>
                 </form>
             </div >
+            <ToastContainer />
         </div >
     )
 }

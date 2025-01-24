@@ -161,10 +161,16 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
 }
 
 // Comprobación de sesión para acceder a rutas protegidas
-export const protectedRoute = (req, res) => {
-    const { user } = req.session
-    if (!user) {
-        return res.status(400).send("Debes iniciar sesión para acceder a la ruta protegida")
+export const getSessionData = (req, res) => {
+    const jwt = req.cookies.jwt
+    if (!jwt) {
+        return res.status(400).json({ message: "Sin token." })
     }
-    res.status(200).json({ user }) // Responde con los datos del usuario si está autenticado
+    const decoded = Jwt.decode(jwt, process.env.JWT_SECRET)
+    const sessionData = {
+        run: decoded.run,
+        name: decoded.name
+    }
+    console.log(sessionData)
+    res.status(200).json({ jwt }) // Responde con los datos del usuario si está autenticado
 }

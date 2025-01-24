@@ -1,22 +1,3 @@
-import jwt from 'jsonwebtoken'
-
-// Configuración del JWT
-const JWT_SECRET = process.env.ADMIN_JWT_SECRET // Se obtiene la clave secreta para firmar el JWT desde las variables de entorno
-const EXPIRES_IN = process.env.ADMIN_JWT_EXPIRES_IN // Tiempo de expiración del JWT, también desde las variables de entorno
-
-// Función para generar el token JWT
-export const generateToken = (user) => {
-    // Se utiliza la librería jwt para generar un token que contiene la información del usuario
-    // Se firma el token con la clave secreta (JWT_SECRET) y se establece el tiempo de expiración
-    return jwt.sign(user, JWT_SECRET, { expiresIn: EXPIRES_IN })
-}
-
-// Función para verificar la validez del token JWT
-export const verifyTokenJWT = (token) => {
-    // Verifica el token recibido utilizando la clave secreta. Retorna el payload del token si es válido.
-    return jwt.verify(token, JWT_SECRET)
-}
-
 // Función para generar una cadena de texto con la información del usuario para los logs
 export const userInfoLogFormat = (
     namesArray,

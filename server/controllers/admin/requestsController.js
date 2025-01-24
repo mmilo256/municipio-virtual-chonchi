@@ -6,6 +6,8 @@ import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
 import User from "../../models/userModel.js"
 import fs from 'fs/promises'
 import path from "path"
+// import { verifyToken } from "../../utils/tokens.js"
+import jwt from 'jsonwebtoken'
 
 // Borrar documento asociado
 export const borrarDocumentoAsociado = async (req, res) => {
@@ -43,7 +45,7 @@ export const obtenerDocumentosAsociados = async (req, res) => {
         const docs = await Document.findAll({ where: { solicitud_id: id, tipo: 'subido' } })
         res.status(200).json(docs)
     } catch (error) {
-        throw new Error(`Ha ocurrido un error: ${error.message}`)
+        res.status(500).json({ message: `Error al obtener los documentos: ${error.message}` })
     }
 }
 
@@ -58,7 +60,7 @@ export const subirDocumentoAsociado = async (req, res) => {
         console.log(doc.dataValues)
         res.status(200).json(doc.dataValues)
     } catch (error) {
-        throw new Error(`Ha ocurrido un error: ${error.message}`)
+        res.status(500).json({ message: `Error al subir el documento: ${error.message}` })
     }
 }
 
@@ -78,8 +80,7 @@ export const updateRequestStatus = async (req, res) => {
         res.status(200).json({ message: "Estado de la solicitud actualizado" }) // Responde con éxito
     } catch (error) {
         await t.rollback() // Si ocurre un error, revierte la transacción
-        console.log(error) // Imprime el error para fines de depuración
-        throw new Error(`Ha ocurrido un error: ${error.message}`); // Lanza un error con el mensaje
+        res.status(500).json({ message: `Error al actualizar el estado de la solicitud: ${error.message}` }) // Responde con un error
     }
 }
 
@@ -102,8 +103,7 @@ export const getRequestById = async (req, res) => {
         })
         res.status(200).json({ request }) // Devuelve la solicitud encontrada en la respuesta
     } catch (error) {
-        console.log(error) // Imprime el error para fines de depuración
-        throw new Error(`Ha ocurrido un error: ${error.message}`); // Lanza un error con el mensaje
+        res.status(500).json({ message: `Error al obtener la solicitud: ${error.message}` }) // Responde con un error
     }
 }
 
@@ -129,7 +129,6 @@ export const getAllRequestsByProcedure = async (req, res) => {
         })
         res.status(200).json({ requests }) // Devuelve las solicitudes encontradas en la respuesta
     } catch (error) {
-        console.log(error) // Imprime el error para fines de depuración
-        throw new Error(`Ha ocurrido un error: ${error.message}`); // Lanza un error con el mensaje
+        res.status(500).json({ message: `Error al obtener las solicitudes: ${error.message}` }) // Responde con un error
     }
 }

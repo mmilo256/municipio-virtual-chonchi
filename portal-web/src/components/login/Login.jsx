@@ -1,46 +1,25 @@
-import { useEffect, useState } from "react"
-import { Navigate } from "react-router-dom"  // Componente para redirigir a otras rutas en el frontend.
-import { verifyToken } from "../../services/authServices"  // Función para verificar el token de autenticación.
+import { useEffect } from "react"
+import { fetchSessionData } from "../../services/authServices"  // Función para verificar el token de autenticación.
 import BotonClaveUnica from "../ui/buttons/BotonClaveUnica"  // Componente de botón para iniciar sesión con ClaveÚnica.
+import useAuthStore from "../../stores/useAuthStore"
 
 const Login = () => {
-    // Obtención de la sesión almacenada en sessionStorage.
-    const user = sessionStorage.getItem('session')
 
-    // Estado para manejar la carga mientras se verifica la sesión.
-    const [loading, setLoading] = useState(true)
+    const { loginUser, isAuthenticated } = useAuthStore()
 
     // useEffect para verificar la sesión al cargar el componente.
     useEffect(() => {
-        const verifySession = async () => {
-            try {
-                // Verificar el token y obtener los datos del usuario.
-                const user = await verifyToken()
-                // Si la verificación es exitosa, guardar los datos del usuario en sessionStorage.
-                sessionStorage.setItem('session', JSON.stringify(user.user))
-            } catch (error) {
-                // Si el token es inválido o no existe, eliminar la sesión.
-                console.log("El token no existe o es inválido.", error.message)
-                sessionStorage.removeItem('session')
-            } finally {
-                // Cambiar el estado de loading a false una vez que la verificación termine.
-                if (setLoading) {
-                    setLoading(false)
+        (async () => {
+            if (!isAuthenticated) {
+                try {
+                    const token = await fetchSessionData()
+                    loginUser(token.jwt)
+                } catch (error) {
+                    console.log(error.message)
                 }
             }
-        }
-        verifySession()
-    }, []) // Este useEffect solo se ejecuta una vez cuando el componente se monta.
-
-    // Si el estado de loading es true, se retorna sin mostrar nada (por el momento).
-    if (loading) {
-        return
-    }
-
-    // Si ya hay una sesión activa (usuario logueado), redirigir al inicio.
-    if (user) {
-        return <Navigate to="/inicio" />
-    }
+        })()
+    }, [loginUser, isAuthenticated]) // Este useEffect solo se ejecuta una vez cuando el componente se monta.
 
     // Retorno del componente de login con la interfaz.
     return (

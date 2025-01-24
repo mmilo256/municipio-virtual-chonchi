@@ -1,18 +1,23 @@
 import { create } from 'zustand'
-import { logout } from '../services/authServices';
 
 const useAuthStore = create((set) => ({
     isAuthenticated: false,
-    token: null,
-    setAuth: (token) => {
-        sessionStorage.setItem('token', token); // Almacena el token en sessionStorage
-        set({ isAuthenticated: true, token });
+    sessionData: {},
+    sessionExpired: false,
+    setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
+    loginUser: (sessionData) => {
+        localStorage.setItem('adminSessionData', JSON.stringify(sessionData))
+        set({ isAuthenticated: true, sessionData })
     },
-    logout: () => {
-        sessionStorage.removeItem('token'); // Elimina el token de sessionStorage
-        set({ isAuthenticated: false, token: null });
-        logout()
-    }
+    logoutUser: () => {
+        localStorage.removeItem('adminSessionData')
+        set({ isAuthenticated: false, sessionData: {}, sessionExpired: false })
+    },
+    checkAuth: () => {
+        const sessionData = localStorage.getItem('adminSessionData')
+        set({ isAuthenticated: !!sessionData, sessionData })
+    },
+    setSessionExpired: (bool) => set({ sessionExpired: bool })
 }));
 
 export default useAuthStore

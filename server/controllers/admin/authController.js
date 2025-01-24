@@ -1,25 +1,31 @@
 import Employee from "../../models/employeeModel.js"
 import crypto from 'node:crypto'
-import { generateToken } from "../../utils/utils.js"
+import { generateToken } from "../../utils/tokens.js"
 
 // Cerrar sesión
 export const logout = async (req, res) => {
-    // Borra el token JWT de las cookies para cerrar la sesión
-    res.clearCookie('tokenjwt', {
-        httpOnly: true, // La cookie no será accesible desde JavaScript
-        secure: false // La cookie no se enviará a través de conexiones seguras (http)
-    })
-    res.send("Se ha cerrado la sesión") // Responde indicando que la sesión se cerró correctamente
+    // Elimina la cookie que contiene el token de acceso
+    res.clearCookie('adminAccessToken')
+    res.status(200).json({ message: "Sesión cerrada" })
 }
 
 // Iniciar sesión
 export const login = async (req, res) => {
     const { username, password } = req.body // Obtiene el nombre de usuario y la contraseña del cuerpo de la solicitud
+
+    if (!username || !password) {
+        return res.status(400).json({
+            error: true,
+            message: "Se requiere un nombre de usuario y una contraseña" // Si no se proporcionan ambos, responde con error
+        })
+    }
+
     try {
         // Verifica que el usuario existe en la base de datos
         const user = await Employee.findOne({ where: { username } })
         if (!user) {
             return res.status(404).json({
+                error: true,
                 message: "Usuario no encontrado" // Si el usuario no existe, responde con error
             })
         }
@@ -29,23 +35,36 @@ export const login = async (req, res) => {
         const hashedPassword = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
         if (hashedPassword !== storedHash) {
             return res.status(401).json({
+                error: true,
                 message: "Contraseña incorrecta" // Si las contraseñas no coinciden, responde con error
             })
         }
 
         // Si las contraseñas coinciden, genera un token JWT
-        const token = generateToken(user.dataValues)
+        const secretKey = process.env.ADMIN_JWT_SECRET
+        const expiresIn = process.env.ADMIN_JWT_EXPIRES_IN
 
-        // Envia el token JWT en una cookie
-        res.cookie('tokenjwt', token, {
-            httpOnly: true, // La cookie no será accesible desde JavaScript
-            secure: false // La cookie no se enviará a través de conexiones seguras (http)
+        const payload = {
+            names: user.nombres,
+            lastNames: user.apellidos,
+            username: user.username,
+            email: user.email,
+            run: user.run,
+            role: user.rol
+        }
+
+        const accessToken = generateToken(payload, secretKey, expiresIn)
+        // Guardar token en cookies
+        res.cookie('adminAccessToken', accessToken, {
+            httpOnly: true,
+            secure: false
         })
 
         // Envía el token también en la respuesta JSON
-        res.status(200).json({ token })
+        res.status(200).json({ payload })
     } catch (error) {
         res.status(500).json({
+            error: true,
             message: error.message // Responde con el mensaje de error si ocurre un fallo
         })
     }

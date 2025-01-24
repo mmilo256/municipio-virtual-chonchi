@@ -3,7 +3,7 @@ import { borrarDocumentoAsociado, getAllRequestsByProcedure, getRequestById, obt
 import { approveRequestPT, getFinalDocument, uploadSignedDocument } from "../../controllers/admin/administracion-municipal/permisosTransitoriosController.js";
 import { setUpload } from "../../config/multer.js";
 
-const uploadPermisosTransitorios = setUpload('decretos/permisos-transitorios')
+const uploadPermisosTransitorios = setUpload('documents/permisos-transitorios')
 const uploadDocumentoAsociado = setUpload('documents/documentos-asociados')
 
 // Router

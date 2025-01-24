@@ -1,4 +1,4 @@
-const Button = ({ text, type = "button", variant, wFull = false, onClick }) => {
+const Button = ({ isLoading, text, type = "button", variant, wFull = false, onClick }) => {
 
     // Color del botón
     let buttonVariant = ""
@@ -7,7 +7,7 @@ const Button = ({ text, type = "button", variant, wFull = false, onClick }) => {
             buttonVariant = "bg-primary hover:bg-primaryHover text-white"
             break;
         case "secondary":
-            buttonVariant = "bg-secondary hover:bg-secondaryHover text-white"
+            buttonVariant = "bg-secondary hover:bg-secondaryHover disabled:bg-secondaryDisabled text-white"
             break;
         case "tertiary":
             buttonVariant = "bg-[#fff] text-black hover:bg-[#eee]"
@@ -17,7 +17,7 @@ const Button = ({ text, type = "button", variant, wFull = false, onClick }) => {
     }
 
     return (
-        <button onClick={onClick} className={`block p-2 rounded ${wFull && "w-full"} ${buttonVariant}`} type={type}>{text}</button>
+        <button onClick={onClick} className={`block ${isLoading && "cursor-wait"} p-2 rounded ${wFull && "w-full"} ${buttonVariant}`} disabled={isLoading} type={type}>{text}</button>
     )
 }
 

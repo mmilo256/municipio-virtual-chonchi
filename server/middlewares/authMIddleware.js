@@ -1,11 +1,12 @@
-import Jwt from 'jsonwebtoken'
+/* import Jwt from 'jsonwebtoken'
 import logger from '../config/winston.js'
-import { userInfoLogFormat, verifyTokenJWT } from '../utils/utils.js';
+import { verifyAdminToken } from '../utils/tokens.js';
+import { userInfoLogFormat } from '../utils/format.js'
 
 // Middleware para verificar si el token de administrador es válido
 export const verifyAdminToken = (req, res, next) => {
     const token = req.cookies.tokenjwt // Obtener el token de las cookies
-    const isValid = verifyTokenJWT(token) // Verificar la validez del token
+    const isValid = verifyToken(token) // Verificar la validez del token
     if (!isValid) {
         return res.status(400).send("No has iniciado sesión") // Si no es válido, retornar un error
     }
@@ -48,3 +49,4 @@ export const verifyToken = (req, res, next) => {
         return res.status(400).json({ error: error.message }) // Retornar el error en la respuesta
     }
 }
+ */

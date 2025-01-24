@@ -42,11 +42,11 @@ export const generarDecretoPT = (data) => {
     const filename = `${Date.now()}_DECRETO_PT.docx`; // Generar un nombre único basado en el timestamp
     const fileData = {
         filename, // Nombre del archivo
-        path: `decretos\\permisos-transitorios\\${filename}` // Ruta del archivo en el sistema
+        path: `documents\\permisos-transitorios\\${filename}` // Ruta del archivo en el sistema
     };
 
     // 7. Escribir el archivo generado en el sistema de archivos
-    writeFileSync(resolve(resolve(__dirname, '../decretos/permisos-transitorios'), fileData.filename), buf);
+    writeFileSync(resolve(resolve(__dirname, '../documents/permisos-transitorios'), fileData.filename), buf);
     // El archivo se guarda en la ruta especificada en el sistema de archivos
 
     // 8. Retornar los datos del archivo generado (nombre y ruta)

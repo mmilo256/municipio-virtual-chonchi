@@ -1,13 +1,20 @@
+import { logout } from "../../services/authServices"
 import useAuthStore from "../../stores/useAuthStore"
 import Button from "./Button"
 import Container from "./Container"
 
 const Navbar = () => {
 
-    const logout = useAuthStore(state => state.logout)
+    const logoutUser = useAuthStore(state => state.logoutUser)
 
-    const handleLogout = () => {
-        logout()
+    const handleLogout = async () => {
+        try {
+            const res = await logout()
+            console.log(res)
+            logoutUser()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (

@@ -23,7 +23,7 @@ const App = () => {
       alert("La sesión ha expirado")
       setTimeout(() => {
         logoutUser()
-      }, 1000);
+      }, 500);
     }
   }, [sessionExpired, logoutUser])
 

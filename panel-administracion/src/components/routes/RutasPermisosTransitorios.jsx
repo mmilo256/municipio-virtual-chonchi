@@ -35,8 +35,8 @@ const PermisosTransitorios = () => {
                 const formattedData = data.map(request => ({
                     id: request.id, // Cambiar por n° de folio
                     name: `${request.usuario.nombres} ${request.usuario.apellidos}`,
-                    procedure: request.tramite.titulo,
-                    createdAt: formatDate(request.createdAt, 1),
+                    procedure: request.respuestas.permissionName,
+                    createdAt: formatDate(request.createdAt, 2),
                     status: <StatusTag status={request.estado} />,
                     action2: <button onClick={() => { handleAction(request) }} className="text-blue-500 underline">Revisar</button>
                 }))
@@ -47,10 +47,15 @@ const PermisosTransitorios = () => {
         })()
     }, [token, navigate])
 
+    const table = {
+        columns: ["ID", "Solicitante", "Actividad", "Fecha de solicitud", "Estado", ""],
+        data: requests
+    }
+
     return (
         <div>
             <Routes>
-                <Route index element={<Solicitudes requests={requests} />} />
+                <Route index element={<Solicitudes title={"Solicitudes de Autorización Especial Transitoria"} requests={table} />} />
                 <Route path="/:id" element={<DetallesSolicitud />} />
                 <Route path="/:id/documentos-asociados" element={<FormularioDocumentoAsociado />} />
                 <Route path="/:id/aprobar-solicitud" element={<FormularioDecretoPT />} />

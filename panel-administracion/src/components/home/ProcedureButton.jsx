@@ -1,18 +1,19 @@
 import { TiDocumentText } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom'
 
-const ProcedureButton = ({ text = "Trámite", color = "bg-slate-600 hover:bg-slate-500", to }) => {
+const ProcedureButton = ({ text = "Trámite", description = "", to }) => {
 
     const navigate = useNavigate()
 
     const handleNavigate = () => {
-        navigate(to)
+        navigate(to, { state: { title: text } })
     }
 
     return (
-        <button onClick={handleNavigate} className={`${color} text-white py-4 w-full flex items-center justify-center gap-2`}>
-            <TiDocumentText size={30} />
-            <span>{text}</span>
+        <button onClick={handleNavigate} className={`bg-secondary hover:bg-secondaryHover flex flex-col items-center text-white w-full p-4`}>
+            <TiDocumentText size={40} />
+            <p className="font-light text-2xl mb-2">{text}</p>
+            <p className="text-red-200 text-center">{description}</p>
         </button>
     )
 }

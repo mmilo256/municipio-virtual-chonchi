@@ -113,7 +113,7 @@ export const getAllRequestsByProcedure = async (req, res) => {
     try {
         // Obtiene todas las solicitudes relacionadas con el trámite indicado
         const requests = await Request.findAll({
-            attributes: ["id", "estado", "usuario_id", "createdAt", "tramite_id"], // Selecciona los atributos de la solicitud
+            attributes: ["id", "estado", "usuario_id", "createdAt", "tramite_id", 'respuestas'], // Selecciona los atributos de la solicitud
             where: { tramite_id: tramiteId }, // Filtra las solicitudes por ID de trámite
             include: [
                 {

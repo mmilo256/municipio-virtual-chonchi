@@ -6,6 +6,7 @@ import adminRequestsRouter from './routes/admin/requestsRoutes.js'  // Rutas par
 import portalUsersRouter from './routes/portal/usersRoutes.js'  // Rutas para usuarios del portal
 import adminEmailRouter from './routes/admin/emailRoutes.js'  // Rutas para emails del panel de administración
 import adminAuthRouter from './routes/admin/authRoutes.js'  // Rutas para autenticación del panel de administración
+import adminProceduresRouter from './routes/admin/proceduresRoutes.js'  // Rutas para los trámites
 import session from "express-session";  // Middleware para sesiones
 import cors from 'cors';  // Middleware para configurar CORS
 import cookieParser from "cookie-parser";  // Middleware para parsear cookies
@@ -84,6 +85,7 @@ app.use("/portal/users", portalUsersRouter);
 app.use("/admin/auth", adminAuthRouter);
 app.use("/admin/email", verifyAdminToken, adminEmailRouter);
 app.use("/admin/requests", verifyAdminToken, adminRequestsRouter);
+app.use("/admin/procedures", verifyAdminToken, adminProceduresRouter);
 
 // Inicializar el servidor y escuchar en el puerto configurado
 app.listen(port, () => {

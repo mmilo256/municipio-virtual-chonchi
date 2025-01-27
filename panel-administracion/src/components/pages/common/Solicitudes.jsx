@@ -1,16 +1,11 @@
 import BaseTable from "../../ui/BaseTable"
 
-const Solicitudes = ({ requests }) => {
-
-    const table = {
-        columns: ["ID", "Nombre del solicitante", "Trámite", "Fecha de solicitud", "Estado", ""],
-        data: requests
-    }
+const Solicitudes = ({ requests, title }) => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Solicitudes de permisos transitorios</h1>
-            <BaseTable table={table} />
+            <h1 className="text-2xl font-bold mb-4">{title}</h1>
+            <BaseTable table={requests} />
         </div>
     )
 }

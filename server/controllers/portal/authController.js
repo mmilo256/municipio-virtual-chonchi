@@ -172,5 +172,5 @@ export const getSessionData = (req, res) => {
         name: decoded.name
     }
     console.log(sessionData)
-    res.status(200).json({ jwt }) // Responde con los datos del usuario si está autenticado
+    res.status(200).json({ sessionData }) // Responde con los datos del usuario si está autenticado
 }

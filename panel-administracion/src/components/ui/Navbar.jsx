@@ -9,8 +9,7 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         try {
-            const res = await logout()
-            console.log(res)
+            await logout()
             logoutUser()
         } catch (error) {
             console.log(error)

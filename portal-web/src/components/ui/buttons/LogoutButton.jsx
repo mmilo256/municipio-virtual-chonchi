@@ -1,22 +1,23 @@
 import { useState } from 'react';  // Importación de useState para gestionar el estado local
 import LogoutIcon from '../../../assets/logout.svg?react';  // Importación del icono de cerrar sesión
 import { logout } from '../../../services/authServices';  // Importación del servicio de logout para cerrar sesión
+import useAuthStore from '../../../stores/useAuthStore';
+import { useEffect } from 'react';
 
 // COMPONENTE: Botón de Cerrar Sesión
 const LogoutButton = ({ darkMode = false }) => {
 
     // Obtiene la información del usuario desde sessionStorage
-    const user = JSON.parse(sessionStorage.getItem('session'))
+    const { sessionData, logoutUser } = useAuthStore(state => state)
+    const [name, setName] = useState("")
 
-    // Función para obtener el nombre completo del usuario
-    const getUserName = () => {
-        let names = ""
-        // Mapea los nombres del usuario y los concatena
-        user.name.nombres.map((name) => {
-            names += name + " "
-        })
-        return names
-    }
+    useEffect(() => {
+        if (Object.values(sessionData).length > 0) {
+            const data = sessionData
+            const nombreCompleto = data.name.nombres[0] + " " + data.name.apellidos[0] + " " + data.name.apellidos[1]
+            setName(nombreCompleto)
+        }
+    }, [sessionData])
 
     // Estado para gestionar el estado de carga (loading) al hacer clic
     const [loading, setLoading] = useState(false)
@@ -24,7 +25,13 @@ const LogoutButton = ({ darkMode = false }) => {
     // Función para manejar el cierre de sesión (backend y frontend)
     const handleLogout = async () => {
         setLoading(true)  // Activa el estado de carga
-        await logout()  // Llama al servicio de cierre de sesión
+        try {
+            await logout()  // Llama al servicio de cierre de sesión
+        } catch (error) {
+            console.log(error)
+        } finally {
+            logoutUser()
+        }
     }
 
     // Renderiza el botón con el nombre del usuario y el icono de cierre de sesión
@@ -36,7 +43,7 @@ const LogoutButton = ({ darkMode = false }) => {
         >
             {/* Nombre del usuario */}
             <span className={`font-light group-disabled:text-slate-400 ${darkMode ? "text-white" : "text-primary"}`}>
-                {getUserName()}
+                {name}
             </span>
             {/* Icono de Cerrar Sesión */}
             <LogoutIcon className={`group-disabled:stroke-slate-400 ${darkMode ? "stroke-white" : "stroke-primary"}`} />

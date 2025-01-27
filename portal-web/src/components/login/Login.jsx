@@ -1,25 +1,14 @@
-import { useEffect } from "react"
-import { fetchSessionData } from "../../services/authServices"  // Función para verificar el token de autenticación.
 import BotonClaveUnica from "../ui/buttons/BotonClaveUnica"  // Componente de botón para iniciar sesión con ClaveÚnica.
 import useAuthStore from "../../stores/useAuthStore"
+import { Navigate } from 'react-router-dom'
 
 const Login = () => {
 
-    const { loginUser, isAuthenticated } = useAuthStore()
+    const { isAuthenticated } = useAuthStore()
 
-    // useEffect para verificar la sesión al cargar el componente.
-    useEffect(() => {
-        (async () => {
-            if (!isAuthenticated) {
-                try {
-                    const token = await fetchSessionData()
-                    loginUser(token.jwt)
-                } catch (error) {
-                    console.log(error.message)
-                }
-            }
-        })()
-    }, [loginUser, isAuthenticated]) // Este useEffect solo se ejecuta una vez cuando el componente se monta.
+    if (isAuthenticated) {
+        return <Navigate to="/inicio" />
+    }
 
     // Retorno del componente de login con la interfaz.
     return (

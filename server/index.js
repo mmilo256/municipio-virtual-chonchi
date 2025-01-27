@@ -16,6 +16,7 @@ import initializeDB from "./config/db/init.js";  // Inicializar la base de datos
 import { fileURLToPath } from 'node:url';  // Utilidad para trabajar con rutas de archivos en módulos ES6
 import path from 'path';  // Utilidad para manipular rutas de archivos
 import { verifyAdminToken } from "./middlewares/admin/authMiddleware.js";
+import { verifyPortalToken } from "./middlewares/portal/authMiddleware.js";
 // import { verifyToken } from "./middlewares/authMIddleware.js";
 
 const port = 10000;  // Definir puerto para el servidor
@@ -76,7 +77,7 @@ app.use(session({
 // Rutas del portal web
 // Se definen las rutas para el portal con sus respectivos middleware de autenticación
 app.use('/portal/auth', portalAuthRouter);
-app.use("/portal/procedures", portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
+app.use("/portal/procedures", verifyPortalToken, portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
 app.use("/portal/requests", portalRequestsRouter);
 app.use("/portal/users", portalUsersRouter);
 

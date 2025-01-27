@@ -9,7 +9,7 @@ const Home = () => {
     const [procedures, setProcedures] = useState([])
 
     // useEffect para cargar los procedimientos cuando el componente se monta.
-    useEffect(() => {
+    /* useEffect(() => {
         const loadProcedures = async () => {
             // Llamada a la función para obtener los procedimientos del backend.
             const data = await fetchAllProcedures()
@@ -18,7 +18,7 @@ const Home = () => {
         }
         // Llamada a la función de carga.
         loadProcedures()
-    }, []) // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
+    }, []) // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte. */
 
     // Mapeo de los procedimientos para agregar un enlace dinámico para cada uno.
     const formattedData = procedures.map(procedure => ({

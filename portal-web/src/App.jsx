@@ -5,17 +5,35 @@ import Home from "./components/home/Home"
 import PermisosTransitorios from "./components/permisos-transitorios/PermisosTransitorios"
 import Requests from "./components/Requests"
 import RequestTracking from "./components/RequestTracking"
-import useAuthStore from "./stores/useAuthStore.js"
 import { useEffect } from "react"
+import { fetchSessionData } from "./services/authServices"
+import useAuthStore from "./stores/useAuthStore"
+import { useState } from "react"
 
 function App() {
 
-  const checkAuth = useAuthStore(state => state.checkAuth)
-  const { sessionExpired, logoutUser } = useAuthStore(state => state)
+  const { loginUser, checkAuth, logoutUser } = useAuthStore()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+    (async () => {
+      await checkAuth()
+      try {
+        const data = await fetchSessionData()
+        loginUser(data.sessionData)
+      } catch (error) {
+        console.log(error.message)
+        logoutUser()
+      } finally {
+        setLoading(false)
+      }
+    })()
+  }, [loginUser, checkAuth, logoutUser])
+
+  if (loading) {
+    return null
+  }
+
 
   return (
     < main className="font-roboto " >

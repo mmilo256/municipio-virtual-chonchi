@@ -22,6 +22,7 @@ const PermisosTransitorios = () => {
             // Obtiene los detalles del trámite y los campos del formulario
             const procedure = await fetchProcedureById(PROCEDURES_ID.permisosTransitorios)
             const inputs = await fetchFormInputs(PROCEDURES_ID.permisosTransitorios)
+            console.log(inputs)
             setProcedure(procedure)  // Guarda los detalles del procedimiento en el estado
             setInputs(inputs)  // Guarda los campos del formulario en el estado global
         }

@@ -16,7 +16,7 @@ const __dirname = dirname(__filename); // Obtener el directorio del archivo actu
 export const generarDecretoPT = (data) => {
     // 1. Cargar el archivo .docx como contenido binario desde la plantilla
     const content = readFileSync(
-        resolve(__dirname, "../templates/decreto_permisoTransitorio.docx"), // Ruta de la plantilla
+        resolve(__dirname, "../../templates/decreto_permisoTransitorio.docx"), // Ruta de la plantilla
         "binary" // Leer el archivo como binario
     );
 
@@ -46,7 +46,7 @@ export const generarDecretoPT = (data) => {
     };
 
     // 7. Escribir el archivo generado en el sistema de archivos
-    writeFileSync(resolve(resolve(__dirname, '../documents/permisos-transitorios'), fileData.filename), buf);
+    writeFileSync(resolve(resolve(__dirname, '../../documents/permisos-transitorios'), fileData.filename), buf);
     // El archivo se guarda en la ruta especificada en el sistema de archivos
 
     // 8. Retornar los datos del archivo generado (nombre y ruta)

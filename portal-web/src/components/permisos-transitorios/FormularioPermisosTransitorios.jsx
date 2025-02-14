@@ -8,6 +8,7 @@ import { fetchUserId } from "../../services/userServices"
 import AntecedentesPermisosTransitorios from "./AntecedentesPermisosTransitorios"
 import ConfirmarFormularioPT from "../ui/forms/ConfirmarFormularioPT"
 import DatosSolicitante from "../ui/forms/DatosSolicitante"
+import useAuthStore from "../../stores/useAuthStore"
 // import usePermisosTransitoriosStore from "../../stores/usePermisosTransitoriosStore"
 
 /* 
@@ -26,6 +27,8 @@ const FormularioPermisosTransitorios = () => {
     // Inputs
     const inputs = useFormsStore(state => state.inputs)
 
+    const { sessionData } = useAuthStore()
+
     // Respuestas formulario
     const [formData, setFormData] = useState({})
 
@@ -39,8 +42,7 @@ const FormularioPermisosTransitorios = () => {
     const navigate = useNavigate()
 
     // Obtener RUT del usuario
-    const sessionInfo = JSON.parse(sessionStorage.getItem('session'))
-    const userRut = `${sessionInfo.run.numero}-${sessionInfo.run.DV}`
+    const userRut = `${sessionData.user.rut.numero}-${sessionData.user.rut.DV}`
 
     // Obtener ID del usuario en la base de datos
     useEffect(() => {

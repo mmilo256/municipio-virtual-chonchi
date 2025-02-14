@@ -5,17 +5,38 @@ import Home from "./components/home/Home"
 import PermisosTransitorios from "./components/permisos-transitorios/PermisosTransitorios"
 import Requests from "./components/Requests"
 import RequestTracking from "./components/RequestTracking"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import useAuthStore from "./stores/useAuthStore"
+import WizardFormContainer from "./components/wizard-form/WizardFormContainer"
+import FormPermisosTransitorios from "./forms/permisos-transitorios/FormPermisosTransitorios"
+/* import { useEffect } from "react"
 import { fetchSessionData } from "./services/authServices"
 import useAuthStore from "./stores/useAuthStore"
-import { useState } from "react"
+import { useState } from "react" */
 
 function App() {
 
-  const { loginUser, checkAuth, logoutUser } = useAuthStore()
+  const { checkAuth } = useAuthStore()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    (async () => {
+      try {
+        await checkAuth()
+      } catch (error) {
+        console.error(error)
+      }
+      setLoading(false)
+    })()
+  }, [checkAuth])
+
+  if (loading) {
+    return null
+  }
+
+  /* const { loginUser, checkAuth, logoutUser } = useAuthStore() */
+
+  /* useEffect(() => {
     (async () => {
       await checkAuth()
       try {
@@ -28,12 +49,7 @@ function App() {
         setLoading(false)
       }
     })()
-  }, [loginUser, checkAuth, logoutUser])
-
-  if (loading) {
-    return null
-  }
-
+  }, [loginUser, checkAuth, logoutUser]) */
 
   return (
     < main className="font-roboto " >
@@ -43,6 +59,7 @@ function App() {
         <Route path="/solicitudes" element={<PrivateRoute><Requests /></PrivateRoute>} />
         <Route path="/solicitudes/:id" element={<PrivateRoute><RequestTracking /></PrivateRoute>} />
         <Route path="/permisos-transitorios/*" element={<PrivateRoute><PermisosTransitorios /></PrivateRoute>} />
+        <Route path="/wizard" element={<PrivateRoute><WizardFormContainer><FormPermisosTransitorios /></WizardFormContainer></PrivateRoute>} />
       </Routes>
     </main >
 

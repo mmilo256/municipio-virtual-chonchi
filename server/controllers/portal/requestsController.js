@@ -20,6 +20,9 @@ export const getStatusLog = async (req, res) => {
 // Obtener todas las solicitudes de un usuario identificado por su RUN
 export const getAllRequestsByRut = async (req, res) => {
     const { run } = req.query
+    if (!run) {
+        return res.status(401).json({ message: "No se proporcionó un RUT" })
+    }
     try {
         // Buscar el usuario por su RUN e incluir sus solicitudes asociadas
         const requests = await User.findOne({
@@ -38,8 +41,7 @@ export const getAllRequestsByRut = async (req, res) => {
         })
         res.status(200).json(requests) // Devolver todas las solicitudes del usuario
     } catch (error) {
-        console.log(error)
-        throw new Error(`Ha ocurrido un error: ${error.message}`); // Captura el error y lo lanza
+        res.status(500).json({ error: true, message: `No se pudo obtener las solicitudes. ${error.message}` })
     }
 }
 

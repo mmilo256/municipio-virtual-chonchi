@@ -6,12 +6,13 @@ import BaseTable from "./ui/BaseTable"  // Componente para mostrar una tabla con
 import StatusTag from "./ui/StatusTag"  // Componente para mostrar el estado de una solicitud de forma estilizada
 import { formatDate } from "../utils/utils"  // Función para formatear la fecha de la solicitud
 import { Link } from "react-router-dom"  // Componente de Link para la navegación
+import useAuthStore from "../stores/useAuthStore"
 
 const Requests = () => {
 
     // Obtener los datos del usuario desde el sessionStorage
-    const user = JSON.parse(sessionStorage.getItem('session'))
-    const rut = `${user.run.numero}-${user.run.DV}`  // Construye el RUT completo del usuario
+    const { sessionData } = useAuthStore(state => state)
+    const rut = `${sessionData.user.rut.numero}-${sessionData.user.rut.DV}`  // Construye el RUT completo del usuario
 
     // Estados para almacenar las solicitudes y el estado de carga
     const [requests, setRequests] = useState([])  // Almacena las solicitudes del usuario

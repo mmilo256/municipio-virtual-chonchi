@@ -4,6 +4,7 @@ import Container from "../Container"
 import Heading from "../Heading"
 import Input from "../Input"
 import { useEffect, useState } from "react"
+import useAuthStore from "../../../stores/useAuthStore"
 
 const DatosSolicitante = ({ onClickNext, onClickPrev, title }) => {
 
@@ -12,25 +13,25 @@ const DatosSolicitante = ({ onClickNext, onClickPrev, title }) => {
     const [nombre, setNombre] = useState('')
     const [rut, setRut] = useState('')
 
-    const session = JSON.parse(sessionStorage.getItem('session'))
+    const { sessionData } = useAuthStore()
 
     useEffect(() => {
         const getUserName = () => {
             let nombres = ""
             let apellidos = ""
             // Mapea los nombres del usuario y los concatena
-            session.name.nombres.map((nombre) => {
+            sessionData.user.name.nombres.map((nombre) => {
                 nombres += nombre + " "
             })
-            session.name.apellidos.map((apellido) => {
+            sessionData.user.name.apellidos.map((apellido) => {
                 apellidos += apellido + " "
             })
             const nombreCompleto = nombres + apellidos
             return nombreCompleto
         }
         setNombre(getUserName())
-        setRut(`${session.run.numero}-${session.run.DV}`)
-    }, [session.run, session.name])
+        setRut(`${sessionData.user.rut.numero}-${sessionData.user.rut.DV}`)
+    }, [sessionData.user])
 
     const onSubmit = handleSubmit((data) => {
         onClickNext(data)

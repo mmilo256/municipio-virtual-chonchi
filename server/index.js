@@ -78,8 +78,8 @@ app.use(session({
 // Se definen las rutas para el portal con sus respectivos middleware de autenticación
 app.use('/portal/auth', portalAuthRouter);
 app.use("/portal/procedures", verifyPortalToken, portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
-app.use("/portal/requests", portalRequestsRouter);
-app.use("/portal/users", portalUsersRouter);
+app.use("/portal/requests", verifyPortalToken, portalRequestsRouter);
+app.use("/portal/users", verifyPortalToken, portalUsersRouter);
 
 // Rutas del panel de administración
 // Se definen las rutas para el panel de administración con sus respectivos middleware de autenticación

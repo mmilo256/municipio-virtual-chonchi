@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 
 const useFormsStore = create((set) => ({
-    inputs: [],
-    setInputs: (data) => set(({
-        inputs: data
+    inputsValues: {},
+    setInputsValues: (data) => set(({
+        inputsValues: data
     })),
 }))
 

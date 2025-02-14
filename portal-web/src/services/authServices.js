@@ -1,5 +1,5 @@
 import axios from "axios"
-import { API_URL, HOME_URL, LOGOUT_URL } from "../constants/constants"
+import { API_URL, /* HOME_URL, LOGOUT_URL */ } from "../constants/constants"
 
 // Función para verificar la validez del token de autenticación
 export const fetchSessionData = async () => {
@@ -27,9 +27,7 @@ export const logout = async () => {
     } catch (error) {
         // Si ocurre un error durante el cierre de sesión, lo imprime en la consola
         console.log(error)
-    } finally {
-        // Elimina la sesión almacenada en sessionStorage
-        sessionStorage.removeItem('session')
+    } /* finally {
 
         // Redirige al usuario a la página de logout
         window.location.href = LOGOUT_URL
@@ -38,5 +36,5 @@ export const logout = async () => {
         setTimeout(() => {
             window.location.href = HOME_URL
         }, 1000);
-    }
+    } */
 }

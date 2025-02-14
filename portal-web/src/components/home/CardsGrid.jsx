@@ -13,7 +13,7 @@ const CardsGrid = ({ data }) => {
                     title={card.titulo}
                     desc={card.descripcion_corta}
                     icon={card.icon}
-                    href={card.href}
+                    href={`/${card.nombre}`}
                 />
             ))}
         </Container>

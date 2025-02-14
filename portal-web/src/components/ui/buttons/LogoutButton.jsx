@@ -1,6 +1,5 @@
 import { useState } from 'react';  // Importación de useState para gestionar el estado local
 import LogoutIcon from '../../../assets/logout.svg?react';  // Importación del icono de cerrar sesión
-import { logout } from '../../../services/authServices';  // Importación del servicio de logout para cerrar sesión
 import useAuthStore from '../../../stores/useAuthStore';
 import { useEffect } from 'react';
 
@@ -13,7 +12,7 @@ const LogoutButton = ({ darkMode = false }) => {
 
     useEffect(() => {
         if (Object.values(sessionData).length > 0) {
-            const data = sessionData
+            const data = sessionData.user
             const nombreCompleto = data.name.nombres[0] + " " + data.name.apellidos[0] + " " + data.name.apellidos[1]
             setName(nombreCompleto)
         }
@@ -24,14 +23,10 @@ const LogoutButton = ({ darkMode = false }) => {
 
     // Función para manejar el cierre de sesión (backend y frontend)
     const handleLogout = async () => {
-        setLoading(true)  // Activa el estado de carga
-        try {
-            await logout()  // Llama al servicio de cierre de sesión
-        } catch (error) {
-            console.log(error)
-        } finally {
-            logoutUser()
-        }
+        setLoading(true)
+        await logoutUser()
+        setLoading(false)
+
     }
 
     // Renderiza el botón con el nombre del usuario y el icono de cierre de sesión

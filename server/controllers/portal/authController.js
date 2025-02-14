@@ -162,15 +162,11 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
 
 // Comprobación de sesión para acceder a rutas protegidas
 export const getSessionData = (req, res) => {
-    const jwt = req.cookies.jwt
-    if (!jwt) {
-        return res.status(400).json({ message: "Sin token." })
-    }
-    const decoded = Jwt.decode(jwt, process.env.JWT_SECRET)
-    const sessionData = {
-        run: decoded.run,
-        name: decoded.name
-    }
-    console.log(sessionData)
-    res.status(200).json({ sessionData }) // Responde con los datos del usuario si está autenticado
+    const user = req.user
+    res.status(200).json({
+        isAuthenticated: true, user: {
+            name: user.name,
+            rut: user.run
+        }
+    })
 }

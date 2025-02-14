@@ -2,6 +2,7 @@ import { useState } from 'react';  // Importación de useState para gestionar el
 import LogoutIcon from '../../../assets/logout.svg?react';  // Importación del icono de cerrar sesión
 import useAuthStore from '../../../stores/useAuthStore';
 import { useEffect } from 'react';
+import { getUserData } from '../../../utils/utils';
 
 // COMPONENTE: Botón de Cerrar Sesión
 const LogoutButton = ({ darkMode = false }) => {
@@ -12,9 +13,8 @@ const LogoutButton = ({ darkMode = false }) => {
 
     useEffect(() => {
         if (Object.values(sessionData).length > 0) {
-            const data = sessionData.user
-            const nombreCompleto = data.name.nombres[0] + " " + data.name.apellidos[0] + " " + data.name.apellidos[1]
-            setName(nombreCompleto)
+            const { fullName } = getUserData(sessionData)
+            setName(fullName)
         }
     }, [sessionData])
 

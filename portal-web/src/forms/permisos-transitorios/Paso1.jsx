@@ -16,6 +16,7 @@ const Paso1 = ({ register, errors }) => {
                 name="orgRut"
                 label="RUT de la organización"
                 register={register}
+                type="rut"
                 error={errors["orgRut"]}
                 validations={{
                     required: validationRules.required
@@ -35,8 +36,7 @@ const Paso1 = ({ register, errors }) => {
                 register={register}
                 type="email"
                 validations={{
-                    required: validationRules.required,
-                    pattern: validationRules.email
+                    required: validationRules.required
                 }} />
             <Input
                 name="orgPhone"

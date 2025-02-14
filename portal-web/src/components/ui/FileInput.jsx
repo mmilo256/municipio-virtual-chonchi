@@ -10,21 +10,22 @@ const FileInput = ({ label, file, setFile, name }) => {
     }
 
     const clearFile = () => {
-        setFile("")
+        setFile(prev => ({
+            ...prev,
+            [name]: null
+        }))
     }
 
     return (
-        <div className="mb-5">
-            <input name={name} ref={hiddenInput} onChange={(e) => { setFile(e.target.files[0]) }} type="file" className="hidden" />
-            <p className="text-slate-600 font-medium mb-1">{label}</p>
-            <div className="border-b pb-2 flex items-center justify-between">
-                <div>
-                    <button className="px-4 py-2 underline bg-primary hover:bg-primaryHover text-white mr-3" type="button" onClick={handleButtonClick}>Subir archivo</button>
-                    <span className={`max-w-[80%] text-sm ${file ? "text-black" : "text-slate-500"}`}>{file ? file.name : "Sin archivo seleccionado"}</span>
+        <div className="text-sm border-b mb-4">
+            <input onChange={(e) => { setFile(prev => ({ ...prev, [name]: e.target.files[0] })) }} name={name} ref={hiddenInput} type="file" className="hidden" />
+            <div className="flex gap-4 relative">
+                <p className="text-slate-600 font-medium w-80">{label}</p>
+                <div className="w-full">
+                    <button className="border border-slate-300 text-slate-800 bg-slate-200 hover:bg-slate-300 py-1 px-4 rounded" type="button" onClick={handleButtonClick}>Subir archivo</button>
+                    <span className={`block bg-white py-2 ${file ? "text-black" : "text-slate-500"}`}>{file ? file.name : "Sin archivo seleccionado"}</span>
                 </div>
-                <div>
-                    {file && <button onClick={clearFile} type="button" className="text-3xl">&times;</button>}
-                </div>
+                {file && <button className="absolute right-0 text-2xl text-slate-500 hover:text-black hover:bg-slate-200 rounded h-5 w-5 flex items-center justify-center" onClick={clearFile} type="button">&times;</button>}
             </div>
         </div>
     )

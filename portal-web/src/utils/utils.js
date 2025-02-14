@@ -1,3 +1,15 @@
+// Obtener la fecha de hoy
+export const getTodayDate = () => {
+    return new Date().toISOString().split("T")[0]
+}
+
+// Obtener datos del usuario
+export const getUserData = (sessionData) => {
+    const fullName = sessionData.user.name.nombres[0] + " " + sessionData.user.name.apellidos[0] + " " + sessionData.user.name.apellidos[1]
+    const rut = `${sessionData.user.rut.numero}-${sessionData.user.rut.DV}`
+    return { fullName, rut }
+}
+
 // Formatear campo numérico
 export const formatNumber = (value) => {
     // Remover todos los caracteres que no sean dígitos o 'k'/'K'

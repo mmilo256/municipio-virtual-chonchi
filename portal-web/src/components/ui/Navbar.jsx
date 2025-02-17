@@ -24,12 +24,10 @@ const Navbar = () => {
 
     return (
         <header>
-            <div className='bg-primary h-20'>
-            </div>
-            <nav className='bg-white shadow py-4'>
+            <nav className='bg-white shadow py-2'>
                 <Container className="flex justify-between items-center">
                     <a href="https://municipalidadchonchi.cl">
-                        <img className='h-16' src={logo} alt="logotipo municipalidad de chonchi" />
+                        <img className='h-12' src={logo} alt="logotipo municipalidad de chonchi" />
                     </a>
                     <button onClick={handleToggleMenu} className='md:hidden bg-slate-800 text-white rounded p-1'><IoMenu size={35} /> </button>
                     {/* Menú de navegación para pantallas móviles */}

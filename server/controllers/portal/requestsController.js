@@ -58,7 +58,9 @@ export const createRequest = async (req, res) => {
             originalname: file.originalname,
             path: file.path // Guardar la información del archivo subido
         })),
-        ...data // Combinar los datos adicionales con los documentos
+        respuestas: data.respuestas,
+        tramite_id: data.tramite_id,
+        usuario_id: data.usuarioId // Combinar los datos adicionales con los documentos
     }
     try {
         // Crear la solicitud en la base de datos

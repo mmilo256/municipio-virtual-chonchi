@@ -1,4 +1,3 @@
-import Input from "../../models/inputModel.js";
 import Procedure from "../../models/procedureModel.js";
 import logger from "../winston.js";
 import defineAssociations from "./associations.js";
@@ -30,9 +29,6 @@ const initializeDB = async () => {
                 ...campo,
                 tramite_id: dataValues.id
             }))
-
-            // Inserta los campos del formulario en la base de datos de manera masiva
-            await Input.bulkCreate(camposFormulario, { transaction: t })
         }
 
         // Si todo va bien, confirma la transacción

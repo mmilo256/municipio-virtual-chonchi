@@ -11,7 +11,7 @@ const Accordion = ({ title, children }) => {
 
     return (
         <>
-            <button onClick={toggleOpen} className="bg-slate-50 hover:bg-sky-100 w-full shadow rounded-t text-left p-2 flex items-center gap-2">
+            <button type="button" onClick={toggleOpen} className="bg-slate-50 hover:bg-sky-100 w-full shadow rounded-t text-left p-2 flex items-center gap-2">
                 <span className={` transition-all ${open ? "rotate-0" : "-rotate-90"}`}><IoMdArrowDropdown size={20} /></span>
                 <span className="font-black">{title}</span>
             </button>

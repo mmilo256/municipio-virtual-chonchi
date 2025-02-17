@@ -132,16 +132,23 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
         // Verificar si el usuario ya existe en la base de datos, si no, agregarlo
         const userExists = await User.findOne({ where: { run: userRut } })
 
+        let userId
+
         if (!userExists) {
-            await User.create(newUserData)
+            const newUser = await User.create(newUserData)
+            userId = newUser.id
             logger.info("Se ha agregado el usuario a la base de datos")
+        } else {
+            userId = userExists.id
         }
 
         // Crear el JSON Web Token (JWT) con los datos del usuario
         const payload = {
+            id: userId,
             run: userData.RolUnico,
             name: userData.name
         }
+
         const jwt = Jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         })
@@ -165,6 +172,7 @@ export const getSessionData = (req, res) => {
     const user = req.user
     res.status(200).json({
         isAuthenticated: true, user: {
+            id: user.id,
             name: user.name,
             rut: user.run
         }

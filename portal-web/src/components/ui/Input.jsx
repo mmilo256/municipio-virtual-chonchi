@@ -18,7 +18,7 @@ const Input = ({
     let input;
 
     // Define estilos comunes para todos los tipos de entrada
-    const INPUT_STYLES = `border-2 ${error ? "border-red-400 outline-red-400" : "border-slate-300"} outline-blue-400 rounded text-sm p-1 w-full`
+    const INPUT_STYLES = `border-2 ${error ? "border-red-400 outline-red-400" : "border-slate-300"} disabled:text-slate-500 outline-blue-400 rounded text-sm p-1 w-full`
 
     // Selecciona el tipo de entrada basado en la prop `type`
     switch (type) {

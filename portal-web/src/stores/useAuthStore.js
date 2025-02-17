@@ -8,6 +8,7 @@ const useAuthStore = create((set) => ({
     setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
     logoutUser: async () => {
         try {
+            window.location.href = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout"
             await logout()
         } catch (error) {
             console.error(error)

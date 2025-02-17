@@ -23,7 +23,7 @@ const Paso3 = ({ register, errors }) => {
                 }} />
             <div className="grid grid-cols-2 gap-4">
                 <Input
-                    name="PermissionStartDate"
+                    name="permissionStartDate"
                     label="Fecha de inicio"
                     error={errors["PermissionStartDate"]}
                     register={register}
@@ -33,7 +33,7 @@ const Paso3 = ({ register, errors }) => {
                         required: validationRules.required
                     }} />
                 <Input
-                    name="PermissionStartTime"
+                    name="permissionStartTime"
                     label="Hora de inicio"
                     error={errors["PermissionStartTime"]}
                     register={register}
@@ -44,7 +44,7 @@ const Paso3 = ({ register, errors }) => {
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <Input
-                    name="PermissionEndDate"
+                    name="permissionEndDate"
                     label="Fecha de término"
                     error={errors["PermissionEndDate"]}
                     register={register}
@@ -54,7 +54,7 @@ const Paso3 = ({ register, errors }) => {
                         required: validationRules.required
                     }} />
                 <Input
-                    name="PermissionEndTime"
+                    name="permissionEndTime"
                     label="Hora de término"
                     error={errors["PermissionEndTime"]}
                     register={register}

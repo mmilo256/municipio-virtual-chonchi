@@ -1,5 +1,4 @@
 import Employee from "../../models/employeeModel.js"
-import Input from "../../models/inputModel.js"
 import Log from "../../models/logModel.js"
 import Request from "../../models/requestModel.js"
 import Procedure from "../../models/procedureModel.js"
@@ -8,9 +7,6 @@ import Document from "../../models/documentModel.js"
 import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
 
 const defineAssociations = async () => {
-    // Campo - Trámite
-    Input.belongsTo(Procedure, { foreignKey: 'tramite_id' })
-    Procedure.hasMany(Input, { foreignKey: 'tramite_id' })
     // Solicitud - Trámite
     Request.belongsTo(Procedure, { foreignKey: 'tramite_id' })
     Procedure.hasMany(Request, { foreignKey: 'tramite_id' })

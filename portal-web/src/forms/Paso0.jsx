@@ -17,6 +17,7 @@ const Paso0 = ({ register, errors, setValue }) => {
 
     return (
         <>
+            <p className="text-slate-600 bg-slate-200 p-2 rounded mb-4">Estos datos se usarán para notificar el estado de su solicitud. En caso de rechazo o aprobación, será notificado al correo electrónico ingresado</p>
             <Input
                 name="name"
                 label={"Nombre completo"}

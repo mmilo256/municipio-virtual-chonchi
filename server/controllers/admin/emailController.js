@@ -2,6 +2,7 @@ import { sendEmail } from "../../config/nodemailer.js"
 
 export const sendMail = async (req, res) => {
     const { to, subject, html, attachments } = req.body
+    console.log({ to, subject, html, attachments })
     try {
         await sendEmail(to, subject, html, attachments)
         res.status(200).json({ message: 'Email sent' })

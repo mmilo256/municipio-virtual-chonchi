@@ -1,7 +1,14 @@
 import Input from "../../components/ui/Input"
+import { ORG_TYPES } from "../../constants/constants"
 import { validationRules } from "../validations"
 
 const Paso1 = ({ register, errors }) => {
+
+    const orgTypes = ORG_TYPES.map((type) => ({
+        value: type,
+        label: type
+    }))
+
     return (
         <>
             <Input
@@ -52,7 +59,7 @@ const Paso1 = ({ register, errors }) => {
                 label="Tipo de organización"
                 error={errors["orgType"]}
                 type="select"
-                options={[{ label: "hola", value: "hola" }]}
+                options={orgTypes}
                 register={register}
                 validations={{
                     required: validationRules.required

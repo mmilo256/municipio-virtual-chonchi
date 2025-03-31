@@ -14,6 +14,7 @@ import { PROCEDURES_ID } from "../../constants/constants"
 import useAuthStore from "../../stores/useAuthStore"
 import { useNavigate } from "react-router-dom"
 import Container from "../../components/ui/Container"
+import FormCompleted from "../FormCompleted"
 
 const FormPermisosTransitorios = () => {
 
@@ -41,7 +42,8 @@ const FormPermisosTransitorios = () => {
         "3. Datos del representante legal",
         "4. Detalle del permiso",
         "5. Antecedentes",
-        "Confirmar formulario"
+        "Confirmar formulario",
+        "Formulario enviado"
     ]
 
     const prevStep = () => {
@@ -64,20 +66,23 @@ const FormPermisosTransitorios = () => {
                 tramite_id: PROCEDURES_ID.permisosTransitorios,
                 usuarioId: sessionData.user.id
             }
-            console.log(formData)
             try {
                 await sendRequest(formData)
-                alert("Todo salió bien")
+                alert("Se ha enviado la solicitud")
+                setStep(prev => prev + 1)
             } catch (error) {
                 console.log(error)
                 alert("Hubo un error")
             }
-
         }
     }
 
+    if (step === 6) {
+        return <FormCompleted text="Tu solicitud se ha enviado exitosamente a la Ilustre Municipalidad de Chonchi" />
+    }
+
     return (
-        <Container className="max-w-[40rem] p-4 mt-4 mx-auto bg-white shadow rounded">
+        <Container className="max-w-[50rem] p-4 mt-4 mx-auto bg-white shadow rounded">
             <h2 className="mt-2 text-lg text-slate-700 text-nowrap">Solicitud de Autorización Especial Transitoria</h2>
             <Heading level={3}>{stepTitles[step]}</Heading>
             <form className="w-full" onSubmit={handleSubmit(onSubmit)}>

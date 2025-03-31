@@ -5,6 +5,7 @@ import Home from "../components/home/Home"
 import Requests from "../components/Requests"
 import RequestTracking from "../components/RequestTracking"
 import ProcedureDetails from "../components/ui/ProcedureDetails"
+import FormPermisosTransitorios from "../forms/permisos-transitorios/FormPermisosTransitorios"
 
 const AppRouter = () => {
     return (
@@ -14,7 +15,9 @@ const AppRouter = () => {
                 <Route path="/inicio" element={<PrivateRoute><Home /></PrivateRoute>} />
                 <Route path="/solicitudes" element={<PrivateRoute><Requests /></PrivateRoute>} />
                 <Route path="/solicitudes/:id" element={<PrivateRoute><RequestTracking /></PrivateRoute>} />
+
                 <Route path="/permisos-transitorios" element={<PrivateRoute><ProcedureDetails /></PrivateRoute>} />
+                <Route path="/permisos-transitorios/formulario" element={<PrivateRoute><FormPermisosTransitorios /></PrivateRoute>} />
             </Routes>
         </div>
     )

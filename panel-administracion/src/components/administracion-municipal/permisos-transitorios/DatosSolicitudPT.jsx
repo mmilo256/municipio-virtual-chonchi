@@ -26,7 +26,7 @@ const DatosSolicitudPT = ({ request, loading }) => {
         <>
             {/* Sección 1: Datos de la organización */}
             <Accordion title="1. Datos de la organización">
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 gap-y-1">
                     <p><strong>Nombre o razón social:</strong> {request.respuestas.orgName}</p>
                     <p><strong>RUT de la organización:</strong> {request.respuestas.orgRut}</p>
                     <p><strong>Domicilio:</strong> {request.respuestas.orgAddress}</p>
@@ -38,7 +38,7 @@ const DatosSolicitudPT = ({ request, loading }) => {
 
             {/* Sección 2: Datos del representante legal */}
             <Accordion title="2. Datos del representante legal">
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 gap-y-1">
                     <p><strong>Nombre Completo:</strong> {request.respuestas.presidentName}</p>
                     <p><strong>RUT:</strong> {request.respuestas.presidentRut}</p>
                     <p><strong>Domicilio:</strong> {request.respuestas.presidentAddress}</p>
@@ -51,7 +51,7 @@ const DatosSolicitudPT = ({ request, loading }) => {
 
             {/* Sección 3: Detalles del permiso */}
             <Accordion title="3. Detalles del permiso">
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 gap-y-1">
                     <p><strong>Nombre de la actividad:</strong> {request.respuestas.permissionName}</p>
                     <p><strong>Lugar de realización:</strong> {request.respuestas.permissionPlace}</p>
                     <p><strong>Fecha de inicio:</strong> {formatDate(request.respuestas.permissionStartDate, 1)}, {request.respuestas.permissionStartTime}</p>

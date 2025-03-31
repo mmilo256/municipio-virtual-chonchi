@@ -16,12 +16,6 @@ const Home = () => {
         })()
     }, []) // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
 
-    // Mapeo de los procedimientos para agregar un enlace dinámico para cada uno.
-    /* const formattedData = procedures.map(procedure => ({
-        ...procedure,  // Se conservan todos los campos del procedimiento.
-        href: `/${procedure.nombre}`  // Se agrega un campo 'href' con el nombre del procedimiento como enlace.
-    })) */
-
     return (
         <>
             {/* Sección de encabezado con una imagen de fondo */}

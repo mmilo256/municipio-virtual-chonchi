@@ -23,6 +23,8 @@ const DetallesSolicitud = () => {
     // Hook personalizado que obtiene los detalles de la solicitud
     const { request, status, unsignedDoc, signedDoc, loading, setStatus } = useRequestDetails(id);
 
+    console.log(request)
+
     // Hook para gestionar los estados de los modales
     const {
         rejectModal, // Estado del modal de rechazo
@@ -66,7 +68,7 @@ const DetallesSolicitud = () => {
 
     // Enviar el decreto firmado por correo electrónico
     const sendSignedDoc = async () => {
-        const emails = [request.respuestas.solicitanteEmail]; // Lista de destinatarios
+        const emails = [request.respuestas.email]; // Lista de destinatarios
         const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`; // Nombre completo del usuario
         const attachments = {
             filename: signedDoc?.nombre,
@@ -94,7 +96,7 @@ const DetallesSolicitud = () => {
     // Confirmar el rechazo de la solicitud
     const confirmReject = async () => {
         if (modalInput.trim().length > 3) {
-            const emails = [request.respuestas.solicitanteEmail]; // Lista de destinatarios
+            const emails = [request.respuestas.email]; // Lista de destinatarios
             const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`; // Nombre completo del usuario
             try {
                 // Actualizar el estado de la solicitud a "rechazada"
@@ -108,7 +110,7 @@ const DetallesSolicitud = () => {
                 alert("Se ha rechazado la solicitud"); // Mostrar alerta de éxito
             } catch (error) {
                 console.log(error); // Registrar el error
-                throw new Error(`Ha ocurrido un error: ${error.message}`);
+                alert("Ocurrió un error")
             }
             setStatus("rechazada"); // Actualizar el estado en la interfaz
             toggleConfirmRejectModal(); // Cerrar el modal de confirmación de rechazo
@@ -166,10 +168,10 @@ const DetallesSolicitud = () => {
                         <strong>RUT:</strong> {request.usuario.run}
                     </p>
                     <p>
-                        <strong>Email:</strong> {request.respuestas.solicitanteEmail}
+                        <strong>Email:</strong> {request.respuestas.email}
                     </p>
                     <p>
-                        <strong>Teléfono:</strong> {request.respuestas.solicitantePhone}
+                        <strong>Teléfono:</strong> {request.respuestas.phone}
                     </p>
                 </div>
             </div>

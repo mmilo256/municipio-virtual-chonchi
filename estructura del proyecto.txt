@@ -1,0 +1,27 @@
+/backend
+│
+├── src
+│   ├── app.js               # Configuración principal de Express (middleware, cors, etc)
+│   ├── routes/               # Definir las rutas de la API
+│   ├── controllers/          # Lógica para cada endpoint
+│   ├── services/             # Lógica de negocio
+│   ├── models/               # Modelos de la base de datos (si usas ORM)
+│   ├── middlewares/          # Autenticación, validaciones, etc
+│   ├── utils/                # Funciones auxiliares (PDF, correo, etc)
+│   ├── config/               # Configuración general (DB, variables de entorno)
+│   ├── tramites/             # Subcarpetas específicas por tipo de trámite
+│   │   ├── certificado_residencia/
+│   │   │   ├── routes.js      # Rutas para el trámite
+│   │   │   ├── controller.js  # Lógica del controlador para este trámite
+│   │   │   └── service.js     # Lógica de negocio para este trámite
+│   │   └── permiso_circulacion/
+│   │       ├── routes.js
+│   │       ├── controller.js
+│   │       └── service.js
+│   └── api/                  # Punto de entrada de las API
+│       ├── web/              # Rutas para el portal web
+│       └── admin/            # Rutas para el panel de administración
+│
+├── .env                      # Variables de entorno
+├── package.json
+└── README.md

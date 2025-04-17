@@ -29,7 +29,7 @@ const Login = () => {
             <div className="p-8 lg:p-16 col-span-3">
                 {/* Título principal del portal */}
                 <h2 className="text-primary text-center lg:text-left font-bold text-4xl mb-4">Municipio Virtual de Chonchi</h2>
-                <div className="text-slate-600 text-xl">
+                <div className="text-slate-600">
                     {/* Descripción general de cómo funciona el portal */}
                     <p className="leading-6 text-justify">A través de este portal, podrá acceder a una amplia variedad de trámites y servicios ofrecidos por la <strong>Municipalidad de Chonchi.</strong></p>
                     <p className="my-5 text-center lg:text-left">¿Cómo funciona?</p>

@@ -1,28 +1,21 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import useAuthStore from "./stores/useAuthStore"
 import AppRouter from "./routes/AppRouter"
+import { verifySession } from "./services/auth.service"
 
 function App() {
 
-  const { checkAuth } = useAuthStore()
-  const [loading, setLoading] = useState(true)
+  const { setIsAuthenticated, setSessionData } = useAuthStore()
 
   useEffect(() => {
     (async () => {
-      try {
-        await checkAuth()
-      } catch (error) {
-        console.error(error)
+      const data = await verifySession()
+      if (data.payload) {
+        setIsAuthenticated(true)
+        setSessionData(data.payload)
       }
-      setLoading(false)
     })()
-  }, [checkAuth])
-
-  if (loading) {
-    return null
-  }
-
-
+  }, [setIsAuthenticated, setSessionData])
 
   return (
     < div className="font-roboto bg-slate-50" >

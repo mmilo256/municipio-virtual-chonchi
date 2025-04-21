@@ -13,7 +13,7 @@ const BotonClaveUnica = ({ className }) => {
         setLoading(true)  // Activa el estado de carga cuando se hace clic
         try {
             // Redirige al usuario al portal de autenticación de Clave Única
-            window.location.href = `${API_URL}/portal/auth/login`
+            window.location.href = `${API_URL}/auth/login`
         } catch (error) {
             // Si ocurre un error, lo muestra en la consola
             console.log(error.message)

@@ -1,22 +1,9 @@
 import { useState } from 'react';  // Importación de useState para gestionar el estado local
 import LogoutIcon from '../../../assets/logout.svg?react';  // Importación del icono de cerrar sesión
-import useAuthStore from '../../../stores/useAuthStore';
-import { useEffect } from 'react';
-import { getUserData } from '../../../utils/utils';
+import { logout } from '../../../services/auth.service';
 
 // COMPONENTE: Botón de Cerrar Sesión
 const LogoutButton = ({ darkMode = false }) => {
-
-    // Obtiene la información del usuario desde sessionStorage
-    const { sessionData, logoutUser } = useAuthStore(state => state)
-    const [name, setName] = useState("")
-
-    useEffect(() => {
-        if (Object.values(sessionData).length > 0) {
-            const { fullName } = getUserData(sessionData)
-            setName(fullName)
-        }
-    }, [sessionData])
 
     // Estado para gestionar el estado de carga (loading) al hacer clic
     const [loading, setLoading] = useState(false)
@@ -24,7 +11,15 @@ const LogoutButton = ({ darkMode = false }) => {
     // Función para manejar el cierre de sesión (backend y frontend)
     const handleLogout = async () => {
         setLoading(true)
-        await logoutUser()
+        try {
+            await logout()
+        } catch (error) {
+            console.log(error)
+        }
+        window.location.href = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout?redirect=logout_uri"
+        setTimeout(() => {
+            window.location.href = "/"
+        }, 1000);
         setLoading(false)
 
     }

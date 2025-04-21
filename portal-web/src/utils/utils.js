@@ -5,8 +5,8 @@ export const getTodayDate = () => {
 
 // Obtener datos del usuario
 export const getUserData = (sessionData) => {
-    const fullName = sessionData.user.name.nombres[0] + " " + sessionData.user.name.apellidos[0] + " " + sessionData.user.name.apellidos[1]
-    const rut = `${sessionData.user.rut.numero}-${sessionData.user.rut.DV}`
+    const fullName = sessionData.nombres + " " + sessionData.apellidos
+    const rut = sessionData.run
     return { fullName, rut }
 }
 

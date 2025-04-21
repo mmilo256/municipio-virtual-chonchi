@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import Container from "../ui/Container"  // Componente para el contenedor que envuelve el contenido.
 import Heading from "../ui/Heading"  // Componente para los encabezados.
-import { fetchAllProcedures } from "../../services/proceduresServices"  // Función para obtener todos los procedimientos del backend.
-import CardsGrid from "./CardsGrid"  // Componente que muestra los procedimientos como tarjetas.
+import { fetchAllProcedures } from "../../services/procedures.service"  // Función para obtener todos los procedimientos del backend.
+import Card from "../ui/Card"
 
 const Home = () => {
     // Declaración del estado para almacenar los procedimientos.
@@ -34,7 +34,17 @@ const Home = () => {
             <Heading className="text-center" level={3}>Servicios disponibles</Heading>
 
             {/* Componente para mostrar los procedimientos en un grid de tarjetas */}
-            <CardsGrid data={procedures} />
+            <Container className="py-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {procedures?.map((card, index) => (
+                    <Card
+                        key={index}
+                        title={card.titulo}
+                        desc={card.descripcion_corta}
+                        icon={card.icon}
+                        href={`/${card.nombre}`}
+                    />
+                ))}
+            </Container>
         </>
     )
 }

@@ -10,10 +10,10 @@ const initializeDB = async () => {
     await defineAssociations()
 
     // Sincroniza los modelos con la base de datos, creando tablas si es necesario
-    await sequelize.sync()
+    await sequelize.sync({ alter: true })
 
     // Inicia una transacción para asegurar que las operaciones de inserción se realicen de manera atómica
-    const t = await sequelize.transaction()
+    /* const t = await sequelize.transaction()
 
     try {
         // Verifica cuántos registros existen en la tabla de procedimientos
@@ -42,7 +42,7 @@ const initializeDB = async () => {
 
         // Lanza un error con el mensaje correspondiente
         throw new Error(`No se pudo inicializar la base de datos. ${error.message}`)
-    }
+    } */
 }
 
 export default initializeDB

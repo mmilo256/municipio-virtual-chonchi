@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react"  // Importa hooks de React
 import Container from "./ui/Container"  // Componente para envolver el contenido con un contenedor
 import Heading from "./ui/Heading"  // Componente de encabezado
-import { fetchRequestsByRut } from "../services/requestsServices"  // Función para obtener las solicitudes desde el backend
 import BaseTable from "./ui/BaseTable"  // Componente para mostrar una tabla con los datos
 import StatusTag from "./ui/StatusTag"  // Componente para mostrar el estado de una solicitud de forma estilizada
 import { formatDate } from "../utils/utils"  // Función para formatear la fecha de la solicitud
 import { Link } from "react-router-dom"  // Componente de Link para la navegación
 import useAuthStore from "../stores/useAuthStore"
+import { fetchRequestsByUserId } from "../services/requests.service"
 
 const Requests = () => {
 
     // Obtener los datos del usuario desde el sessionStorage
-    const { sessionData } = useAuthStore(state => state)
-    const rut = `${sessionData.user.rut.numero}-${sessionData.user.rut.DV}`  // Construye el RUT completo del usuario
+    const { sessionData } = useAuthStore()  // Construye el RUT completo del usuario
 
     // Estados para almacenar las solicitudes y el estado de carga
     const [requests, setRequests] = useState([])  // Almacena las solicitudes del usuario
@@ -22,9 +21,9 @@ const Requests = () => {
     useEffect(() => {
         (async () => {
             // Llama al servicio para obtener las solicitudes del usuario por RUT
-            const data = await fetchRequestsByRut(rut)
+            const data = await fetchRequestsByUserId(sessionData.id)
             // Formatea los datos obtenidos para mostrarlos en la tabla
-            const formattedData = data.solicitudes.map((solicitud) => ({
+            const formattedData = data?.map((solicitud) => ({
                 id: solicitud.id,  // ID de la solicitud
                 tramite: solicitud.tramite.titulo,  // Título del trámite
                 fecha: formatDate(solicitud.createdAt, 2),  // Fecha de la solicitud formateada
@@ -36,7 +35,7 @@ const Requests = () => {
             setRequests(formattedData)  // Guarda las solicitudes formateadas en el estado
             setLoading(false)  // Establece que la carga ha finalizado
         })()
-    }, [rut])  // Solo se vuelve a ejecutar cuando cambia el RUT
+    }, [sessionData])  // Solo se vuelve a ejecutar cuando cambia el RUT
 
     // Definición de las columnas y datos de la tabla
     const table = {

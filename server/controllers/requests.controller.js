@@ -1,8 +1,18 @@
-import { sequelize } from "../../config/db/config.js"
-import Procedure from "../../models/procedureModel.js"
-import Request from "../../models/requestModel.js"
-import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
-import User from "../../models/userModel.js"
+import { sequelize } from "../config/db/config.js"
+import Procedure from "../models/procedureModel.js"
+import Request from "../models/requestModel.js"
+import RequestsStatusLog from "../models/RequestsStatusLogModel.js"
+
+// Obtener todas las solicitudes realizadas
+export const getAllRequests = async (req, res) => {
+    try {
+        const requests = await Request.findAll()
+        res.json(requests)
+    } catch (error) {
+        console.log(error)
+        res.json({ message: "No se pudo obtener las solicitudes.", error: error.message })
+    }
+}
 
 // Obtener el historial de cambios de estado de una solicitud específica
 export const getStatusLog = async (req, res) => {
@@ -13,35 +23,28 @@ export const getStatusLog = async (req, res) => {
         res.status(200).json(logs) // Enviar el historial de estados como respuesta
     } catch (error) {
         console.log(error)
-        throw new Error(error.message); // Captura el error y lo lanza
+        res.json({ message: "No se pudo obtener el log", error: error.message })
     }
 }
 
-// Obtener todas las solicitudes de un usuario identificado por su RUN
-export const getAllRequestsByRut = async (req, res) => {
-    const { run } = req.query
-    if (!run) {
-        return res.status(401).json({ message: "No se proporcionó un RUT" })
+// Obtener todas las solicitudes realizadas por un usuario, según el id del usuario
+export const getAllRequestsByUserId = async (req, res) => {
+    const { id } = req.params
+    if (!id) {
+        return res.status(401).json({ message: "No se proporcionó un id" })
     }
     try {
         // Buscar el usuario por su RUN e incluir sus solicitudes asociadas
-        const requests = await User.findOne({
-            attributes: ['id', 'run'], // Seleccionar solo ciertos campos del usuario
-            where: { run }, // Filtrar por el RUN proporcionado
-            include: [
-                {
-                    model: Request, // Incluir las solicitudes del usuario
-                    attributes: ['id', 'estado', 'createdAt'], // Campos de la solicitud
-                    include: [{
-                        model: Procedure, // Incluir el trámite asociado a la solicitud
-                        attributes: ['id', 'nombre', 'titulo'] // Campos del trámite
-                    }]
-                }
-            ]
+        const requests = await Request.findAll({
+            where: { usuario_id: id },
+            include: {
+                model: Procedure,
+                attributes: ["titulo"]
+            }
         })
         res.status(200).json(requests) // Devolver todas las solicitudes del usuario
     } catch (error) {
-        res.status(500).json({ error: true, message: `No se pudo obtener las solicitudes. ${error.message}` })
+        res.status(500).json({ error: error.message, message: "No se pudo obtener las solicitudes." })
     }
 }
 
@@ -52,13 +55,13 @@ export const createRequest = async (req, res) => {
     const files = req.files // Obtener los archivos subidos con la solicitud
     const requestData = {
         estado: "pendiente", // Establecer el estado inicial de la solicitud
-        documentos: files.map(file => ({
+        documentos: JSON.stringify(files.map(file => ({
             fieldname: file.fieldname,
             filename: file.filename,
             originalname: file.originalname,
             path: file.path // Guardar la información del archivo subido
-        })),
-        respuestas: data.respuestas,
+        }))),
+        respuestas: JSON.stringify(data.respuestas),
         tramite_id: data.tramite_id,
         usuario_id: data.usuarioId // Combinar los datos adicionales con los documentos
     }
@@ -72,6 +75,6 @@ export const createRequest = async (req, res) => {
     } catch (error) {
         await t.rollback() // Si ocurre un error, revertir la transacción
         console.log(error)
-        throw new Error(`Hubo un error: ${error.message}`); // Captura el error y lo lanza
+        res.json({ message: "No se pudo ingresar la solicitud.", error: error.message })
     }
 }

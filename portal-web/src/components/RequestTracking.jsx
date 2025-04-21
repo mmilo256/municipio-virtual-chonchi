@@ -3,7 +3,7 @@ import StatusTracker from "./ui/StatusTracker"  // Componente que muestra el seg
 import Heading from "./ui/Heading"  // Componente de encabezado
 import Container from "./ui/Container"  // Componente contenedor para envolver el contenido
 import { useEffect, useState } from "react"  // Hooks de React para efectos y estados
-import { fetchRequestStatusLogs } from "../services/requestsServices"  // Función para obtener los logs de la solicitud
+import { fetchRequestStatusLogs } from "../services/requests.service"  // Función para obtener los logs de la solicitud
 import { formatDate } from "../utils/utils"  // Función para formatear las fechas
 
 const RequestTracking = () => {

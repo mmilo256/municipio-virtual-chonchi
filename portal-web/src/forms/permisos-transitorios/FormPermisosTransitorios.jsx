@@ -9,7 +9,7 @@ import Paso4 from "./Paso4"
 import Heading from "../../components/ui/Heading"
 import useFormsStore from "../../stores/useFormsStore"
 import ConfirmarFormularioPT from "./ConfirmarFormularioPT"
-import { sendRequest } from "../../services/requestsServices"
+import { sendRequest } from "../../services/requests.service"
 import { PROCEDURES_ID } from "../../constants/constants"
 import useAuthStore from "../../stores/useAuthStore"
 import { useNavigate } from "react-router-dom"
@@ -64,7 +64,7 @@ const FormPermisosTransitorios = () => {
                 respuestas: inputsValues,
                 documentos: docsValues,
                 tramite_id: PROCEDURES_ID.permisosTransitorios,
-                usuarioId: sessionData.user.id
+                usuarioId: sessionData.id
             }
             try {
                 await sendRequest(formData)

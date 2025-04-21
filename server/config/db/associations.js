@@ -22,7 +22,6 @@ const defineAssociations = async () => {
     // Solicitud - Documento
     Document.belongsTo(Request, { foreignKey: 'solicitud_id' })
     Request.hasMany(Document, { foreignKey: 'solicitud_id', as: 'documentosAsociados' })
-
 }
 
 export default defineAssociations

@@ -1,23 +1,15 @@
 import e from "express";
-import portalAuthRouter from './routes/portal/authRoutes.js'  // Rutas para autenticación del portal
-import portalProceduresRouter from './routes/portal/proceduresRoutes.js'  // Rutas para procedimientos del portal
-import portalRequestsRouter from './routes/portal/requestsRoutes.js'  // Rutas para solicitudes del portal
-import adminRequestsRouter from './routes/admin/requestsRoutes.js'  // Rutas para solicitudes del panel de administración
-import portalUsersRouter from './routes/portal/usersRoutes.js'  // Rutas para usuarios del portal
-import adminEmailRouter from './routes/admin/emailRoutes.js'  // Rutas para emails del panel de administración
-import adminAuthRouter from './routes/admin/authRoutes.js'  // Rutas para autenticación del panel de administración
-import adminProceduresRouter from './routes/admin/proceduresRoutes.js'  // Rutas para los trámites
 import session from "express-session";  // Middleware para sesiones
 import cors from 'cors';  // Middleware para configurar CORS
 import cookieParser from "cookie-parser";  // Middleware para parsear cookies
 import 'dotenv/config';  // Cargar variables de entorno
-import logger from "./config/winston.js";  // Logger para registrar logs
 import initializeDB from "./config/db/init.js";  // Inicializar la base de datos
 import { fileURLToPath } from 'node:url';  // Utilidad para trabajar con rutas de archivos en módulos ES6
 import path from 'path';  // Utilidad para manipular rutas de archivos
-import { verifyAdminToken } from "./middlewares/admin/authMiddleware.js";
-import { verifyPortalToken } from "./middlewares/portal/authMiddleware.js";
 // import { verifyToken } from "./middlewares/authMIddleware.js";
+
+import portalApi from './api/portal.js'
+import { config } from "./config/config.js";
 
 const port = 10000;  // Definir puerto para el servidor
 const app = e();  // Crear la instancia de la aplicación Express
@@ -34,15 +26,6 @@ app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'docume
 
 // Inicializar base de datos (esto se realiza de forma asíncrona)
 await initializeDB();
-
-// Middleware para registrar solicitudes HTTP
-// Este middleware registra todas las solicitudes HTTP que llegan al servidor
-app.use((req, res, next) => {
-    const { method, url } = req;  // Obtener método HTTP y URL de la solicitud
-    let message = `${method} ${url}`;  // Crear mensaje con el método y URL
-    logger.info(`Solicitud HTTP: ${message}`);  // Registrar la solicitud en los logs
-    next();  // Continuar con la ejecución del siguiente middleware o ruta
-});
 
 app.use(e.json());  // Middleware para parsear el cuerpo de las solicitudes en formato JSON
 app.use(cookieParser());  // Middleware para parsear las cookies de las solicitudes
@@ -64,8 +47,11 @@ app.use(cors({
 
 // Configuración del middleware de sesión
 // Esto gestiona las sesiones del usuario utilizando cookies
+
+const { sessionSecret } = config
+
 app.use(session({
-    secret: process.env.SESSION_SECRET,  // Clave secreta para firmar las cookies de sesión
+    secret: sessionSecret,  // Clave secreta para firmar las cookies de sesión
     resave: false,  // No volver a guardar la sesión si no ha habido cambios
     saveUninitialized: false,  // No guardar sesiones sin inicializar
     cookie: {
@@ -74,7 +60,7 @@ app.use(session({
     }
 }));
 
-// Rutas del portal web
+/* // Rutas del portal web
 // Se definen las rutas para el portal con sus respectivos middleware de autenticación
 app.use('/portal/auth', portalAuthRouter);
 app.use("/portal/procedures", verifyPortalToken, portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
@@ -86,7 +72,9 @@ app.use("/portal/users", verifyPortalToken, portalUsersRouter);
 app.use("/admin/auth", adminAuthRouter);
 app.use("/admin/email", verifyAdminToken, adminEmailRouter);
 app.use("/admin/requests", verifyAdminToken, adminRequestsRouter);
-app.use("/admin/procedures", verifyAdminToken, adminProceduresRouter);
+app.use("/admin/procedures", verifyAdminToken, adminProceduresRouter); */
+
+app.use("/api/portal", portalApi)
 
 // Inicializar el servidor y escuchar en el puerto configurado
 app.listen(port, () => {

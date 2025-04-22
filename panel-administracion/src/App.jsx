@@ -6,26 +6,21 @@ import RutasPermisosTransitorios from './components/routes/RutasPermisosTransito
 import Protected from './components/common/Protected'
 import useAuthStore from './stores/useAuthStore'
 import { useEffect } from 'react'
+import { verifySession } from './services/authServices'
 
 const App = () => {
 
-  const checkAuth = useAuthStore(state => state.checkAuth)
-  const { sessionExpired, logoutUser } = useAuthStore(state => state)
+  const { setIsAuthenticated, setSessionData } = useAuthStore()
 
-  // Comprobar si el usuario ha iniciado sesión
   useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
-
-  // Comprobar si la sesión ha expirado 
-  useEffect(() => {
-    if (sessionExpired) {
-      alert("La sesión ha expirado")
-      setTimeout(() => {
-        logoutUser()
-      }, 500);
-    }
-  }, [sessionExpired, logoutUser])
+    (async () => {
+      const data = await verifySession()
+      if (data.data) {
+        setIsAuthenticated(true)
+        setSessionData(data.data)
+      }
+    })()
+  }, [setIsAuthenticated, setSessionData])
 
   return (
     <div className='bg-white text-black min-h-dvh'>

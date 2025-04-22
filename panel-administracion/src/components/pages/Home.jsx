@@ -8,17 +8,13 @@ import { obtenerTramites } from "../../services/proceduresServices"
 const Home = () => {
 
     const [procedures, setProcedures] = useState([])
-    const { sessionData } = useAuthStore(state => state)
-    const [userData, setUserData] = useState([])
+    const { sessionData } = useAuthStore()
 
     // Obtener los trámites según los permisos del usuario
     useEffect(() => {
         (async () => {
             const data = await obtenerTramites()
             setProcedures(data)
-            if (Object.values(sessionData).length !== 0) {
-                setUserData(JSON.parse(sessionData))
-            }
         })()
     }, [sessionData])
 
@@ -26,7 +22,7 @@ const Home = () => {
         <div>
             {/* <Alert type="warning" text="Hay cosas pendientes" /> */}
             <main className="grid grid-cols-1 gap-4 mt-6">
-                <p className="text-4xl">Bienvenido(a), {userData.names}</p>
+                <p className="text-4xl">Bienvenido(a), {sessionData.nombres}</p>
                 <HomeSection title="Solicitudes por trámite">
                     <div className="grid grid-cols-2 gap-2">
                         {procedures.map((procedure, index) => (

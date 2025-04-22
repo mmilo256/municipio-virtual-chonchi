@@ -1,5 +1,5 @@
 import { getAccessToken, getAuthUrl, getUserData, insertUser } from './auth.service.js'
-import { generateJWT, generateRandomToken, verifyJWT } from '../../utils/token.utils.js';
+import { generateJWT, generateRandomToken } from '../../utils/token.utils.js';
 import { config } from '../../config/config.js';
 
 const { jwtSecret, jwtExpiresIn, homeUrl } = config.oauth

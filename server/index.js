@@ -2,13 +2,12 @@ import e from "express";
 import session from "express-session";  // Middleware para sesiones
 import cors from 'cors';  // Middleware para configurar CORS
 import cookieParser from "cookie-parser";  // Middleware para parsear cookies
-import 'dotenv/config';  // Cargar variables de entorno
 import initializeDB from "./config/db/init.js";  // Inicializar la base de datos
 import { fileURLToPath } from 'node:url';  // Utilidad para trabajar con rutas de archivos en módulos ES6
 import path from 'path';  // Utilidad para manipular rutas de archivos
-// import { verifyToken } from "./middlewares/authMIddleware.js";
 
 import portalApi from './api/portal.js'
+import adminApi from './api/admin.js'
 import { config } from "./config/config.js";
 
 const port = 10000;  // Definir puerto para el servidor
@@ -60,21 +59,15 @@ app.use(session({
     }
 }));
 
-/* // Rutas del portal web
-// Se definen las rutas para el portal con sus respectivos middleware de autenticación
-app.use('/portal/auth', portalAuthRouter);
-app.use("/portal/procedures", verifyPortalToken, portalProceduresRouter);  // Ruta protegida por el middleware verifyToken
-app.use("/portal/requests", verifyPortalToken, portalRequestsRouter);
-app.use("/portal/users", verifyPortalToken, portalUsersRouter);
-
 // Rutas del panel de administración
 // Se definen las rutas para el panel de administración con sus respectivos middleware de autenticación
-app.use("/admin/auth", adminAuthRouter);
+/* app.use("/admin/auth", adminAuthRouter);
 app.use("/admin/email", verifyAdminToken, adminEmailRouter);
 app.use("/admin/requests", verifyAdminToken, adminRequestsRouter);
 app.use("/admin/procedures", verifyAdminToken, adminProceduresRouter); */
 
 app.use("/api/portal", portalApi)
+app.use("/api/admin", adminApi)
 
 // Inicializar el servidor y escuchar en el puerto configurado
 app.listen(port, () => {

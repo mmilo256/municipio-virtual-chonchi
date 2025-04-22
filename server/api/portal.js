@@ -10,5 +10,4 @@ router.use("/auth", authRoutes)
 router.use("/procedures", authMiddleware, proceduresRoutes)
 router.use("/requests", authMiddleware, requestsRoutes)
 
-
 export default router

@@ -13,8 +13,7 @@ const Login = () => {
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
-    const isAuthenticated = useAuthStore(state => state.isAuthenticated)
-    const loginUser = useAuthStore(state => state.loginUser)
+    const { isAuthenticated } = useAuthStore()
 
     const handleLogin = async (e) => {
         setIsLoading(true)
@@ -25,8 +24,8 @@ const Login = () => {
             return setIsLoading(false)
         }
         try {
-            const token = await login(username, password)
-            loginUser(token.payload)
+            await login(username, password)
+            window.location.href = "/"
             toast.success("¡Has iniciado sesión!")
         } catch (error) {
             toast.error(error.message)

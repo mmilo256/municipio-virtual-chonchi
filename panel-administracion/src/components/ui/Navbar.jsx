@@ -1,16 +1,14 @@
 import { logout } from "../../services/authServices"
-import useAuthStore from "../../stores/useAuthStore"
 import Button from "./Button"
 import Container from "./Container"
 
 const Navbar = () => {
 
-    const logoutUser = useAuthStore(state => state.logoutUser)
 
     const handleLogout = async () => {
         try {
             await logout()
-            logoutUser()
+            window.location.href = "/login"
         } catch (error) {
             console.log(error)
         }

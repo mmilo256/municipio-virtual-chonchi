@@ -23,7 +23,7 @@ const ProcedureDetails = ({ id }) => {
                 <Heading className="text-center md:text-left">{procedure?.titulo}</Heading>
             </div>
             <div className="block md:hidden mb-2">
-                <Button variant="secondary" fullWidth>Iniciar trámite</Button>
+                <Button href="formulario" type="link" variant="secondary" fullWidth>Iniciar trámite</Button>
             </div>
             <div className="grid md:grid-cols-9 gap-5 text-slate-700">
                 <main className="md:col-span-6 pr-10">

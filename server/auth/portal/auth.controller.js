@@ -75,25 +75,13 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
 // Comprobar la validez del token
 export const verifySession = async (req, res) => {
     try {
-        const token = req.cookies['jwt']
-        if (!token) {
-            return res.json({ message: "No hay token" })
-        }
-        const payload = verifyJWT(token, jwtSecret)
+        const payload = req.user
         if (!payload) {
-            return res.json({ message: "El token no es válido" })
+            return res.json({ message: "No hay una sesión activa" })
         }
-        res.json({
-            message: "Todo correcto", payload: {
-                id: payload.id,
-                nombres: payload.nombres,
-                apellidos: payload.apellidos,
-                run: payload.run
-            }
-        })
-    } catch (error) {
-        console.log(error.message)
-        res.json({ message: "Error interno del servidor" })
+        res.json({ message: "La sesión está activa", payload })
+    } catch (e) {
+        res.json({ message: "Error interno del servidor", error: e.message })
     }
 }
 

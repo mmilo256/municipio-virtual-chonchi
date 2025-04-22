@@ -13,6 +13,8 @@ function App() {
       if (data.payload) {
         setIsAuthenticated(true)
         setSessionData(data.payload)
+      } else {
+        console.log(data)
       }
     })()
   }, [setIsAuthenticated, setSessionData])

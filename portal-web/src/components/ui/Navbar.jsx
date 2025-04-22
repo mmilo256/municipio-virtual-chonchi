@@ -35,9 +35,10 @@ const Navbar = () => {
                         <ul className='bg-slate-800 bg-opacity-90 text-white pt-16 font-medium flex flex-col absolute bottom-0 top-0 w-[90%]'>
                             <button onClick={handleToggleMenu} className='absolute right-2 top-5 z-50'><FaTimes size={35} /></button>
                             {NAVIGATION.map((item, index) => (
-                                <li key={index}><NavLink className="border-b border-b-slate-500 p-3" to={item.href}>{item.name}</NavLink></li>
+                                <li key={index}><NavLink onClick={() => { setToggleMenu(!toggleMenu) }} className="block border-b border-b-slate-500 p-3" to={item.href}>{item.name}</NavLink></li>
                             ))}
-                            <div className='p-3 my-5'>
+                            <div className='mt-5 pl-3 flex items-center'>
+                                <span>Cerrar sesión</span>
                                 <LogoutButton darkMode />
                             </div>
                         </ul>

@@ -2,7 +2,7 @@ import apiClient from './apiClient'
 
 export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {
     try {
-        await apiClient.delete(`admin/requests/${solicitudId}/documentos-asociados/${documentoId}`)
+        await apiClient.delete(`/requests/${solicitudId}/documentos-asociados/${documentoId}`)
     } catch (error) {
         throw error.message
     }
@@ -10,7 +10,7 @@ export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {
 
 export const fetchDocumentosAsociados = async (id) => {
     try {
-        const response = await apiClient.get(`admin/requests/${id}/documentos-asociados`)
+        const response = await apiClient.get(`/requests/${id}/documentos-asociados`)
         const data = response.data
         return data
     } catch (error) {
@@ -20,7 +20,7 @@ export const fetchDocumentosAsociados = async (id) => {
 
 export const subirDocumentoAsociado = async (id, file) => {
     try {
-        await apiClient.post(`admin/requests/${id}/documento-asociado`, file, { headers: { "Content-Type": "multipart/form-data" } })
+        await apiClient.post(`/requests/${id}/documento-asociado`, file, { headers: { "Content-Type": "multipart/form-data" } })
     } catch (error) {
         throw error.message
     }
@@ -28,7 +28,7 @@ export const subirDocumentoAsociado = async (id, file) => {
 
 export const updateRequestStatus = async (requestId, estado) => {
     try {
-        await apiClient.patch(`/admin/requests/${requestId}/estado`, { estado })
+        await apiClient.patch(`/requests/${requestId}/estado`, { estado })
     } catch (error) {
         throw error.message
     }
@@ -36,8 +36,8 @@ export const updateRequestStatus = async (requestId, estado) => {
 
 export const fetchRequestById = async (requestId) => {
     try {
-        const response = await apiClient.get(`/admin/requests/${requestId}`)
-        const data = response.data.request
+        const response = await apiClient.get(`/requests/${requestId}`)
+        const data = response.data
         return data
     } catch (error) {
         throw error.message
@@ -46,8 +46,8 @@ export const fetchRequestById = async (requestId) => {
 
 export const fetchRequestsByProcedure = async (procedureId) => {
     try {
-        const response = await apiClient.get(`/admin/requests?tramiteId=${procedureId}`)
-        const data = response.data.requests
+        const response = await apiClient.get(`/requests/procedure/${procedureId}`)
+        const data = response.data
         return data
     } catch (error) {
         throw error.message

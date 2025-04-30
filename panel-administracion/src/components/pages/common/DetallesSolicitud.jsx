@@ -23,8 +23,6 @@ const DetallesSolicitud = () => {
     // Hook personalizado que obtiene los detalles de la solicitud
     const { request, status, unsignedDoc, signedDoc, loading, setStatus } = useRequestDetails(id);
 
-    console.log(request)
-
     // Hook para gestionar los estados de los modales
     const {
         rejectModal, // Estado del modal de rechazo
@@ -40,16 +38,16 @@ const DetallesSolicitud = () => {
     // Navegar a la página para aprobar la solicitud
     const approveRequest = () => {
         const requestInfo = {
-            id: request.id,
-            activity: request.respuestas.permissionName,
-            orgName: request.respuestas.orgName,
-            orgRut: request.respuestas.orgRut,
-            presidentName: request.respuestas.presidentName,
-            presidentRut: request.respuestas.presidentRut,
-            startDate: request.respuestas.permissionStartDate,
-            startTime: request.respuestas.permissionStartTime,
-            endTime: request.respuestas.permissionEndTime,
-            place: request.respuestas.permissionPlace,
+            id: request?.id,
+            activity: request?.respuestas?.permissionName,
+            orgName: request?.respuestas?.orgName,
+            orgRut: request?.respuestas?.orgRut,
+            presidentName: request?.respuestas?.presidentName,
+            presidentRut: request?.respuestas?.presidentRut,
+            startDate: request?.respuestas?.permissionStartDate,
+            startTime: request?.respuestas?.permissionStartTime,
+            endTime: request?.respuestas?.permissionEndTime,
+            place: request?.respuestas?.permissionPlace,
         };
         navigate("aprobar-solicitud", { state: requestInfo });
     };
@@ -68,15 +66,15 @@ const DetallesSolicitud = () => {
 
     // Enviar el decreto firmado por correo electrónico
     const sendSignedDoc = async () => {
-        const emails = [request.respuestas.email]; // Lista de destinatarios
-        const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`; // Nombre completo del usuario
+        const emails = [request?.respuestas?.email]; // Lista de destinatarios
+        const userName = `${request?.usuario?.nombres} ${request?.usuario?.apellidos}`; // Nombre completo del usuario
         const attachments = {
             filename: signedDoc?.nombre,
             path: `${API_URL}/${signedDoc?.ruta}`,
         };
         try {
             // Actualizar el estado de la solicitud a "finalizada"
-            await updateRequestStatus(request.id, "finalizada");
+            await updateRequestStatus(request?.id, "finalizada");
             // Enviar el correo electrónico
             await sendEmail(
                 emails,
@@ -96,11 +94,11 @@ const DetallesSolicitud = () => {
     // Confirmar el rechazo de la solicitud
     const confirmReject = async () => {
         if (modalInput.trim().length > 3) {
-            const emails = [request.respuestas.email]; // Lista de destinatarios
-            const userName = `${request.usuario.nombres} ${request.usuario.apellidos}`; // Nombre completo del usuario
+            const emails = [request?.respuestas?.email]; // Lista de destinatarios
+            const userName = `${request?.usuario?.nombres} ${request?.usuario?.apellidos}`; // Nombre completo del usuario
             try {
                 // Actualizar el estado de la solicitud a "rechazada"
-                await updateRequestStatus(request.id, "rechazada");
+                await updateRequestStatus(request?.id, "rechazada");
                 // Enviar el correo electrónico
                 await sendEmail(
                     emails,
@@ -141,12 +139,12 @@ const DetallesSolicitud = () => {
             />
             {/* Encabezado con el estado de la solicitud */}
             <div className="flex items-center gap-5">
-                <h1 className="text-2xl font-bold">Solicitud de permiso transitorio #{request.id}</h1>
+                <h1 className="text-2xl font-bold">Solicitud de permiso transitorio #{request?.id}</h1>
                 <StatusTag status={status} />
             </div>
             {/* Fecha de la solicitud */}
             <p className="text-slate-500">
-                <strong>Fecha de solicitud:</strong> {formatDate(request.createdAt, 1)}
+                <strong>Fecha de solicitud:</strong> {formatDate(request?.createdAt)}
             </p>
             {/* Acciones disponibles */}
             <AccionesSolicitud
@@ -162,16 +160,16 @@ const DetallesSolicitud = () => {
                 <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>
                 <div className="bg-[#fff] p-4 shadow rounded">
                     <p>
-                        <strong>Nombre:</strong> {request.usuario.nombres} {request.usuario.apellidos}
+                        <strong>Nombre:</strong> {request?.usuario?.nombres} {request?.usuario?.apellidos}
                     </p>
                     <p>
-                        <strong>RUT:</strong> {request.usuario.run}
+                        <strong>RUT:</strong> {request?.usuario?.run}
                     </p>
                     <p>
-                        <strong>Email:</strong> {request.respuestas.email}
+                        <strong>Email:</strong> {request?.respuestas?.email}
                     </p>
                     <p>
-                        <strong>Teléfono:</strong> {request.respuestas.phone}
+                        <strong>Teléfono:</strong> {request?.respuestas?.phone}
                     </p>
                 </div>
             </div>

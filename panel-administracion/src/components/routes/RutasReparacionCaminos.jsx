@@ -6,12 +6,12 @@ import Solicitudes from "../pages/common/Solicitudes"
 import { PROCEDURES_ID } from "../../constants/constants"
 import IndexPermisosTransitorios from "../tramites/permisos-transitorios/IndexPermisosTransitorios"
 
-const PermisosTransitorios = () => {
+const RutasReparacionCaminos = () => {
 
     return (
         <div>
             <Routes>
-                <Route index element={<Solicitudes tramiteId={PROCEDURES_ID.permisosTransitorios} title={"Solicitudes de Autorización Especial Transitoria"} />} />
+                <Route index element={<Solicitudes tramiteId={PROCEDURES_ID.reparacionCaminos} title={"Solicitudes de Reparación de Caminos"} />} />
                 <Route path="/:id" element={<IndexPermisosTransitorios />} />
                 <Route path="/:id/documentos-asociados" element={<FormularioDocumentoAsociado />} />
                 <Route path="/:id/aprobar-solicitud" element={<FormularioDecretoPT />} />
@@ -21,4 +21,4 @@ const PermisosTransitorios = () => {
     )
 }
 
-export default PermisosTransitorios
+export default RutasReparacionCaminos

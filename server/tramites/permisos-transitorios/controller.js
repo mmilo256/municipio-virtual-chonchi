@@ -1,11 +1,11 @@
-import { generarDecretoPT } from "../../../utils/documents/generarDecretoPT.js"
-import { formatDate } from "../../../utils/format.js"
-import Document from "../../../models/documentModel.js"
-import Request from "../../../models/requestModel.js"
-import RequestsStatusLog from "../../../models/RequestsStatusLogModel.js"
+
+import Document from "../../models/documentModel.js"
+import Request from "../../models/requestModel.js"
+import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
+import { generarDecretoPT } from "../../utils/documents/generarDecretoPT.js"
 
 // Subir documento firmado
-export const uploadSignedDocument = async (req, res) => {
+export const subirDecretoFirmado = async (req, res) => {
     const { id } = req.params // Obtiene el ID de la solicitud desde los parámetros de la URL
     const file = req.file // Obtiene el archivo subido en la solicitud
     console.log(file) // Imprime el archivo para fines de depuración
@@ -16,7 +16,7 @@ export const uploadSignedDocument = async (req, res) => {
 }
 
 // Obtener documento final del trámite
-export const getFinalDocument = async (req, res) => {
+export const obtenerDecreto = async (req, res) => {
     const { id } = req.params // Obtiene el ID de la solicitud desde los parámetros de la URL
     const { estado_doc } = req.query // Obtiene el estado del documento desde los parámetros de la consulta
     try {
@@ -37,13 +37,15 @@ export const approveRequestPT = async (req, res) => {
     // Prepara los datos necesarios para generar el decreto
     const data = {
         n_dec: req.body.data.n_dec,
-        fecha_dec: formatDate(new Date(), 1),
+        /* fecha_dec: formatDate(new Date(), 1), */
+        fecha_dec: "alo",
         org_name: req.body.data.org_name.toUpperCase(),
         org_rut: req.body.data.org_rut.toUpperCase(),
         activity_name: req.body.data.activity_name.toUpperCase(),
         owner_name: req.body.data.owner_name.toUpperCase(),
         owner_rut: req.body.data.owner_rut.toUpperCase(),
-        start_date: formatDate(req.body.data.start_date, 1),
+        /* start_date: formatDate(req.body.data.start_date, 1), */
+        start_date: "fechi",
         place: req.body.data.place.toUpperCase(),
         start_time: req.body.data.start_time,
         end_time: req.body.data.end_time

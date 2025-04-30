@@ -7,5 +7,6 @@ export const ORG_TYPES = ["Junta de Vecinos", "Comunidad Indígena", "Club Depor
 export const LOGOUT_URL = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout"
 // export const REQUEST_AUTH_URL = "http://localhost:10000/solicitar-autorizacion"
 export const PROCEDURES_ID = {
-    permisosTransitorios: 1
+    permisosTransitorios: 1,
+    reparacionCaminos: 2
 }

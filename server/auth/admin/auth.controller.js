@@ -1,5 +1,4 @@
-import { config } from "../../config/config.js"
-import { verifyJWT } from "../../utils/token.utils.js"
+
 import { createEmployee, loginUser } from "./auth.service.js"
 
 // Registrar un usuario
@@ -57,27 +56,14 @@ export const logout = async (req, res) => {
 
 // Verificar la sesión del usuario
 export const verifySession = async (req, res) => {
-
-    const { jwtSecret } = config.oauth
-
     try {
-        const token = req.cookies['jwt-admin']
-        if (!token) {
-            return res.json({ message: "Acceso denegado" })
+        const userData = req.user
+        if (!userData) {
+            return res.json({ message: "No hay una sesión activa" })
         }
-        const decoded = verifyJWT(token, jwtSecret)
-        if (!decoded) {
-            return res.json({ message: "El token no es válido" })
-        }
+        console.log({ userData, msg: "No entiendo que pasa" })
         res.json({
-            message: "La sesión está activa", data: {
-                nombres: decoded.nombres,
-                apellidos: decoded.apellidos,
-                username: decoded.username,
-                email: decoded.email,
-                run: decoded.run,
-                rol: decoded.rol
-            }
+            message: "La sesión está activa", data: userData
         })
     } catch (error) {
         console.log(error.message)

@@ -10,11 +10,22 @@ const apiClient = axios.create({
 
 apiClient.interceptors.response.use(
     (response) => response, // Maneja respuestas exitosas normalmente
-    (error) => {
+    async (error) => {
         if (error.response) {
-            const { setSessionExpired, isAuthenticated } = useAuthStore.getState();
-            if (isAuthenticated) {
-                setSessionExpired(true)
+            const { status } = await error.response
+            if (status === 401 || status === 500) {
+                const { setIsAuthenticated, isAuthenticated } = useAuthStore.getState();
+                if (isAuthenticated) {
+                    setIsAuthenticated(false)
+                    try {
+                        await axios.post(`${API_URL}/auth/logout`, null, {
+                            withCredentials: true
+                        })
+                        alert("La sesión ha expirado")
+                    } catch (e) {
+                        console.log(e.message)
+                    }
+                }
             }
             return Promise.reject(error.response.data);
         } else {

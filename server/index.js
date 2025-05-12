@@ -18,10 +18,10 @@ const __filename = fileURLToPath(import.meta.url);  // Obtener la ruta del archi
 export const __dirname = path.dirname(__filename);  // Obtener el directorio del archivo actual
 
 // Configuración para servir archivos estáticos
-// Se define que los archivos en 'uploads' y 'decretos/permisos-transitorios' se sirvan como archivos estáticos
+// Se define que los archivos en 'uploads' y 'documents' se sirvan como archivos estáticos
 app.use('/uploads', e.static(path.join(__dirname, 'uploads')));
-app.use('/documents/permisos-transitorios', e.static(path.join(__dirname, 'documents/permisos-transitorios')));
-app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'documents/documentos-asociados')));
+app.use('/documents', e.static(path.join(__dirname, 'documents')));
+//app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'documents/documentos-asociados')));
 
 // Inicializar base de datos (esto se realiza de forma asíncrona)
 await initializeDB();

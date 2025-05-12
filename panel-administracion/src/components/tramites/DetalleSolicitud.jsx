@@ -1,7 +1,7 @@
 import StatusTag from "../ui/StatusTag"
 import { formatDate } from "../../utils/format"
 
-const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentos }) => {
+const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos }) => {
 
     return (
         <div>
@@ -43,18 +43,14 @@ const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentos })
             <div className="mt-4">
                 <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
                 {respuestas}
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos adjuntos en la solicitud</h2>
-                        {documentos}
-                    </div>
-                    <div>
-                        <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos asociados</h2>
-                        {documentos}
-                    </div>
+                <div>
+                    <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos adjuntos en la solicitud</h2>
+                    {documentosForm}
                 </div>
-                {/* <h2 className="text-xl mt-6 mb-2 font-semibold">Subir documentos asociados</h2>
-                {documentos} */}
+                {documentosSubidos && <div>
+                    <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos asociados</h2>
+                    {documentosSubidos}
+                </div>}
             </div>
         </div>
     )

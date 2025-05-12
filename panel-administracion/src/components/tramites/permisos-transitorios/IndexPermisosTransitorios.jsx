@@ -5,11 +5,13 @@ import AccionesPermisosTransitorios from "./AccionesPermisosTransitorios"
 import DetalleSolicitud from "../DetalleSolicitud"
 import RespuestasPermisosTransitorios from "./RespuestasPermisosTransitorios"
 import DocsPermisosTransitorios from "./DocsPermisosTransitorios"
+import DocumentosSubidos from "../DocumentosSubidos"
 
 const IndexPermisosTransitorios = () => {
 
     const { id } = useParams()
     const [requestData, setRequestData] = useState({})
+    const [uploadedDocs, setUploadedDocs] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -35,7 +37,8 @@ const IndexPermisosTransitorios = () => {
             actions={<AccionesPermisosTransitorios />}
             requestData={requestData}
             respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}
-            documentos={<DocsPermisosTransitorios docs={requestData.documentos} />}
+            documentosForm={<DocsPermisosTransitorios docs={requestData.documentos} />}
+            documentosSubidos={<DocumentosSubidos />}
         />
     )
 }

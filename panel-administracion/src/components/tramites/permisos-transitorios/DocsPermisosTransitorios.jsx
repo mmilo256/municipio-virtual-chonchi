@@ -1,10 +1,6 @@
-import { useEffect, useState } from "react"
 import { SERVER_URL } from "../../../constants/constants"
-import BaseTable from "../../ui/BaseTable"
 
 const DocsPermisosTransitorios = ({ docs = [] }) => {
-
-    const [data, setData] = useState([])
 
     const reqDocs = [
         {
@@ -24,13 +20,14 @@ const DocsPermisosTransitorios = ({ docs = [] }) => {
         },
     ]
 
-    const columns = [
-        "Nombre",
-        "Acciones"
-    ]
-
     return (
-        <BaseTable columns={columns} data={reqDocs} />
+        <>
+            < ul >
+                {reqDocs.map((doc, index) => (
+                    <li key={index}>{doc.name}</li>
+                ))}
+            </ul >
+        </>
     )
 }
 

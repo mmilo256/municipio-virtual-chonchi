@@ -1,4 +1,5 @@
 import { sequelize } from "../config/db/config.js"
+import Document from "../models/documentModel.js"
 import Procedure from "../models/procedureModel.js"
 import Request from "../models/requestModel.js"
 import RequestsStatusLog from "../models/RequestsStatusLogModel.js"
@@ -51,6 +52,21 @@ export const getUserRequests = async (user_id) => {
     })
 
     return requests
+}
+
+export const uploadDocument = async (file, requestId, status, type) => {
+    try {
+        const doc = {
+            ruta: file?.path || null,
+            estado: status || null,
+            tipo: type || null
+        }
+        const newDoc = await Document.create(doc, { where: { tramite_id: requestId } })
+        return newDoc
+    } catch (error) {
+        console.log(error)
+        throw { status: 500, message: "No se pudo subir el documento" }
+    }
 }
 
 export const createNewRequest = async (data, files) => {

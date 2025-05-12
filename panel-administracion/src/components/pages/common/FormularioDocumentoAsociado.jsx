@@ -27,9 +27,13 @@ const FormDocumentoAsociado = () => {
     const onSubmit = async () => {
         const formData = new FormData()
         formData.append('nombre', filename)
-        formData.append('docAsociado', file)
+        formData.append('uploadedDoc', file)
+        const data = {
+            ...formData,
+            type: "subido"
+        }
         try {
-            await subirDocumentoAsociado(id, formData)
+            await subirDocumentoAsociado(id, data)
             alert("Documento subido correctamente")
             navigate(`../${id}`)
         } catch (error) {
@@ -40,7 +44,7 @@ const FormDocumentoAsociado = () => {
 
     return (
         <div>
-            <FormLayout uploadName="docAsociado" onSubmit={onSubmit} submitText="Subir documento" title="Subir documento asociado" inputs={inputs} />
+            <FormLayout uploadName="uploadedDoc" onSubmit={onSubmit} submitText="Subir documento" title="Subir documento asociado" inputs={inputs} />
         </div>
     )
 }

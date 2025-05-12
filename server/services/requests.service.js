@@ -54,12 +54,13 @@ export const getUserRequests = async (user_id) => {
     return requests
 }
 
-export const uploadDocument = async (file, requestId, status, type) => {
+export const uploadDocument = async (file, requestId, status, type, name) => {
     try {
         const doc = {
             ruta: file?.path || null,
             estado: status || null,
             tipo: type || null,
+            nombre: name,
             solicitud_id: requestId
         }
         const newDoc = await Document.create(doc)

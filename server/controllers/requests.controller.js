@@ -78,9 +78,11 @@ export const createRequest = async (req, res) => {
 export const uploadDocument = async (req, res) => {
     try {
         const { id } = req.params
-        const file = req.file
-        const { status, type } = req.body
-        const docs = await uploadDocumentService(file, id, status, type)
+        const file = req.files[0]
+        // console.log({ archivo: file })
+        const { status, type, name } = req.body
+        console.log(req.body)
+        const docs = await uploadDocumentService(file, id, status, type, name)
         res.status(200).json({ tramite_id: id, docs })
     } catch (e) {
         console.log(e)

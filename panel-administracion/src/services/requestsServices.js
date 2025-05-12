@@ -18,9 +18,9 @@ export const fetchDocumentosAsociados = async (id) => {
     }
 }
 
-export const subirDocumentoAsociado = async (id, file) => {
+export const subirDocumentoAsociado = async (id, data) => {
     try {
-        await apiClient.post(`/requests/${id}/documento-asociado`, file, { headers: { "Content-Type": "multipart/form-data" } })
+        await apiClient.post(`/requests/${id}/documents`, data, { headers: { "Content-Type": "multipart/form-data" } })
     } catch (error) {
         throw error.message
     }

@@ -59,9 +59,10 @@ export const uploadDocument = async (file, requestId, status, type) => {
         const doc = {
             ruta: file?.path || null,
             estado: status || null,
-            tipo: type || null
+            tipo: type || null,
+            solicitud_id: requestId
         }
-        const newDoc = await Document.create(doc, { where: { tramite_id: requestId } })
+        const newDoc = await Document.create(doc)
         return newDoc
     } catch (error) {
         console.log(error)

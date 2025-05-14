@@ -9,12 +9,12 @@ const uploadAdmin = setUpload("documents/")
 const router = e.Router()
 
 router.get("/", getAllRequests)
+router.post("/", uploadPublic.any('requestDoc', 8), createRequest)
 router.get("/:id", getRequestById)
+router.get("/user/:id", getAllRequestsByUserId)
 router.get("/:id/documents", getUploadedDocuments)
 router.post("/:id/documents", uploadAdmin.any("uploadedDoc"), uploadDocument)
-router.get("/user/:id", getAllRequestsByUserId)
-router.get("/procedure/:procedure_id", getAllRequestsByProcedure)
+router.get("/procedure/:id", getAllRequestsByProcedure)
 router.get("/:id/historial", getStatusLog)
-router.post("/", uploadPublic.any('requestDoc', 8), createRequest)
 
 export default router

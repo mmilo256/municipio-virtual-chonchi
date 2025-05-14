@@ -34,9 +34,9 @@ export const getRequestById = async (req, res) => {
 
 // Obtener todas las solicitudes de un trámite en específico
 export const getAllRequestsByProcedure = async (req, res) => {
-    const { procedure_id } = req.params
+    const { id } = req.params
     try {
-        const requests = await getRequestsByProcedure(procedure_id)
+        const requests = await getRequestsByProcedure(id)
         res.status(200).json(requests)
     } catch (e) {
         res.status(500).json({ error: e.message, message: "Error interno del servidor" })

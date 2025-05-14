@@ -63,6 +63,7 @@ export const getDocumentsByRequest = async (requestId) => {
         return null
     }
 }
+
 export const uploadDocument = async (file, requestId, status, type, name) => {
     try {
         const doc = {

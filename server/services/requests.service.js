@@ -54,6 +54,15 @@ export const getUserRequests = async (user_id) => {
     return requests
 }
 
+export const getDocumentsByRequest = async (requestId) => {
+    try {
+        const docs = await Document.findAll({ where: { solicitud_id: requestId } })
+        return docs
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}
 export const uploadDocument = async (file, requestId, status, type, name) => {
     try {
         const doc = {

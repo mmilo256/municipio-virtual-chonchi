@@ -1,4 +1,13 @@
-import { createNewRequest, getLogs, getRequests, getRequestsByProcedure, getUserRequests, getRequestById as getRequestByIdService, uploadDocument as uploadDocumentService } from "../services/requests.service.js"
+import {
+    createNewRequest,
+    getLogs,
+    getRequests,
+    getRequestsByProcedure,
+    getUserRequests,
+    getRequestById as getRequestByIdService,
+    uploadDocument as uploadDocumentService,
+    getDocumentsByRequest
+} from "../services/requests.service.js"
 
 // Obtener todas las solicitudes realizadas
 export const getAllRequests = async (req, res) => {
@@ -71,6 +80,17 @@ export const createRequest = async (req, res) => {
         await t.rollback() // Si ocurre un error, revertir la transacción
         console.log(error)
         res.json({ message: "No se pudo ingresar la solicitud.", error: error.message })
+    }
+}
+
+export const getUploadedDocuments = async (req, res) => {
+    const { id } = req.params
+    try {
+        const docs = await getDocumentsByRequest(id)
+        res.status(200).json(docs)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message, message: "No se pudo obtener los documentos asociados a la solicitud" })
     }
 }
 

@@ -15,6 +15,12 @@ const IndexPermisosTransitorios = () => {
 
     useEffect(() => {
         (async () => {
+            console.log("Yies")
+        })()
+    }, [])
+
+    useEffect(() => {
+        (async () => {
             const response = await fetchRequestById(id)
             const formattedFormData = JSON.parse(response.respuestas)
             const formattedDocsData = JSON.parse(response.documentos)

@@ -1,6 +1,6 @@
 import e from "express";
 import { setUpload } from '../config/multer.js'
-import { createRequest, getAllRequests, getAllRequestsByProcedure, getAllRequestsByUserId, getRequestById, getStatusLog, uploadDocument } from "../controllers/requests.controller.js";
+import { createRequest, getAllRequests, getAllRequestsByProcedure, getAllRequestsByUserId, getRequestById, getStatusLog, getUploadedDocuments, uploadDocument } from "../controllers/requests.controller.js";
 
 const uploadPublic = setUpload()
 const uploadAdmin = setUpload("documents/")
@@ -10,6 +10,7 @@ const router = e.Router()
 
 router.get("/", getAllRequests)
 router.get("/:id", getRequestById)
+router.get("/:id/documents", getUploadedDocuments)
 router.post("/:id/documents", uploadAdmin.any("uploadedDoc"), uploadDocument)
 router.get("/user/:id", getAllRequestsByUserId)
 router.get("/procedure/:procedure_id", getAllRequestsByProcedure)

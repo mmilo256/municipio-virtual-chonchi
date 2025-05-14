@@ -43,10 +43,10 @@ const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosFor
             <div className="mt-4">
                 <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
                 {respuestas}
-                <div>
+                {documentosForm && <div>
                     <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos adjuntos en la solicitud</h2>
                     {documentosForm}
-                </div>
+                </div>}
                 {documentosSubidos && <div>
                     <h2 className="text-xl mt-6 mb-2 font-semibold">Documentos asociados</h2>
                     {documentosSubidos}

@@ -1,4 +1,4 @@
 uploads/*
 !uploads/.gitkeep
-decretos/*
-!decretos/.gitkeep
+documents/*
+!documents/.gitkeep

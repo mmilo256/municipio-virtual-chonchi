@@ -3,14 +3,14 @@ import Upload from "../ui/Upload"
 import Button from "../ui/Button"
 import { useState } from "react"
 import { subirDocumentoAsociado } from "../../services/requestsServices"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const FormularioSubirDocumento = () => {
 
     const [name, setName] = useState("")
     const [file, setFile] = useState(null)
     const { id } = useParams()
-    console.log(id)
+    const navigate = useNavigate()
 
     const uploadDocument = async (e) => {
         e.preventDefault()
@@ -24,6 +24,7 @@ const FormularioSubirDocumento = () => {
         try {
             await subirDocumentoAsociado(id, formData)
             alert("Se ha subido un documento")
+            navigate(`../${id}`)
         } catch (error) {
             console.log(error)
             alert("Error")

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { fetchRequestById } from "../../../services/requestsServices"
+import { fetchDocumentosAsociados, fetchRequestById } from "../../../services/requestsServices"
 import AccionesPermisosTransitorios from "./AccionesPermisosTransitorios"
 import DetalleSolicitud from "../DetalleSolicitud"
 import RespuestasPermisosTransitorios from "./RespuestasPermisosTransitorios"
@@ -15,9 +15,10 @@ const IndexPermisosTransitorios = () => {
 
     useEffect(() => {
         (async () => {
-            console.log("Yies")
+            const data = await fetchDocumentosAsociados(id)
+            setUploadedDocs(data)
         })()
-    }, [])
+    }, [id])
 
     useEffect(() => {
         (async () => {
@@ -44,7 +45,7 @@ const IndexPermisosTransitorios = () => {
             requestData={requestData}
             respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}
             documentosForm={<DocsPermisosTransitorios docs={requestData.documentos} />}
-            documentosSubidos={<DocumentosSubidos />}
+            documentosSubidos={<DocumentosSubidos docs={uploadedDocs} />}
         />
     )
 }

@@ -1,3 +1,4 @@
+import { SERVER_URL } from "../../constants/constants"
 import BaseTable from "../ui/BaseTable"
 import Button from "../ui/Button"
 import { useNavigate } from 'react-router-dom'
@@ -8,11 +9,13 @@ const DocumentosSubidos = ({ docs = [] }) => {
 
     const columns = ["Documento", "Acciones"]
 
-    const data = docs.map(doc => ({
-        name: doc?.nombre,
-        path: doc?.path,
-        actions: "acciones"
-    }))
+    const data = docs.map(doc => {
+        const ruta = `${SERVER_URL}/${doc?.ruta}`
+        return ({
+            document: <a target="_blank" className="text-blue-500 underline" href={ruta}>{doc.nombre}</a>,
+            actions: "acciones"
+        })
+    })
 
     const onNavigate = () => {
         navigate("subir-documento")

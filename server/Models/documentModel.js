@@ -9,6 +9,7 @@ const Document = sequelize.define('documentos', {
     },
     numero: DataTypes.INTEGER,
     ruta: DataTypes.STRING,
+    originalname: DataTypes.STRING,
     estado: DataTypes.ENUM("sin firmar", "firmado"),
     nombre: DataTypes.STRING,
     tipo: DataTypes.ENUM('subido', 'generado')

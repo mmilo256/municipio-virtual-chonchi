@@ -68,6 +68,7 @@ export const uploadDocument = async (file, requestId, status, type, name) => {
     try {
         const doc = {
             ruta: file?.path || null,
+            originalname: file?.originalname,
             estado: status || null,
             tipo: type || null,
             nombre: name,

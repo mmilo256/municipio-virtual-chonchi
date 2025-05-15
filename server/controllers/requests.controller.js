@@ -101,7 +101,6 @@ export const uploadDocument = async (req, res) => {
         const file = req.files[0]
         // console.log({ archivo: file })
         const { status, type, name } = req.body
-        console.log(req.body)
         const docs = await uploadDocumentService(file, id, status, type, name)
         res.status(200).json({ tramite_id: id, docs })
     } catch (e) {

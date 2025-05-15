@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import TableButton from "../ui/TableButton"
 import { useState } from "react"
 import Modal from "../ui/Modal"
-import { deleteDocumentService } from "../../services/documents.service"
+import { deleteDocumentService, downloadDocumentService } from "../../services/documents.service"
 
 const DocumentosSubidos = ({ docs = [], setRefresh }) => {
 
@@ -15,6 +15,7 @@ const DocumentosSubidos = ({ docs = [], setRefresh }) => {
     const navigate = useNavigate()
     const columns = ["Documento", "Acciones"]
 
+    // Borrar un documento
     const onDeleteDocument = async () => {
         try {
             await deleteDocumentService(selectedDocument.id)
@@ -33,13 +34,23 @@ const DocumentosSubidos = ({ docs = [], setRefresh }) => {
         setDeleteModal(!deleteModal)
     }
 
+    // Descargar documento
+    const onDownloadDocument = (id) => {
+        try {
+            downloadDocumentService(id)
+        } catch (error) {
+            console.log(error)
+            alert("No se pudo descargar el documento")
+        }
+    }
+
     const data = docs.map(doc => {
         const ruta = `${SERVER_URL}/${doc?.ruta}`
         return ({
             document: <a target="_blank" className="text-blue-500 underline" href={ruta}>{doc.nombre}</a>,
             actions: <div className="flex gap-2">
                 <TableButton onClick={() => { toggleDeleteModal(doc) }} color="red" text="Borrar" />
-                <TableButton color="blue" text="Descargar" />
+                <TableButton onClick={() => { onDownloadDocument(doc.id) }} color="blue" text="Descargar" />
             </div>
         })
     })

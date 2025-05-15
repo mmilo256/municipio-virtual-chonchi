@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { fetchDocumentosAsociados, fetchRequestById } from "../../../services/requestsServices"
+import { fetchDocumentosAdjuntos, fetchDocumentosAsociados, fetchRequestById } from "../../../services/requestsServices"
 import AccionesPermisosTransitorios from "./AccionesPermisosTransitorios"
 import DetalleSolicitud from "../DetalleSolicitud"
 import RespuestasPermisosTransitorios from "./RespuestasPermisosTransitorios"
@@ -12,7 +12,15 @@ const IndexPermisosTransitorios = () => {
     const { id } = useParams()
     const [requestData, setRequestData] = useState({})
     const [uploadedDocs, setUploadedDocs] = useState([])
+    const [docsAdjuntos, setDocsAdjuntos] = useState([])
     const [refresh, setRefresh] = useState(false)
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetchDocumentosAdjuntos(id)
+            setDocsAdjuntos(response)
+        })()
+    }, [id])
 
     useEffect(() => {
         (async () => {
@@ -45,7 +53,7 @@ const IndexPermisosTransitorios = () => {
             actions={<AccionesPermisosTransitorios />}
             requestData={requestData}
             respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}
-            documentosForm={<DocsPermisosTransitorios docs={requestData.documentos} />}
+            documentosForm={<DocsPermisosTransitorios docs={docsAdjuntos} />}
             documentosSubidos={<DocumentosSubidos setRefresh={setRefresh} docs={uploadedDocs} />}
         />
     )

@@ -69,7 +69,7 @@ const FormPermisosTransitorios = () => {
             try {
                 await sendRequest(formData)
                 alert("Se ha enviado la solicitud")
-                setStep(prev => prev + 1)
+                // setStep(prev => prev + 1)
             } catch (error) {
                 console.log(error)
                 alert("Hubo un error")

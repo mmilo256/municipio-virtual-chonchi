@@ -54,9 +54,9 @@ export const getUserRequests = async (user_id) => {
     return requests
 }
 
-export const getDocumentsByRequest = async (requestId) => {
+export const getDocumentsByRequest = async (requestId, type) => {
     try {
-        const docs = await Document.findAll({ where: { solicitud_id: requestId } })
+        const docs = await Document.findAll({ where: { solicitud_id: requestId, tipo: type } })
         return docs
     } catch (error) {
         console.log(error)
@@ -83,6 +83,50 @@ export const uploadDocument = async (file, requestId, status, type, name) => {
 }
 
 export const createNewRequest = async (data, files) => {
+
+    const t = await sequelize.transaction()
+
+    const requestData = {
+        estado: "pendiente", // Establecer el estado inicial de la solicitud
+        respuestas: JSON.stringify(data.respuestas),
+        tramite_id: data.tramite_id,
+        usuario_id: data.usuarioId // Combinar los datos adicionales con los documentos
+    }
+    try {
+
+        // Crear la solicitud en la base de datos
+        const request = await Request.create(requestData, { transaction: t })
+
+        const documents = files.map(file => {
+            const str = file.fieldname
+            const match = str.match(/\[(.*?)\]/)
+            if (match) {
+                return ({
+                    ruta: file.path,
+                    originalname: file.originalname,
+                    nombre: match[1],
+                    tipo: "adjunto",
+                    solicitud_id: request.id
+                })
+            }
+        })
+
+
+        // Guardar documentos adjuntos en base de datos
+        const docs = await Document.bulkCreate(documents, { transaction: t })
+        console.log(docs)
+
+        // Registrar el estado inicial de la solicitud en el log de estados
+        await RequestsStatusLog.create({ solicitud_id: request.id, estado: 'pendiente' }, { transaction: t })
+        await t.commit() // Confirmar la transacción
+        return request
+    } catch (error) {
+        await t.rollback() // Si ocurre un error, revertir la transacción
+        throw { status: 500, message: "No se pudo ingresar la solicitud" }
+    }
+}
+
+/* export const createNewRequest = async (data, files) => {
     const t = await sequelize.transaction() // Iniciar una transacción para asegurar la atomicidad
     const requestData = {
         estado: "pendiente", // Establecer el estado inicial de la solicitud
@@ -107,4 +151,5 @@ export const createNewRequest = async (data, files) => {
         await t.rollback() // Si ocurre un error, revertir la transacción
         throw { status: 500, message: "No se pudo ingresar la solicitud" }
     }
-}
+} */
+

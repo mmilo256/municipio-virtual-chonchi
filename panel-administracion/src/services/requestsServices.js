@@ -10,7 +10,17 @@ export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {
 
 export const fetchDocumentosAsociados = async (id) => {
     try {
-        const response = await apiClient.get(`/requests/${id}/documents`)
+        const response = await apiClient.get(`/requests/${id}/documents?type=subido`)
+        const data = response.data
+        return data
+    } catch (error) {
+        throw error.message
+    }
+}
+
+export const fetchDocumentosAdjuntos = async (id) => {
+    try {
+        const response = await apiClient.get(`/requests/${id}/documents?type=adjunto`)
         const data = response.data
         return data
     } catch (error) {

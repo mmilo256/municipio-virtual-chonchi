@@ -83,10 +83,12 @@ export const createRequest = async (req, res) => {
     }
 }
 
+// Obtener todos los documentos asociados a una solicitud
 export const getUploadedDocuments = async (req, res) => {
     const { id } = req.params
+    const { type } = req.query
     try {
-        const docs = await getDocumentsByRequest(id)
+        const docs = await getDocumentsByRequest(id, type)
         res.status(200).json(docs)
     } catch (error) {
         console.log(error)

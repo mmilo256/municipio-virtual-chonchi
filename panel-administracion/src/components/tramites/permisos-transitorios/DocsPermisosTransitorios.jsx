@@ -2,32 +2,47 @@ import { SERVER_URL } from "../../../constants/constants"
 
 const DocsPermisosTransitorios = ({ docs = [] }) => {
 
-    const reqDocs = [
+    /* const reqDocs = [
         {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[0]?.path}`} className="text-blue-600 underline">Cédula de identidad</a>
-        }, {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[1]?.path}`} className="text-blue-600 underline">RUT Tributario</a>
-        }, {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[2]?.path}`} className="text-blue-600 underline">Vigencia de Persona Jurídica</a>
-        }, {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[3]?.path}`} className="text-blue-600 underline">Documento de ocupación legal del recinto</a>
-        }, {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[4]?.path}`} className="text-blue-600 underline">Declaración jurada</a>
-        }, {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[5]?.path}`} className="text-blue-600 underline">Certificado de antecedentes</a>
-        }, {
-            name: <a target="__blank" href={`${SERVER_URL}/${docs[6]?.path}`} className="text-blue-600 underline">Firma del presidente</a>
+            name: "Cédula de identidad",
+            href: `${SERVER_URL}/${docs[0]?.ruta}`
         },
-    ]
+        {
+            name: "RUT Tributario",
+            href: `${SERVER_URL}/${docs[1]?.ruta}`
+        },
+        {
+            name: "Vigencia de Persona Jurídica",
+            href: `${SERVER_URL}/${docs[2]?.ruta}`
+        },
+        {
+            name: "Documento de ocupación legal del recinto",
+            href: `${SERVER_URL}/${docs[3]?.ruta}`
+        },
+        {
+            name: "Declaración jurada",
+            href: `${SERVER_URL}/${docs[4]?.ruta}`
+        },
+        {
+            name: "Certificado de antecedentes",
+            href: `${SERVER_URL}/${docs[5]?.ruta}`
+        },
+        {
+            name: "Firma del presidente",
+            href: `${SERVER_URL}/${docs[6]?.ruta}`
+        },
+    ]; */
 
     return (
-        <>
-            < ul >
-                {reqDocs.map((doc, index) => (
-                    <li key={index}>{doc.name}</li>
-                ))}
-            </ul >
-        </>
+        < ul >
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[0]?.ruta}`}>Cédula de identidad</a></li>
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[1]?.ruta}`}>RUT Tributario</a></li>
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[2]?.ruta}`}>Vigencia de Persona Jurídica</a></li>
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[3]?.ruta}`}>Documento de ocupación legal del recinto</a></li>
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[4]?.ruta}`}>Declaración Jurada</a></li>
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[5]?.ruta}`}>Certificado de antecedentes</a></li>
+            <li><a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[6]?.ruta}`}>Firma del presidente</a></li>
+        </ul >
     )
 }
 

@@ -12,13 +12,14 @@ const IndexPermisosTransitorios = () => {
     const { id } = useParams()
     const [requestData, setRequestData] = useState({})
     const [uploadedDocs, setUploadedDocs] = useState([])
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         (async () => {
             const data = await fetchDocumentosAsociados(id)
             setUploadedDocs(data)
         })()
-    }, [id])
+    }, [id, refresh])
 
     useEffect(() => {
         (async () => {
@@ -45,7 +46,7 @@ const IndexPermisosTransitorios = () => {
             requestData={requestData}
             respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}
             documentosForm={<DocsPermisosTransitorios docs={requestData.documentos} />}
-            documentosSubidos={<DocumentosSubidos docs={uploadedDocs} />}
+            documentosSubidos={<DocumentosSubidos setRefresh={setRefresh} docs={uploadedDocs} />}
         />
     )
 }

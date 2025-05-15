@@ -31,7 +31,9 @@ const Solicitudes = ({ title, tramiteId }) => {
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">{title}</h1>
-            <BaseTable data={requests} columns={columns} />
+            {requests.length === 0
+                ? <p>No hay solicitudes pendientes</p>
+                : <BaseTable data={requests} columns={columns} />}
         </div>
     )
 }

@@ -54,6 +54,16 @@ export const getUserRequests = async (user_id) => {
     return requests
 }
 
+export const updateRequestStatusService = async (id, status) => {
+    try {
+        await Request.update({ estado: status }, { where: { id } })
+        await RequestsStatusLog.create({ estado: status, solicitud_id: id })
+        return { message: "Estado actualizado exitosamente", status, requestId: id }
+    } catch (error) {
+        throw { error, message: "No se pudo actualizar el estado de la solicitud" }
+    }
+}
+
 export const getDocumentsByRequest = async (requestId, type) => {
     try {
         const docs = await Document.findAll({ where: { solicitud_id: requestId, tipo: type } })
@@ -126,30 +136,4 @@ export const createNewRequest = async (data, files) => {
     }
 }
 
-/* export const createNewRequest = async (data, files) => {
-    const t = await sequelize.transaction() // Iniciar una transacción para asegurar la atomicidad
-    const requestData = {
-        estado: "pendiente", // Establecer el estado inicial de la solicitud
-        documentos: JSON.stringify(files.map(file => ({
-            fieldname: file.fieldname,
-            filename: file.filename,
-            originalname: file.originalname,
-            path: file.path // Guardar la información del archivo subido
-        }))),
-        respuestas: JSON.stringify(data.respuestas),
-        tramite_id: data.tramite_id,
-        usuario_id: data.usuarioId // Combinar los datos adicionales con los documentos
-    }
-    try {
-        // Crear la solicitud en la base de datos
-        const request = await Request.create(requestData, { transaction: t })
-        // Registrar el estado inicial de la solicitud en el log de estados
-        await RequestsStatusLog.create({ solicitud_id: request.id, estado: 'pendiente' }, { transaction: t })
-        await t.commit() // Confirmar la transacción
-        return request
-    } catch (error) {
-        await t.rollback() // Si ocurre un error, revertir la transacción
-        throw { status: 500, message: "No se pudo ingresar la solicitud" }
-    }
-} */
 

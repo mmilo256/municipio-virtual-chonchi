@@ -6,7 +6,8 @@ import {
     getUserRequests,
     getRequestById as getRequestByIdService,
     uploadDocument as uploadDocumentService,
-    getDocumentsByRequest
+    getDocumentsByRequest,
+    updateRequestStatusService
 } from "../services/requests.service.js"
 
 // Obtener todas las solicitudes realizadas
@@ -53,6 +54,19 @@ export const getStatusLog = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.json({ message: "No se pudo obtener el log", error: error.message })
+    }
+}
+
+export const updateRequestStatus = async (req, res) => {
+    const { id } = req.params
+    const { status } = req.body
+    try {
+        const request = await updateRequestStatusService(id, status)
+        console.log(request)
+        res.status(200).json(request)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message, message: "No se pudo actualizar el estado de la solicitud" })
     }
 }
 

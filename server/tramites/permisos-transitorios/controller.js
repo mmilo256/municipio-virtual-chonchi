@@ -3,6 +3,7 @@ import Document from "../../models/documentModel.js"
 import Request from "../../models/requestModel.js"
 import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
 import { generarDecretoPT } from "../../utils/documents/generarDecretoPT.js"
+import { generarDecretoService } from "./service.js"
 
 // Subir documento firmado
 export const subirDecretoFirmado = async (req, res) => {
@@ -30,6 +31,20 @@ export const obtenerDecreto = async (req, res) => {
 }
 
 // Generar decreto para solicitudes de permisos transitorios
+export const generarDecreto = async (req, res) => {
+    const { id } = req.params
+    const dataDecreto = await generarDecretoService(req.body)
+    console.log(dataDecreto)
+    try {
+        res.status(200).json({ message: "Decreto generado exitosamente", dataDecreto })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message, message: "No se pudo generar el decreto de permiso transitorio" })
+    }
+}
+
+/*
+
 export const approveRequestPT = async (req, res) => {
 
     const { id } = req.params // Obtiene el ID de la solicitud desde los parámetros de la URL
@@ -37,14 +52,14 @@ export const approveRequestPT = async (req, res) => {
     // Prepara los datos necesarios para generar el decreto
     const data = {
         n_dec: req.body.data.n_dec,
-        /* fecha_dec: formatDate(new Date(), 1), */
+        fecha_dec: formatDate(new Date(), 1),
         fecha_dec: "alo",
         org_name: req.body.data.org_name.toUpperCase(),
         org_rut: req.body.data.org_rut.toUpperCase(),
         activity_name: req.body.data.activity_name.toUpperCase(),
         owner_name: req.body.data.owner_name.toUpperCase(),
         owner_rut: req.body.data.owner_rut.toUpperCase(),
-        /* start_date: formatDate(req.body.data.start_date, 1), */
+        start_date: formatDate(req.body.data.start_date, 1),
         start_date: "fechi",
         place: req.body.data.place.toUpperCase(),
         start_time: req.body.data.start_time,
@@ -67,3 +82,5 @@ export const approveRequestPT = async (req, res) => {
         throw new Error(`Ha ocurrido un error: ${error.message}`); // Lanza un error si algo falla
     }
 }
+
+*/

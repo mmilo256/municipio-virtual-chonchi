@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../../ui/Modal";
 import { useState } from "react";
 import Input from "../../ui/Input";
@@ -12,6 +12,8 @@ const AccionesPermisosTransitorios = ({
     setStatus,
     request
 }) => {
+
+    const navigate = useNavigate()
 
     const requestEmail = request?.respuestas?.email
     const userFullName = request?.respuestas?.name
@@ -40,6 +42,9 @@ const AccionesPermisosTransitorios = ({
         }
     }
 
+    // GENERAR DECRETO (SIN FIRMA) -------------------------------------------
+
+
     // Renderiza diferentes botones según el estado de la solicitud.
     switch (status) {
         // Estados: "pendiente" o "en revisión".
@@ -55,6 +60,7 @@ const AccionesPermisosTransitorios = ({
                         Rechazar solicitud
                     </button>
                     <button
+                        onClick={() => { navigate("generar-decreto") }}
                         className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
                     >
                         Generar decreto

@@ -13,7 +13,7 @@ router.use("/auth", authRoutes)
 router.use("/procedures", authMiddleware, proceduresRoutes)
 router.use("/requests", authMiddleware, requestsRoutes)
 router.use("/documents", authMiddleware, documentsRoutes)
-router.use("/permisos-transitorios", authMiddleware, permisosTransitoriosRoutes)
 router.use("/email", authMiddleware, emailRoutes)
+router.use("/permisos-transitorios", authMiddleware, permisosTransitoriosRoutes)
 
 export default router

@@ -1,14 +1,14 @@
 import StatusTag from "../ui/StatusTag"
 import { formatDate } from "../../utils/format"
 
-const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos }) => {
+const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos, status }) => {
 
     return (
         <div>
             {/* Encabezado con el estado de la solicitud */}
             <div className="flex items-center gap-5">
                 <h1 className="text-2xl font-bold">{requestData?.tramite} #{requestData?.id}</h1>
-                <StatusTag status={requestData.estado} />
+                <StatusTag status={status} />
             </div>
             {/* Fecha de la solicitud */}
             <p className="text-slate-500">

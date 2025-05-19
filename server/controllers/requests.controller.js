@@ -62,7 +62,6 @@ export const updateRequestStatus = async (req, res) => {
     const { status } = req.body
     try {
         const request = await updateRequestStatusService(id, status)
-        console.log(request)
         res.status(200).json(request)
     } catch (error) {
         console.log(error)

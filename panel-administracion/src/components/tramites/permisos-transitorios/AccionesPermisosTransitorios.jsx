@@ -1,22 +1,45 @@
 import { Link } from "react-router-dom";
-
-// Componente que muestra las acciones disponibles según el estado de una solicitud.
-// Recibe como props: 
-// - `status`: el estado actual de la solicitud.
-// - `toggleRejectModal`: función para abrir/cerrar el modal de rechazo.
-// - `approveRequest`: función para iniciar el proceso de aprobación de la solicitud.
-// - `handlePreviewUnsignedDoc`: función para visualizar el decreto sin firmar.
-// - `handlePreviewSignedDoc`: función para visualizar el decreto firmado.
-// - `toggleApproveModal`: función para abrir/cerrar el modal de envío del decreto aprobado.
+import Modal from "../../ui/Modal";
+import { useState } from "react";
+import Input from "../../ui/Input";
+import { rejectTemplate } from "../../../email-templates/permisos-transitorios/rejectTemplate.js";
+import { sendEmail } from "../../../services/emailServices.js";
+import { updateRequestStatus } from "../../../services/requestsServices.js";
 
 const AccionesPermisosTransitorios = ({
+    requestId,
     status = "pendiente",
-    toggleRejectModal,
-    approveRequest,
-    handlePreviewUnsignedDoc,
-    handlePreviewSignedDoc,
-    toggleApproveModal,
+    setStatus,
+    request
 }) => {
+
+    const requestEmail = request?.respuestas?.email
+    const userFullName = request?.respuestas?.name
+
+    // RECHAZAR SOLICITUD -------------------------------------------
+    const [rejectModal, setRejectModal] = useState(false)
+    const [rejectInput, setRejectInput] = useState("")
+    const rejectTitle = "SOLICITUD DE PERMISO TRANSITORIO: RECHAZADA"
+
+    const openRejectModal = () => {
+        setRejectModal(true)
+    }
+
+    const onRejectRequest = async () => {
+        if (!rejectInput) {
+            return alert("Debe ingresar un motivo")
+        }
+        const emailTemplate = rejectTemplate(userFullName, rejectInput)
+        try {
+            await sendEmail(requestEmail, rejectTitle, emailTemplate)
+            await updateRequestStatus(requestId, "rechazada")
+            setStatus("rechazada")
+            alert("Se ha notificado al usuario el rechazo de su solicitud")
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
     // Renderiza diferentes botones según el estado de la solicitud.
     switch (status) {
         // Estados: "pendiente" o "en revisión".
@@ -26,17 +49,19 @@ const AccionesPermisosTransitorios = ({
             return (
                 <div className="flex items-center gap-4 my-4">
                     <button
-                        onClick={toggleRejectModal}
+                        onClick={openRejectModal}
                         className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded"
                     >
                         Rechazar solicitud
                     </button>
                     <button
-                        onClick={approveRequest}
                         className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
                     >
                         Generar decreto
                     </button>
+                    <Modal onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
+                        <Input value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
+                    </Modal>
                 </div>
             );
 
@@ -46,13 +71,11 @@ const AccionesPermisosTransitorios = ({
             return (
                 <div className="flex items-center gap-4 my-4">
                     <button
-                        onClick={toggleRejectModal}
                         className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded"
                     >
                         Rechazar solicitud
                     </button>
                     <button
-                        onClick={handlePreviewUnsignedDoc}
                         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
                     >
                         Descargar decreto
@@ -72,19 +95,16 @@ const AccionesPermisosTransitorios = ({
             return (
                 <div className="flex items-center gap-4 my-4">
                     <button
-                        onClick={handlePreviewUnsignedDoc}
                         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
                     >
                         Descargar decreto sin firma
                     </button>
                     <button
-                        onClick={handlePreviewSignedDoc}
                         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
                     >
                         Descargar decreto firmado
                     </button>
                     <button
-                        onClick={toggleApproveModal}
                         className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded"
                     >
                         Enviar decreto
@@ -98,13 +118,11 @@ const AccionesPermisosTransitorios = ({
             return (
                 <div className="flex items-center gap-4 my-4">
                     <button
-                        onClick={handlePreviewUnsignedDoc}
                         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
                     >
                         Descargar decreto sin firma
                     </button>
                     <button
-                        onClick={handlePreviewSignedDoc}
                         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
                     >
                         Descargar decreto firmado

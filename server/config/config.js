@@ -1,6 +1,8 @@
 import 'dotenv/config'
 
 export const config = {
+    email: process.env.EMAIL,
+    emailPassword: process.env.EMAIL_PASSWORD,
     sessionSecret: process.env.SESSION_SECRET,
     oauth: {
         clientId: process.env.CLIENT_ID,

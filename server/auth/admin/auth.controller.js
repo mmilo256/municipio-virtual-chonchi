@@ -61,7 +61,6 @@ export const verifySession = async (req, res) => {
         if (!userData) {
             return res.json({ message: "No hay una sesión activa" })
         }
-        console.log({ userData, msg: "No entiendo que pasa" })
         res.json({
             message: "La sesión está activa", data: userData
         })

@@ -36,9 +36,9 @@ export const subirDocumentoAsociado = async (id, data) => {
     }
 }
 
-export const updateRequestStatus = async (requestId, estado) => {
+export const updateRequestStatus = async (requestId, status) => {
     try {
-        await apiClient.patch(`/requests/${requestId}/estado`, { estado })
+        await apiClient.patch(`/requests/${requestId}`, { status })
     } catch (error) {
         throw error.message
     }

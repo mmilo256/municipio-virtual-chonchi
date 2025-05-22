@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Input from "../../ui/Input"
 import Button from "../../ui/Button"
 import { useEffect, useState } from "react"
@@ -9,19 +9,22 @@ const GenerarDecretoPermisosTransitorios = () => {
 
     const { id } = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
+    const { request } = location.state
+    const respuestas = request?.respuestas
 
     // Estados
     const [numDecreto, setNumDecreto] = useState("")
-    const [actividad, setActividad] = useState("")
-    const [ubicacion, setUbicacion] = useState("")
-    const [organizacion, setOrganizacion] = useState("")
-    const [rutOrganizacion, setRutOrganizacion] = useState("")
-    const [presidente, setPresidente] = useState("")
-    const [rutPresidente, setRutPresidente] = useState("")
-    const [fechaInicio, setFechaInicio] = useState("")
-    const [horaInicio, setHoraInicio] = useState("")
-    const [fechaTermino, setFechaTermino] = useState("")
-    const [horaTermino, setHoraTermino] = useState("")
+    const [actividad, setActividad] = useState(respuestas?.permissionName || "")
+    const [ubicacion, setUbicacion] = useState(respuestas?.permissionPlace || "")
+    const [organizacion, setOrganizacion] = useState(respuestas?.orgName || "")
+    const [rutOrganizacion, setRutOrganizacion] = useState(respuestas?.orgRut || "")
+    const [presidente, setPresidente] = useState(respuestas?.presidentName || "")
+    const [rutPresidente, setRutPresidente] = useState(respuestas?.presidentRut || "")
+    const [fechaInicio, setFechaInicio] = useState(respuestas?.permissionStartDate || "")
+    const [horaInicio, setHoraInicio] = useState(respuestas?.permissionStartTime || "")
+    const [fechaTermino, setFechaTermino] = useState(respuestas?.permissionEndDate || "")
+    const [horaTermino, setHoraTermino] = useState(respuestas?.permissionEndTime || "")
     const [esValido, setEsValido] = useState(false)
 
     // Validación de campos

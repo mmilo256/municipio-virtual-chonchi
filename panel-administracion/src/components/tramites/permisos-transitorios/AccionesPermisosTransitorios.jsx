@@ -56,7 +56,7 @@ const AccionesPermisosTransitorios = ({
 
     // GENERAR DECRETO (SIN FIRMA) -------------------------------------------
     const generarDecretoButton = <button
-        onClick={() => { navigate("generar-decreto") }}
+        onClick={() => { navigate("generar-decreto", { state: { request } }) }}
         className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
     >
         Generar decreto

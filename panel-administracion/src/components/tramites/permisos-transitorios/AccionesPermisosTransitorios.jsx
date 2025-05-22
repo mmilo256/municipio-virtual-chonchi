@@ -42,7 +42,25 @@ const AccionesPermisosTransitorios = ({
         }
     }
 
+    const rechazarSolicitudButton = <>
+        <button
+            onClick={openRejectModal}
+            className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded"
+        >
+            Rechazar solicitud
+        </button>
+        <Modal onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
+            <Input value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
+        </Modal>
+    </>
+
     // GENERAR DECRETO (SIN FIRMA) -------------------------------------------
+    const generarDecretoButton = <button
+        onClick={() => { navigate("generar-decreto") }}
+        className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
+    >
+        Generar decreto
+    </button>
 
 
     // Renderiza diferentes botones según el estado de la solicitud.
@@ -53,21 +71,8 @@ const AccionesPermisosTransitorios = ({
         case "en revision":
             return (
                 <div className="flex items-center gap-4 my-4">
-                    <button
-                        onClick={openRejectModal}
-                        className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded"
-                    >
-                        Rechazar solicitud
-                    </button>
-                    <button
-                        onClick={() => { navigate("generar-decreto") }}
-                        className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
-                    >
-                        Generar decreto
-                    </button>
-                    <Modal onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
-                        <Input value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
-                    </Modal>
+                    {rechazarSolicitudButton}
+                    {generarDecretoButton}
                 </div>
             );
 
@@ -76,11 +81,7 @@ const AccionesPermisosTransitorios = ({
         case "por firmar":
             return (
                 <div className="flex items-center gap-4 my-4">
-                    <button
-                        className="bg-red-300 hover:bg-red-200 text-red-800 py-2 px-5 rounded"
-                    >
-                        Rechazar solicitud
-                    </button>
+                    {rechazarSolicitudButton}
                     <button
                         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
                     >

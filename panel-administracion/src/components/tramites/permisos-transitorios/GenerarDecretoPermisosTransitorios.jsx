@@ -1,12 +1,14 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Input from "../../ui/Input"
 import Button from "../../ui/Button"
 import { useEffect, useState } from "react"
 import { generarDecreto } from "../../../services/permisosTransitoriosServices"
+import { updateRequestStatus } from "../../../services/requestsServices"
 
 const GenerarDecretoPermisosTransitorios = () => {
 
     const { id } = useParams()
+    const navigate = useNavigate()
 
     // Estados
     const [numDecreto, setNumDecreto] = useState("")
@@ -70,11 +72,13 @@ const GenerarDecretoPermisosTransitorios = () => {
         }
         try {
             const response = await generarDecreto(id, data)
-            console.log(response)
-            alert("Todo bien")
+            console.log(response.data)
+            await updateRequestStatus(id, "por firmar")
+            alert("Decreto generado exitosamente")
+            navigate(`../${id}`)
         } catch (error) {
             console.log(error)
-            alert("Todo mal")
+            alert("No se pudo generar el decreto")
 
         }
     }

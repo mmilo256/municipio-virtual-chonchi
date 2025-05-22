@@ -5,13 +5,14 @@ import Layout from './components/layouts/Layout'
 import RutasPermisosTransitorios from './components/routes/RutasPermisosTransitorios'
 import Protected from './components/common/Protected'
 import useAuthStore from './stores/useAuthStore'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { verifySession } from './services/authServices'
 import RutasReparacionCaminos from './components/routes/RutasReparacionCaminos'
 
 const App = () => {
 
   const { setIsAuthenticated, setSessionData } = useAuthStore()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     (async () => {
@@ -24,11 +25,16 @@ const App = () => {
           setIsAuthenticated(false)
           setSessionData({})
         }
+        setLoading(false)
       } catch (e) {
         console.log(e.message)
       }
     })()
   }, [setIsAuthenticated, setSessionData])
+
+  if (loading) {
+    return null
+  }
 
   return (
     <div className='bg-white text-black min-h-dvh'>

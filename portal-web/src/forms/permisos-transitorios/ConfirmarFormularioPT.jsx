@@ -156,13 +156,13 @@ const ConfirmarFormularioPT = () => {
                 <Accordion title="5. Antecedentes">
                     <ul className="list-disc list-inside pl-8 text-blue-700 underline">
                         {/* Lista de documentos cargados por el usuario */}
-                        {<li><a href={URL.createObjectURL(docsValues.docCI)} target="_blank">Cédula de identidad del representante legal</a></li>}
-                        {<li><a href={URL.createObjectURL(docsValues.docRutTributario)} target="_blank" >RUT tributario</a></li>}
-                        {<li><a href={URL.createObjectURL(docsValues.docCertificadoAntecedentes)} target="_blank" >Certificado de antecedentes para fines especiales</a></li>}
-                        {<li><a href={URL.createObjectURL(docsValues.docVigenciaPersonaJuridica)} target="_blank" >Certificado de vigencia de Persona Jurídica</a></li>}
-                        {<li><a href={URL.createObjectURL(docsValues.docOcupacionRecinto)} target="_blank" >Documento que acredita la ocupación legal del recinto</a></li>}
-                        {<li><a href={URL.createObjectURL(docsValues.docDeclaracionJurada)} target="_blank" >Declaración jurada simple Ley 19.925 de alcoholes</a></li>}
-                        {<li><a href={URL.createObjectURL(docsValues.docFirmaPresidente)} target="_blank" >Firma del representante legal</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docCI)} target="_blank">Cédula de identidad del representante legal</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docRutTributario)} target="_blank" >RUT tributario</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docCertificadoAntecedentes)} target="_blank" >Certificado de antecedentes para fines especiales</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docVigenciaPersonaJuridica)} target="_blank" >Certificado de vigencia de Persona Jurídica</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docOcupacionRecinto)} target="_blank" >Documento que acredita la ocupación legal del recinto</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docDeclaracionJurada)} target="_blank" >Declaración jurada simple Ley 19.925 de alcoholes</a></li>}
+                        {<li><a href={URL.createObjectURL(docsValues?.docFirmaPresidente)} target="_blank" >Firma del representante legal</a></li>}
                     </ul>
                 </Accordion>
             </div >

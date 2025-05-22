@@ -6,6 +6,7 @@ import DetalleSolicitud from "../DetalleSolicitud"
 import RespuestasPermisosTransitorios from "./RespuestasPermisosTransitorios"
 import DocsPermisosTransitorios from "./DocsPermisosTransitorios"
 import DocumentosSubidos from "../DocumentosSubidos"
+import { obtenerDecretos } from "../../../services/permisosTransitoriosServices"
 
 const IndexPermisosTransitorios = () => {
 
@@ -14,7 +15,19 @@ const IndexPermisosTransitorios = () => {
     const [uploadedDocs, setUploadedDocs] = useState([])
     const [docsAdjuntos, setDocsAdjuntos] = useState([])
     const [requestStatus, setRequestStatus] = useState("")
+    const [decretoSinFirma, setDecretoSinFirma] = useState({})
+    const [decretoFirmado, setDecretoFirmado] = useState({})
     const [refresh, setRefresh] = useState(false)
+
+    // Cargar los decretos si existen
+    useEffect(() => {
+        (async () => {
+            const decretos = await obtenerDecretos(id)
+            setDecretoSinFirma(decretos?.decretoSinFirma)
+            setDecretoFirmado(decretos?.decretoFirmado)
+
+        })()
+    }, [id])
 
     // Cambiar el estado a "en revision" en caso de que se abra la solicitud por primera vez
     useEffect(() => {
@@ -74,6 +87,7 @@ const IndexPermisosTransitorios = () => {
                 setStatus={setRequestStatus}
                 request={requestData}
                 requestId={id}
+                decretos={{ decretoSinFirma, decretoFirmado }}
             />}
             requestData={requestData}
             respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}

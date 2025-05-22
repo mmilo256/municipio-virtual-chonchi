@@ -5,7 +5,9 @@ import Document from "../../models/documentModel.js"
 export const obtenerDecretosService = async (requestId) => {
     try {
         const decretos = await Document.findAll({ where: { solicitud_id: requestId, tipo: "generado" } })
-        return decretos
+        const decretoSinFirma = decretos.find(doc => doc.estado === "sin firmar")
+        const decretoFirmado = decretos.find(doc => doc.estado === "firmado")
+        return { decretoSinFirma, decretoFirmado }
     } catch (error) {
         console.log(error)
         throw { error: error.message, message: "No se pudo obtener los decretos asociados a esta solicitud" }

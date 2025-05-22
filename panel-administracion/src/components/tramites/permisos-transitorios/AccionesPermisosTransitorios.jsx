@@ -5,12 +5,14 @@ import Input from "../../ui/Input";
 import { rejectTemplate } from "../../../email-templates/permisos-transitorios/rejectTemplate.js";
 import { sendEmail } from "../../../services/emailServices.js";
 import { updateRequestStatus } from "../../../services/requestsServices.js";
+import { SERVER_URL } from "../../../constants/constants.js";
 
 const AccionesPermisosTransitorios = ({
     requestId,
     status = "pendiente",
     setStatus,
-    request
+    request,
+    decretos
 }) => {
 
     const navigate = useNavigate()
@@ -63,6 +65,19 @@ const AccionesPermisosTransitorios = ({
     </button>
 
 
+    // DESCARGAR DECRETO (SIN FIRMA) ---------------------------------
+    const abrirDecreto = () => {
+        const ruta = `${SERVER_URL}/${decretos?.decretoSinFirma?.ruta}`
+        window.open(ruta)
+    }
+    const descargarDecretoButton = <button
+        onClick={abrirDecreto}
+        className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
+    >
+        Descargar decreto
+    </button>
+
+
     // Renderiza diferentes botones según el estado de la solicitud.
     switch (status) {
         // Estados: "pendiente" o "en revisión".
@@ -82,11 +97,7 @@ const AccionesPermisosTransitorios = ({
             return (
                 <div className="flex items-center gap-4 my-4">
                     {rechazarSolicitudButton}
-                    <button
-                        className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
-                    >
-                        Descargar decreto
-                    </button>
+                    {descargarDecretoButton}
                     <Link
                         to="subir-decreto-firmado"
                         className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
@@ -101,11 +112,7 @@ const AccionesPermisosTransitorios = ({
         case "aprobada":
             return (
                 <div className="flex items-center gap-4 my-4">
-                    <button
-                        className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
-                    >
-                        Descargar decreto sin firma
-                    </button>
+                    {descargarDecretoButton}
                     <button
                         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
                     >
@@ -124,11 +131,7 @@ const AccionesPermisosTransitorios = ({
         case "finalizada":
             return (
                 <div className="flex items-center gap-4 my-4">
-                    <button
-                        className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
-                    >
-                        Descargar decreto sin firma
-                    </button>
+                    {descargarDecretoButton}
                     <button
                         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
                     >

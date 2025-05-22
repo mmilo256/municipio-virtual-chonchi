@@ -28,13 +28,13 @@ export const generarDecreto = async (requestId, data) => {
     }
 }
 
-export const fetchFinalDocument = async (solicitud_id, estado_doc = "sin firmar") => {
+export const obtenerDecretos = async (solicitudId) => {
     try {
-        const response = await apiClient.get(`/permisos-transitorios/${solicitud_id}/obtener-decreto?estado_doc=${estado_doc}`)
+        const response = await apiClient.get(`/permisos-transitorios/${solicitudId}/obtener-decretos`)
         const data = response.data
-        return data.document
+        return data
     } catch (error) {
         console.log(error)
-        throw new Error(`Ha ocurrido un error: ${error.message}`);
+        throw { error }
     }
 }

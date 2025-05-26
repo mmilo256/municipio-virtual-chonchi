@@ -15,6 +15,9 @@ const AccionesPermisosTransitorios = ({
     decretos
 }) => {
 
+    console.log(decretos)
+
+
     const navigate = useNavigate()
 
     const requestEmail = request?.respuestas?.email
@@ -65,17 +68,26 @@ const AccionesPermisosTransitorios = ({
     </button>
 
 
-    // DESCARGAR DECRETO (SIN FIRMA) ---------------------------------
-    const abrirDecreto = () => {
-        const ruta = `${SERVER_URL}/${decretos?.decretoSinFirma?.ruta}`
+    // DESCARGAR DECRETO  ---------------------------------
+    const abrirDecreto = (decreto) => {
+        const ruta = `${SERVER_URL}/${decreto?.ruta}`
         window.open(ruta)
     }
-    const descargarDecretoButton = <button
-        onClick={abrirDecreto}
+    const descargarDecretoSinFirmarButton = <button
+        onClick={() => { abrirDecreto(decretos?.decretoSinFirma) }}
         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
     >
-        Descargar decreto
+        Decreto (sin firma)
     </button>
+
+    const descargarDecretoFirmadoButton = <button
+        onClick={() => { abrirDecreto(decretos?.decretoFirmado) }}
+        className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
+    >
+        Decreto firmado
+    </button>
+
+
 
 
     // SUBIR DECRETO FIRMADO ------------------------------
@@ -101,7 +113,7 @@ const AccionesPermisosTransitorios = ({
             return (
                 <div className="flex items-center gap-4 my-4">
                     {rechazarSolicitudButton}
-                    {descargarDecretoButton}
+                    {descargarDecretoSinFirmarButton}
                     <Link
                         to="subir-decreto"
                         className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
@@ -116,12 +128,8 @@ const AccionesPermisosTransitorios = ({
         case "aprobada":
             return (
                 <div className="flex items-center gap-4 my-4">
-                    {descargarDecretoButton}
-                    <button
-                        className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
-                    >
-                        Descargar decreto firmado
-                    </button>
+                    {descargarDecretoSinFirmarButton}
+                    {descargarDecretoFirmadoButton}
                     <button
                         className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded"
                     >
@@ -135,12 +143,8 @@ const AccionesPermisosTransitorios = ({
         case "finalizada":
             return (
                 <div className="flex items-center gap-4 my-4">
-                    {descargarDecretoButton}
-                    <button
-                        className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
-                    >
-                        Descargar decreto firmado
-                    </button>
+                    {descargarDecretoSinFirmarButton}
+                    {descargarDecretoFirmadoButton}
                 </div>
             );
 

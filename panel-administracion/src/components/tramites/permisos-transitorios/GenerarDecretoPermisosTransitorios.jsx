@@ -74,8 +74,7 @@ const GenerarDecretoPermisosTransitorios = () => {
             horaTermino
         }
         try {
-            const response = await generarDecreto(id, data)
-            console.log(response.data)
+            await generarDecreto(id, data)
             await updateRequestStatus(id, "por firmar")
             alert("Decreto generado exitosamente")
             navigate(`../${id}`)

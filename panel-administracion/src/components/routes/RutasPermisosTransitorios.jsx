@@ -14,7 +14,7 @@ const PermisosTransitorios = () => {
                 <Route path="/:id" element={<IndexPermisosTransitorios />} />
                 <Route path="/:id/subir-documento" element={<FormularioSubirDocumento titulo="Subir documento asociado a la solicitud" tipo="subido" />} />
                 <Route path="/:id/generar-decreto" element={<GenerarDecretoPermisosTransitorios />} />
-                <Route path="/:id/subir-decreto" element={<FormularioSubirDocumento titulo="Subir decreto firmado" estado="firmado" tipo="subido" estadoSolicitud="aprobada" />} />
+                <Route path="/:id/subir-decreto" element={<FormularioSubirDocumento titulo="Subir decreto firmado" estado="firmado" tipo="generado" estadoSolicitud="aprobada" />} />
             </Routes>
         </div>
     )

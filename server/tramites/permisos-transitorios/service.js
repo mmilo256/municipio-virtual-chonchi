@@ -5,6 +5,7 @@ import Document from "../../models/documentModel.js"
 export const obtenerDecretosService = async (requestId) => {
     try {
         const decretos = await Document.findAll({ where: { solicitud_id: requestId, tipo: "generado" } })
+        console.log(decretos)
         const decretoSinFirma = decretos.find(doc => doc.estado === "sin firmar")
         const decretoFirmado = decretos.find(doc => doc.estado === "firmado")
         return { decretoSinFirma, decretoFirmado }

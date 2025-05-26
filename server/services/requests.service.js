@@ -81,9 +81,10 @@ export const uploadDocument = async (file, requestId, status, type, name) => {
             originalname: file?.originalname,
             estado: status || null,
             tipo: type || null,
-            nombre: name,
+            nombre: name || "sin nombre",
             solicitud_id: requestId
         }
+        console.log(doc)
         const newDoc = await Document.create(doc)
         return newDoc
     } catch (error) {

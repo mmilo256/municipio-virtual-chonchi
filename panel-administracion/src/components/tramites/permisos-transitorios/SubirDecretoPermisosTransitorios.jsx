@@ -1,12 +1,11 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import Upload from '../../ui/Upload'
 import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { uploadSignedDocument } from '../../../services/permisosTransitoriosServices'
 import { updateRequestStatus } from '../../../services/requestsServices'
+import Upload from '../../ui/Upload'
 import Button from '../../ui/Button'
 
-const SubirDecretoFirmado = () => {
-
+const SubirDecretoPermisosTransitorios = () => {
     const { id } = useParams()
 
     const [signedDoc, setSignedDoc] = useState(null)
@@ -19,10 +18,11 @@ const SubirDecretoFirmado = () => {
             const data = new FormData()
             data.append('signedDoc', signedDoc)
             try {
-                await uploadSignedDocument(id, data)
-                await updateRequestStatus(id, 'aprobada')
+                // await uploadSignedDocument(id, data)
+                // await updateRequestStatus(id, 'aprobada')
                 alert("Archivo subido correctamente")
-                navigate(`../${id}`)
+                console.log(data)
+                // navigate(`../${id}`)
             } catch (error) {
                 alert("No se pudo subir el documento firmado")
                 console.log(error.message)
@@ -44,4 +44,4 @@ const SubirDecretoFirmado = () => {
     )
 }
 
-export default SubirDecretoFirmado
+export default SubirDecretoPermisosTransitorios

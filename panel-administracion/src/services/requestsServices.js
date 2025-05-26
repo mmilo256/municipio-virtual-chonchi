@@ -28,9 +28,16 @@ export const fetchDocumentosAdjuntos = async (id) => {
     }
 }
 
-export const subirDocumentoAsociado = async (id, data) => {
+export const subirDocumentoAsociado = async (id, data, status = null, type = null, name = null) => {
+    let queries = {}
+    if (status) { queries.status = status }
+    if (type) { queries.type = type }
+    if (name) { queries.name = name }
+
+    const queryString = new URLSearchParams(queries).toString()
+
     try {
-        await apiClient.post(`/requests/${id}/documents`, data, { headers: { "Content-Type": "multipart/form-data" } })
+        await apiClient.post(`/requests/${id}/documents?${queryString}`, data, { headers: { "Content-Type": "multipart/form-data" } })
     } catch (error) {
         throw error.message
     }

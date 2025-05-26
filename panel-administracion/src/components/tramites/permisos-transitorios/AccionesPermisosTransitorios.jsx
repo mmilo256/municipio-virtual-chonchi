@@ -78,6 +78,10 @@ const AccionesPermisosTransitorios = ({
     </button>
 
 
+    // SUBIR DECRETO FIRMADO ------------------------------
+
+
+
     // Renderiza diferentes botones según el estado de la solicitud.
     switch (status) {
         // Estados: "pendiente" o "en revisión".
@@ -99,7 +103,7 @@ const AccionesPermisosTransitorios = ({
                     {rechazarSolicitudButton}
                     {descargarDecretoButton}
                     <Link
-                        to="subir-decreto-firmado"
+                        to="subir-decreto"
                         className="bg-amber-300 hover:bg-amber-200 text-amber-800 py-2 px-5 rounded"
                     >
                         Subir decreto firmado

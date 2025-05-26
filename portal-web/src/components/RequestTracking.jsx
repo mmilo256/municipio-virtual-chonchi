@@ -3,13 +3,18 @@ import StatusTracker from "./ui/StatusTracker"  // Componente que muestra el seg
 import Heading from "./ui/Heading"  // Componente de encabezado
 import Container from "./ui/Container"  // Componente contenedor para envolver el contenido
 import { useEffect, useState } from "react"  // Hooks de React para efectos y estados
-import { fetchRequestStatusLogs } from "../services/requests.service"  // Función para obtener los logs de la solicitud
+import { fetchDocumentosAdjuntos, fetchRequestById, fetchRequestStatusLogs } from "../services/requests.service"  // Función para obtener los logs de la solicitud
 import { formatDate } from "../utils/utils"  // Función para formatear las fechas
+import { SERVER_URL } from "../../../panel-administracion/src/constants/constants"
+import Respuestas from "./Respuestas"
 
 const RequestTracking = () => {
 
     // Obtiene el ID de la solicitud desde los parámetros de la URL
     const { id } = useParams()
+    const [requestData, setRequestData] = useState({})
+    const [requestDocs, setRequestDocs] = useState([])
+    const [tramiteId, setTramiteId] = useState(null)
 
     // Estado para almacenar los logs de la solicitud
     const [logs, setLogs] = useState([])
@@ -58,10 +63,32 @@ const RequestTracking = () => {
         })()
     }, [id])  // El efecto se ejecuta nuevamente si cambia el ID de la solicitud
 
+    useEffect(() => {
+        (async () => {
+            const response = await fetchRequestById(id)
+            setTramiteId(response?.tramite_id)
+            const formattedFormData = JSON.parse(response.respuestas)
+            setRequestData(formattedFormData)
+        })()
+    }, [id])
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetchDocumentosAdjuntos(id)
+            const docs = response.map(doc => ({
+                ruta: `${SERVER_URL}/${doc.ruta}`
+            }))
+            setRequestDocs(docs)
+        })()
+    }, [id])
+
     return (
         <Container>
             <Heading level={2}>Seguimiento de solicitud #{id}</Heading>  {/* Título de la página con el ID de la solicitud */}
-            <StatusTracker data={logs} />  {/* Componente que muestra el seguimiento de los logs */}
+            <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded shadow">
+                <StatusTracker data={logs} />  {/* Componente que muestra el seguimiento de los logs */}
+                <Respuestas tramiteId={tramiteId} data={requestData} docs={requestDocs} />
+            </div>
         </Container>
     )
 }

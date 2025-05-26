@@ -16,6 +16,26 @@ export const fetchRequestStatusLogs = async (request_id) => {
     }
 }
 
+export const fetchRequestById = async (requestId) => {
+    try {
+        const response = await apiClient.get(`/requests/${requestId}`)
+        const data = response.data
+        return data
+    } catch (error) {
+        throw error.message
+    }
+}
+
+export const fetchDocumentosAdjuntos = async (id) => {
+    try {
+        const response = await apiClient.get(`/requests/${id}/documents?type=adjunto`)
+        const data = response.data
+        return data
+    } catch (error) {
+        throw error.message
+    }
+}
+
 // Función para obtener todas las solicitudes realizadas por un usuario dado su RUT
 export const fetchRequestsByUserId = async (id) => {
     try {

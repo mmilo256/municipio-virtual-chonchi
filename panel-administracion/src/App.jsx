@@ -25,10 +25,10 @@ const App = () => {
           setIsAuthenticated(false)
           setSessionData({})
         }
-        setLoading(false)
       } catch (e) {
         console.log(e.message)
       }
+      setLoading(false)
     })()
   }, [setIsAuthenticated, setSessionData])
 

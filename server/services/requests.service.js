@@ -123,8 +123,7 @@ export const createNewRequest = async (data, files) => {
 
 
         // Guardar documentos adjuntos en base de datos
-        const docs = await Document.bulkCreate(documents, { transaction: t })
-        console.log(docs)
+        await Document.bulkCreate(documents, { transaction: t })
 
         // Registrar el estado inicial de la solicitud en el log de estados
         await RequestsStatusLog.create({ solicitud_id: request.id, estado: 'pendiente' }, { transaction: t })

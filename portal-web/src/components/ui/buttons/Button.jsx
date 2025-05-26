@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 
 // Componente Button que puede ser un botón o un enlace estilizado
-const Button = ({ children, variant = "primary", type = "button", href, onClick, disabled, fullWidth }) => {
+const Button = ({ children, variant = "primary", type = "button", href, onClick, disabled, fullWidth, isLoading }) => {
     // Determina los estilos del botón según el tipo de variante
     let buttonStyles;
     switch (variant) {
@@ -25,11 +25,11 @@ const Button = ({ children, variant = "primary", type = "button", href, onClick,
     // Renderiza un enlace o un botón según el tipo especificado
     return (
         type === "link"
-            ? <NavLink disabled={disabled} to={href} className={`block transition-colors ${buttonStyles}`}>
-                <span className='underline'>{children}</span>
+            ? <NavLink disabled={disabled || isLoading} to={href} className={`block transition-colors ${buttonStyles}`}>
+                <span className='underline'>{isLoading ? "Cargando..." : children}</span>
             </NavLink>
-            : <button disabled={disabled} onClick={onClick} type={type} className={`block transition-colors ${buttonStyles}`}>
-                <span className='underline'>{children}</span>
+            : <button disabled={disabled || isLoading} onClick={onClick} type={type} className={`block transition-colors ${buttonStyles}`}>
+                <span className='underline'>{isLoading ? "Cargando..." : children}</span>
             </button>
     )
 }

@@ -45,19 +45,19 @@ const ConfirmarFormularioPT = () => {
                     <div className="grid grid-cols-2 pl-8">
                         <div className={itemStyles}>
                             <p><strong>Nombre del solicitante </strong></p>
-                            <p>{name}</p>
+                            <p>{name || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>RUT </strong></p>
-                            <p>{rut}</p>
+                            <p>{rut || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Correo electrónico </strong></p>
-                            <p>{email}</p>
+                            <p>{email || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Teléfono </strong></p>
-                            <p>{phone}</p>
+                            <p>{phone || ""}</p>
                         </div>
                     </div>
                 </Accordion >
@@ -65,27 +65,27 @@ const ConfirmarFormularioPT = () => {
                     <div className="grid grid-cols-2 pl-8">
                         <div className={itemStyles}>
                             <p><strong>Nombre o razón social </strong></p>
-                            <p>{orgName}</p>
+                            <p>{orgName || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>RUT de la organización </strong></p>
-                            <p>{orgRut}</p>
+                            <p>{orgRut || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Domicilio </strong></p>
-                            <p>{orgAddress}</p>
+                            <p>{orgAddress || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Correo electrónico </strong></p>
-                            <p>{orgEmail}</p>
+                            <p>{orgEmail || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Teléfono </strong></p>
-                            <p>{orgPhone}</p>
+                            <p>{orgPhone || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Tipo de organización </strong></p>
-                            <p>{orgType}</p>
+                            <p>{orgType || ""}</p>
                         </div>
                     </div>
                 </Accordion>
@@ -93,23 +93,23 @@ const ConfirmarFormularioPT = () => {
                     <div className="grid grid-cols-2 pl-8">
                         <div className={itemStyles}>
                             <p><strong>Nombre completo </strong></p>
-                            <p>{presidentName}</p>
+                            <p>{presidentName || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>RUT </strong></p>
-                            <p>{presidentRut}</p>
+                            <p>{presidentRut || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Domicilio </strong></p>
-                            <p>{presidentAddress}</p>
+                            <p>{presidentAddress || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Correo electrónico </strong></p>
-                            <p>{presidentEmail}</p>
+                            <p>{presidentEmail || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Teléfono </strong></p>
-                            <p>{presidentPhone}</p>
+                            <p>{presidentPhone || ""}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Teléfono 2 </strong></p>
@@ -137,11 +137,11 @@ const ConfirmarFormularioPT = () => {
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Consumo y/o venta de bebidas alcohólicas </strong></p>
-                            <p>{JSON.parse(permissionAlcohol) ? "Si" : "No"}</p>
+                            <p>{JSON.parse(permissionAlcohol || false) ? "Si" : "No"}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Consumo y/o venta de alimentos </strong></p>
-                            <p>{JSON.parse(permissionFood) ? "Si" : "No"}</p>
+                            <p>{JSON.parse(permissionFood || false) ? "Si" : "No"}</p>
                         </div>
                         <div className={itemStyles}>
                             <p><strong>Descripción de la actividad </strong></p>

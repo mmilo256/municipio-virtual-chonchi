@@ -34,6 +34,8 @@ const FormPermisosTransitorios = () => {
     })
     const { setInputsValues, setDocsValues, inputsValues, docsValues } = useFormsStore()
 
+    const [isLoading, setIsLoading] = useState(false)
+
     const [step, setStep] = useState(0)
     const lastStep = 5
     const stepTitles = [
@@ -55,6 +57,7 @@ const FormPermisosTransitorios = () => {
     }
 
     const onSubmit = async (data) => {
+        setIsLoading(true)
         setInputsValues(data)
         setDocsValues(docs)
         if (step < lastStep) {
@@ -75,6 +78,7 @@ const FormPermisosTransitorios = () => {
                 alert("Hubo un error")
             }
         }
+        setIsLoading(false)
     }
 
     if (step === 6) {
@@ -93,8 +97,8 @@ const FormPermisosTransitorios = () => {
                 {step === 4 && <Paso4 register={register} docs={docs} setDocs={setDocs} />}
                 {step === 5 && <ConfirmarFormularioPT />}
                 <div className="mt-4 flex gap-2 justify-end">
-                    <Button onClick={prevStep} type="button">Anterior</Button>
-                    <Button variant="secondary" type="submit">{step < lastStep ? "Siguiente" : "Finalizar"}</Button>
+                    <Button isLoading={isLoading} onClick={prevStep} type="button">Anterior</Button>
+                    <Button isLoading={isLoading} variant="secondary" type="submit">{step < lastStep ? "Siguiente" : "Finalizar"}</Button>
                 </div>
             </form>
         </Container>

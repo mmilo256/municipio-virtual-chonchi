@@ -17,7 +17,7 @@ const Button = ({ isLoading, text, type = "button", variant, wFull = false, onCl
     }
 
     return (
-        <button onClick={onClick} className={`block ${isLoading && "cursor-wait"} p-2 rounded ${wFull && "w-full"} ${buttonVariant}`} disabled={isLoading || !isValid} type={type}>{text}</button>
+        <button onClick={onClick} className={`block ${isLoading && "cursor-wait"} p-2 rounded ${wFull && "w-full"} ${buttonVariant}`} disabled={isLoading || !isValid} type={type}>{isLoading ? "Cargando..." : text}</button>
     )
 }
 

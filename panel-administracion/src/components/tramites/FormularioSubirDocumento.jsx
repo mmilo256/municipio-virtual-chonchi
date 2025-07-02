@@ -9,6 +9,8 @@ const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud }) => 
 
     const [name, setName] = useState("")
     const [file, setFile] = useState(null)
+    const [loading, setLoading] = useState(false)
+
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -17,11 +19,14 @@ const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud }) => 
         if (!name || !file) {
             return alert("Complete todos los campos")
         }
+        setLoading(true)
         const formData = new FormData()
         formData.append("file", file)
         try {
             await subirDocumentoAsociado(id, formData, estado, tipo, name)
-            await updateRequestStatus(id, estadoSolicitud)
+            if (estadoSolicitud) {
+                await updateRequestStatus(id, estadoSolicitud)
+            }
             alert("Se ha subido un documento")
             navigate(`../${id}`)
         } catch (error) {
@@ -38,7 +43,7 @@ const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud }) => 
                 <Input name="uploadedDoc" label="Nombre" value={name} onChange={setName} />
                 <Upload name="uploadedDoc" files={file} setFiles={setFile} />
                 <div className="mt-4">
-                    <Button type="submit" text="Subir documento" variant="secondary" />
+                    <Button isLoading={loading} type="submit" text="Subir documento" variant="secondary" />
                 </div>
             </form>
         </div>

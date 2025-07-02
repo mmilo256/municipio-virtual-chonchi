@@ -1,6 +1,6 @@
 import Button from "./Button"
 
-const Modal = ({ children, title, btnText, modal, toggleModal, onClick }) => {
+const Modal = ({ children, title, btnText, modal, toggleModal, onClick, loading }) => {
 
     if (!modal) {
         return null
@@ -20,8 +20,8 @@ const Modal = ({ children, title, btnText, modal, toggleModal, onClick }) => {
                 </div>
 
                 <div className="flex justify-end gap-4 mt-4">
-                    <Button onClick={toggleModal} variant="tertiary" text="Cancelar" />
-                    <Button onClick={onClick} variant="secondary" text={btnText} />
+                    {!loading && <Button onClick={toggleModal} variant="tertiary" text="Cancelar" />}
+                    <Button isLoading={loading} onClick={onClick} variant="secondary" text={btnText} />
                 </div>
             </div>
         </div>

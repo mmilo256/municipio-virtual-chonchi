@@ -15,9 +15,6 @@ const AccionesPermisosTransitorios = ({
     decretos
 }) => {
 
-    console.log(decretos)
-
-
     const navigate = useNavigate()
 
     const requestEmail = request?.respuestas?.email
@@ -28,6 +25,8 @@ const AccionesPermisosTransitorios = ({
     const [rejectInput, setRejectInput] = useState("")
     const rejectTitle = "SOLICITUD DE PERMISO TRANSITORIO: RECHAZADA"
 
+    const [loading, setLoading] = useState(false)
+
     const openRejectModal = () => {
         setRejectModal(true)
     }
@@ -36,6 +35,7 @@ const AccionesPermisosTransitorios = ({
         if (!rejectInput) {
             return alert("Debe ingresar un motivo")
         }
+        setLoading(true)
         const emailTemplate = rejectTemplate(userFullName, rejectInput)
         try {
             await sendEmail(requestEmail, rejectTitle, emailTemplate)
@@ -54,7 +54,7 @@ const AccionesPermisosTransitorios = ({
         >
             Rechazar solicitud
         </button>
-        <Modal onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
+        <Modal loading={loading} onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
             <Input value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
         </Modal>
     </>
@@ -88,11 +88,7 @@ const AccionesPermisosTransitorios = ({
     </button>
 
 
-
-
     // SUBIR DECRETO FIRMADO ------------------------------
-
-
 
     // Renderiza diferentes botones según el estado de la solicitud.
     switch (status) {
@@ -130,11 +126,12 @@ const AccionesPermisosTransitorios = ({
                 <div className="flex items-center gap-4 my-4">
                     {descargarDecretoSinFirmarButton}
                     {descargarDecretoFirmadoButton}
-                    <button
+                    <Link
+                        to="enviar-decreto"
                         className="bg-green-300 hover:bg-green-200 text-green-800 py-2 px-5 rounded"
                     >
                         Enviar decreto
-                    </button>
+                    </Link>
                 </div>
             );
 

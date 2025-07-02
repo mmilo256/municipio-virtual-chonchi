@@ -4,6 +4,7 @@ import { PROCEDURES_ID } from "../../constants/constants"
 import IndexPermisosTransitorios from "../tramites/permisos-transitorios/IndexPermisosTransitorios"
 import FormularioSubirDocumento from "../tramites/FormularioSubirDocumento"
 import GenerarDecretoPermisosTransitorios from "../tramites/permisos-transitorios/GenerarDecretoPermisosTransitorios"
+import EnviarDecretoPermisosTransitorios from "../tramites/permisos-transitorios/EnviarDecretoPermisosTransitorios"
 
 const PermisosTransitorios = () => {
 
@@ -15,6 +16,7 @@ const PermisosTransitorios = () => {
                 <Route path="/:id/subir-documento" element={<FormularioSubirDocumento titulo="Subir documento asociado a la solicitud" tipo="subido" />} />
                 <Route path="/:id/generar-decreto" element={<GenerarDecretoPermisosTransitorios />} />
                 <Route path="/:id/subir-decreto" element={<FormularioSubirDocumento titulo="Subir decreto firmado" estado="firmado" tipo="generado" estadoSolicitud="aprobada" />} />
+                <Route path="/:id/enviar-decreto" element={<EnviarDecretoPermisosTransitorios />} />
             </Routes>
         </div>
     )

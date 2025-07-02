@@ -15,8 +15,11 @@ const DocumentosSubidos = ({ docs = [], setRefresh }) => {
     const navigate = useNavigate()
     const columns = ["Documento", "Acciones"]
 
+    const [loading, setLoading] = useState(false)
+
     // Borrar un documento
     const onDeleteDocument = async () => {
+        setLoading(true)
         try {
             await deleteDocumentService(selectedDocument.id)
             alert(`Documento borrado.`)
@@ -67,7 +70,7 @@ const DocumentosSubidos = ({ docs = [], setRefresh }) => {
                     ? <p>No hay documentos subidos</p>
                     : <BaseTable columns={columns} data={data} />}
             </div>
-            <Modal onClick={onDeleteDocument} btnText="Borrar documento" title="Borrar documento" toggleModal={toggleDeleteModal} modal={deleteModal}>
+            <Modal loading={loading} onClick={onDeleteDocument} btnText="Borrar documento" title="Borrar documento" toggleModal={toggleDeleteModal} modal={deleteModal}>
                 <p>¿Seguro que desea borrar el documento <strong>{selectedDocument?.nombre}</strong>?</p>
             </Modal>
         </>

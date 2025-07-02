@@ -27,6 +27,8 @@ const GenerarDecretoPermisosTransitorios = () => {
     const [horaTermino, setHoraTermino] = useState(respuestas?.permissionEndTime || "")
     const [esValido, setEsValido] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+
     // Validación de campos
     useEffect(() => {
         if (numDecreto &&
@@ -59,6 +61,7 @@ const GenerarDecretoPermisosTransitorios = () => {
 
     // Enviar formulario
     const onSubmit = async (e) => {
+        setLoading(true)
         e.preventDefault()
         const data = {
             numDecreto,
@@ -105,7 +108,7 @@ const GenerarDecretoPermisosTransitorios = () => {
                     <Input value={horaTermino} onChange={setHoraTermino} label="Hora de término" type="time" />
                 </div>
                 <div className="flex justify-end">
-                    <Button text="Generar decreto" type="submit" variant="secondary" isValid={esValido} />
+                    <Button isLoading={loading} text="Generar decreto" type="submit" variant="secondary" isValid={esValido} />
                 </div>
             </form>
         </div>

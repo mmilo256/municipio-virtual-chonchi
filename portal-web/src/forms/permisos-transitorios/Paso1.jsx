@@ -14,6 +14,7 @@ const Paso1 = ({ register, errors }) => {
             <Input
                 name="orgName"
                 label="Nombre de la organización"
+                placeholder="Ej: Junta de vecinos 77"
                 register={register}
                 error={errors["orgName"]}
                 validations={{
@@ -22,6 +23,7 @@ const Paso1 = ({ register, errors }) => {
             <Input
                 name="orgRut"
                 label="RUT de la organización"
+                placeholder="Ej: 12345678-9"
                 register={register}
                 type="rut"
                 error={errors["orgRut"]}
@@ -31,6 +33,7 @@ const Paso1 = ({ register, errors }) => {
             <Input
                 name="orgAddress"
                 label="Dirección"
+                placeholder="Ej: Calle 154"
                 error={errors["orgAddress"]}
                 register={register}
                 validations={{
@@ -39,6 +42,7 @@ const Paso1 = ({ register, errors }) => {
             <Input
                 name="orgEmail"
                 label="Correo electrónico"
+                placeholder="Ej: ejemplo@gmail.com"
                 error={errors["orgEmail"]}
                 register={register}
                 type="email"
@@ -48,6 +52,7 @@ const Paso1 = ({ register, errors }) => {
             <Input
                 name="orgPhone"
                 label="Número de teléfono"
+                placeholder="Ej: 954883895"
                 error={errors["orgPhone"]}
                 type="phone"
                 register={register}

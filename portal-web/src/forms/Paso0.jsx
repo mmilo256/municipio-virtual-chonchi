@@ -39,6 +39,7 @@ const Paso0 = ({ register, errors, setValue }) => {
             <Input
                 name="email"
                 label={"Correo electrónico"}
+                placeholder="Ej: ejemplo@gmail.cl"
                 type="email"
                 register={register}
                 error={errors["email"]}
@@ -48,6 +49,7 @@ const Paso0 = ({ register, errors, setValue }) => {
             <Input
                 name="phone"
                 label={"Número de teléfono"}
+                placeholder="Ej: 965783889"
                 type="phone"
                 register={register}
                 error={errors["phone"]}

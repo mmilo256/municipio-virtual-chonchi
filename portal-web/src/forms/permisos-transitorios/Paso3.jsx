@@ -8,6 +8,7 @@ const Paso3 = ({ register, errors }) => {
             <Input
                 name="permissionName"
                 label="Nombre de la actividad"
+                placeholder="Ej: Bingo bailable"
                 error={errors["permissionName"]}
                 register={register}
                 validations={{
@@ -16,6 +17,7 @@ const Paso3 = ({ register, errors }) => {
             <Input
                 name="permissionPlace"
                 label="Lugar de realización"
+                placeholder="Ej: Gimnasio Municipal"
                 error={errors["permissionPlace"]}
                 register={register}
                 validations={{
@@ -88,6 +90,7 @@ const Paso3 = ({ register, errors }) => {
             <Input
                 name="permissionDescription"
                 label="Descripción de la actividad"
+                placeholder="La actividad consiste en..."
                 type="textarea"
                 error={errors["permissionDescription"]}
                 register={register}
@@ -97,6 +100,7 @@ const Paso3 = ({ register, errors }) => {
             <Input
                 name="permissionPurpose"
                 label="Destino de los fondos"
+                placeholder="Los fondos recaudados serán destinados a..."
                 type="textarea"
                 error={errors["permissionPurpose"]}
                 register={register}

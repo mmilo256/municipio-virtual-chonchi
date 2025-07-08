@@ -8,6 +8,7 @@ const Paso2 = ({ register, errors }) => {
                 name="presidentName"
                 label="Nombre del representante legal"
                 error={errors["presidentName"]}
+                placeholder="Ej: Juan López Pérez"
                 register={register}
                 validations={{
                     required: validationRules.required
@@ -15,6 +16,7 @@ const Paso2 = ({ register, errors }) => {
             <Input
                 name="presidentRut"
                 label="RUT del representante legal"
+                placeholder="Ej: 15955637-K"
                 error={errors["presidentRut"]}
                 type="rut"
                 register={register}
@@ -24,6 +26,7 @@ const Paso2 = ({ register, errors }) => {
             <Input
                 name="presidentAddress"
                 label="Dirección"
+                placeholder="Ej: Calle 123"
                 error={errors["presidentAddress"]}
                 register={register}
                 validations={{
@@ -32,6 +35,7 @@ const Paso2 = ({ register, errors }) => {
             <Input
                 name="presidentEmail"
                 label="Correo electrónico"
+                placeholder="Ej: correo@gmail.com"
                 type="email"
                 error={errors["presidentEmail"]}
                 register={register}
@@ -41,6 +45,7 @@ const Paso2 = ({ register, errors }) => {
             <Input
                 name="presidentPhone"
                 label="Teléfono"
+                placeholder="Ej: 9684778841"
                 type="phone"
                 error={errors["presidentPhone"]}
                 register={register}
@@ -50,6 +55,7 @@ const Paso2 = ({ register, errors }) => {
             <Input
                 name="presidentPhone2"
                 label="Teléfono alternativo"
+                placeholder="Ej: 9684778841"
                 type="phone"
                 error={errors["presidentPhone2"]}
                 register={register} />

@@ -1,11 +1,18 @@
+import { useEffect } from "react";
 import Button from "../components/ui/buttons/Button"
 import Container from "../components/ui/Container"
 import Heading from "../components/ui/Heading"
+import { ToastContainer, toast } from 'react-toastify';
 
 const FormCompleted = ({ text }) => {
-    return (
 
+    useEffect(() => {
+        toast.success("Se ha enviado la solicitud exitosamente")
+    }, [])
+
+    return (
         <Container>
+            <ToastContainer />
             <div className="py-24">
                 <Heading className="text-center" level={1}>¡Solicitud enviada!</Heading>
                 <p className="text-center mb-3">{text}</p>

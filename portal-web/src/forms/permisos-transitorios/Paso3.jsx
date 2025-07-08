@@ -2,7 +2,8 @@ import Input from "../../components/ui/Input"
 import { getTodayDate } from "../../utils/utils"
 import { validationRules } from "../validations"
 
-const Paso3 = ({ register, errors }) => {
+const Paso3 = ({ register, errors, getValues }) => {
+
     return (
         <>
             <Input
@@ -50,20 +51,21 @@ const Paso3 = ({ register, errors }) => {
                     label="Fecha de término"
                     error={errors["PermissionEndDate"]}
                     register={register}
-                    min={getTodayDate()}
+                    min={getValues("permissionStartDate")}
                     type="date"
                     validations={{
                         required: validationRules.required
                     }} />
-                <Input
+                {<Input
                     name="permissionEndTime"
                     label="Hora de término"
+                    min={getTodayDate()}
                     error={errors["PermissionEndTime"]}
                     register={register}
                     type="time"
                     validations={{
                         required: validationRules.required
-                    }} />
+                    }} />}
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <Input

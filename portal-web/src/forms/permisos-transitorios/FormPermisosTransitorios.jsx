@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 import Button from "../../components/ui/buttons/Button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Paso0 from "../Paso0"
 import Paso1 from "./Paso1"
 import Paso2 from "./Paso2"
@@ -22,7 +22,7 @@ const FormPermisosTransitorios = () => {
 
     const { sessionData } = useAuthStore()
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+    const { register, handleSubmit, setValue, formState: { errors }, getValues } = useForm()
     const [docs, setDocs] = useState({
         docCI: null,
         docRutTributario: null,
@@ -35,6 +35,22 @@ const FormPermisosTransitorios = () => {
     const { setInputsValues, setDocsValues, inputsValues, docsValues } = useFormsStore()
 
     const [isLoading, setIsLoading] = useState(false)
+
+    const [isValid, setIsValid] = useState(false)
+
+    useEffect(() => {
+        if (docs.docCI &&
+            docs.docCertificadoAntecedentes &&
+            docs.docDeclaracionJurada &&
+            docs.docFirmaPresidente &&
+            docs.docOcupacionRecinto &&
+            docs.docRutTributario &&
+            docs.docVigenciaPersonaJuridica) {
+            setIsValid(true)
+        } else {
+            setIsValid(false)
+        }
+    }, [docs])
 
     const [step, setStep] = useState(0)
     const lastStep = 5
@@ -71,7 +87,6 @@ const FormPermisosTransitorios = () => {
             }
             try {
                 await sendRequest(formData)
-                alert("Se ha enviado la solicitud")
                 setStep(prev => prev + 1)
             } catch (error) {
                 console.log(error)
@@ -93,12 +108,12 @@ const FormPermisosTransitorios = () => {
                 {step === 0 && <Paso0 register={register} errors={errors} setValue={setValue} />}
                 {step === 1 && <Paso1 register={register} errors={errors} />}
                 {step === 2 && <Paso2 register={register} errors={errors} />}
-                {step === 3 && <Paso3 register={register} errors={errors} />}
+                {step === 3 && <Paso3 register={register} errors={errors} getValues={getValues} />}
                 {step === 4 && <Paso4 register={register} docs={docs} setDocs={setDocs} />}
                 {step === 5 && <ConfirmarFormularioPT />}
                 <div className="mt-4 flex gap-2 justify-end">
                     <Button isLoading={isLoading} onClick={prevStep} type="button">Anterior</Button>
-                    <Button isLoading={isLoading} variant="secondary" type="submit">{step < lastStep ? "Siguiente" : "Finalizar"}</Button>
+                    <Button isLoading={isLoading} disabled={step === 4 && !isValid} variant="secondary" type="submit">{step < lastStep ? "Siguiente" : "Finalizar"}</Button>
                 </div>
             </form>
         </Container>

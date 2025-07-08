@@ -8,6 +8,8 @@ const Home = () => {
     // Declaración del estado para almacenar los procedimientos.
     const [procedures, setProcedures] = useState([])
 
+    console.log(procedures)
+
     // useEffect para cargar los procedimientos cuando el componente se monta.
     useEffect(() => {
         (async () => {
@@ -42,6 +44,7 @@ const Home = () => {
                         desc={card.descripcion_corta}
                         icon={card.icon}
                         href={`/${card.nombre}`}
+                        direccion={card.direcciones_municipale.nombre}
                     />
                 ))}
             </Container>

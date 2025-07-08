@@ -10,7 +10,7 @@ const initializeDB = async () => {
     await defineAssociations()
 
     // Sincroniza los modelos con la base de datos, creando tablas si es necesario
-    await sequelize.sync()
+    await sequelize.sync({ alter: true })
 
     // Inicia una transacción para asegurar que las operaciones de inserción se realicen de manera atómica
     /* const t = await sequelize.transaction()

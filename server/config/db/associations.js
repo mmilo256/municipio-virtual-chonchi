@@ -5,11 +5,15 @@ import Procedure from "../../models/procedureModel.js"
 import User from "../../models/userModel.js"
 import Document from "../../models/documentModel.js"
 import RequestsStatusLog from "../../models/RequestsStatusLogModel.js"
+import Direccion from "../../models/DireccionModel.js"
 
 const defineAssociations = async () => {
     // Solicitud - Trámite
     Request.belongsTo(Procedure, { foreignKey: 'tramite_id' })
     Procedure.hasMany(Request, { foreignKey: 'tramite_id' })
+    // Direccion - Trámite
+    Procedure.belongsTo(Direccion, { foreignKey: 'direccion_id' })
+    Direccion.hasMany(Procedure, { foreignKey: 'direccion_id' })
     // Solicitud - Usuario
     Request.belongsTo(User, { foreignKey: 'usuario_id' })
     User.hasMany(Request, { foreignKey: 'usuario_id' })

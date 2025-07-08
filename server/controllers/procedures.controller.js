@@ -1,10 +1,16 @@
 import Procedure from "../models/procedureModel.js"
+import Direccion from "../models/DireccionModel.js"
 
 // Obtener todos los trámites disponibles
 export const getAllProcedures = async (req, res) => {
     try {
         // Consultar todos los trámites de la base de datos
-        const procedures = await Procedure.findAll()
+        const procedures = await Procedure.findAll({
+            include: {
+                model: Direccion,
+                attributes: ["nombre"],
+            }
+        })
         res.status(200).json(procedures) // Enviar la lista de trámites como respuesta
     } catch (error) {
         // Registrar el error en caso de fallo

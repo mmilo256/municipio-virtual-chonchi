@@ -7,6 +7,7 @@ import { formatDate } from "../utils/utils"  // Función para formatear la fecha
 import { Link } from "react-router-dom"  // Componente de Link para la navegación
 import useAuthStore from "../stores/useAuthStore"
 import { fetchRequestsByUserId } from "../services/requests.service"
+import Breadcrumbs from "./ui/Breadcrumbs"
 
 const Requests = () => {
 
@@ -16,6 +17,10 @@ const Requests = () => {
     // Estados para almacenar las solicitudes y el estado de carga
     const [requests, setRequests] = useState([])  // Almacena las solicitudes del usuario
     const [loading, setLoading] = useState(true)  // Controla el estado de carga
+
+    const breadcrumbs = [
+        { label: "Solicitudes", href: "/solicitudes" }
+    ]
 
     // Efecto para obtener las solicitudes cuando el componente se monta
     useEffect(() => {
@@ -50,6 +55,7 @@ const Requests = () => {
 
     return (
         <Container>  {/* Contenedor del componente */}
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
             <Heading level={2}>Solicitudes realizadas</Heading>  {/* Título de la página */}
             <BaseTable table={table} />  {/* Componente de tabla para mostrar las solicitudes */}
         </Container>

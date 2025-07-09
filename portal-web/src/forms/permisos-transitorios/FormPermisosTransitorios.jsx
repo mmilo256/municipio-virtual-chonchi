@@ -13,8 +13,8 @@ import { sendRequest } from "../../services/requests.service"
 import { PROCEDURES_ID } from "../../constants/constants"
 import useAuthStore from "../../stores/useAuthStore"
 import { useNavigate } from "react-router-dom"
-import Container from "../../components/ui/Container"
 import FormCompleted from "../FormCompleted"
+import FormLayout from "../FormLayout"
 
 const FormPermisosTransitorios = () => {
 
@@ -68,7 +68,7 @@ const FormPermisosTransitorios = () => {
         if (step > 0) {
             setStep(prev => prev - 1)
         } else {
-            navigate("..")
+            navigate("../permisos-transitorios")
         }
     }
 
@@ -101,8 +101,8 @@ const FormPermisosTransitorios = () => {
     }
 
     return (
-        <Container className="max-w-[50rem] p-4 mt-4 mx-auto bg-white shadow rounded">
-            <h2 className="mt-2 text-lg text-slate-700 text-nowrap">Solicitud de Autorización Especial Transitoria</h2>
+
+        <FormLayout titulo="Autorización Especial Transitoria" nombre="permisos-transitorios">
             <Heading level={3}>{stepTitles[step]}</Heading>
             <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
                 {step === 0 && <Paso0 register={register} errors={errors} setValue={setValue} />}
@@ -116,7 +116,8 @@ const FormPermisosTransitorios = () => {
                     <Button isLoading={isLoading} disabled={step === 4 && !isValid} variant="secondary" type="submit">{step < lastStep ? "Siguiente" : "Finalizar"}</Button>
                 </div>
             </form>
-        </Container>
+        </FormLayout>
+
     )
 }
 

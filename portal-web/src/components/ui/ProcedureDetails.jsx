@@ -3,11 +3,18 @@ import Container from "./Container"
 import Heading from "./Heading"
 import Button from "./buttons/Button"
 import { fetchProcedureById } from "../../services/procedures.service"
+import Breadcrumbs from "./Breadcrumbs"
 
 
 const ProcedureDetails = ({ id }) => {
 
     const [procedure, setProcedure] = useState({})
+
+    console.log(procedure)
+
+    const breadcrumbs = [
+        { label: procedure.titulo, href: `/${procedure.nombre}` }
+    ]
 
     // Obtener toda la información del trámite, incluyendo campos
     useEffect(() => {
@@ -19,6 +26,7 @@ const ProcedureDetails = ({ id }) => {
 
     return (
         <Container>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
             <div className="mb-4">
                 <Heading className="text-center md:text-left">{procedure?.titulo}</Heading>
             </div>

@@ -3,12 +3,11 @@ import Container from "../ui/Container"  // Componente para el contenedor que en
 import Heading from "../ui/Heading"  // Componente para los encabezados.
 import { fetchAllProcedures } from "../../services/procedures.service"  // Función para obtener todos los procedimientos del backend.
 import Card from "../ui/Card"
+import Breadcrumbs from "../ui/Breadcrumbs"
 
 const Home = () => {
     // Declaración del estado para almacenar los procedimientos.
     const [procedures, setProcedures] = useState([])
-
-    console.log(procedures)
 
     // useEffect para cargar los procedimientos cuando el componente se monta.
     useEffect(() => {
@@ -33,6 +32,7 @@ const Home = () => {
                 </div>
             </div>
             {/* Subtítulo de la sección de servicios */}
+            <Container ><Breadcrumbs /></Container>
             <Heading className="text-center" level={3}>Servicios disponibles</Heading>
 
             {/* Componente para mostrar los procedimientos en un grid de tarjetas */}

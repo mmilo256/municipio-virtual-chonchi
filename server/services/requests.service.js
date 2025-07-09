@@ -42,16 +42,19 @@ export const getRequestsByProcedure = async (procedure_id) => {
     return requests
 }
 
-export const getUserRequests = async (user_id) => {
-    const requests = await Request.findAll({
+export const getUserRequests = async (user_id, pageSize, offset) => {
+    const { rows, count } = await Request.findAndCountAll({
+        limit: pageSize,
+        offset,
         where: { usuario_id: user_id },
         include: {
             model: Procedure,
             attributes: ["titulo"]
         }
     })
+    const totalPages = Math.ceil(count / pageSize) === 0 ? 1 : Math.ceil(count / pageSize)
 
-    return requests
+    return { requests: rows, totalPages }
 }
 
 export const updateRequestStatusService = async (id, status) => {

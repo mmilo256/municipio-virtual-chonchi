@@ -5,7 +5,7 @@ import { IoMdHome } from "react-icons/io";
 const Breadcrumbs = ({ breadcrumbs }) => {
 
     return (
-        <div className="text-slate-500 flex gap-1 mt-6">
+        <div className="text-slate-500 flex gap-1 mt-6 text-sm">
             <Link className="flex items-center gap-1 font-medium hover:text-black" to="/"><IoMdHome /> Inicio</Link>
             {breadcrumbs?.map((item, index) => (
                 <div key={index} className="flex items-center gap-1" >

@@ -10,8 +10,6 @@ const ProcedureDetails = ({ id }) => {
 
     const [procedure, setProcedure] = useState({})
 
-    console.log(procedure)
-
     const breadcrumbs = [
         { label: procedure.titulo, href: `/${procedure.nombre}` }
     ]

@@ -36,11 +36,11 @@ export const fetchDocumentosAdjuntos = async (id) => {
     }
 }
 
-// Función para obtener todas las solicitudes realizadas por un usuario dado su RUT
-export const fetchRequestsByUserId = async (id) => {
+// Función para obtener todas las solicitudes realizadas por un usuario dado su ID
+export const fetchRequestsByUserId = async (id, page = 1, pageSize = 10) => {
     try {
-        // Realiza una solicitud GET para obtener las solicitudes asociadas al RUT proporcionado
-        const response = await apiClient.get(`/requests/user/${id}`)
+        // Realiza una solicitud GET para obtener las solicitudes asociadas al ID proporcionado
+        const response = await apiClient.get(`/requests/user/${id}?page=${page}&pageSize=${pageSize}`)
 
         // Extrae y devuelve las solicitudes desde la respuesta
         const data = response.data

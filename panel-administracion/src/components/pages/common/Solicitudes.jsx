@@ -4,8 +4,9 @@ import { fetchRequestsByProcedure } from "../../../services/requestsServices"
 import StatusTag from "../../ui/StatusTag"
 import { formatDate } from "../../../utils/format"
 import { Link } from "react-router-dom"
+import Breadcrumbs from "../../ui/Breadcrumbs"
 
-const Solicitudes = ({ title, tramiteId }) => {
+const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
 
     const [requests, setRequests] = useState([])
 
@@ -28,9 +29,14 @@ const Solicitudes = ({ title, tramiteId }) => {
         "#", "Nombre ciudadano", "RUT", "Fecha de solicitud", "Estado", "Acciones"
     ]
 
+    const breadcrumbs = [
+        { label: breadcrumbsData.tramite, href: breadcrumbsData.tramiteHref }
+    ]
+
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">{title}</h1>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+            <h1 className="text-2xl font-bold my-4">{title}</h1>
             {requests.length === 0
                 ? <p>No hay solicitudes pendientes</p>
                 : <BaseTable data={requests} columns={columns} />}

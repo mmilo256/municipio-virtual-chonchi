@@ -4,6 +4,7 @@ import HomeSection from "../home/HomeSection"
 import ProcedureButton from "../home/ProcedureButton"
 import RecentActivity from "../home/RecentActivity"
 import { obtenerTramites } from "../../services/proceduresServices"
+import Breadcrumbs from "../ui/Breadcrumbs"
 
 const Home = () => {
 
@@ -21,8 +22,9 @@ const Home = () => {
     return (
         <div>
             {/* <Alert type="warning" text="Hay cosas pendientes" /> */}
-            <main className="grid grid-cols-1 gap-4 mt-6">
-                <p className="text-4xl">Bienvenido(a), {sessionData.nombres}</p>
+            <main>
+                <Breadcrumbs />
+                <p className="text-4xl my-4">Bienvenido(a), {sessionData.nombres}</p>
                 <HomeSection title="Solicitudes por trámite">
                     <div className="grid grid-cols-2 gap-2">
                         {procedures.map((procedure, index) => (

@@ -9,7 +9,7 @@ const Layout = () => {
             <Navbar />
             <div className='grid grid-cols-6'>
                 <Sidebar />
-                <div className='col-span-5 mt-6'>
+                <div className='col-span-5'>
                     <Container>
                         <Outlet />
                     </Container>

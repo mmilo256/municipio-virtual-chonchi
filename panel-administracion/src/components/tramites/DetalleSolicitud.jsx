@@ -1,12 +1,14 @@
 import StatusTag from "../ui/StatusTag"
 import { formatDate } from "../../utils/format"
+import Breadcrumbs from "../ui/Breadcrumbs"
 
-const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos, status }) => {
+const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos, status, breadcrumbs }) => {
 
     return (
         <div>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
             {/* Encabezado con el estado de la solicitud */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 mt-4">
                 <h1 className="text-2xl font-bold">{requestData?.tramite} #{requestData?.id}</h1>
                 <StatusTag status={status} />
             </div>

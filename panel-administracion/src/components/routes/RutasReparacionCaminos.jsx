@@ -6,10 +6,17 @@ import IndexPermisosTransitorios from "../tramites/permisos-transitorios/IndexPe
 
 const RutasReparacionCaminos = () => {
 
+    const tramite = "Reparación de caminos"
+    const tramiteHref = "/reparacion-caminos"
+
+    const data = {
+        tramite, tramiteHref
+    }
+
     return (
         <div>
             <Routes>
-                <Route index element={<Solicitudes tramiteId={PROCEDURES_ID.reparacionCaminos} title={"Solicitudes de Reparación de Caminos"} />} />
+                <Route index element={<Solicitudes tramiteId={PROCEDURES_ID.reparacionCaminos} title={"Solicitudes de Reparación de Caminos"} breadcrumbsData={data} />} />
                 <Route path="/:id" element={<IndexPermisosTransitorios />} />
                 <Route path="/:id/documentos-asociados" element={<FormularioDocumentoAsociado />} />
             </Routes>

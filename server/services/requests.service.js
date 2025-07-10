@@ -31,15 +31,20 @@ export const getLogs = async (request_id) => {
     return logs
 }
 
-export const getRequestsByProcedure = async (procedure_id) => {
-    const requests = await Request.findAll({
+export const getRequestsByProcedure = async (procedure_id, pageSize, offset) => {
+    const { rows, count } = await Request.findAndCountAll({
+        limit: pageSize,
+        offset,
         where: { tramite_id: procedure_id },
         include: {
             model: User,
             attributes: ["nombres", "apellidos", "run"]
         }
     })
-    return requests
+
+    const totalPages = Math.ceil(count / pageSize) === 0 ? 1 : Math.ceil(count / pageSize)
+
+    return { requests: rows, totalPages }
 }
 
 export const getUserRequests = async (user_id, pageSize, offset) => {

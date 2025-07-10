@@ -61,9 +61,9 @@ export const fetchRequestById = async (requestId) => {
     }
 }
 
-export const fetchRequestsByProcedure = async (procedureId) => {
+export const fetchRequestsByProcedure = async (procedureId, page = 1, pageSize = 10) => {
     try {
-        const response = await apiClient.get(`/requests/procedure/${procedureId}`)
+        const response = await apiClient.get(`/requests/procedure/${procedureId}?page=${page}&pageSize=${pageSize}`)
         const data = response.data
         return data
     } catch (error) {

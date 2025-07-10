@@ -112,7 +112,7 @@ const FormPermisosTransitorios = () => {
                 {step === 4 && <Paso4 register={register} docs={docs} setDocs={setDocs} />}
                 {step === 5 && <ConfirmarFormularioPT />}
                 <div className="mt-4 flex gap-2 justify-end">
-                    <Button isLoading={isLoading} onClick={prevStep} type="button">Anterior</Button>
+                    {!isLoading && <Button onClick={prevStep} type="button">Anterior</Button>}
                     <Button isLoading={isLoading} disabled={step === 4 && !isValid} variant="secondary" type="submit">{step < lastStep ? "Siguiente" : "Finalizar"}</Button>
                 </div>
             </form>

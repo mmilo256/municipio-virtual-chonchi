@@ -1,7 +1,7 @@
 const BaseTable = ({ table }) => {
 
     return (
-        <table className="bg-[#fff] w-full rounded overflow-hidden shadow">
+        <table className="bg-[#fff] w-full rounded overflow-hidden shadow text-xs md:text-sm">
             <thead>
                 <tr className="text-left bg-primary text-white">
                     {table.columns.map((col, index) => (

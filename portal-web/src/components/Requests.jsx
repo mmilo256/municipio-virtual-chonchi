@@ -23,7 +23,6 @@ const Requests = () => {
     const [totalPages, setTotalPages] = useState(1)
     const pageSize = 10
 
-
     const breadcrumbs = [
         { label: "Solicitudes", href: "/solicitudes" }
     ]

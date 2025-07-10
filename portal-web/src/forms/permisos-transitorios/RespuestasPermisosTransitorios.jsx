@@ -35,10 +35,10 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
     const itemStyles = "mb-2"
 
     return (
-        <div>
+        <div className="text-sm">
             {/* Acordeones para mostrar los datos organizados */}
             < Accordion title="1. Datos del solicitante" >
-                <div className="grid grid-cols-2 pl-8">
+                <div className=" pl-2">
                     <div className={itemStyles}>
                         <p><strong>Nombre del solicitante </strong></p>
                         <p>{name || ""}</p>
@@ -58,7 +58,7 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
                 </div>
             </Accordion >
             <Accordion title="2. Datos de la organización">
-                <div className="grid grid-cols-2 pl-8">
+                <div className=" pl-2">
                     <div className={itemStyles}>
                         <p><strong>Nombre o razón social </strong></p>
                         <p>{orgName || ""}</p>
@@ -86,7 +86,7 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
                 </div>
             </Accordion>
             <Accordion title="3. Datos del representante legal">
-                <div className="grid grid-cols-2 pl-8">
+                <div className=" pl-2">
                     <div className={itemStyles}>
                         <p><strong>Nombre completo </strong></p>
                         <p>{presidentName || ""}</p>
@@ -114,7 +114,7 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
                 </div>
             </Accordion>
             <Accordion title="4. Detalles del permiso">
-                <div className="grid grid-cols-2 pl-8">
+                <div className=" pl-2">
                     <div className={itemStyles}>
                         <p><strong>Nombre de la actividad </strong></p>
                         <p>{permissionName}</p>
@@ -150,7 +150,7 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
                 </div>
             </Accordion>
             <Accordion title="5. Antecedentes">
-                <ul className="list-disc list-inside pl-8 text-blue-700 underline">
+                <ul className="list-disc list-inside pl-2 text-blue-700 underline">
                     {<li><a href={docs[0]?.ruta} target="_blank">Cédula de identidad del representante legal</a></li>}
                     {<li><a href={docs[1]?.ruta} target="_blank" >RUT tributario</a></li>}
                     {<li><a href={docs[2]?.ruta} target="_blank" >Certificado de antecedentes para fines especiales</a></li>}

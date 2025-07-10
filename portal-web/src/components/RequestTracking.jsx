@@ -91,8 +91,8 @@ const RequestTracking = () => {
     return (
         <Container>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <Heading level={2}>Seguimiento de solicitud #{id}</Heading>  {/* Título de la página con el ID de la solicitud */}
-            <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded shadow">
+            <Heading level={3}>Seguimiento de solicitud #{id}</Heading>  {/* Título de la página con el ID de la solicitud */}
+            <div className="md:grid md:grid-cols-2 md:gap-2 bg-white p-4 rounded shadow">
                 <StatusTracker data={logs} />  {/* Componente que muestra el seguimiento de los logs */}
                 <Respuestas tramiteId={tramiteId} data={requestData} docs={requestDocs} />
             </div>

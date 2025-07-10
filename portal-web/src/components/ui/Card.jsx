@@ -7,7 +7,7 @@ const Card = ({ title, desc, href, icon, direccion }) => {
             <div className="flex justify-center transition-all group-hover:text-white text-slate-500">{icon}</div>
             <p className="group-hover:text-white transition-all text-primary text-xl font-semibold mb-1 mt-1">{title}</p>
             <p className="group-hover:text-white transition-all text-slate-600 mb-3">{desc}</p>
-            <span className="absolute -top-3 -right-3 text-xs bg-blue-600 font-bold text-white rounded-full px-2 py-1">{direccion}</span>
+            <span className="absolute -top-1 -left-1 text-xs bg-blue-600 font-bold text-white rounded-full px-2 py-1">{direccion}</span>
         </Link>
     );
 };

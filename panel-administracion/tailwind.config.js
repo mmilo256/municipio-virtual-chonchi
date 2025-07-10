@@ -15,7 +15,8 @@ export default {
         primary: "#06163A",
         primaryHover: "#0d2252",
         secondary: "#ff3514",
-        secondaryHover: "#a3210b"
+        secondaryHover: "#a3210b",
+        secondaryDisabled: "#e3634d"
       }
     },
   },

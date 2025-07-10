@@ -1,19 +1,33 @@
-import { Route, Routes } from "react-router-dom"
-import Login from "./components/login/Login"
-import PrivateRoute from "./components/PrivateRoute"
-import Home from "./components/home/Home"
-import PermisosTransitorios from "./components/permisos-transitorios/PermisosTransitorios"
+import { useEffect } from "react"
+import useAuthStore from "./stores/useAuthStore"
+import AppRouter from "./routes/AppRouter"
+import { verifySession } from "./services/auth.service"
+import { useState } from "react"
 
 function App() {
 
+  const { setIsAuthenticated, setSessionData } = useAuthStore()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    (async () => {
+      const data = await verifySession()
+      if (data.payload) {
+        setIsAuthenticated(true)
+        setSessionData(data.payload)
+      }
+      setLoading(false)
+    })()
+  }, [setIsAuthenticated, setSessionData])
+
+  if (loading) {
+    return null
+  }
+
   return (
-    < main className="font-roboto " >
-      <Routes>
-        <Route index element={<Login />} />
-        <Route path="/inicio" element={<PrivateRoute><Home /></PrivateRoute>} />
-        <Route path="/permisos-transitorios/*" element={<PrivateRoute><PermisosTransitorios /></PrivateRoute>} />
-      </Routes>
-    </main >
+    < div className="font-roboto bg-slate-50" >
+      <AppRouter />
+    </div >
 
   )
 }

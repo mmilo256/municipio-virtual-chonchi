@@ -1,2 +1,6 @@
 uploads/*
 !uploads/.gitkeep
+documents/*
+documents/generated/*
+!documents/generated/.gitkeep
+!documents/.gitkeep

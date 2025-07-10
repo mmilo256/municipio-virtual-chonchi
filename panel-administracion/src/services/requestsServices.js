@@ -1,25 +1,72 @@
-import axios from 'axios'
-import { API_URL } from '../constants/constants'
+import apiClient from './apiClient'
+
+export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {
+    try {
+        await apiClient.delete(`/requests/${solicitudId}/documentos-asociados/${documentoId}`)
+    } catch (error) {
+        throw error.message
+    }
+}
+
+export const fetchDocumentosAsociados = async (id) => {
+    try {
+        const response = await apiClient.get(`/requests/${id}/documents?type=subido`)
+        const data = response.data
+        return data
+    } catch (error) {
+        throw error.message
+    }
+}
+
+export const fetchDocumentosAdjuntos = async (id) => {
+    try {
+        const response = await apiClient.get(`/requests/${id}/documents?type=adjunto`)
+        const data = response.data
+        return data
+    } catch (error) {
+        throw error.message
+    }
+}
+
+export const subirDocumentoAsociado = async (id, data, status = null, type = null, name = null) => {
+    let queries = {}
+    if (status) { queries.status = status }
+    if (type) { queries.type = type }
+    if (name) { queries.name = name }
+
+    const queryString = new URLSearchParams(queries).toString()
+
+    try {
+        await apiClient.post(`/requests/${id}/documents?${queryString}`, data, { headers: { "Content-Type": "multipart/form-data" } })
+    } catch (error) {
+        throw error.message
+    }
+}
+
+export const updateRequestStatus = async (requestId, status) => {
+    try {
+        await apiClient.patch(`/requests/${requestId}`, { status })
+    } catch (error) {
+        throw error.message
+    }
+}
 
 export const fetchRequestById = async (requestId) => {
     try {
-        const response = await axios.get(`${API_URL}/requests/${requestId}`)
-        const data = response.data.request
+        const response = await apiClient.get(`/requests/${requestId}`)
+        const data = response.data
         return data
     } catch (error) {
-        console.log(error)
-        throw new Error(`Ha ocurrido un error: ${error.message}`);
-
+        throw error.message
     }
 }
 
 export const fetchRequestsByProcedure = async (procedureId) => {
     try {
-        const response = await axios.get(`${API_URL}/requests?tramiteId=${procedureId}`)
-        const data = response.data.requests
+        const response = await apiClient.get(`/requests/procedure/${procedureId}`)
+        const data = response.data
         return data
     } catch (error) {
-        console.log(error)
-        throw new Error(`Ha ocurrido un error: ${error.message}`)
+        throw error.message
     }
 }

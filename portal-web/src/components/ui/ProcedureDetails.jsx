@@ -1,73 +1,67 @@
 import { useEffect, useState } from "react"
 import Container from "./Container"
 import Heading from "./Heading"
-import GuideLayoutSkeleton from "./GuideLayoutSkeleton"
 import Button from "./buttons/Button"
+import { fetchProcedureById } from "../../services/procedures.service"
+import Breadcrumbs from "./Breadcrumbs"
 
 
-const ProcedureDetails = ({ onClick, data, extraReq }) => {
+const ProcedureDetails = ({ id }) => {
 
-    const [loading, setLoading] = useState(true)
+    const [procedure, setProcedure] = useState({})
 
+    const breadcrumbs = [
+        { label: procedure.titulo, href: `/${procedure.nombre}` }
+    ]
+
+    // Obtener toda la información del trámite, incluyendo campos
     useEffect(() => {
-        if (Object.values(data).length > 0) {
-            setLoading(false)
-        }
-    }, [data])
-
-    if (loading) {
-        return <GuideLayoutSkeleton />
-    }
+        (async () => {
+            const data = await fetchProcedureById(id)
+            setProcedure(data)
+        })()
+    }, [id])
 
     return (
-        <Container>
+        <Container className="text-sm">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
             <div className="mb-4">
-                <Heading className="text-center md:text-left">{data.titulo}</Heading>
+                <Heading className="text-center md:text-left text-2xl md:text-2xl">{procedure?.titulo}</Heading>
+            </div>
+            <div className="block md:hidden mb-2">
+                <Button href="formulario" type="link" variant="secondary" fullWidth>Iniciar trámite</Button>
             </div>
             <div className="grid md:grid-cols-9 gap-5 text-slate-700">
                 <main className="md:col-span-6 pr-10">
                     <article className="mb-4">
-                        <Heading align="left" level={3}>Descripción</Heading>
-                        <p className="text-justify">{data.descripcion}</p>
+                        <Heading align="left" level={4}>Descripción</Heading>
+                        <p className="text-justify">{procedure?.descripcion}</p>
                     </article>
                     <article className="mb-4">
-                        <Heading align="left" level={3}>Información adicional</Heading>
-                        <ul className="list-disc list-inside">
-                            {data.info_adicional.map((info, index) => (
-                                <li key={index} className="mb-2">{info}</li>
-                            ))}
-                        </ul>
+                        <Heading align="left" level={4}>Requisitos</Heading>
+                        <p className="text-justify">{procedure?.requisitos}</p>
                     </article>
                     <article className="mb-4">
-                        <Heading align="left" level={3}>Requisitos</Heading>
-                        <ul className="list-disc list-inside">
-                            {data.requisitos.map((info, index) => (
-                                <li key={index} className="mb-2">{info}</li>
-                            ))}
-                        </ul>
-                        {extraReq}
+                        <Heading align="left" level={4}>Costo</Heading>
+                        <p>{procedure?.costo || "No tiene costo"}</p>
                     </article>
-                    <article className="mb-4">
-                        <Heading align="left" level={3}>Costo</Heading>
-                        <p>{data.costo === 0 ? "No tiene costo" : data.costo}</p>
-                    </article>
-                    <article className="mb-4">
-                        <Heading align="left" level={3}>Modalidad de pago</Heading>
-                        <p>{data.modalidad_pago ?? "No tiene modalidad de pago"}</p>
-                    </article>
+                    {procedure?.costo !== 0 && <article className="mb-4">
+                        <Heading align="left" level={4}>Modalidad de pago</Heading>
+                        <p>{procedure?.modaldad_pago}</p>
+                    </article>}
                 </main>
                 <div className="md:col-span-3 max-h-min shadow-lg rounded p-5 shadow-slate-400">
-                    <Heading align="center" level={3}>Contacto y atención</Heading>
+                    <Heading align="center" level={4}>Contacto y atención</Heading>
                     <Heading align="left" level={4}>Dirección</Heading>
-                    <p className="break-words">{data.direccion}</p>
+                    <p className="break-words">{procedure?.direccion}</p>
                     <Heading align="left" level={4}>Horario de atención</Heading>
-                    <p className="break-words">{data.horario_atencion}</p>
+                    <p className="break-words">{procedure?.horario_atencion}</p>
                     <Heading align="left" level={4}>Correo electrónico</Heading>
-                    <p className="break-words">{data.email}</p>
+                    <p className="break-words">{procedure?.email}</p>
                     <Heading align="left" level={4}>Teléfono(s)</Heading>
-                    <p className="break-words">{data.telefono}</p>
-                    <div className="mt-4">
-                        <Button onClick={onClick} variant="secondary" fullWidth>Iniciar trámite</Button>
+                    <p className="break-words">{procedure?.telefono}</p>
+                    <div className="mt-4 hidden md:block">
+                        <Button href="formulario" type="link" variant="secondary" fullWidth>Iniciar trámite</Button>
                     </div>
                 </div>
             </div>

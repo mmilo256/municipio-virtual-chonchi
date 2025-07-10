@@ -1,4 +1,9 @@
-export const formatDate = (date, format) => {
+import dayjs from 'dayjs'
+import 'dayjs/locale/es'
+
+dayjs.locale("es")
+
+/* export const formatDate = (date, format) => {
 
     const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 
@@ -25,4 +30,9 @@ export const formatDate = (date, format) => {
             break;
     }
     return dateString
+} */
+
+export const formatDate = (date, format = "DD MMM YYYY") => {
+    const formatted = dayjs(date).format(format)
+    return formatted
 }

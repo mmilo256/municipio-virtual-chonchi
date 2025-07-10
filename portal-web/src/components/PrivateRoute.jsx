@@ -1,10 +1,12 @@
-import { Navigate } from "react-router-dom"
 import Layout from "./layouts/Layout"
+import useAuthStore from "../stores/useAuthStore"
+import { Navigate } from 'react-router-dom'
+
 const PrivateRoute = ({ children }) => {
 
-    const user = sessionStorage.getItem('session')
+    const { isAuthenticated } = useAuthStore(state => state)
 
-    if (!user) {
+    if (!isAuthenticated) {
         return <Navigate to="/" />
     }
 

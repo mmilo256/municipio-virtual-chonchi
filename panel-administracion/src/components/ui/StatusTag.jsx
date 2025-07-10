@@ -20,6 +20,10 @@ const StatusTag = ({ status }) => {
             statusBgColor = "bg-green-200"
             statusTextColor = "text-green-800"
             break;
+        case "por firmar":
+            statusBgColor = "bg-violet-200"
+            statusTextColor = "text-violet-800"
+            break;
         case "finalizada":
             statusBgColor = "bg-slate-200"
             statusTextColor = "text-slate-800"
@@ -30,7 +34,7 @@ const StatusTag = ({ status }) => {
     }
 
     return (
-        <span className={`${statusBgColor} ${statusTextColor} capitalize text-sm px-3 py-1 rounded-full`}>{status}</span>
+        <span className={`${statusBgColor} ${statusTextColor} whitespace-nowrap capitalize text-xs px-3 py-1 rounded-full`}>{status}</span>
     )
 }
 

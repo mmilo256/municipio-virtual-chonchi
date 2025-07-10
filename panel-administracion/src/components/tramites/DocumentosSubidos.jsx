@@ -6,6 +6,7 @@ import TableButton from "../ui/TableButton"
 import { useState } from "react"
 import Modal from "../ui/Modal"
 import { deleteDocumentService, downloadDocumentService } from "../../services/documents.service"
+import { toast } from 'react-toastify';
 
 const DocumentosSubidos = ({ docs = [], setRefresh }) => {
 
@@ -22,11 +23,11 @@ const DocumentosSubidos = ({ docs = [], setRefresh }) => {
         setLoading(true)
         try {
             await deleteDocumentService(selectedDocument.id)
-            alert(`Documento borrado.`)
             setRefresh(prev => !prev)
+            toast.success("Documento borrado exitosamente")
         } catch (error) {
             console.log(error)
-            alert("No se pudo borrar el documento")
+            toast.error("No se pudo borrar el documento seleccionado")
         } finally {
             setDeleteModal(false)
         }

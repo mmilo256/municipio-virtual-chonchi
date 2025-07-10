@@ -80,8 +80,12 @@ const GenerarDecretoPermisosTransitorios = () => {
         try {
             await generarDecreto(id, data)
             await updateRequestStatus(id, "por firmar")
-            alert("Decreto generado exitosamente")
-            navigate(`../${id}`)
+            navigate(`../${id}`, {
+                state: {
+                    showToast: true,
+                    toastMessage: "El decreto se ha generado exitosamente"
+                }
+            })
         } catch (error) {
             console.log(error)
             alert("No se pudo generar el decreto")

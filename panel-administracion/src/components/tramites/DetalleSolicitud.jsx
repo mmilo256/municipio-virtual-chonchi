@@ -1,11 +1,24 @@
 import StatusTag from "../ui/StatusTag"
 import { formatDate } from "../../utils/format"
 import Breadcrumbs from "../ui/Breadcrumbs"
+import { ToastContainer, toast } from 'react-toastify';
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos, status, breadcrumbs }) => {
 
+    const location = useLocation()
+
+    useEffect(() => {
+        if (location?.state?.showToast) {
+            toast.success(location.state.toastMessage)
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state])
+
     return (
         <div>
+            <ToastContainer />
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             {/* Encabezado con el estado de la solicitud */}
             <div className="flex items-center gap-5 mt-4">

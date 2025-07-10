@@ -5,6 +5,7 @@ import { useState } from "react"
 import { subirDocumentoAsociado, updateRequestStatus } from "../../services/requestsServices"
 import { useNavigate, useParams } from "react-router-dom"
 import Breadcrumbs from "../ui/Breadcrumbs"
+import { ToastContainer, toast } from 'react-toastify';
 
 const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud, breadcrumbsData }) => {
 
@@ -25,7 +26,7 @@ const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud, bread
     const uploadDocument = async (e) => {
         e.preventDefault()
         if (!name || !file) {
-            return alert("Complete todos los campos")
+            return toast.error("Debe rellenar todos los campos")
         }
         setLoading(true)
         const formData = new FormData()
@@ -35,16 +36,21 @@ const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud, bread
             if (estadoSolicitud) {
                 await updateRequestStatus(id, estadoSolicitud)
             }
-            alert("Se ha subido un documento")
-            navigate(`../${id}`)
+            navigate(`../${id}`, {
+                state: {
+                    showToast: true,
+                    toastMessage: "El documento ha sido subido exitosamente"
+                }
+            })
         } catch (error) {
             console.log(error)
-            alert("Error")
+            toast.error("Ha ocurrido un error y no se pudo subir el documento")
         }
     }
 
     return (
         <div className="max-w-[36rem] mx-auto">
+            <ToastContainer />
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             {/* Título del formulario */}
             <h1 className="text-2xl font-bold my-4">{titulo}</h1>

@@ -29,6 +29,7 @@ const Login = () => {
             toast.success("¡Has iniciado sesión!")
         } catch (error) {
             toast.error(error.message)
+            setIsLoading(false)
         }
     }
 

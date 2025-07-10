@@ -55,7 +55,7 @@ const AccionesPermisosTransitorios = ({
             Rechazar solicitud
         </button>
         <Modal loading={loading} onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
-            <Input value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
+            <Input className="mb-0" value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
         </Modal>
     </>
 

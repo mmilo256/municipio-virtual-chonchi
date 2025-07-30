@@ -6,8 +6,11 @@ import { formatDate } from "../../../utils/format"
 import { Link } from "react-router-dom"
 import Breadcrumbs from "../../ui/Breadcrumbs"
 import Pagination from "../../ui/Pagination"
+import TableFilters from "../../ui/TableFilters"
 
 const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
+
+    const [currentFilters, setCurrentFilters] = useState([])
 
     const [requests, setRequests] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
@@ -16,7 +19,8 @@ const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
 
     useEffect(() => {
         (async () => {
-            const data = await fetchRequestsByProcedure(tramiteId, currentPage, pageSize)
+            const filters = currentFilters.length !== 0 ? currentFilters.join(",") : null
+            const data = await fetchRequestsByProcedure(tramiteId, currentPage, pageSize, filters)
             setTotalPages(data.totalPages)
             const formattedData = data?.requests?.map(e => ({
                 id: e.id,
@@ -28,7 +32,7 @@ const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
             }))
             setRequests(formattedData)
         })()
-    }, [tramiteId, currentPage])
+    }, [tramiteId, currentPage, currentFilters])
 
     const columns = [
         "#", "Nombre ciudadano", "RUT", "Fecha de solicitud", "Estado", "Acciones"
@@ -45,6 +49,7 @@ const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
             {requests.length === 0
                 ? <p>No hay solicitudes pendientes</p>
                 : <>
+                    <TableFilters currentFilters={currentFilters} setCurrentFilters={setCurrentFilters} setCurrentPage={setCurrentPage} />
                     <BaseTable data={requests} columns={columns} />
                     <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
                 </>}

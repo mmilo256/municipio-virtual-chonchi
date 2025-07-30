@@ -33,21 +33,23 @@ export const getRequestById = async (req, res) => {
     }
 }
 
-// Obtener todas las solicitudes de un trámite en específico
+// Obtener todas las solicitudes de un trámite en específico (SOLICITUDES DEL PANEL DE ADMINISTRACIÓN)
 export const getAllRequestsByProcedure = async (req, res) => {
     const { id } = req.params
     const page = parseInt(req.query.page) || 1
     const pageSize = parseInt(req.query.pageSize) || 10
+    const filters = req.query.filters
     const offset = (page - 1) * pageSize
+
     try {
-        const requests = await getRequestsByProcedure(id, pageSize, offset)
+        const requests = await getRequestsByProcedure(id, pageSize, offset, filters)
         res.status(200).json(requests)
     } catch (e) {
         res.status(500).json({ error: e.message, message: "Error interno del servidor" })
     }
 }
 
-// Obtener todas las solicitudes realizadas por un usuario, según el id del usuario
+// Obtener todas las solicitudes realizadas por un usuario, según el id del usuario (SOLICITUDES DEL PORTAL WEB PÚBLICO)
 export const getAllRequestsByUserId = async (req, res) => {
     const { id } = req.params
     const page = parseInt(req.query.page) || 1

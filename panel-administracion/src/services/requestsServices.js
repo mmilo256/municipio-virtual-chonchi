@@ -61,9 +61,16 @@ export const fetchRequestById = async (requestId) => {
     }
 }
 
-export const fetchRequestsByProcedure = async (procedureId, page = 1, pageSize = 10) => {
+export const fetchRequestsByProcedure = async (procedureId, page = 1, pageSize = 10, filters) => {
+
+    let queryString = `/requests/procedure/${procedureId}?page=${page}&pageSize=${pageSize}`
+
+    if (filters) {
+        queryString += `&filters=${filters}`
+    }
+
     try {
-        const response = await apiClient.get(`/requests/procedure/${procedureId}?page=${page}&pageSize=${pageSize}`)
+        const response = await apiClient.get(queryString)
         const data = response.data
         return data
     } catch (error) {

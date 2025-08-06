@@ -65,6 +65,7 @@ export const getUserRequests = async (user_id, pageSize, offset) => {
         limit: pageSize,
         offset,
         where: { usuario_id: user_id },
+        order: [["createdAt", "DESC"]],
         include: {
             model: Procedure,
             attributes: ["titulo"]

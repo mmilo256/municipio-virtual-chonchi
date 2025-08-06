@@ -11,9 +11,9 @@ const BaseTable = ({ data = [], columns = [] }) => {
             </thead>
             <tbody>
                 {data?.map((row, index) => (
-                    <tr key={index} className="even:bg-sky-50 odd:bg-[#fff]">
+                    <tr key={index} className="even:bg-sky-50 hover:bg-orange-50 odd:bg-[#fff]">
                         {Object.values(row)?.map((cell, index) => (
-                            <td key={index} className="p-2 text-sm">{cell}</td>
+                            <td key={index} className="px-2 py-1.5 text-sm">{cell}</td>
                         ))}
                     </tr>
                 ))}

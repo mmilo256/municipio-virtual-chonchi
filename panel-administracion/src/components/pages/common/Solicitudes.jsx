@@ -15,7 +15,7 @@ const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
     const [requests, setRequests] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
-    const pageSize = 10
+    const pageSize = 15
 
     useEffect(() => {
         (async () => {
@@ -43,7 +43,7 @@ const Solicitudes = ({ title, tramiteId, breadcrumbsData }) => {
     ]
 
     return (
-        <div>
+        <div className="mb-4">
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <h1 className="text-2xl font-bold my-4">{title}</h1>
             {requests.length === 0

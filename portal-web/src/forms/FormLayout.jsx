@@ -1,5 +1,6 @@
 import Breadcrumbs from "../components/ui/Breadcrumbs"
 import Container from "../components/ui/Container"
+import Heading from "../components/ui/Heading"
 
 const FormLayout = ({ children, titulo, nombre }) => {
 
@@ -9,9 +10,9 @@ const FormLayout = ({ children, titulo, nombre }) => {
     ]
 
     return (
-        <Container className="max-w-[50rem] p-4 py-1 mt-4 mx-auto bg-white shadow rounded">
+        <Container className="py-4 px-10 mt-4 mx-auto shadow rounded bg-white">
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <h2 className="mt-2 text-lg text-slate-700 text-nowrap">{titulo}</h2>
+            <Heading className="text-slate-700" level={3}>{titulo}</Heading>
             {children}
         </Container>
     )

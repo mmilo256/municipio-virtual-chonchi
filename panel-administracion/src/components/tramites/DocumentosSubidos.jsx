@@ -30,6 +30,7 @@ const DocumentosSubidos = ({ docs = [], setRefresh }) => {
             toast.error("No se pudo borrar el documento seleccionado")
         } finally {
             setDeleteModal(false)
+            setLoading(false)
         }
     }
 

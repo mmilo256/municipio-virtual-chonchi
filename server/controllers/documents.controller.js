@@ -1,5 +1,10 @@
 import { deleteDocumentService, downloadDocumentService } from "../services/documents.service.js"
 
+// Subir un archivo al servidor
+export const subirArchivo = async () => {
+
+}
+
 // Borrar un documento
 export const deleteDocument = async (req, res) => {
     const { id } = req.params

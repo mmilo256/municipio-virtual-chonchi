@@ -79,14 +79,14 @@ const AccionesPermisosTransitorios = ({
         onClick={() => { abrirDecreto(decretos?.decretoSinFirma) }}
         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
     >
-        Decreto (sin firma)
+        Descargar decreto (sin firma)
     </button>
 
     const descargarDecretoFirmadoButton = <button
         onClick={() => { abrirDecreto(decretos?.decretoFirmado) }}
         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
     >
-        Decreto firmado
+        Descargar decreto (firmado)
     </button>
 
 

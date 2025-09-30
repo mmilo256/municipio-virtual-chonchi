@@ -30,3 +30,4 @@ export const fetchProcedureById = async (id) => {
         throw error.message
     }
 }
+

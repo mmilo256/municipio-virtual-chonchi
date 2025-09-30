@@ -7,16 +7,34 @@ import { emailRegex } from "../../../utils/regex";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaRegLightbulb } from "react-icons/fa";
 import Upload from "../../ui/Upload";
+import { fetchRequestById } from "../../../services/requestsServices";
 // import { sendEmail } from "../../../services/emailServices";
 
 const EnviarDocumento = () => {
 
     const { id } = useParams()
 
-    const [input, setInput] = useState("")
+    const [selectedEmail, setSelectedEmail] = useState("")
     const [destinatarios, setDestinatarios] = useState([])
     const [archivo, setArchivo] = useState(null)
     const [isValid, setIsValid] = useState(false)
+
+    const [userEmail, setUserEmail] = useState("")
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetchRequestById(id)
+            const respuestas = JSON.parse(response.respuestas)
+            setUserEmail(respuestas.email)
+        })()
+    }, [id])
+
+    // Lista de destinatarios
+    const destList = [
+        { nombre: "Solicitante", email: userEmail },
+        { nombre: "Bomberos", email: "bomberos@gmail.com" },
+        { nombre: "Carabineros", email: "carabineros@gmail.com" },
+    ]
 
     // Validación de los campos
     useEffect(() => {
@@ -27,19 +45,20 @@ const EnviarDocumento = () => {
         }
     }, [archivo, destinatarios])
 
+
     // Agregar un correo a la lista de destinatarios
     const agregarDestinatario = (e) => {
         e.preventDefault()
-        if (input === "") {
+        if (selectedEmail === "") {
             toast.warning("Ingrese un correo electrónico")
-        } else if (!emailRegex.test(input)) {
+        } else if (!emailRegex.test(selectedEmail)) {
             toast.warning("Ingrese un correo electrónico válido")
         } else {
             setDestinatarios(prev => [
                 ...prev,
-                input
+                selectedEmail
             ])
-            setInput("")
+            setSelectedEmail("")
         }
     }
 
@@ -75,8 +94,19 @@ const EnviarDocumento = () => {
             <p className="bg-amber-100 p-2 rounded text-amber-600 mb-4 flex items-center gap-2"> <FaRegLightbulb className="text-amber-600" /> Este paso da por finalizado el trámite</p>
             <label className="block mb-1" htmlFor="destinatario">Agregar destinatario</label>
             <form className="flex gap-2">
-                <input value={input} onChange={(e) => { setInput(e.target.value) }} className="block w-full border-2 rounded p-1" type="email" id="destinatario" />
-                <button type="submit" onClick={agregarDestinatario} className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40"> <IoIosAddCircleOutline size={25} /> Agregar</button>
+                {/* <input value={input} onChange={(e) => { setInput(e.target.value) }} className="block w-full border-2 rounded p-1" type="email" id="destinatario" /> */}
+                <select id="destinatario" value={selectedEmail}
+                    onChange={(e) => {
+                        setSelectedEmail(e.target.value);
+                    }} className="block w-full border-2 rounded p-1">
+                    <option value="">-- Selecciona un destinatario --</option>
+                    {destList.map(dest => (
+                        <option key={dest.email} value={dest.email}>
+                            {`${dest.email} [${dest.nombre}]`}
+                        </option>
+                    ))}
+                </select>
+                <button onClick={agregarDestinatario} className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40"> <IoIosAddCircleOutline size={25} /> Agregar</button>
             </form>
             <div className="mt-4">
                 {destinatarios.map((dest, index) => (

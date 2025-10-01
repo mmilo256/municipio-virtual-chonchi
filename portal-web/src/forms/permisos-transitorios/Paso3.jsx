@@ -1,8 +1,21 @@
+import { useEffect, useState } from "react"
 import Input from "../../components/ui/Input"
 import { getTodayDate } from "../../utils/utils"
 import { validationRules } from "../validations"
 
-const Paso3 = ({ register, errors, getValues }) => {
+const Paso3 = ({ register, errors, watch }) => {
+
+    const [startDate, setStartDate] = useState(null)
+    const [startTime, setStartTime] = useState(null)
+
+    // Escucha cambios en el campo de fecha de inicio
+    const watchedStartDate = watch("permissionStartDate");
+    const watchedStartTime = watch("permissionStartTime")
+
+    useEffect(() => {
+        setStartDate(watchedStartDate || null)
+        setStartTime(watchedStartTime || null)
+    }, [watchedStartDate, watchedStartTime])
 
     return (
         <>
@@ -45,28 +58,27 @@ const Paso3 = ({ register, errors, getValues }) => {
                         required: validationRules.required
                     }} />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            {startDate && startTime && < div className="grid grid-cols-2 gap-4">
                 <Input
                     name="permissionEndDate"
                     label="Fecha de término"
                     error={errors["PermissionEndDate"]}
                     register={register}
-                    min={getValues("permissionStartDate")}
+                    min={startDate}
                     type="date"
                     validations={{
                         required: validationRules.required
                     }} />
-                {<Input
+                <Input
                     name="permissionEndTime"
                     label="Hora de término"
-                    min={getTodayDate()}
                     error={errors["PermissionEndTime"]}
                     register={register}
                     type="time"
                     validations={{
                         required: validationRules.required
-                    }} />}
-            </div>
+                    }} />
+            </div >}
             <div className="grid grid-cols-2 gap-4">
                 <Input
                     name="permissionAlcohol"

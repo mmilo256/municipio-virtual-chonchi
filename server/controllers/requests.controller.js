@@ -33,14 +33,39 @@ export const getRequestById = async (req, res) => {
     }
 }
 
-// Obtener todas las solicitudes de un trámite en específico
+// Obtener todas las solicitudes de un trámite en específico (SOLICITUDES DEL PANEL DE ADMINISTRACIÓN)
 export const getAllRequestsByProcedure = async (req, res) => {
     const { id } = req.params
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
+    const filters = req.query.filters
+    const offset = (page - 1) * pageSize
+
     try {
-        const requests = await getRequestsByProcedure(id)
+        const requests = await getRequestsByProcedure(id, pageSize, offset, filters)
         res.status(200).json(requests)
     } catch (e) {
         res.status(500).json({ error: e.message, message: "Error interno del servidor" })
+    }
+}
+
+// Obtener todas las solicitudes realizadas por un usuario, según el id del usuario (SOLICITUDES DEL PORTAL WEB PÚBLICO)
+export const getAllRequestsByUserId = async (req, res) => {
+    const { id } = req.params
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
+    const offset = (page - 1) * pageSize
+
+    if (!id) {
+        return res.status(401).json({ message: "No se proporcionó un id" })
+    }
+
+    try {
+        // Buscar el usuario por su RUN e incluir sus solicitudes asociadas
+        const requests = await getUserRequests(id, pageSize, offset)
+        res.status(200).json(requests) // Devolver todas las solicitudes del usuario
+    } catch (error) {
+        res.status(500).json({ error: error.message, message: "No se pudo obtener las solicitudes." })
     }
 }
 
@@ -66,26 +91,6 @@ export const updateRequestStatus = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: error.message, message: "No se pudo actualizar el estado de la solicitud" })
-    }
-}
-
-// Obtener todas las solicitudes realizadas por un usuario, según el id del usuario
-export const getAllRequestsByUserId = async (req, res) => {
-    const { id } = req.params
-    const page = parseInt(req.query.page) || 1
-    const pageSize = parseInt(req.query.pageSize) || 10
-    const offset = (page - 1) * pageSize
-
-    if (!id) {
-        return res.status(401).json({ message: "No se proporcionó un id" })
-    }
-
-    try {
-        // Buscar el usuario por su RUN e incluir sus solicitudes asociadas
-        const requests = await getUserRequests(id, pageSize, offset)
-        res.status(200).json(requests) // Devolver todas las solicitudes del usuario
-    } catch (error) {
-        res.status(500).json({ error: error.message, message: "No se pudo obtener las solicitudes." })
     }
 }
 

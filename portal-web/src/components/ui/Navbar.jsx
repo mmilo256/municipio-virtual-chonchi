@@ -38,7 +38,6 @@ const Navbar = () => {
                                 <li key={index}><NavLink onClick={() => { setToggleMenu(!toggleMenu) }} className="block border-b border-b-slate-500 p-3" to={item.href}>{item.name}</NavLink></li>
                             ))}
                             <div className='mt-5 pl-3 flex items-center'>
-                                <span>Cerrar sesión</span>
                                 <LogoutButton darkMode />
                             </div>
                         </ul>

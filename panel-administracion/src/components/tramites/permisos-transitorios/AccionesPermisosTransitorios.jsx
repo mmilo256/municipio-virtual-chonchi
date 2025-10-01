@@ -6,6 +6,7 @@ import { rejectTemplate } from "../../../email-templates/permisos-transitorios/r
 import { sendEmail } from "../../../services/emailServices.js";
 import { updateRequestStatus } from "../../../services/requestsServices.js";
 import { SERVER_URL } from "../../../constants/constants.js";
+import { toast } from 'react-toastify';
 
 const AccionesPermisosTransitorios = ({
     requestId,
@@ -33,7 +34,7 @@ const AccionesPermisosTransitorios = ({
 
     const onRejectRequest = async () => {
         if (!rejectInput) {
-            return alert("Debe ingresar un motivo")
+            return toast.error("Debe indicar un motivo para rechazar la solicitud")
         }
         setLoading(true)
         const emailTemplate = rejectTemplate(userFullName, rejectInput)
@@ -41,9 +42,10 @@ const AccionesPermisosTransitorios = ({
             await sendEmail(requestEmail, rejectTitle, emailTemplate)
             await updateRequestStatus(requestId, "rechazada")
             setStatus("rechazada")
-            alert("Se ha notificado al usuario el rechazo de su solicitud")
+            toast.success("Se ha notificado al usuario el rechazo de su solicitud")
         } catch (error) {
-            alert(error.message)
+            console.log(error)
+            toast.error("Ha ocurrido un error y no se pudo rechazar la solicitud")
         }
     }
 
@@ -55,7 +57,7 @@ const AccionesPermisosTransitorios = ({
             Rechazar solicitud
         </button>
         <Modal loading={loading} onClick={onRejectRequest} title="Rechazar solicitud" btnText="Rechazar solicitud" modal={rejectModal} toggleModal={() => { setRejectModal(prev => !prev) }} >
-            <Input value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
+            <Input className="mb-0" value={rejectInput} onChange={setRejectInput} type="textarea" label="Indique el motivo por el cual rechaza la solicitud:" />
         </Modal>
     </>
 
@@ -77,14 +79,14 @@ const AccionesPermisosTransitorios = ({
         onClick={() => { abrirDecreto(decretos?.decretoSinFirma) }}
         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
     >
-        Decreto (sin firma)
+        Descargar decreto (sin firma)
     </button>
 
     const descargarDecretoFirmadoButton = <button
         onClick={() => { abrirDecreto(decretos?.decretoFirmado) }}
         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
     >
-        Decreto firmado
+        Descargar decreto (firmado)
     </button>
 
 

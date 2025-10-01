@@ -33,7 +33,7 @@ const LogoutButton = ({ darkMode = false }) => {
         >
             {/* Nombre del usuario */}
             <span className={`font-light group-disabled:text-slate-400 ${darkMode ? "text-white" : "text-primary"}`}>
-                {name}
+                Cerrar sesión
             </span>
             {/* Icono de Cerrar Sesión */}
             <LogoutIcon className={`group-disabled:stroke-slate-400 ${darkMode ? "stroke-white" : "stroke-primary"}`} />

@@ -4,13 +4,14 @@ import Button from "../../ui/Button"
 import { useEffect, useState } from "react"
 import { generarDecreto } from "../../../services/permisosTransitoriosServices"
 import { updateRequestStatus } from "../../../services/requestsServices"
+import Breadcrumbs from "../../ui/Breadcrumbs"
 
 const GenerarDecretoPermisosTransitorios = () => {
 
     const { id } = useParams()
     const navigate = useNavigate()
     const location = useLocation()
-    const { request } = location.state
+    const request = location?.state?.request || {}
     const respuestas = request?.respuestas
 
     // Estados
@@ -79,8 +80,12 @@ const GenerarDecretoPermisosTransitorios = () => {
         try {
             await generarDecreto(id, data)
             await updateRequestStatus(id, "por firmar")
-            alert("Decreto generado exitosamente")
-            navigate(`../${id}`)
+            navigate(`../${id}`, {
+                state: {
+                    showToast: true,
+                    toastMessage: "El decreto se ha generado exitosamente"
+                }
+            })
         } catch (error) {
             console.log(error)
             alert("No se pudo generar el decreto")
@@ -88,9 +93,16 @@ const GenerarDecretoPermisosTransitorios = () => {
         }
     }
 
+    const breadcrumbs = [
+        { label: "Autorización Especial Transitoria", href: "/permisos-transitorios" },
+        { label: `Solicitud #${id}`, href: `/permisos-transitorios/${id}` },
+        { label: `Generar decreto` },
+    ]
+
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Generar decreto</h1>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+            <h1 className="text-2xl font-bold my-4">Generar decreto</h1>
             <form onSubmit={onSubmit} >
                 <div className="max-w-52">
                     <Input value={numDecreto} onChange={setNumDecreto} type="number" label="N° decreto" />

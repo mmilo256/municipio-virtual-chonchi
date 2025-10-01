@@ -131,7 +131,7 @@ const Input = ({
     // Renderiza la etiqueta y el componente de entrada
     return (
         <label className="block mb-4">
-            <p className="text-slate-600 font-medium text-sm"><span>{label}</span> {!validations?.required && <span className="font-light text-xs text-slate-500">(opcional)</span>}</p>
+            <p className="text-slate-600 font-medium text-sm mb-1"><span>{label}</span> {!validations?.required && <span className="font-light text-xs text-slate-500">(opcional)</span>}</p>
             {input}
             {/* type === "textarea" && <span className="text-slate-500 text-xs">{`${value[name].value.length}/${max}`}</span> */}
             {error && <p className="left-0 -bottom-4 text-red-500 text-xs">{error.message}</p>}

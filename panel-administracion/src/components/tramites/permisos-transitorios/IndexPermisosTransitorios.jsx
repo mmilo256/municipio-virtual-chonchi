@@ -79,9 +79,15 @@ const IndexPermisosTransitorios = () => {
         })()
     }, [id])
 
+    const detailBreadcrumbs = [
+        { label: requestData.tramite, href: "/permisos-transitorios" },
+        { label: `Solicitud #${id}`, href: `/permisos-transitorios/${id}` }
+    ]
+
     return (
         <DetalleSolicitud
             status={requestStatus}
+            breadcrumbs={detailBreadcrumbs}
             actions={<AccionesPermisosTransitorios
                 status={requestStatus}
                 setStatus={setRequestStatus}

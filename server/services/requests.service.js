@@ -1,3 +1,4 @@
+import { Op } from "sequelize"
 import { sequelize } from "../config/db/config.js"
 import Document from "../models/documentModel.js"
 import Procedure from "../models/procedureModel.js"
@@ -31,15 +32,32 @@ export const getLogs = async (request_id) => {
     return logs
 }
 
-export const getRequestsByProcedure = async (procedure_id) => {
-    const requests = await Request.findAll({
-        where: { tramite_id: procedure_id },
+export const getRequestsByProcedure = async (procedure_id, pageSize, offset, filters) => {
+
+    const whereClause = {
+        tramite_id: procedure_id
+    }
+
+    if (filters) {
+        const statusArray = filters.split(",")
+        whereClause.estado = {
+            [Op.in]: statusArray
+        }
+    }
+
+    const { rows, count } = await Request.findAndCountAll({
+        limit: pageSize,
+        offset,
+        where: whereClause,
         include: {
             model: User,
             attributes: ["nombres", "apellidos", "run"]
         }
     })
-    return requests
+
+    const totalPages = Math.ceil(count / pageSize) === 0 ? 1 : Math.ceil(count / pageSize)
+
+    return { requests: rows, totalPages }
 }
 
 export const getUserRequests = async (user_id, pageSize, offset) => {
@@ -47,6 +65,7 @@ export const getUserRequests = async (user_id, pageSize, offset) => {
         limit: pageSize,
         offset,
         where: { usuario_id: user_id },
+        order: [["createdAt", "DESC"]],
         include: {
             model: Procedure,
             attributes: ["titulo"]

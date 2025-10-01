@@ -26,9 +26,9 @@ const Login = () => {
         try {
             await login(username, password)
             window.location.href = "/"
-            toast.success("¡Has iniciado sesión!")
         } catch (error) {
             toast.error(error.message)
+            setIsLoading(false)
         }
     }
 

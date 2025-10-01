@@ -3,17 +3,40 @@ import { MdNavigateBefore } from "react-icons/md";
 import { MdNavigateNext } from "react-icons/md";
 import { MdLastPage } from "react-icons/md";
 
-const Pagination = () => {
+const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
 
-    const buttonStyles = "bg-primary hover:bg-blue-700 text-white text-lg rounded p-1"
+    const buttonStyles = "bg-primary hover:bg-slate-600 text-white text-lg rounded p-1"
+
+    const onFirstPage = async () => {
+        if (currentPage > 1) {
+            setCurrentPage(1)
+        }
+    }
+
+    const onPrevPage = async () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1)
+        }
+    }
+    const onNextPage = async () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(prev => prev + 1)
+        }
+    }
+
+    const onLastPage = async () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(totalPages)
+        }
+    }
 
     return (
         <div className="flex items-center justify-center gap-4 mt-4">
-            <button className="bg-primary hover:bg-slate-300 text-white text-lg rounded p-1"><MdFirstPage /></button>
-            <button className={buttonStyles}><MdNavigateBefore /></button>
-            <p>1 / 2</p>
-            <button className={buttonStyles}><MdNavigateNext /></button>
-            <button className={buttonStyles}><MdLastPage /></button>
+            <button onClick={onFirstPage} className={buttonStyles}><MdFirstPage /></button>
+            <button onClick={onPrevPage} className={buttonStyles}><MdNavigateBefore /></button>
+            <p>{currentPage} / {totalPages}</p>
+            <button onClick={onNextPage} className={buttonStyles}><MdNavigateNext /></button>
+            <button onClick={onLastPage} className={buttonStyles}><MdLastPage /></button>
         </div>
     )
 }

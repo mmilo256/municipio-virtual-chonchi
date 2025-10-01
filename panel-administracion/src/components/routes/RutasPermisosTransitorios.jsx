@@ -4,19 +4,26 @@ import { PROCEDURES_ID } from "../../constants/constants"
 import IndexPermisosTransitorios from "../tramites/permisos-transitorios/IndexPermisosTransitorios"
 import FormularioSubirDocumento from "../tramites/FormularioSubirDocumento"
 import GenerarDecretoPermisosTransitorios from "../tramites/permisos-transitorios/GenerarDecretoPermisosTransitorios"
-import EnviarDecretoPermisosTransitorios from "../tramites/permisos-transitorios/EnviarDecretoPermisosTransitorios"
+import EnviarDocumento from "../tramites/permisos-transitorios/EnviarDocumento"
 
 const PermisosTransitorios = () => {
+
+    const tramite = "Autorización Especial Transitoria"
+    const tramiteHref = "/permisos-transitorios"
+
+    const data = {
+        tramite, tramiteHref
+    }
 
     return (
         <div>
             <Routes>
-                <Route index element={<Solicitudes tramiteId={PROCEDURES_ID.permisosTransitorios} title={"Solicitudes de Autorización Especial Transitoria"} />} />
+                <Route index element={<Solicitudes tramiteId={PROCEDURES_ID.permisosTransitorios} title={"Solicitudes de Autorización Especial Transitoria"} breadcrumbsData={data} />} />
                 <Route path="/:id" element={<IndexPermisosTransitorios />} />
-                <Route path="/:id/subir-documento" element={<FormularioSubirDocumento titulo="Subir documento asociado a la solicitud" tipo="subido" />} />
+                <Route path="/:id/subir-documento" element={<FormularioSubirDocumento titulo="Subir documento asociado a la solicitud" tipo="subido" breadcrumbsData={{ ...data, pagina: "subir-documento" }} />} />
                 <Route path="/:id/generar-decreto" element={<GenerarDecretoPermisosTransitorios />} />
-                <Route path="/:id/subir-decreto" element={<FormularioSubirDocumento titulo="Subir decreto firmado" estado="firmado" tipo="generado" estadoSolicitud="aprobada" />} />
-                <Route path="/:id/enviar-decreto" element={<EnviarDecretoPermisosTransitorios />} />
+                <Route path="/:id/subir-decreto" element={<FormularioSubirDocumento titulo="Subir decreto firmado" estado="firmado" tipo="generado" estadoSolicitud="aprobada" breadcrumbsData={{ ...data, pagina: "subir-decreto" }} />} />
+                <Route path="/:id/enviar-decreto" element={<EnviarDocumento />} />
             </Routes>
         </div>
     )

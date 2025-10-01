@@ -22,7 +22,7 @@ const FormPermisosTransitorios = () => {
 
     const { sessionData } = useAuthStore()
 
-    const { register, handleSubmit, setValue, formState: { errors }, getValues } = useForm()
+    const { register, handleSubmit, setValue, watch, formState: { errors }, getValues } = useForm()
     const [docs, setDocs] = useState({
         docCI: null,
         docRutTributario: null,
@@ -108,7 +108,7 @@ const FormPermisosTransitorios = () => {
                 {step === 0 && <Paso0 register={register} errors={errors} setValue={setValue} />}
                 {step === 1 && <Paso1 register={register} errors={errors} />}
                 {step === 2 && <Paso2 register={register} errors={errors} />}
-                {step === 3 && <Paso3 register={register} errors={errors} getValues={getValues} />}
+                {step === 3 && <Paso3 register={register} errors={errors} getValues={getValues} watch={watch} />}
                 {step === 4 && <Paso4 register={register} docs={docs} setDocs={setDocs} />}
                 {step === 5 && <ConfirmarFormularioPT />}
                 <div className="mt-4 flex gap-2 justify-end">

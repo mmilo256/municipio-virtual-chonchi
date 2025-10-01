@@ -23,6 +23,14 @@ export const deleteDocumentService = async (id) => {
     }
 }
 
+export const getDocumentService = async (id) => {
+    const document = await Document.findByPk(id)
+    if (!document) {
+        return { message: "No se encontró el documentus" }
+    }
+    return document
+}
+
 export const downloadDocumentService = async (id) => {
     try {
         const document = await Document.findByPk(id)

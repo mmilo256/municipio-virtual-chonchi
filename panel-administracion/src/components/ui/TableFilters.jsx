@@ -7,6 +7,7 @@ const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => 
     const [btnPorFirmar, setBtnPorFirmar] = useState(false)
     const [btnAprobada, setBtnAprobada] = useState(false)
     const [btnRechazada, setBtnRechazada] = useState(false)
+    const [btnFinalizada, setBtnFinalizada] = useState(false)
 
     const onFilter = async (status) => {
         setCurrentPage(1)
@@ -25,6 +26,9 @@ const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => 
                 break;
             case "rechazada":
                 setBtnRechazada(!btnRechazada)
+                break;
+            case "finalizada":
+                setBtnFinalizada(!btnFinalizada)
                 break;
             default:
                 break;
@@ -52,6 +56,7 @@ const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => 
                 <button onClick={() => { onFilter("por firmar") }} className={`block rounded-full py-1 px-4 ${btnPorFirmar ? activeButtonStyles : inactiveButtonStyles}`}>Por firmar</button>
                 <button onClick={() => { onFilter("aprobada") }} className={`block rounded-full py-1 px-4 ${btnAprobada ? activeButtonStyles : inactiveButtonStyles}`}>Aprobadas</button>
                 <button onClick={() => { onFilter("rechazada") }} className={`block rounded-full py-1 px-4 ${btnRechazada ? activeButtonStyles : inactiveButtonStyles}`}>Rechazadas</button>
+                <button onClick={() => { onFilter("finalizada") }} className={`block rounded-full py-1 px-4 ${btnFinalizada ? activeButtonStyles : inactiveButtonStyles}`}>Finalizadas</button>
             </div>
         </>
     )

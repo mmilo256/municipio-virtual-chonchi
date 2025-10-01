@@ -26,8 +26,7 @@ export const login = async (req, res) => {
         // Guardar token en cookies
         res.cookie('jwt-admin', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none"
+            secure: false
         })
 
         // Envía el token también en la respuesta JSON
@@ -46,8 +45,7 @@ export const logout = async (req, res) => {
         // Elimina la cookie que contiene el token de acceso
         res.clearCookie('jwt-admin', {
             httpOnly: true,
-            secure: true,
-            sameSite: "none"
+            secure: false
         })
         res.status(200).json({ message: "Sesión cerrada" })
     } catch (error) {

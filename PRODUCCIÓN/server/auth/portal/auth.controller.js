@@ -59,9 +59,8 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
 
         // Enviar el JWT en una cookie
         res.cookie('jwt', jwt, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none"
+            secure: false, // Cambiar a true en producción para usar HTTPS
+            httpOnly: true // Impide acceso al cookie desde JavaScript
         })
         // res.redirect(homeUrl) // Redirigir al usuario a la página principal */
 
@@ -89,9 +88,8 @@ export const verifySession = async (req, res) => {
 // Cerrar sesión
 export const logout = async (req, res) => {
     res.clearCookie('jwt', {
-        secure: true, // Cambiar a true en producción para usar HTTPS
-        httpOnly: true, // Impide acceso al cookie desde JavaScript en el navegador
-        sameSite: "none"
+        secure: false, // Cambiar a true en producción para usar HTTPS
+        httpOnly: true // Impide acceso al cookie desde JavaScript en el navegador
     })
     res.json({ message: "Se ha destruido la sesión" })
 }

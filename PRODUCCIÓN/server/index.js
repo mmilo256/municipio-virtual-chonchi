@@ -54,9 +54,8 @@ app.use(session({
     resave: false,  // No volver a guardar la sesión si no ha habido cambios
     saveUninitialized: false,  // No guardar sesiones sin inicializar
     cookie: {
-        secure: true,  // Cambiar a true en producción para forzar conexiones seguras (HTTPS)
-        httpOnly: true,  // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
-        sameSite: "none"
+        secure: false,  // Cambiar a true en producción para forzar conexiones seguras (HTTPS)
+        httpOnly: true  // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
     }
 }));
 

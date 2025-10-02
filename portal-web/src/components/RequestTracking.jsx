@@ -5,7 +5,6 @@ import Container from "./ui/Container"  // Componente contenedor para envolver e
 import { useEffect, useState } from "react"  // Hooks de React para efectos y estados
 import { fetchDocumentosAdjuntos, fetchRequestById, fetchRequestStatusLogs } from "../services/requests.service"  // Función para obtener los logs de la solicitud
 import { formatDate } from "../utils/utils"  // Función para formatear las fechas
-import { SERVER_URL } from "../../../panel-administracion/src/constants/constants"
 import Respuestas from "./Respuestas"
 import Breadcrumbs from "./ui/Breadcrumbs"
 
@@ -82,7 +81,9 @@ const RequestTracking = () => {
         (async () => {
             const response = await fetchDocumentosAdjuntos(id)
             const docs = response.map(doc => ({
-                ruta: `${SERVER_URL}/${doc.ruta}`
+                id: doc.id,
+                originalName: doc.originalname,
+                slug: doc.nombre
             }))
             setRequestDocs(docs)
         })()

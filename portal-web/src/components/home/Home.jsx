@@ -4,16 +4,21 @@ import Heading from "../ui/Heading"  // Componente para los encabezados.
 import { fetchAllProcedures } from "../../services/procedures.service"  // Función para obtener todos los procedimientos del backend.
 import Card from "../ui/Card"
 import Breadcrumbs from "../ui/Breadcrumbs"
+import CardSkeleton from "../ui/Skeletons/CardSkeleton"
 
 const Home = () => {
     // Declaración del estado para almacenar los procedimientos.
     const [procedures, setProcedures] = useState([])
 
+    const [loading, setLoading] = useState(false)
+
     // useEffect para cargar los procedimientos cuando el componente se monta.
     useEffect(() => {
         (async () => {
+            setLoading(true)
             const data = await fetchAllProcedures()
             setProcedures(data)
+            setLoading(false)
         })()
     }, []) // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
 
@@ -37,16 +42,15 @@ const Home = () => {
 
             {/* Componente para mostrar los procedimientos en un grid de tarjetas */}
             <Container className="py-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {procedures?.map((card, index) => (
+                {!loading ? procedures?.map((card, index) => (
                     <Card
                         key={index}
                         title={card.titulo}
                         desc={card.descripcion_corta}
-                        icon={card.icon}
                         href={`/${card.nombre}`}
                         direccion={card.direcciones_municipale.nombre}
                     />
-                ))}
+                )) : <CardSkeleton />}
             </Container>
         </>
     )

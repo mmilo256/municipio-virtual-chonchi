@@ -6,16 +6,16 @@ const Heading = ({ children, level = 1, className, darkMode }) => {
     let size
     switch (level) {
         case 1:
-            size = "text-3xl md:text-4xl py-4"
+            size = "text-3xl md:text-4xl my-4"
             break;
         case 2:
-            size = "text-2xl md:text-3xl py-3"
+            size = "text-2xl md:text-3xl my-3"
             break;
         case 3:
-            size = "text-xl md:text-2xl py-2"
+            size = "text-xl md:text-2xl my-2"
             break;
         case 4:
-            size = "text-lg md:text-xl py-1"
+            size = "text-lg md:text-xl my-1"
             break;
         default:
             break;

@@ -21,7 +21,6 @@ function App() {
   useEffect(() => {
     (async () => {
       const data = await verifySession()
-      console.log(data)
       if (data.payload) {
         setIsAuthenticated(true)
         setSessionData(data.payload)

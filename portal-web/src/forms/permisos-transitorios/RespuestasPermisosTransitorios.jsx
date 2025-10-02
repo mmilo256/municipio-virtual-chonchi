@@ -34,6 +34,11 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
 
     const itemStyles = "mb-2"
 
+    const openDocument = (id) => {
+        window.open(`https://municipiovirtualchonchi.cl/api/portal/documents/${id}/view`)
+    }
+
+
     return (
         <div className="text-sm">
             {/* Acordeones para mostrar los datos organizados */}
@@ -151,13 +156,16 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
             </Accordion>
             <Accordion title="5. Antecedentes">
                 <ul className="list-disc list-inside pl-2 text-blue-700 underline">
-                    {<li><a href={docs[0]?.ruta} target="_blank">Cédula de identidad del representante legal</a></li>}
-                    {<li><a href={docs[1]?.ruta} target="_blank" >RUT tributario</a></li>}
-                    {<li><a href={docs[2]?.ruta} target="_blank" >Certificado de antecedentes para fines especiales</a></li>}
-                    {<li><a href={docs[3]?.ruta} target="_blank" >Certificado de vigencia de Persona Jurídica</a></li>}
-                    {<li><a href={docs[4]?.ruta} target="_blank" >Documento que acredita la ocupación legal del recinto</a></li>}
-                    {<li><a href={docs[5]?.ruta} target="_blank" >Declaración jurada simple Ley 19.925 de alcoholes</a></li>}
-                    {<li><a href={docs[6]?.ruta} target="_blank" >Firma del representante legal</a></li>}
+                    {/* {docs.map((doc, index) => (
+                        <button onClick={() => { openDocument(doc.id) }} className="block" key={index} >{doc.slug}</button>
+                    ))} */}
+                    <button onClick={() => { openDocument(docs[0].id) }} className="block">Cédula de identidad del representante legal</button>
+                    <button onClick={() => { openDocument(docs[1].id) }} className="block">RUT tributario</button>
+                    <button onClick={() => { openDocument(docs[2].id) }} className="block">Certificado de antecedentes para fines especiales</button>
+                    <button onClick={() => { openDocument(docs[3].id) }} className="block">Certificado de vigencia de Persona Jurídica</button>
+                    <button onClick={() => { openDocument(docs[4].id) }} className="block">Documento que acredita la ocupación legal del recinto</button>
+                    <button onClick={() => { openDocument(docs[5].id) }} className="block">Declaración jurada simple Ley 19.925 de alcoholes</button>
+                    <button onClick={() => { openDocument(docs[6].id) }} className="block">Firma del representante legal</button>
                 </ul>
             </Accordion>
         </div>

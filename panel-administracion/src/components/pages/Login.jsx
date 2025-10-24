@@ -25,7 +25,7 @@ const Login = () => {
         }
         try {
             await login(username, password)
-            window.location.href = "/"
+            window.location.href = "/admin/"
         } catch (error) {
             toast.error(error.message)
             setIsLoading(false)
@@ -33,7 +33,7 @@ const Login = () => {
     }
 
     if (isAuthenticated) {
-        return <Navigate to="/" />
+        return <Navigate to="/admin/" />
     }
 
     return (

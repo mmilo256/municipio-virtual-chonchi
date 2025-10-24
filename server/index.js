@@ -9,6 +9,7 @@ import path from 'path';  // Utilidad para manipular rutas de archivos
 import portalApi from './api/portal.js'
 import adminApi from './api/admin.js'
 import { config } from "./config/config.js";
+import { toBool } from "./utils/format.utils.js";
 
 const port = 10000;  // Definir puerto para el servidor
 const app = e();  // Crear la instancia de la aplicación Express
@@ -33,11 +34,9 @@ app.use(cookieParser());  // Middleware para parsear las cookies de las solicitu
 // Definir los orígenes permitidos para acceder a la API (en producción y desarrollo)
 app.use(cors({
     origin: [
-        'https://municipio-virtual.onrender.com',
-        'https://municipio-virtual-chonchi.onrender.com',
-        'http://localhost:10000',
         'http://localhost:5173',
         'http://localhost:5174',
+        'https://municipiovirtualchonchi.cl/',
         'https://accounts.claveunica.gob.cl/'
     ],
     credentials: true,  // Permitir el envío de cookies y credenciales en solicitudes
@@ -47,16 +46,15 @@ app.use(cors({
 // Configuración del middleware de sesión
 // Esto gestiona las sesiones del usuario utilizando cookies
 
-const { sessionSecret } = config
+const { sessionSecret, cookieSecure } = config
 
 app.use(session({
     secret: sessionSecret,  // Clave secreta para firmar las cookies de sesión
     resave: false,  // No volver a guardar la sesión si no ha habido cambios
     saveUninitialized: false,  // No guardar sesiones sin inicializar
     cookie: {
-        secure: true,  // Cambiar a true en producción para forzar conexiones seguras (HTTPS)
-        httpOnly: true,  // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
-        sameSite: "none"
+        secure: toBool(cookieSecure),
+        httpOnly: true  // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
     }
 }));
 

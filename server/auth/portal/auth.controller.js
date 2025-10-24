@@ -1,30 +1,30 @@
 import { getAccessToken, getAuthUrl, getUserData, insertUser } from './auth.service.js'
 import { generateJWT, generateRandomToken } from '../../utils/token.utils.js';
 import { config } from '../../config/config.js';
+import { toBool } from '../../utils/format.utils.js';
 
 const { jwtSecret, jwtExpiresIn, homeUrl } = config.oauth
+const { cookieSecure } = config
 
-// Función para ingresar credenciales en ClaveÚnica
+// Login ClaveÚnica
 export const login = async (req, res) => {
     try {
         // Crear un token anti-falsificación único para proteger el proceso de login
         const csrfToken = generateRandomToken()
         req.session.csrfToken = csrfToken;
 
-        // Obtener URL ir al login de ClaveÚnica
+        // Obtener URL para ir al login de ClaveÚnica
         const authUrl = getAuthUrl(csrfToken)
 
         // Redirigir al usuario al login de ClaveÚnica para la autenticación
         res.redirect(authUrl);
     } catch (error) {
-        // Manejo de errores en el proceso de login
         console.error('Error en el proceso de login:', error);
         res.status(500).json({ message: 'Error al procesar la solicitud de login' });
     }
 };
 
-// Función callback para cuando el usuario autoriza la aplicación en ClaveÚnica
-export const callback = async (req, res) => { // Cambiar nombre a callback en producción
+export const callback = async (req, res) => {
     const { code, state } = req.query
 
     // Verificar que se hayan recibido correctamente los parámetros de código y estado
@@ -34,6 +34,8 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
 
     // Confirmar que el token anti-falsificación es válido
     const csrfToken = req.session.csrfToken
+
+    console.log(req.session)
     if (state !== csrfToken) {
         return res.status(400).json({ message: "El token anti-falsificación no es válido." })
     }
@@ -60,12 +62,10 @@ export const callback = async (req, res) => { // Cambiar nombre a callback en pr
         // Enviar el JWT en una cookie
         res.cookie('jwt', jwt, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none"
+            secure: toBool(cookieSecure)
         })
-        // res.redirect(homeUrl) // Redirigir al usuario a la página principal */
 
-        res.redirect(homeUrl)
+        res.redirect(homeUrl) // Redirigir al usuario a la página principal
 
     } catch (error) {
         console.log(error)
@@ -89,9 +89,8 @@ export const verifySession = async (req, res) => {
 // Cerrar sesión
 export const logout = async (req, res) => {
     res.clearCookie('jwt', {
-        secure: true, // Cambiar a true en producción para usar HTTPS
-        httpOnly: true, // Impide acceso al cookie desde JavaScript en el navegador
-        sameSite: "none"
+        secure: toBool(cookieSecure),
+        httpOnly: true
     })
     res.json({ message: "Se ha destruido la sesión" })
 }

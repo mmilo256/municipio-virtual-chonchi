@@ -9,7 +9,7 @@ import Home from "./components/home/Home"
 import Requests from "./components/Requests"
 import RequestTracking from "./components/RequestTracking"
 import ProcedureDetails from "./components/ui/ProcedureDetails"
-import { PROCEDURES_ID } from "./constants/constants"
+import { PROCEDURES_ID } from "./config"
 import FormPermisosTransitorios from "./forms/permisos-transitorios/FormPermisosTransitorios"
 import FormReparacionCaminos from "./forms/reparacion-caminos/FormReparacionCaminos"
 

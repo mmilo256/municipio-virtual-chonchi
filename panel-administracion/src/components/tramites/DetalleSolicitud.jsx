@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
-const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos, status, breadcrumbs }) => {
+const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosForm, documentosSubidos, status, breadcrumbs, loading }) => {
 
     const location = useLocation()
 
@@ -22,7 +22,7 @@ const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosFor
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             {/* Encabezado con el estado de la solicitud */}
             <div className="flex items-center gap-5 mt-4">
-                <h1 className="text-2xl font-bold">{requestData?.tramite} #{requestData?.id}</h1>
+                <h1 className="text-2xl font-bold">{!loading ? `${requestData?.tramite} #${requestData?.id}` : <span className="inline-block h-6 rounded-full w-72 bg-slate-200 animate-pulse"></span>}</h1>
                 <StatusTag status={status} />
             </div>
             {/* Fecha de la solicitud */}
@@ -38,19 +38,19 @@ const DetalleSolicitud = ({ requestData = [], actions, respuestas, documentosFor
                 <div className="bg-[#fff] p-4 shadow rounded">
                     <p>
                         <strong>Nombre: </strong>
-                        {requestData?.respuestas?.name}
+                        {!loading ? requestData?.respuestas?.name : <span className="inline-block h-4 rounded-full w-72 bg-slate-200 animate-pulse"></span>}
                     </p>
                     <p>
                         <strong>RUT: </strong>
-                        {requestData?.respuestas?.rut}
+                        {!loading ? requestData?.respuestas?.rut : <span className="inline-block h-4 rounded-full w-72 bg-slate-200 animate-pulse"></span>}
                     </p>
                     <p>
                         <strong>Email: </strong>
-                        {requestData?.respuestas?.email}
+                        {!loading ? requestData?.respuestas?.email : <span className="inline-block h-4 rounded-full w-72 bg-slate-200 animate-pulse"></span>}
                     </p>
                     <p>
                         <strong>Teléfono: </strong>
-                        {requestData?.respuestas?.phone}
+                        {!loading ? requestData?.respuestas?.phone : <span className="inline-block h-4 rounded-full w-72 bg-slate-200 animate-pulse"></span>}
                     </p>
                 </div>
             </div>

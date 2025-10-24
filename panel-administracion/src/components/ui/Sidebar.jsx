@@ -16,7 +16,6 @@ const Sidebar = ({ state, setState }) => {
         {state ? <ul className="flex flex-col gap-2">
           <li><Link to="/" className="hover:underline">Inicio</Link></li>
           <li><Link to="permisos-transitorios" className="hover:underline">Permisos Transitorios</Link></li>
-          <li><Link to="reparacion-caminos" className="hover:underline">Reparación de Caminos</Link></li>
         </ul>
           : <div></div>}
         <LogoutButton btnText={state && "Cerrar sesión"} />

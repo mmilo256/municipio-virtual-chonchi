@@ -4,6 +4,7 @@ export const config = {
     email: process.env.EMAIL,
     emailPassword: process.env.EMAIL_PASSWORD,
     sessionSecret: process.env.SESSION_SECRET,
+    cookieSecure: process.env.COOKIE_SECURE,
     oauth: {
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,

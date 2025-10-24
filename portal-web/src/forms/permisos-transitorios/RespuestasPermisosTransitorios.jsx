@@ -1,7 +1,8 @@
 import Accordion from "../../components/ui/Accordion"
+import { API_URL } from "../../config"
 import { formatDate } from "../../utils/utils"
 
-const RespuestasPermisosTransitorios = ({ data, docs }) => {
+const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
 
     const {
         name,
@@ -35,8 +36,10 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
     const itemStyles = "mb-2"
 
     const openDocument = (id) => {
-        window.open(`https://municipiovirtualchonchi.cl/api/portal/documents/${id}/view`)
+        window.open(`${API_URL}/documents/${id}/view`)
     }
+
+    console.log(docs)
 
 
     return (
@@ -154,20 +157,31 @@ const RespuestasPermisosTransitorios = ({ data, docs }) => {
                     </div>
                 </div>
             </Accordion>
-            <Accordion title="5. Antecedentes">
+            {!direct ? <Accordion title="5. Antecedentes">
                 <ul className="list-disc list-inside pl-2 text-blue-700 underline">
                     {/* {docs.map((doc, index) => (
                         <button onClick={() => { openDocument(doc.id) }} className="block" key={index} >{doc.slug}</button>
                     ))} */}
-                    <button onClick={() => { openDocument(docs[0].id) }} className="block">Cédula de identidad del representante legal</button>
-                    <button onClick={() => { openDocument(docs[1].id) }} className="block">RUT tributario</button>
-                    <button onClick={() => { openDocument(docs[2].id) }} className="block">Certificado de antecedentes para fines especiales</button>
-                    <button onClick={() => { openDocument(docs[3].id) }} className="block">Certificado de vigencia de Persona Jurídica</button>
-                    <button onClick={() => { openDocument(docs[4].id) }} className="block">Documento que acredita la ocupación legal del recinto</button>
-                    <button onClick={() => { openDocument(docs[5].id) }} className="block">Declaración jurada simple Ley 19.925 de alcoholes</button>
-                    <button onClick={() => { openDocument(docs[6].id) }} className="block">Firma del representante legal</button>
+                    <button type="button" onClick={() => { openDocument(docs[0].id) }} className="block text-left">Cédula de identidad del representante legal</button>
+                    <button type="button" onClick={() => { openDocument(docs[1].id) }} className="block text-left">RUT tributario</button>
+                    <button type="button" onClick={() => { openDocument(docs[2].id) }} className="block text-left">Certificado de antecedentes para fines especiales</button>
+                    <button type="button" onClick={() => { openDocument(docs[3].id) }} className="block text-left">Certificado de vigencia de Persona Jurídica</button>
+                    <button type="button" onClick={() => { openDocument(docs[4].id) }} className="block text-left">Documento que acredita la ocupación legal del recinto</button>
+                    <button type="button" onClick={() => { openDocument(docs[5].id) }} className="block text-left">Declaración jurada simple Ley 19.925 de alcoholes</button>
+                    <button type="button" onClick={() => { openDocument(docs[6].id) }} className="block text-left">Firma del representante legal</button>
                 </ul>
             </Accordion>
+                : <Accordion title="5. Antecedentes">
+                    <ul className="list-disc list-inside pl-2 text-blue-700 underline">
+                        <a target="_blank" href={docs[0].ruta} className="block text-left">Cédula de identidad del representante legal</a>
+                        <a target="_blank" href={docs[1].ruta} className="block text-left">RUT tributario</a>
+                        <a target="_blank" href={docs[2].ruta} className="block text-left">Certificado de antecedentes para fines especiales</a>
+                        <a target="_blank" href={docs[3].ruta} className="block text-left">Certificado de vigencia de Persona Jurídica</a>
+                        <a target="_blank" href={docs[4].ruta} className="block text-left">Documento que acredita la ocupación legal del recinto</a>
+                        <a target="_blank" href={docs[5].ruta} className="block text-left">Declaración jurada simple Ley 19.925 de alcoholes</a>
+                        <a target="_blank" href={docs[6].ruta} className="block text-left">Firma del representante legal</a>
+                    </ul>
+                </Accordion>}
         </div>
     )
 }

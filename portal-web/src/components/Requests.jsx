@@ -57,17 +57,14 @@ const Requests = () => {
         data: requests  // Datos de las solicitudes
     }
 
-    // Si los datos están cargando, no muestra nada
-    if (loading) {
-        return null
-    }
-
     return (
         <Container>  {/* Contenedor del componente */}
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <Heading level={2}>Solicitudes realizadas</Heading>  {/* Título de la página */}
-            <BaseTable table={table} />  {/* Componente de tabla para mostrar las solicitudes */}
-            <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+            {!loading
+                ? <><BaseTable table={table} />
+                    <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} /></>
+                : <p>Cargando solicitudes...</p>}
         </Container>
     )
 }

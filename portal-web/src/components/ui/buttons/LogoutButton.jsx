@@ -1,6 +1,7 @@
 import { useState } from 'react';  // Importación de useState para gestionar el estado local
 import LogoutIcon from '../../../assets/logout.svg?react';  // Importación del icono de cerrar sesión
 import { logout } from '../../../services/auth.service';
+import { LOGOUT_URL } from '../../../config';
 
 // COMPONENTE: Botón de Cerrar Sesión
 const LogoutButton = ({ darkMode = false }) => {
@@ -16,7 +17,7 @@ const LogoutButton = ({ darkMode = false }) => {
         } catch (error) {
             console.log(error)
         }
-        window.location.href = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout?redirect=logout_uri"
+        window.location.href = LOGOUT_URL
         setTimeout(() => {
             window.location.href = "/"
         }, 1000);

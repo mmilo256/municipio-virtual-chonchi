@@ -5,8 +5,8 @@ import Input from "../../ui/Input";
 import { rejectTemplate } from "../../../email-templates/permisos-transitorios/rejectTemplate.js";
 import { sendEmail } from "../../../services/emailServices.js";
 import { updateRequestStatus } from "../../../services/requestsServices.js";
-import { SERVER_URL } from "../../../constants/constants.js";
 import { toast } from 'react-toastify';
+import { API_URL } from "../../../../config.js";
 
 const AccionesPermisosTransitorios = ({
     requestId,
@@ -71,19 +71,18 @@ const AccionesPermisosTransitorios = ({
 
 
     // DESCARGAR DECRETO  ---------------------------------
-    const abrirDecreto = (decreto) => {
-        const ruta = `${SERVER_URL}/${decreto?.ruta}`
-        window.open(ruta)
+    const abrirDecreto = (id) => {
+        window.open(`${API_URL}/documents/${id}/view`)
     }
     const descargarDecretoSinFirmarButton = <button
-        onClick={() => { abrirDecreto(decretos?.decretoSinFirma) }}
+        onClick={() => { abrirDecreto(decretos?.decretoSinFirma.id) }}
         className="bg-blue-300 hover:bg-blue-200 text-blue-800 py-2 px-5 rounded"
     >
         Descargar decreto (sin firma)
     </button>
 
     const descargarDecretoFirmadoButton = <button
-        onClick={() => { abrirDecreto(decretos?.decretoFirmado) }}
+        onClick={() => { abrirDecreto(decretos?.decretoFirmado.id) }}
         className="bg-violet-300 hover:bg-violet-200 text-violet-800 py-2 px-5 rounded"
     >
         Descargar decreto (firmado)

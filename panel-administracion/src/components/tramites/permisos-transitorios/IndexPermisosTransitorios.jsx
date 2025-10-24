@@ -19,6 +19,8 @@ const IndexPermisosTransitorios = () => {
     const [decretoFirmado, setDecretoFirmado] = useState({})
     const [refresh, setRefresh] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+
     // Cargar los decretos si existen
     useEffect(() => {
         (async () => {
@@ -63,19 +65,25 @@ const IndexPermisosTransitorios = () => {
     // Cargar respuestas del formulario
     useEffect(() => {
         (async () => {
-            const response = await fetchRequestById(id)
-            const formattedFormData = JSON.parse(response.respuestas)
-            const data = {
-                id: response.id,
-                respuestas: formattedFormData,
-                createdAt: response.createdAt,
-                estado: response.estado,
-                tramite: response.tramite.titulo,
-                tramite_id: response.tramite_id,
-                usuario_id: response.usuario_id
+            setLoading(true)
+            try {
+                const response = await fetchRequestById(id)
+                const formattedFormData = JSON.parse(response.respuestas)
+                const data = {
+                    id: response.id,
+                    respuestas: formattedFormData,
+                    createdAt: response.createdAt,
+                    estado: response.estado,
+                    tramite: response.tramite.titulo,
+                    tramite_id: response.tramite_id,
+                    usuario_id: response.usuario_id
+                }
+                setRequestStatus(data.estado)
+                setRequestData(data)
+            } catch (error) {
+                console.log(error)
             }
-            setRequestStatus(data.estado)
-            setRequestData(data)
+            setLoading(false)
         })()
     }, [id])
 
@@ -88,6 +96,7 @@ const IndexPermisosTransitorios = () => {
         <DetalleSolicitud
             status={requestStatus}
             breadcrumbs={detailBreadcrumbs}
+            loading={loading}
             actions={<AccionesPermisosTransitorios
                 status={requestStatus}
                 setStatus={setRequestStatus}
@@ -98,7 +107,7 @@ const IndexPermisosTransitorios = () => {
             requestData={requestData}
             respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}
             documentosForm={<DocsPermisosTransitorios docs={docsAdjuntos} />}
-            documentosSubidos={<DocumentosSubidos setRefresh={setRefresh} docs={uploadedDocs} />}
+            documentosSubidos={<DocumentosSubidos status={requestStatus} setRefresh={setRefresh} docs={uploadedDocs} />}
         />
     )
 }

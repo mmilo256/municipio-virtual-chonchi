@@ -2,6 +2,7 @@ import { deleteDocumentService, downloadDocumentService, getDocumentService } fr
 import Document from "../models/documentModel.js"
 import fs from 'fs'
 import path from "path"
+import mime from 'mime'
 
 // Subir un archivo al servidor
 export const subirArchivo = async () => {
@@ -54,7 +55,7 @@ export const viewDocument = async (req, res) => {
         })
     } catch (err) {
         console.error(err)
-        res.status(500).json({ message: 'Error interno' })
+        res.status(500).json({ message: 'Error interno', err })
     }
 }
 

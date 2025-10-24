@@ -11,7 +11,7 @@ export const getAuthUrl = (csrfToken) => {
         client_id: clientId,
         response_type: "code",
         scope: "openid run name",
-        redirect_uri: redirectUri,
+        redirect_uri: "https://municipio-virtual.onrender.com/inicio",
         state: csrfToken // Incluir el token CSRF para proteger la solicitud
     };
 
@@ -41,8 +41,8 @@ export const getAccessToken = async (code, state) => {
         const { access_token } = response.data
         return access_token
     } catch (error) {
-        console.log(error.message)
-        return null
+        console.error('Error: ', error.response?.data || error.message);
+        res.status(500).json({ message: 'No se pudo iniciar sesión.' });
     }
 }
 
@@ -57,8 +57,8 @@ export const getUserData = async (accessToken) => {
         })
         return response.data
     } catch (error) {
-        console.log(error)
-        return null
+        console.error('Error al obtener datos del usuario:', error.response?.data || error.message);
+        return null;
     }
 }
 

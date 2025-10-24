@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import Solicitudes from "../pages/common/Solicitudes"
-import { PROCEDURES_ID } from "../../constants/constants"
+import { PROCEDURES_ID } from "../../../config"
 import IndexPermisosTransitorios from "../tramites/permisos-transitorios/IndexPermisosTransitorios"
 import FormularioSubirDocumento from "../tramites/FormularioSubirDocumento"
 import GenerarDecretoPermisosTransitorios from "../tramites/permisos-transitorios/GenerarDecretoPermisosTransitorios"

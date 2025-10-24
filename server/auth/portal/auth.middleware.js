@@ -6,6 +6,7 @@ const { jwtSecret } = config.oauth
 export const authMiddleware = async (req, res, next) => {
     try {
         const token = req.cookies['jwt']
+        console.log(token)
         if (!token) {
             return res.json({ message: "Acceso denegado" })
         }

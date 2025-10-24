@@ -1,6 +1,6 @@
 import { useState } from 'react'  // Importación del hook useState de React para manejar el estado
 import claveUnica from '../../../assets/claveunica.svg'  // Importación del logo de Clave Única
-import { API_URL } from '../../../constants/constants'  // Importación de la URL de la API
+import { API_URL } from '../../../config'
 
 // Componente BotonClaveUnica
 const BotonClaveUnica = ({ className }) => {

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"  // Para obtener parámetros de la URL (como el ID de la solicitud)
+import { useNavigate, useParams } from "react-router-dom"  // Para obtener parámetros de la URL (como el ID de la solicitud)
 import StatusTracker from "./ui/StatusTracker"  // Componente que muestra el seguimiento de los estados
 import Heading from "./ui/Heading"  // Componente de encabezado
 import Container from "./ui/Container"  // Componente contenedor para envolver el contenido
@@ -15,6 +15,10 @@ const RequestTracking = () => {
     const [requestData, setRequestData] = useState({})
     const [requestDocs, setRequestDocs] = useState([])
     const [tramiteId, setTramiteId] = useState(null)
+
+    const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
 
     const breadcrumbs = [
         { label: "Solicitudes", href: "/solicitudes" },
@@ -65,17 +69,26 @@ const RequestTracking = () => {
                 active: index === data.length - 1 ? true : false  // Marca el último log como activo
             }))
             setLogs(formattedData)  // Guarda los logs formateados en el estado
+
         })()
     }, [id])  // El efecto se ejecuta nuevamente si cambia el ID de la solicitud
 
     useEffect(() => {
         (async () => {
-            const response = await fetchRequestById(id)
-            setTramiteId(response?.tramite_id)
-            const formattedFormData = JSON.parse(response.respuestas)
-            setRequestData(formattedFormData)
+            setLoading(true)
+            try {
+                const response = await fetchRequestById(id)
+                setTramiteId(response?.tramite_id)
+                const formattedFormData = JSON.parse(response.respuestas)
+                setRequestData(formattedFormData)
+            } catch (e) {
+                alert("No se pudo cargar la información")
+                console.log(e)
+                navigate("../")
+            }
+            setLoading(false)
         })()
-    }, [id])
+    }, [id, navigate])
 
     useEffect(() => {
         (async () => {
@@ -94,8 +107,10 @@ const RequestTracking = () => {
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <Heading level={3}>Seguimiento de solicitud #{id}</Heading>  {/* Título de la página con el ID de la solicitud */}
             <div className="md:grid md:grid-cols-2 md:gap-2 bg-white p-4 rounded shadow">
-                <StatusTracker data={logs} />  {/* Componente que muestra el seguimiento de los logs */}
-                <Respuestas tramiteId={tramiteId} data={requestData} docs={requestDocs} />
+                {!loading
+                    ? <><StatusTracker data={logs} />  {/* Componente que muestra el seguimiento de los logs */}
+                        <Respuestas tramiteId={tramiteId} data={requestData} docs={requestDocs} /></>
+                    : <p>Cargando información...</p>}
             </div>
         </Container>
     )

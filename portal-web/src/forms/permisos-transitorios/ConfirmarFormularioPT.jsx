@@ -16,7 +16,7 @@ const ConfirmarFormularioPT = () => {
         <Container>
             <div className="mt-4 text-sm">
                 {/* Acordeones para mostrar los datos organizados */}
-                <RespuestasPermisosTransitorios data={inputsValues} docs={formattedDocs} />
+                <RespuestasPermisosTransitorios data={inputsValues} docs={formattedDocs} direct />
             </div >
         </Container >
     )

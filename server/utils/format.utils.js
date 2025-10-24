@@ -33,3 +33,8 @@ export const userInfoLogFormat = (
 export const formatDate = (date, format = "DD/MM/YYYY") => {
     return dayjs(date).format(format)
 }
+
+
+export const toBool = (value) => {
+    return value === 'true' || value === '1'
+}

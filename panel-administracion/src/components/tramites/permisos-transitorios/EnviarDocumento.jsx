@@ -9,9 +9,9 @@ import { FaRegLightbulb } from "react-icons/fa";
 import { fetchRequestById, updateRequestStatus } from "../../../services/requestsServices";
 import { sendEmail } from "../../../services/emailServices";
 import { obtenerDecretos } from "../../../services/permisosTransitoriosServices";
-import { SERVER_URL } from "../../../constants/constants";
 import { approveTemplate } from "../../../email-templates/permisos-transitorios/approveTemplate";
 import Modal from "../../ui/Modal";
+import { API_URL } from "../../../../config";
 
 const EnviarDocumento = () => {
 
@@ -25,6 +25,7 @@ const EnviarDocumento = () => {
     const [approveModal, setApproveModal] = useState(false)
 
     const [decretoPath, setDecretoPath] = useState("")
+    const [decretoId, setDecretoId] = useState()
 
     const [userEmail, setUserEmail] = useState("")
 
@@ -35,6 +36,7 @@ const EnviarDocumento = () => {
         (async () => {
             const decretos = await obtenerDecretos(id)
             setDecretoPath(decretos?.decretoFirmado?.ruta)
+            setDecretoId(decretos?.decretoFirmado?.id)
         })()
     }, [id])
 
@@ -117,6 +119,10 @@ const EnviarDocumento = () => {
         { label: `Enviar decreto` }
     ]
 
+    const openDocument = (id) => {
+        window.open(`${API_URL}/documents/${id}/view`)
+    }
+
     return (
         <div className="max-w-[60rem] mx-auto bg-[#fff] p-6 pt-0 mt-4 rounded border">
             <Modal
@@ -168,7 +174,8 @@ const EnviarDocumento = () => {
             </div>
             <hr className="my-4" />
 
-            <a className="block py-1 px-4 text-blue-500 border underline font-bold" target="_blank" href={`${SERVER_URL}/${decretoPath}`}>DECRETO.PDF</a>
+            {/* <a className="block py-1 px-4 text-blue-500 border underline font-bold" target="_blank" href={`${SERVER_URL}/${decretoPath}`}>DECRETO.PDF</a> */}
+            {decretoId && <button className="block py-1 px-4 text-blue-500 border underline font-bold" target="_blank" type="button" onClick={() => { openDocument(decretoId) }} >DECRETO.PDF</button>}
 
             <div className="mt-10 flex justify-end gap-2">
                 <Button variant="primary" text="Volver" />

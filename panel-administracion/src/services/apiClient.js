@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../constants/constants';
+import { API_URL } from '../../config';
 import useAuthStore from '../stores/useAuthStore';
 
 // Crear una instancia personalizada de Axios

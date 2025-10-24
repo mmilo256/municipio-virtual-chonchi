@@ -1,5 +1,5 @@
 import Input from "../../components/ui/Input"
-import { ORG_TYPES } from "../../constants/constants"
+import { ORG_TYPES } from "../../config"
 import { validationRules } from "../validations"
 
 const Paso1 = ({ register, errors }) => {

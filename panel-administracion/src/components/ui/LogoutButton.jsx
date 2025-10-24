@@ -11,7 +11,7 @@ const LogoutButton = ({ btnText }) => {
         setLoading(true)
         try {
             await logout()
-            window.location.href = "/login"
+            window.location.href = "/admin/login"
         } catch (error) {
             console.log(error)
         }

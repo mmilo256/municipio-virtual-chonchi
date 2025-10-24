@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { SERVER_URL } from "../../../constants/constants"
 import BaseTable from "../../ui/BaseTable"
 import TableButton from "../../ui/TableButton"
 import { useEffect } from "react"
 import { downloadDocumentService } from "../../../services/documents.service"
+import { API_URL } from "../../../../config"
 
 const DocsPermisosTransitorios = ({ docs = [] }) => {
 
@@ -20,34 +20,38 @@ const DocsPermisosTransitorios = ({ docs = [] }) => {
         }
     }
 
+    const openDocument = (id) => {
+        window.open(`${API_URL}/documents/${id}/view`)
+    }
+
     useEffect(() => {
         const reqDocs = [
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[0]?.ruta}`}>Cédula de identidad</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[0].id) }}>Cédula de identidad</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[0].id) }} color="blue" text="Descargar" />
             },
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[1]?.ruta}`}>RUT Tributario</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[1].id) }}>RUT Tributario</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[1].id) }} color="blue" text="Descargar" />
             },
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[2]?.ruta}`}>Vigencia de Persona Jurídica</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[2].id) }}>Vigencia de Persona Jurídica</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[2].id) }} color="blue" text="Descargar" />
             },
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[3]?.ruta}`}>Documento de ocupación legal del recinto</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[3].id) }}>Documento de ocupación legal del recinto</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[3].id) }} color="blue" text="Descargar" />
             },
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[4]?.ruta}`}>Declaración Jurada</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[4].id) }}>Declaración Jurada</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[4].id) }} color="blue" text="Descargar" />
             },
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[5]?.ruta}`}>Certificado de antecedentes</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[5].id) }}>Certificado de antecedentes</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[5].id) }} color="blue" text="Descargar" />
             },
             {
-                link: <a target="__blank" className="text-blue-500 underline" href={`${SERVER_URL}/${docs[6]?.ruta}`}>Firma del presidente</a>,
+                link: <button type="button" className="text-blue-500 underline" onClick={() => { openDocument(docs[6].id) }}>Firma del presidente</button>,
                 href: <TableButton onClick={() => { onDownloadDocument(docs[6].id) }} color="blue" text="Descargar" />
             },
         ];

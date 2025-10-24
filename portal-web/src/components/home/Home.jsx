@@ -5,12 +5,17 @@ import { fetchAllProcedures } from "../../services/procedures.service"  // Funci
 import Card from "../ui/Card"
 import Breadcrumbs from "../ui/Breadcrumbs"
 import CardSkeleton from "../ui/Skeletons/CardSkeleton"
+import useAuthStore from "../../stores/useAuthStore"
 
 const Home = () => {
     // Declaración del estado para almacenar los procedimientos.
     const [procedures, setProcedures] = useState([])
 
     const [loading, setLoading] = useState(false)
+
+    const user = useAuthStore(state => state.sessionData)
+
+    console.log(user.nombres)
 
     // useEffect para cargar los procedimientos cuando el componente se monta.
     useEffect(() => {
@@ -30,7 +35,7 @@ const Home = () => {
                     {/* Contenedor de texto centralizado */}
                     <Container>
                         {/* Título del portal */}
-                        <Heading className="text-center" darkMode>MUNICIPIO VIRTUAL</Heading>
+                        <Heading className="text-center" darkMode>Hola, {user.nombres}</Heading>
                         {/* Descripción corta debajo del título */}
                         <p className="text-center text-slate-300">Accede a nuestros servicios en línea de manera fácil y rápida.</p>
                     </Container>

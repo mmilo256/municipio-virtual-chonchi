@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "lint": "eslint server portal-web panel-administracion --ext .js,.jsx",
+    "lint:fix": "eslint server portal-web panel-administracion --ext .js,.jsx --fix",
+    "format": "prettier . -w",
+    "check:format": "prettier . -c"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.4.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.38.0",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2"
+  }
+}

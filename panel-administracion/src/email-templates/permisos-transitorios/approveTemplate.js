@@ -77,5 +77,5 @@ export const approveTemplate = (userFullName) => {
   </div>
 </body>
 </html>
-`
-}
+`;
+};

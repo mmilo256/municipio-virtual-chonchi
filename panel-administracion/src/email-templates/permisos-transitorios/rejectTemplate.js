@@ -77,5 +77,5 @@ export const rejectTemplate = (userFullName, reason, title) => {
   </div>
 </body>
 </html>
-`
-}
+`;
+};

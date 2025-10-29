@@ -1,6 +1,5 @@
 export const renderTemplatePT = (userName, reason, title, type) => {
-
-  let body
+  let body;
   if (type === 'rechazado') {
     body = `
 <p>Estimado/a ${userName},</p>
@@ -10,7 +9,7 @@ export const renderTemplatePT = (userName, reason, title, type) => {
       <p>Si tiene alguna duda o desea más información, no dude en ponerse en contacto con nosotros.</p>
       <p>Atentamente,</p>
       <p><strong>Municipio de Chonchi</strong></p>
-`
+`;
   }
   if (type === 'aprobado') {
     body = `
@@ -20,7 +19,7 @@ export const renderTemplatePT = (userName, reason, title, type) => {
       <p>Si tiene alguna duda o desea más información, no dude en ponerse en contacto con nosotros.</p>
       <p>Atentamente,</p>
       <p><strong>Municipio de Chonchi</strong></p>
-`
+`;
   }
 
   return `
@@ -95,5 +94,5 @@ export const renderTemplatePT = (userName, reason, title, type) => {
   </div>
 </body>
 </html>
-`
-}
+`;
+};

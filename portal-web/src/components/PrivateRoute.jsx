@@ -1,4 +1,4 @@
-import Layout from './layouts/Layout';
+import Layout from './Layout';
 import useAuthStore from '../stores/useAuthStore';
 import { Navigate } from 'react-router-dom';
 

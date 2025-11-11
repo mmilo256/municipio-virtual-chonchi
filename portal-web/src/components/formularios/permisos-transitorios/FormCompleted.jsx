@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import Button from '../components/ui/buttons/Button';
-import Container from '../components/ui/Container';
-import Heading from '../components/ui/Heading';
+import Button from '../../ui/buttons/Button';
+import Container from '../../ui/Container';
+import Heading from '../../ui/Heading';
 import { ToastContainer, toast } from 'react-toastify';
 
 const FormCompleted = ({ text }) => {

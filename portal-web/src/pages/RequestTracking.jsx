@@ -1,16 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom'; // Para obtener parámetros de la URL (como el ID de la solicitud)
-import StatusTracker from './ui/StatusTracker'; // Componente que muestra el seguimiento de los estados
-import Heading from './ui/Heading'; // Componente de encabezado
-import Container from './ui/Container'; // Componente contenedor para envolver el contenido
 import { useEffect, useState } from 'react'; // Hooks de React para efectos y estados
 import {
   fetchDocumentosAdjuntos,
   fetchRequestById,
   fetchRequestStatusLogs,
-} from '../services/requests.service'; // Función para obtener los logs de la solicitud
-import { formatDate } from '../utils/utils'; // Función para formatear las fechas
-import Respuestas from './Respuestas';
-import Breadcrumbs from './ui/Breadcrumbs';
+} from '../services/requests.service';
+import { formatDate } from '../utils/utils';
+import Container from '../components/ui/Container';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Heading from '../components/ui/Heading';
+import StatusTracker from '../components/ui/StatusTracker';
+import Respuestas from '../components/ui/Respuestas';
 
 const RequestTracking = () => {
   // Obtiene el ID de la solicitud desde los parámetros de la URL

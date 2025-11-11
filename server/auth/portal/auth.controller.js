@@ -2,6 +2,7 @@ import { getAccessToken, getAuthUrl, getUserData, insertUser } from './auth.serv
 import { generateJWT, generateRandomToken } from '../../utils/token.utils.js';
 import { config } from '../../config/config.js';
 import { toBool } from '../../utils/format.utils.js';
+import logger from '../../config/winston.js';
 
 const { jwtSecret, jwtExpiresIn, homeUrl } = config.oauth;
 const { cookieSecure } = config;
@@ -63,7 +64,9 @@ export const callback = async (req, res) => {
       httpOnly: true,
       secure: toBool(cookieSecure),
     });
-
+    logger.info(
+      `INICIO DE SESIÓN PORTAL WEB - USUARIO: ${payload.nombres} ${payload.apellidos} - ID: ${payload.id}`,
+    );
     res.redirect(homeUrl); // Redirigir al usuario a la página principal
   } catch (error) {
     console.error(error);

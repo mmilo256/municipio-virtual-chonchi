@@ -1,4 +1,4 @@
-import FileInput from '../../components/ui/FileInput';
+import FileInput from '../../ui/FileInput';
 
 const Paso4 = ({ docs, setDocs }) => {
   return (

@@ -1,6 +1,6 @@
-import BotonClaveUnica from '../ui/buttons/BotonClaveUnica'; // Componente de botón para iniciar sesión con ClaveÚnica.
-import useAuthStore from '../../stores/useAuthStore';
 import { Navigate } from 'react-router-dom';
+import useAuthStore from '../stores/useAuthStore';
+import BotonClaveUnica from '../components/ui/buttons/BotonClaveUnica';
 
 const Login = () => {
   const { isAuthenticated } = useAuthStore();

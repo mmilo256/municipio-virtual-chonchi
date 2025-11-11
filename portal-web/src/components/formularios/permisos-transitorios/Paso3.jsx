@@ -1,13 +1,21 @@
-import Input from '../../components/ui/Input';
-import { getTodayDate } from '../../utils/utils';
-import { validationRules } from '../validations';
+import Input from '../../ui/Input';
+import { getTodayDate } from '../../../utils/utils.js';
+import { validationRules } from '../validations.js';
 
-const Paso3 = ({ register, errors }) => {
+const Paso3 = ({ register, errors, watch }) => {
+  // Escucha cambios en el campo de fecha de inicio
+  const watchedStartDate = watch('permissionStartDate');
+  const watchedStartTime = watch('permissionStartTime');
+
+  const startDate = watchedStartDate || null;
+  const startTime = watchedStartTime || null;
+
   return (
     <>
       <Input
         name="permissionName"
         label="Nombre de la actividad"
+        placeholder="Ej: Bingo bailable"
         error={errors['permissionName']}
         register={register}
         validations={{
@@ -17,6 +25,7 @@ const Paso3 = ({ register, errors }) => {
       <Input
         name="permissionPlace"
         label="Lugar de realización"
+        placeholder="Ej: Gimnasio Municipal"
         error={errors['permissionPlace']}
         register={register}
         validations={{
@@ -46,29 +55,31 @@ const Paso3 = ({ register, errors }) => {
           }}
         />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          name="permissionEndDate"
-          label="Fecha de término"
-          error={errors['PermissionEndDate']}
-          register={register}
-          min={getTodayDate()}
-          type="date"
-          validations={{
-            required: validationRules.required,
-          }}
-        />
-        <Input
-          name="permissionEndTime"
-          label="Hora de término"
-          error={errors['PermissionEndTime']}
-          register={register}
-          type="time"
-          validations={{
-            required: validationRules.required,
-          }}
-        />
-      </div>
+      {startDate && startTime && (
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            name="permissionEndDate"
+            label="Fecha de término"
+            error={errors['PermissionEndDate']}
+            register={register}
+            min={startDate}
+            type="date"
+            validations={{
+              required: validationRules.required,
+            }}
+          />
+          <Input
+            name="permissionEndTime"
+            label="Hora de término"
+            error={errors['PermissionEndTime']}
+            register={register}
+            type="time"
+            validations={{
+              required: validationRules.required,
+            }}
+          />
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-4">
         <Input
           name="permissionAlcohol"
@@ -102,6 +113,7 @@ const Paso3 = ({ register, errors }) => {
       <Input
         name="permissionDescription"
         label="Descripción de la actividad"
+        placeholder="La actividad consiste en..."
         type="textarea"
         error={errors['permissionDescription']}
         register={register}
@@ -112,6 +124,7 @@ const Paso3 = ({ register, errors }) => {
       <Input
         name="permissionPurpose"
         label="Destino de los fondos"
+        placeholder="Los fondos recaudados serán destinados a..."
         type="textarea"
         error={errors['permissionPurpose']}
         register={register}

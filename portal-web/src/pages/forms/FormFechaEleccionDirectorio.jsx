@@ -1,22 +1,21 @@
 import { useForm } from 'react-hook-form';
-import Button from '../../components/ui/buttons/Button';
 import { useState } from 'react';
-import Paso0 from '../Paso0';
-import Paso1 from './Paso1';
-import Paso2 from './Paso2';
-import Paso3 from './Paso3';
-import Paso4 from './Paso4';
-import Heading from '../../components/ui/Heading';
-import useFormsStore from '../../stores/useFormsStore';
-import ConfirmarFormularioPT from './ConfirmarFormularioPT';
-import { sendRequest } from '../../services/requests.service';
-import { PROCEDURES_ID } from '../../config';
-import useAuthStore from '../../stores/useAuthStore';
 import { useNavigate } from 'react-router-dom';
-import FormCompleted from '../FormCompleted';
-import FormLayout from '../FormLayout';
+import useAuthStore from '../../stores/useAuthStore';
+import useFormsStore from '../../stores/useFormsStore';
+import { sendRequest } from '../../services/requests.service';
+import FormCompleted from '../../components/formularios/permisos-transitorios/FormCompleted';
+import FormLayout from '../../components/formularios/FormLayout';
+import Heading from '../../components/ui/Heading';
+import Paso0 from '../../components/formularios/Paso0';
+import Paso1 from '../../components/formularios/permisos-transitorios/Paso1';
+import Paso2 from '../../components/formularios/permisos-transitorios/Paso2';
+import Paso3 from '../../components/formularios/permisos-transitorios/Paso3';
+import Paso4 from '../../components/formularios/permisos-transitorios/Paso4';
+import ConfirmarFormularioPT from '../../components/formularios/permisos-transitorios/ConfirmarFormularioPT';
+import Button from '../../components/ui/buttons/Button';
 
-const FormPermisosTransitorios = () => {
+const FormFechaEleccionDirectorio = () => {
   const navigate = useNavigate();
 
   const { sessionData } = useAuthStore();
@@ -52,13 +51,12 @@ const FormPermisosTransitorios = () => {
     docs.docVigenciaPersonaJuridica;
 
   const [step, setStep] = useState(0);
-  const lastStep = 5;
+  const lastStep = 4;
   const stepTitles = [
     '1. Contacto del solicitante',
-    '2. Datos de la organización',
-    '3. Datos del representante legal',
-    '4. Detalle del permiso',
-    '5. Antecedentes',
+    '2. Información de la Organización Comunitaria',
+    '3. Identificación de la Comisión Electoral',
+    '4. Datos de la elección',
     'Confirmar formulario',
     'Formulario enviado',
   ];
@@ -81,7 +79,7 @@ const FormPermisosTransitorios = () => {
       const formData = {
         respuestas: inputsValues,
         documentos: docsValues,
-        tramite_id: PROCEDURES_ID.permisosTransitorios,
+        tramite_id: 1, // Cambiar por id tomada de la URL
         usuarioId: sessionData.id,
       };
       try {
@@ -102,7 +100,10 @@ const FormPermisosTransitorios = () => {
   }
 
   return (
-    <FormLayout titulo="Autorización Especial Transitoria" nombre="permisos-transitorios">
+    <FormLayout
+      titulo="Comunicación Fecha de Elección de Directorio"
+      nombre="fecha-eleccion-directorio"
+    >
       <Heading level={3}>{stepTitles[step]}</Heading>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         {step === 0 && <Paso0 register={register} errors={errors} setValue={setValue} />}
@@ -133,4 +134,4 @@ const FormPermisosTransitorios = () => {
   );
 };
 
-export default FormPermisosTransitorios;
+export default FormFechaEleccionDirectorio;

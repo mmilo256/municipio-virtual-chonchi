@@ -1,22 +1,21 @@
 import { useForm } from 'react-hook-form';
-import Button from '../../components/ui/buttons/Button';
 import { useState } from 'react';
-import Paso0 from '../Paso0';
-import Paso1 from './Paso1';
-import Paso2 from './Paso2';
-import Paso3 from './Paso3';
-import Paso4 from './Paso4';
-import Heading from '../../components/ui/Heading';
-import useFormsStore from '../../stores/useFormsStore';
-import ConfirmarFormularioPT from './ConfirmarFormularioPT';
-import { sendRequest } from '../../services/requests.service';
-import { PROCEDURES_ID } from '../../config';
-import useAuthStore from '../../stores/useAuthStore';
 import { useNavigate } from 'react-router-dom';
-import Container from '../../components/ui/Container';
-import FormCompleted from '../FormCompleted';
+import useAuthStore from '../../stores/useAuthStore';
+import useFormsStore from '../../stores/useFormsStore';
+import { sendRequest } from '../../services/requests.service';
+import FormCompleted from '../../components/formularios/permisos-transitorios/FormCompleted';
+import FormLayout from '../../components/formularios/FormLayout';
+import Heading from '../../components/ui/Heading';
+import Paso0 from '../../components/formularios/Paso0';
+import Paso1 from '../../components/formularios/permisos-transitorios/Paso1';
+import Paso2 from '../../components/formularios/permisos-transitorios/Paso2';
+import Paso3 from '../../components/formularios/permisos-transitorios/Paso3';
+import Paso4 from '../../components/formularios/permisos-transitorios/Paso4';
+import ConfirmarFormularioPT from '../../components/formularios/permisos-transitorios/ConfirmarFormularioPT';
+import Button from '../../components/ui/buttons/Button';
 
-const FormReparacionCaminos = () => {
+const FormPermisosTransitorios = () => {
   const navigate = useNavigate();
 
   const { sessionData } = useAuthStore();
@@ -25,7 +24,9 @@ const FormReparacionCaminos = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
+    getValues,
   } = useForm();
   const [docs, setDocs] = useState({
     docCI: null,
@@ -37,6 +38,17 @@ const FormReparacionCaminos = () => {
     docFirmaPresidente: null,
   });
   const { setInputsValues, setDocsValues, inputsValues, docsValues } = useFormsStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isValid =
+    docs.docCI &&
+    docs.docCertificadoAntecedentes &&
+    docs.docDeclaracionJurada &&
+    docs.docFirmaPresidente &&
+    docs.docOcupacionRecinto &&
+    docs.docRutTributario &&
+    docs.docVigenciaPersonaJuridica;
 
   const [step, setStep] = useState(0);
   const lastStep = 5;
@@ -54,11 +66,12 @@ const FormReparacionCaminos = () => {
     if (step > 0) {
       setStep((prev) => prev - 1);
     } else {
-      navigate('..');
+      navigate('../permisos-transitorios');
     }
   };
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     setInputsValues(data);
     setDocsValues(docs);
     if (step < lastStep) {
@@ -67,18 +80,18 @@ const FormReparacionCaminos = () => {
       const formData = {
         respuestas: inputsValues,
         documentos: docsValues,
-        tramite_id: PROCEDURES_ID.reparacionCaminos,
+        tramite_id: 1, // Cambiar por id tomada de la URL
         usuarioId: sessionData.id,
       };
       try {
         await sendRequest(formData);
-        alert('Se ha enviado la solicitud');
         setStep((prev) => prev + 1);
       } catch (error) {
         console.log(error);
         alert('Hubo un error');
       }
     }
+    setIsLoading(false);
   };
 
   if (step === 6) {
@@ -88,29 +101,35 @@ const FormReparacionCaminos = () => {
   }
 
   return (
-    <Container className="max-w-[50rem] p-4 mt-4 mx-auto bg-white shadow rounded">
-      <h2 className="mt-2 text-lg text-slate-700 text-nowrap">
-        Solicitud de Reparación de Caminos
-      </h2>
+    <FormLayout titulo="Autorización Especial Transitoria" nombre="permisos-transitorios">
       <Heading level={3}>{stepTitles[step]}</Heading>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         {step === 0 && <Paso0 register={register} errors={errors} setValue={setValue} />}
         {step === 1 && <Paso1 register={register} errors={errors} />}
         {step === 2 && <Paso2 register={register} errors={errors} />}
-        {step === 3 && <Paso3 register={register} errors={errors} />}
+        {step === 3 && (
+          <Paso3 register={register} errors={errors} getValues={getValues} watch={watch} />
+        )}
         {step === 4 && <Paso4 register={register} docs={docs} setDocs={setDocs} />}
         {step === 5 && <ConfirmarFormularioPT />}
         <div className="mt-4 flex gap-2 justify-end">
-          <Button onClick={prevStep} type="button">
-            Anterior
-          </Button>
-          <Button variant="secondary" type="submit">
+          {!isLoading && (
+            <Button onClick={prevStep} type="button">
+              Anterior
+            </Button>
+          )}
+          <Button
+            isLoading={isLoading}
+            disabled={step === 4 && !isValid}
+            variant="secondary"
+            type="submit"
+          >
             {step < lastStep ? 'Siguiente' : 'Finalizar'}
           </Button>
         </div>
       </form>
-    </Container>
+    </FormLayout>
   );
 };
 
-export default FormReparacionCaminos;
+export default FormPermisosTransitorios;

@@ -1,5 +1,5 @@
-import Input from '../../components/ui/Input';
-import { validationRules } from '../validations';
+import Input from '../../ui/Input';
+import { validationRules } from '../validations.js';
 
 const Paso2 = ({ register, errors }) => {
   return (

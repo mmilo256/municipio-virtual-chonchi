@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import Input from '../components/ui/Input';
-import useAuthStore from '../stores/useAuthStore';
-import { getUserData } from '../utils/utils';
+import Input from '../ui/Input';
+import useAuthStore from '../../stores/useAuthStore';
+import { getUserData } from '../../utils/utils';
 import { validationRules } from './validations';
 
 const Paso0 = ({ register, errors, setValue }) => {

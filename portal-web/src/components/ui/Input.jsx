@@ -1,4 +1,4 @@
-import { validationRules } from '../../forms/validations';
+import { validationRules } from '../formularios/validations.js';
 
 const Input = ({
   register,

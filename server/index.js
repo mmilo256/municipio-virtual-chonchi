@@ -55,7 +55,7 @@ app.use(
     resave: false, // No volver a guardar la sesión si no ha habido cambios
     saveUninitialized: false, // No guardar sesiones sin inicializar
     cookie: {
-      secure: true,
+      secure: false,
       httpOnly: true, // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
     },
   }),

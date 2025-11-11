@@ -6,6 +6,7 @@ export const getAllProcedures = async (req, res) => {
   try {
     // Consultar todos los trámites de la base de datos
     const procedures = await Procedure.findAll({
+      attributes: ['id', 'descripcion_corta', 'nombre', 'titulo'],
       include: {
         model: Direccion,
         attributes: ['nombre'],

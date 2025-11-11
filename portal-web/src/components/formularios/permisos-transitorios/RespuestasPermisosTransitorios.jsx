@@ -1,6 +1,6 @@
-import Accordion from '../../components/ui/Accordion';
-import { API_URL } from '../../config';
-import { formatDate } from '../../utils/utils';
+import { API_URL } from '../../../config';
+import { formatDate } from '../../../utils/utils';
+import Accordion from '../../ui/Accordion';
 
 const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
   const {

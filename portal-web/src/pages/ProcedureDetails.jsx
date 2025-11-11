@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react';
-import Container from './Container';
-import Heading from './Heading';
-import Button from './buttons/Button';
-import { fetchProcedureById } from '../../services/procedures.service';
-import Breadcrumbs from './Breadcrumbs';
+import { fetchProcedureById } from '../services/procedures.service';
+import Container from '../components/ui/Container';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Heading from '../components/ui/Heading';
+import Button from '../components/ui/buttons/Button';
+import { useParams } from 'react-router-dom';
 
-const ProcedureDetails = ({ id }) => {
+const ProcedureDetails = () => {
+  const { id } = useParams();
   const [procedure, setProcedure] = useState({});
   const [loading, setLoading] = useState(false);
 
   const breadcrumbs = [{ label: procedure.titulo, href: `/${procedure.nombre}` }];
 
-  // Obtener toda la información del trámite, incluyendo campos
+  console.log(procedure);
+
+  // Obtener toda la información del trámite
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -83,7 +87,7 @@ const ProcedureDetails = ({ id }) => {
             </article>
           )}
         </main>
-        <div className="md:col-span-3 max-h-min shadow-lg rounded p-5 shadow-slate-400">
+        <div className="md:col-span-3 max-h-min shadow-sm rounded p-5 bg-white shadow-slate-400">
           <Heading align="center" level={3}>
             Contacto y atención
           </Heading>

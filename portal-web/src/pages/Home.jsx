@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import Container from '../ui/Container'; // Componente para el contenedor que envuelve el contenido.
-import Heading from '../ui/Heading'; // Componente para los encabezados.
-import { fetchAllProcedures } from '../../services/procedures.service'; // Función para obtener todos los procedimientos del backend.
-import Card from '../ui/Card';
-import Breadcrumbs from '../ui/Breadcrumbs';
-import CardSkeleton from '../ui/Skeletons/CardSkeleton';
-import useAuthStore from '../../stores/useAuthStore';
+import useAuthStore from '../stores/useAuthStore';
+import { fetchAllProcedures } from '../services/procedures.service';
+import Container from '../components/ui/Container';
+import Heading from '../components/ui/Heading';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import CardSkeleton from '../components/ui/Skeletons/CardSkeleton';
+import Card from '../components/ui/Card';
 
 const Home = () => {
   // Declaración del estado para almacenar los procedimientos.
@@ -24,6 +24,8 @@ const Home = () => {
       setLoading(false);
     })();
   }, []); // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
+
+  console.log(procedures);
 
   return (
     <>
@@ -62,7 +64,7 @@ const Home = () => {
               key={index}
               title={card.titulo}
               desc={card.descripcion_corta}
-              href={`/${card.nombre}`}
+              href={`/${card.id}/${card.nombre}`}
               direccion={card.direcciones_municipale.nombre}
             />
           ))

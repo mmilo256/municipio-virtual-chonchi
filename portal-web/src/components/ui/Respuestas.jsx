@@ -1,4 +1,4 @@
-import RespuestasPermisosTransitorios from '../forms/permisos-transitorios/RespuestasPermisosTransitorios';
+import RespuestasPermisosTransitorios from '../formularios/permisos-transitorios/RespuestasPermisosTransitorios';
 
 const Respuestas = ({ tramiteId, data, docs }) => {
   let component;

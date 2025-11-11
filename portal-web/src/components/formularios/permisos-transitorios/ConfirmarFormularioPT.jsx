@@ -1,5 +1,5 @@
-import Container from '../../components/ui/Container';
-import useFormsStore from '../../stores/useFormsStore';
+import useFormsStore from '../../../stores/useFormsStore';
+import Container from '../../ui/Container';
 import RespuestasPermisosTransitorios from './RespuestasPermisosTransitorios';
 
 const ConfirmarFormularioPT = () => {

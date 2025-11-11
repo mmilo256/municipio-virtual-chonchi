@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'; // Importa hooks de React
-import Container from './ui/Container'; // Componente para envolver el contenido con un contenedor
-import Heading from './ui/Heading'; // Componente de encabezado
-import BaseTable from './ui/BaseTable'; // Componente para mostrar una tabla con los datos
-import StatusTag from './ui/StatusTag'; // Componente para mostrar el estado de una solicitud de forma estilizada
+import Container from '../components/ui/Container'; // Componente para envolver el contenido con un contenedor
+import Heading from '../components/ui/Heading'; // Componente de encabezado
+import BaseTable from '../components/ui/BaseTable'; // Componente para mostrar una tabla con los datos
+import StatusTag from '../components/ui/StatusTag'; // Componente para mostrar el estado de una solicitud de forma estilizada
 import { formatDate } from '../utils/utils'; // Función para formatear la fecha de la solicitud
 import { Link } from 'react-router-dom'; // Componente de Link para la navegación
 import useAuthStore from '../stores/useAuthStore';
 import { fetchRequestsByUserId } from '../services/requests.service';
-import Breadcrumbs from './ui/Breadcrumbs';
-import Pagination from './ui/Pagination';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Pagination from '../components/ui/Pagination';
 
 const Requests = () => {
   // Obtener los datos del usuario desde el sessionStorage

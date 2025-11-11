@@ -7,3 +7,12 @@ combined.log
 error.log
 uploads/*
 !uploads/.gitkeep
+chonchi-virtual/
+chonchi-virtual.rar
+Municipio Virtual Chonchi/
+Municipio Virtual Chonchi.rar
+Backup/
+dist/
+PRODUCCION/
+.vscode/
+server.zip

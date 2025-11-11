@@ -1,68 +1,61 @@
-import { Route, Routes, useNavigate } from "react-router-dom"
-import FormularioDecretoPT from "../pages/permisos-transitorios/FormularioDecretoPT"
-import SubirDecretoFirmadoPT from "../pages/permisos-transitorios/SubirDecretoFirmadoPT"
-import DetallesSolicitud from "../pages/common/DetallesSolicitud"
-import FormularioDocumentoAsociado from "../pages/common/FormularioDocumentoAsociado"
-import Solicitudes from "../pages/common/Solicitudes"
-import { useEffect, useState } from "react"
-import { fetchRequestsByProcedure, updateRequestStatus } from "../../services/requestsServices"
-import { PROCEDURES_ID } from "../../constants/constants"
-import { formatDate } from "../../utils/format"
-import StatusTag from "../ui/StatusTag"
-import useAuthStore from "../../stores/useAuthStore"
+import { Route, Routes } from 'react-router-dom';
+import Solicitudes from '../pages/common/Solicitudes';
+import { PROCEDURES_ID } from '../../../config';
+import IndexPermisosTransitorios from '../tramites/permisos-transitorios/IndexPermisosTransitorios';
+import FormularioSubirDocumento from '../tramites/FormularioSubirDocumento';
+import GenerarDecretoPermisosTransitorios from '../tramites/permisos-transitorios/GenerarDecretoPermisosTransitorios';
+import EnviarDocumento from '../tramites/permisos-transitorios/EnviarDocumento';
 
 const PermisosTransitorios = () => {
+  const tramite = 'Autorización Especial Transitoria';
+  const tramiteHref = '/permisos-transitorios';
 
-    const token = useAuthStore(state => state.token)
+  const data = {
+    tramite,
+    tramiteHref,
+  };
 
-    // Obtener todas las solicitudes de permisos transitorios
-    const [requests, setRequests] = useState([])
+  return (
+    <div>
+      <Routes>
+        <Route
+          index
+          element={
+            <Solicitudes
+              tramiteId={PROCEDURES_ID.permisosTransitorios}
+              title={'Solicitudes de Autorización Especial Transitoria'}
+              breadcrumbsData={data}
+            />
+          }
+        />
+        <Route path="/:id" element={<IndexPermisosTransitorios />} />
+        <Route
+          path="/:id/subir-documento"
+          element={
+            <FormularioSubirDocumento
+              titulo="Subir documento asociado a la solicitud"
+              tipo="subido"
+              breadcrumbsData={{ ...data, pagina: 'subir-documento' }}
+            />
+          }
+        />
+        <Route path="/:id/generar-decreto" element={<GenerarDecretoPermisosTransitorios />} />
+        <Route
+          path="/:id/subir-decreto"
+          element={
+            <FormularioSubirDocumento
+              titulo="Subir decreto firmado"
+              estado="firmado"
+              tipo="generado"
+              estadoSolicitud="aprobada"
+              breadcrumbsData={{ ...data, pagina: 'subir-decreto' }}
+            />
+          }
+        />
+        <Route path="/:id/enviar-decreto" element={<EnviarDocumento />} />
+      </Routes>
+    </div>
+  );
+};
 
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const data = await fetchRequestsByProcedure(PROCEDURES_ID.permisosTransitorios, token)
-                // Cambiar a estado 'en revision' si el estado actual es 'pendiente'
-                const handleAction = async (request) => {
-                    if (request.estado === "pendiente") {
-                        await updateRequestStatus(request.id, "en revision")
-                    }
-                    navigate(`${request.id}`)
-                }
-                // Formatear datos
-                const formattedData = data.map(request => ({
-                    id: request.id, // Cambiar por n° de folio
-                    name: `${request.usuario.nombres} ${request.usuario.apellidos}`,
-                    procedure: request.respuestas.permissionName,
-                    createdAt: formatDate(request.createdAt, 2),
-                    status: <StatusTag status={request.estado} />,
-                    action2: <button onClick={() => { handleAction(request) }} className="text-blue-500 underline">Revisar</button>
-                }))
-                setRequests(formattedData)
-            } catch (error) {
-                console.log(error)
-            }
-        })()
-    }, [token, navigate])
-
-    const table = {
-        columns: ["ID", "Solicitante", "Actividad", "Fecha de solicitud", "Estado", ""],
-        data: requests
-    }
-
-    return (
-        <div>
-            <Routes>
-                <Route index element={<Solicitudes title={"Solicitudes de Autorización Especial Transitoria"} requests={table} />} />
-                <Route path="/:id" element={<DetallesSolicitud />} />
-                <Route path="/:id/documentos-asociados" element={<FormularioDocumentoAsociado />} />
-                <Route path="/:id/aprobar-solicitud" element={<FormularioDecretoPT />} />
-                <Route path="/:id/subir-decreto-firmado" element={<SubirDecretoFirmadoPT />} />
-            </Routes>
-        </div>
-    )
-}
-
-export default PermisosTransitorios
+export default PermisosTransitorios;

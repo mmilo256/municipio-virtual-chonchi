@@ -1,7 +1,5 @@
-const Container = ({ children }) => {
-    return (
-        <div className="w-[1400px] max-w-[90%] mx-auto">{children}</div>
-    )
-}
+const Container = ({ children, className }) => {
+  return <div className={`w-full max-w-[98%] mx-auto ${className}`}>{children}</div>;
+};
 
-export default Container
+export default Container;

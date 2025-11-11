@@ -1,11 +1,11 @@
-import apiClient from "./apiClient"
+import apiClient from './apiClient';
 
 export const obtenerTramites = async () => {
-    try {
-        const response = await apiClient.get(`admin/procedures`)
-        const data = response.data
-        return data
-    } catch (error) {
-        throw error.message
-    }
-}
+  try {
+    const response = await apiClient.get(`/procedures`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw error.message;
+  }
+};

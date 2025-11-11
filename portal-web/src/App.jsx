@@ -1,35 +1,93 @@
-import { useEffect, useState } from "react"
-import useAuthStore from "./stores/useAuthStore"
-import AppRouter from "./routes/AppRouter"
+import { useEffect } from 'react';
+import useAuthStore from './stores/useAuthStore';
+import { verifySession } from './services/auth.service';
+import { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
+// import { PROCEDURES_ID } from './config';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import Requests from './pages/Requests';
+import RequestTracking from './pages/RequestTracking';
+import ProcedureDetails from './pages/ProcedureDetails';
+import FormPermisosTransitorios from './pages/forms/FormPermisosTransitorios';
+import FormFechaEleccionDirectorio from './pages/forms/FormFechaEleccionDirectorio';
 
 function App() {
-
-  const { checkAuth } = useAuthStore()
-  const [loading, setLoading] = useState(true)
+  const { setIsAuthenticated, setSessionData } = useAuthStore();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      try {
-        await checkAuth()
-      } catch (error) {
-        console.error(error)
+      const data = await verifySession();
+      if (data.payload) {
+        setIsAuthenticated(true);
+        setSessionData(data.payload);
       }
-      setLoading(false)
-    })()
-  }, [checkAuth])
+      setLoading(false);
+    })();
+  }, [setIsAuthenticated, setSessionData]);
 
   if (loading) {
-    return null
+    return null;
   }
 
-
-
   return (
-    < div className="font-roboto bg-slate-50" >
-      <AppRouter />
-    </div >
+    <div className="font-roboto bg-slate-50">
+      <Routes>
+        <Route index element={<Login />} />
+        <Route
+          path="/inicio"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/solicitudes"
+          element={
+            <PrivateRoute>
+              <Requests />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/solicitudes/:id"
+          element={
+            <PrivateRoute>
+              <RequestTracking />
+            </PrivateRoute>
+          }
+        />
 
-  )
+        <Route
+          path="/:id/:slug"
+          element={
+            <PrivateRoute>
+              <ProcedureDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/:id/permisos-transitorios/formulario"
+          element={
+            <PrivateRoute>
+              <FormPermisosTransitorios />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/:id/fecha-eleccion-directorio/formulario"
+          element={
+            <PrivateRoute>
+              <FormFechaEleccionDirectorio />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;

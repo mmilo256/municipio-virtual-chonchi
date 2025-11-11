@@ -1,13 +1,13 @@
-import { sequelize } from "../config/db/config.js";
-import { DataTypes } from "sequelize";
+import { sequelize } from '../config/db/config.js';
+import { DataTypes } from 'sequelize';
 
 const Log = sequelize.define('logs', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    accion: DataTypes.STRING
-})
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  accion: DataTypes.STRING,
+});
 
-export default Log
+export default Log;

@@ -1,0 +1,126 @@
+import { useNavigate, useParams } from 'react-router-dom'; // Para obtener parámetros de la URL (como el ID de la solicitud)
+import { useEffect, useState } from 'react'; // Hooks de React para efectos y estados
+import {
+  fetchDocumentosAdjuntos,
+  fetchRequestById,
+  fetchRequestStatusLogs,
+} from '../services/requests.service';
+import { formatDate } from '../utils/utils';
+import Container from '../components/ui/Container';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Heading from '../components/ui/Heading';
+import StatusTracker from '../components/ui/StatusTracker';
+import Respuestas from '../components/ui/Respuestas';
+
+const RequestTracking = () => {
+  // Obtiene el ID de la solicitud desde los parámetros de la URL
+  const { id } = useParams();
+  const [requestData, setRequestData] = useState({});
+  const [requestDocs, setRequestDocs] = useState([]);
+  const [tramiteId, setTramiteId] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const breadcrumbs = [
+    { label: 'Solicitudes', href: '/solicitudes' },
+    { label: `Solicitud #${id}`, href: `/solicitudes/${id}` },
+  ];
+
+  // Estado para almacenar los logs de la solicitud
+  const [logs, setLogs] = useState([]);
+
+  // Función para definir un mensaje según el estado de la solicitud
+  const setMessage = (status) => {
+    let message;
+    switch (status) {
+      case 'pendiente':
+        message = 'Estamos esperando que un funcionario revise su solicitud.';
+        break;
+      case 'en revision':
+        message = 'Su solicitud está siendo revisada por un funcionario.';
+        break;
+      case 'por firmar':
+        message = 'Se generó su decreto y está pendiente de firma';
+        break;
+      case 'rechazada':
+        message = 'Su solicitud ha sido rechazada. Por favor, revise los motivos del rechazo.';
+        break;
+      case 'aprobada':
+        message = 'Su solicitud ha sido aprobada y su decreto será enviado a la brevedad';
+        break;
+      case 'finalizada':
+        message = 'Su solicitud ha sido completada y finalizada correctamente.';
+        break;
+      default:
+        break;
+    }
+    return message;
+  };
+
+  // Hook useEffect que se ejecuta al cargar el componente
+  useEffect(() => {
+    (async () => {
+      // Obtiene los logs de estado de la solicitud
+      const data = await fetchRequestStatusLogs(id);
+      // Formatea los datos de los logs
+      const formattedData = data.map((log, index) => ({
+        status: log.estado, // Estado de la solicitud
+        updated_at: formatDate(log.createdAt, 2), // Fecha de la actualización, formateada
+        message: setMessage(log.estado), // Mensaje correspondiente al estado
+        active: index === data.length - 1 ? true : false, // Marca el último log como activo
+      }));
+      setLogs(formattedData); // Guarda los logs formateados en el estado
+    })();
+  }, [id]); // El efecto se ejecuta nuevamente si cambia el ID de la solicitud
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const response = await fetchRequestById(id);
+        setTramiteId(response?.tramite_id);
+        const formattedFormData = JSON.parse(response.respuestas);
+        setRequestData(formattedFormData);
+      } catch (e) {
+        alert('No se pudo cargar la información');
+        console.log(e);
+        navigate('../');
+      }
+      setLoading(false);
+    })();
+  }, [id, navigate]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetchDocumentosAdjuntos(id);
+      const docs = response.map((doc) => ({
+        id: doc.id,
+        originalName: doc.originalname,
+        slug: doc.nombre,
+      }));
+      setRequestDocs(docs);
+    })();
+  }, [id]);
+
+  return (
+    <Container>
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <Heading level={3}>Seguimiento de solicitud #{id}</Heading>{' '}
+      {/* Título de la página con el ID de la solicitud */}
+      <div className="md:grid md:grid-cols-2 md:gap-2 bg-white p-4 rounded shadow">
+        {!loading ? (
+          <>
+            <StatusTracker data={logs} /> {/* Componente que muestra el seguimiento de los logs */}
+            <Respuestas tramiteId={tramiteId} data={requestData} docs={requestDocs} />
+          </>
+        ) : (
+          <p>Cargando información...</p>
+        )}
+      </div>
+    </Container>
+  );
+};
+
+export default RequestTracking;

@@ -1,55 +1,86 @@
-import apiClient from './apiClient'
+import apiClient from './apiClient';
 
 export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {
-    try {
-        await apiClient.delete(`admin/requests/${solicitudId}/documentos-asociados/${documentoId}`)
-    } catch (error) {
-        throw error.message
-    }
-}
+  try {
+    await apiClient.delete(`/requests/${solicitudId}/documentos-asociados/${documentoId}`);
+  } catch (error) {
+    throw error.message;
+  }
+};
 
 export const fetchDocumentosAsociados = async (id) => {
-    try {
-        const response = await apiClient.get(`admin/requests/${id}/documentos-asociados`)
-        const data = response.data
-        return data
-    } catch (error) {
-        throw error.message
-    }
-}
+  try {
+    const response = await apiClient.get(`/requests/${id}/documents?type=subido`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw error.message;
+  }
+};
 
-export const subirDocumentoAsociado = async (id, file) => {
-    try {
-        await apiClient.post(`admin/requests/${id}/documento-asociado`, file, { headers: { "Content-Type": "multipart/form-data" } })
-    } catch (error) {
-        throw error.message
-    }
-}
+export const fetchDocumentosAdjuntos = async (id) => {
+  try {
+    const response = await apiClient.get(`/requests/${id}/documents?type=adjunto`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw error.message;
+  }
+};
 
-export const updateRequestStatus = async (requestId, estado) => {
-    try {
-        await apiClient.patch(`/admin/requests/${requestId}/estado`, { estado })
-    } catch (error) {
-        throw error.message
-    }
-}
+export const subirDocumentoAsociado = async (id, data, status = null, type = null, name = null) => {
+  let queries = {};
+  if (status) {
+    queries.status = status;
+  }
+  if (type) {
+    queries.type = type;
+  }
+  if (name) {
+    queries.name = name;
+  }
+
+  const queryString = new URLSearchParams(queries).toString();
+
+  try {
+    await apiClient.post(`/requests/${id}/documents?${queryString}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  } catch (error) {
+    throw error.message;
+  }
+};
+
+export const updateRequestStatus = async (requestId, status) => {
+  try {
+    await apiClient.patch(`/requests/${requestId}`, { status });
+  } catch (error) {
+    throw error.message;
+  }
+};
 
 export const fetchRequestById = async (requestId) => {
-    try {
-        const response = await apiClient.get(`/admin/requests/${requestId}`)
-        const data = response.data.request
-        return data
-    } catch (error) {
-        throw error.message
-    }
-}
+  try {
+    const response = await apiClient.get(`/requests/${requestId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw error.message;
+  }
+};
 
-export const fetchRequestsByProcedure = async (procedureId) => {
-    try {
-        const response = await apiClient.get(`/admin/requests?tramiteId=${procedureId}`)
-        const data = response.data.requests
-        return data
-    } catch (error) {
-        throw error.message
-    }
-}
+export const fetchRequestsByProcedure = async (procedureId, page = 1, pageSize = 10, filters) => {
+  let queryString = `/requests/procedure/${procedureId}?page=${page}&pageSize=${pageSize}`;
+
+  if (filters) {
+    queryString += `&filters=${filters}`;
+  }
+
+  try {
+    const response = await apiClient.get(queryString);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw error.message;
+  }
+};

@@ -25,8 +25,6 @@ const Home = () => {
     })();
   }, []); // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
 
-  console.log(procedures);
-
   return (
     <>
       {/* Sección de encabezado con una imagen de fondo */}

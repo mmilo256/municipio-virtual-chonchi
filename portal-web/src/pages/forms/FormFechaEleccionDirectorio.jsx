@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useAuthStore from '../../stores/useAuthStore';
 import useFormsStore from '../../stores/useFormsStore';
 import { sendRequest } from '../../services/requests.service';
@@ -8,11 +8,10 @@ import FormCompleted from '../../components/formularios/permisos-transitorios/Fo
 import FormLayout from '../../components/formularios/FormLayout';
 import Heading from '../../components/ui/Heading';
 import Paso0 from '../../components/formularios/Paso0';
-import Paso1 from '../../components/formularios/permisos-transitorios/Paso1';
-import Paso2 from '../../components/formularios/permisos-transitorios/Paso2';
-import Paso3 from '../../components/formularios/permisos-transitorios/Paso3';
-import Paso4 from '../../components/formularios/permisos-transitorios/Paso4';
-import ConfirmarFormularioPT from '../../components/formularios/permisos-transitorios/ConfirmarFormularioPT';
+import Paso1 from '../../components/formularios/fecha-eleccion-directorio/Paso1';
+import Paso2 from '../../components/formularios/fecha-eleccion-directorio/Paso2';
+import Paso3 from '../../components/formularios/fecha-eleccion-directorio/Paso3';
+import Confirmacion from '../../components/formularios/fecha-eleccion-directorio/Confirmacion';
 import Button from '../../components/ui/buttons/Button';
 
 const FormFechaEleccionDirectorio = () => {
@@ -20,35 +19,22 @@ const FormFechaEleccionDirectorio = () => {
 
   const { sessionData } = useAuthStore();
 
+  const { id } = useParams();
+
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
-    getValues,
   } = useForm();
   const [docs, setDocs] = useState({
-    docCI: null,
-    docRutTributario: null,
-    docVigenciaPersonaJuridica: null,
-    docOcupacionRecinto: null,
-    docDeclaracionJurada: null,
-    docCertificadoAntecedentes: null,
-    docFirmaPresidente: null,
+    docFechaEleccion: null,
   });
   const { setInputsValues, setDocsValues, inputsValues, docsValues } = useFormsStore();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const isValid =
-    docs.docCI &&
-    docs.docCertificadoAntecedentes &&
-    docs.docDeclaracionJurada &&
-    docs.docFirmaPresidente &&
-    docs.docOcupacionRecinto &&
-    docs.docRutTributario &&
-    docs.docVigenciaPersonaJuridica;
+  const isValid = docs.docFechaEleccion;
 
   const [step, setStep] = useState(0);
   const lastStep = 4;
@@ -58,14 +44,13 @@ const FormFechaEleccionDirectorio = () => {
     '3. Identificación de la Comisión Electoral',
     '4. Datos de la elección',
     'Confirmar formulario',
-    'Formulario enviado',
   ];
 
   const prevStep = () => {
     if (step > 0) {
       setStep((prev) => prev - 1);
     } else {
-      navigate('../permisos-transitorios');
+      navigate('../');
     }
   };
 
@@ -79,7 +64,7 @@ const FormFechaEleccionDirectorio = () => {
       const formData = {
         respuestas: inputsValues,
         documentos: docsValues,
-        tramite_id: 1, // Cambiar por id tomada de la URL
+        tramite_id: id,
         usuarioId: sessionData.id,
       };
       try {
@@ -93,9 +78,9 @@ const FormFechaEleccionDirectorio = () => {
     setIsLoading(false);
   };
 
-  if (step === 6) {
+  if (step === 5) {
     return (
-      <FormCompleted text="Tu solicitud se ha enviado exitosamente a la Ilustre Municipalidad de Chonchi" />
+      <FormCompleted text="Con fecha (fecha de hoy xd), se ha recepcionado el aviso o comunicación de la fecha de la elección del directorio de la organización comunitaria denominada:" />
     );
   }
 
@@ -109,11 +94,8 @@ const FormFechaEleccionDirectorio = () => {
         {step === 0 && <Paso0 register={register} errors={errors} setValue={setValue} />}
         {step === 1 && <Paso1 register={register} errors={errors} />}
         {step === 2 && <Paso2 register={register} errors={errors} />}
-        {step === 3 && (
-          <Paso3 register={register} errors={errors} getValues={getValues} watch={watch} />
-        )}
-        {step === 4 && <Paso4 register={register} docs={docs} setDocs={setDocs} />}
-        {step === 5 && <ConfirmarFormularioPT />}
+        {step === 3 && <Paso3 register={register} errors={errors} docs={docs} setDocs={setDocs} />}
+        {step === 4 && <Confirmacion />}
         <div className="mt-4 flex gap-2 justify-end">
           {!isLoading && (
             <Button onClick={prevStep} type="button">
@@ -122,7 +104,7 @@ const FormFechaEleccionDirectorio = () => {
           )}
           <Button
             isLoading={isLoading}
-            disabled={step === 4 && !isValid}
+            disabled={step === 3 && !isValid}
             variant="secondary"
             type="submit"
           >

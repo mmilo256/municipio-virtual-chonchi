@@ -21,8 +21,6 @@ const FormLayout = ({ titulo, children }) => {
     })();
   }, [id]);
 
-  console.log(procedure);
-
   const breadcrumbs = [
     { label: procedure?.titulo, href: `/${procedure?.nombre}` },
     { label: 'Formulario', href: `/${procedure?.nombre}/formulario` },
@@ -31,7 +29,7 @@ const FormLayout = ({ titulo, children }) => {
   return (
     <Container className="py-4 px-10 mt-4 mx-auto shadow rounded bg-white">
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <Heading className="text-slate-700" level={3}>
+      <Heading className="text-slate-500 font-light" level={3}>
         {titulo}
       </Heading>
       {children}

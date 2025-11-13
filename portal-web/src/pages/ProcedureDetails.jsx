@@ -13,8 +13,6 @@ const ProcedureDetails = () => {
 
   const breadcrumbs = [{ label: procedure.titulo, href: `/${procedure.nombre}` }];
 
-  console.log(procedure);
-
   // Obtener toda la información del trámite
   useEffect(() => {
     (async () => {

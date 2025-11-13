@@ -21,9 +21,7 @@ const Heading = ({ children, level = 1, className, darkMode }) => {
   }
 
   return (
-    <Tag
-      className={`font-semibold ${darkMode ? 'text-white' : 'text-primary'} ${size} ${className}`}
-    >
+    <Tag className={`${darkMode ? 'text-white' : 'text-primary'} ${size} ${className}`}>
       {children}
     </Tag>
   );

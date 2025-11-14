@@ -2,7 +2,7 @@ const BaseTable = ({ table }) => {
   return (
     <table className="bg-[#fff] w-full rounded overflow-hidden shadow text-xs md:text-sm">
       <thead>
-        <tr className="text-left bg-primary text-white">
+        <tr className="text-left bg-secondary text-white">
           {table.columns.map((col, index) => (
             <th key={index} className="p-2">
               {col}

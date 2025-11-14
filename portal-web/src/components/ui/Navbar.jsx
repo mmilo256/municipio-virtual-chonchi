@@ -33,15 +33,15 @@ const Navbar = () => {
           </a>
           <button
             onClick={handleToggleMenu}
-            className="md:hidden bg-slate-800 text-white rounded p-1"
+            className="md:hidden bg-customBlack text-white rounded p-1"
           >
             <IoMenu size={35} />{' '}
           </button>
           {/* Menú de navegación para pantallas móviles */}
           <div
-            className={`md:hidden fixed inset-0 bg-black bg-opacity-80 z-10 ${toggleMenu ? 'block' : 'hidden'}`}
+            className={`md:hidden fixed inset-0 bg-customBlack z-10 ${toggleMenu ? 'block' : 'hidden'}`}
           >
-            <ul className="bg-slate-800 bg-opacity-90 text-white pt-16 font-medium flex flex-col absolute bottom-0 top-0 w-[90%]">
+            <ul className="bg-customBlack bg-opacity-90 text-white pt-16 font-medium flex flex-col absolute bottom-0 top-0 w-[90%]">
               <button onClick={handleToggleMenu} className="absolute right-2 top-5 z-50">
                 <FaTimes size={35} />
               </button>
@@ -65,10 +65,10 @@ const Navbar = () => {
           </div>
           {/* Menú de navegación para pantallas grandes */}
           <div className="hidden md:flex items-center gap-8">
-            <ul className="flex gap-4 text-blue-950">
+            <ul className="flex gap-4 text-customBlack">
               {NAVIGATION.map((item, index) => (
                 <li key={index}>
-                  <NavLink className="hover:text-cyan-500" to={item.href}>
+                  <NavLink className="hover:text-primary" to={item.href}>
                     {item.name}
                   </NavLink>
                 </li>

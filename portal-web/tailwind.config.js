@@ -4,10 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#06163A',
-        primaryHover: '#0d2252',
-        secondary: '#ff3514',
-        secondaryHover: '#a3210b',
+        primary: '#FF680A',
+        primaryHover: '#FF8133',
+        primaryDisabled: '#FFD9C2',
+        secondary: '#1C2635',
+        secondaryHover: '#004C8F',
+        secondaryDisabled: '#99CFFF',
+        customBlack: '#1C2635',
+        customWhite: '#fafafa',
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

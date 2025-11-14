@@ -12,6 +12,7 @@ import RequestTracking from './pages/RequestTracking';
 import ProcedureDetails from './pages/ProcedureDetails';
 import FormPermisosTransitorios from './pages/forms/FormPermisosTransitorios';
 import FormFechaEleccionDirectorio from './pages/forms/FormFechaEleccionDirectorio';
+import FormStepper from './components/form/FormStepper';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -82,6 +83,16 @@ function App() {
           element={
             <PrivateRoute>
               <FormFechaEleccionDirectorio />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/pruebas-componentes"
+          element={
+            <PrivateRoute>
+              <div className="p-40">
+                <FormStepper />
+              </div>
             </PrivateRoute>
           }
         />

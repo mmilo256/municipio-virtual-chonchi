@@ -13,11 +13,11 @@ const Login = () => {
       <div className="grid lg:grid-cols-7 min-h-dvh bg-slate-50">
         {/* Sección de la imagen de fondo con texto sobre él */}
         <div className="relative bg-red-600 h-52 lg:h-auto col-span-4 bg-[url('/chonchi-aereo.jpg')]">
-          <div className="absolute inset-0 bg-primary bg-opacity-85 flex flex-col justify-center text-center items-center text-white">
+          <div className="absolute inset-0 bg-customBlack bg-opacity-85 flex flex-col justify-center text-center items-center text-white">
             {/* Título y subtítulo de la página */}
             <h2 className="text-lg lg:text-3xl opacity-50">Ilustre Municipalidad de Chonchi</h2>
             <h1 className="text-4xl lg:text-6xl font-bold">
-              Municipio <span className="text-secondary">Virtual</span>
+              Municipio <span className="text-primary">Virtual</span>
             </h1>
             <div className="mt-4 w-full px-8 md:hidden">
               {/* Botón de ClaveÚnica en dispositivos pequeños */}
@@ -28,7 +28,7 @@ const Login = () => {
         {/* Contenido principal del formulario de login */}
         <div className="px-4 lg:px-4 xl:px-16 xl:pt-8 col-span-3 pt-4">
           {/* Título principal del portal */}
-          <h2 className="text-primary text-center lg:text-left font-bold text-4xl mb-4 mt-2">
+          <h2 className="text-secondary text-center lg:text-left font-bold text-4xl mb-4 mt-2">
             Municipio Virtual de Chonchi
           </h2>
           <div className="text-slate-600">

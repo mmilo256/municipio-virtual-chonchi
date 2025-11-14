@@ -122,9 +122,13 @@ const ProcedureDetails = () => {
             <p className="bg-gray-200 rounded-full w-[90%] animate-pulse h-5"></p>
           )}
           <div className="mt-4 hidden md:block">
-            <Button href="formulario" type="link" variant="secondary" fullWidth>
-              Iniciar trámite
-            </Button>
+            <Button
+              href="formulario"
+              type="link"
+              label="Iniciar trámite"
+              variant="primary"
+              fullWidth
+            />
           </div>
         </div>
       </div>

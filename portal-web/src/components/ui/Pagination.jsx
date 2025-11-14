@@ -4,7 +4,7 @@ import { MdNavigateNext } from 'react-icons/md';
 import { MdLastPage } from 'react-icons/md';
 
 const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
-  const buttonStyles = 'bg-primary hover:bg-slate-600 text-white text-lg rounded p-1';
+  const buttonStyles = 'bg-secondary hover:bg-secondaryHover text-white text-lg rounded p-1';
 
   const onFirstPage = async () => {
     if (currentPage > 1) {

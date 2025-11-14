@@ -32,7 +32,7 @@ const Home = () => {
         style={{ backgroundPosition: 'center 70%' }}
         className="relative bg-[url('/chonchi-aereo.jpg')] bg-cover bg-center py-32 mb-2"
       >
-        <div className="absolute inset-0 bg-primary bg-opacity-80 flex flex-col justify-center items-center">
+        <div className="absolute inset-0 bg-customBlack bg-opacity-80 flex flex-col justify-center items-center">
           {/* Contenedor de texto centralizado */}
           <Container>
             {/* Título del portal */}

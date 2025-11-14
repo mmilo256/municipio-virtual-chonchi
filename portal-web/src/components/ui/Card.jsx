@@ -4,9 +4,9 @@ const Card = ({ title, desc, href, direccion }) => {
   return (
     <Link
       to={href}
-      className="relative flex flex-col gap-4 shadow hover:-translate-y-0.5 p-5 shadow-slate-600 group text-center bg-white hover:text-white transition-all duration-300 hover:bg-secondary group"
+      className="relative flex flex-col gap-4 shadow hover:-translate-y-0.5 p-5 shadow-slate-600 group text-center bg-white hover:text-white transition-all duration-300 hover:bg-primary group"
     >
-      <p className="group-hover:text-white transition-all h-8 flex items-center justify-center text-primary text-xl font-semibold">
+      <p className="group-hover:text-white transition-all h-8 flex items-center justify-center text-customBlack text-xl font-semibold">
         {title}
       </p>
       <p className="group-hover:text-white transition-all h-8 flex items-center justify-center text-slate-600">

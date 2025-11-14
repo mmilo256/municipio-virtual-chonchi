@@ -8,7 +8,7 @@ const FormField = ({ children, label, id, helper = null, error }) => {
 
   return (
     <div className="flex flex-col">
-      <label className="font-medium text-slate-500" htmlFor={id}>
+      <label className="font-medium text-slate-500 mb-1" htmlFor={id}>
         {label}
       </label>
       {input}

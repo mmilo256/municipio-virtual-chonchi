@@ -12,7 +12,10 @@ import RequestTracking from './pages/RequestTracking';
 import ProcedureDetails from './pages/ProcedureDetails';
 import FormPermisosTransitorios from './pages/forms/FormPermisosTransitorios';
 import FormFechaEleccionDirectorio from './pages/forms/FormFechaEleccionDirectorio';
-import FormStepper from './components/form/FormStepper';
+import WizardForm from './components/form/WizardForm';
+import Paso01 from './components/form/tramites/permisos-transitorios/Paso01';
+import Container from './components/ui/Container';
+import PermisosTransitoriosForm from './pages/tramites/PermisosTransitoriosForm';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -32,6 +35,17 @@ function App() {
   if (loading) {
     return null;
   }
+
+  const STEPS = [
+    {
+      id: 'solicitante',
+      label: 'Datos del solicitante',
+      description: 'Nombre, RUT, contacto',
+      component: Paso01,
+    },
+    { id: 'tramite', label: 'Datos del trámite', description: 'Información del trámite' },
+    { id: 'revision', label: 'Revisión y envío', description: 'Confirma los datos' },
+  ];
 
   return (
     <div className="font-roboto bg-slate-50">
@@ -90,9 +104,7 @@ function App() {
           path="/pruebas-componentes"
           element={
             <PrivateRoute>
-              <div className="p-40">
-                <FormStepper />
-              </div>
+              <PermisosTransitoriosForm />
             </PrivateRoute>
           }
         />

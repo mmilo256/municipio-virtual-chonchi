@@ -1,13 +1,7 @@
-const STEPS = [
-  { id: 'solicitante', label: 'Datos del solicitante', description: 'Nombre, RUT, contacto' },
-  { id: 'tramite', label: 'Datos del trámite', description: 'Información del trámite' },
-  { id: 'revision', label: 'Revisión y envío', description: 'Confirma los datos' },
-];
-
-const FormStepper = ({ currentStep = 0 }) => {
+const FormStepper = ({ steps, currentStep = 0 }) => {
   return (
     <div className="flex flex-col gap-4">
-      {STEPS.map((step, index) => {
+      {steps.map((step, index) => {
         const isActive = index === currentStep;
         const isCompleted = index < currentStep;
         const isPending = index > currentStep;

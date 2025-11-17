@@ -10,11 +10,6 @@ import Home from './pages/Home';
 import Requests from './pages/Requests';
 import RequestTracking from './pages/RequestTracking';
 import ProcedureDetails from './pages/ProcedureDetails';
-import FormPermisosTransitorios from './pages/forms/FormPermisosTransitorios';
-import FormFechaEleccionDirectorio from './pages/forms/FormFechaEleccionDirectorio';
-import WizardForm from './components/form/WizardForm';
-import Paso01 from './components/form/tramites/permisos-transitorios/Paso01';
-import Container from './components/ui/Container';
 import PermisosTransitoriosForm from './pages/tramites/PermisosTransitoriosForm';
 
 function App() {
@@ -35,17 +30,6 @@ function App() {
   if (loading) {
     return null;
   }
-
-  const STEPS = [
-    {
-      id: 'solicitante',
-      label: 'Datos del solicitante',
-      description: 'Nombre, RUT, contacto',
-      component: Paso01,
-    },
-    { id: 'tramite', label: 'Datos del trámite', description: 'Información del trámite' },
-    { id: 'revision', label: 'Revisión y envío', description: 'Confirma los datos' },
-  ];
 
   return (
     <div className="font-roboto bg-slate-50">
@@ -86,22 +70,6 @@ function App() {
         />
         <Route
           path="/:id/permisos-transitorios/formulario"
-          element={
-            <PrivateRoute>
-              <FormPermisosTransitorios />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/:id/fecha-eleccion-directorio/formulario"
-          element={
-            <PrivateRoute>
-              <FormFechaEleccionDirectorio />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/pruebas-componentes"
           element={
             <PrivateRoute>
               <PermisosTransitoriosForm />

@@ -31,7 +31,7 @@ const Button = ({
     <NavLink
       disabled={disabled || isLoading}
       to={href}
-      className={`transition-colors font-medium rounded disabled:cursor-not-allowed py-3 w-36 flex justify-center text-center ${fullWidth && 'w-full'} ${buttonStyles}`}
+      className={`text-base transition-colors font-medium rounded disabled:cursor-not-allowed py-3 w-36 flex justify-center text-center ${fullWidth && 'w-full'} ${buttonStyles}`}
     >
       <span>{isLoading ? <FaSpinner /> : label}</span>
     </NavLink>
@@ -40,7 +40,7 @@ const Button = ({
       disabled={disabled || isLoading}
       onClick={onClick}
       type={type}
-      className={`transition-colors font-medium rounded disabled:cursor-not-allowed py-3 w-36 flex justify-center text-center ${fullWidth && 'w-full'} ${buttonStyles}`}
+      className={`text-base transition-colors font-medium rounded disabled:cursor-not-allowed py-3 w-36 flex justify-center text-center ${fullWidth && 'w-full'} ${buttonStyles}`}
     >
       <span>{isLoading ? <FaSpinner className="animate-spin" /> : label}</span>
     </button>

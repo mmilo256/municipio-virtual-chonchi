@@ -7,13 +7,15 @@ const FormField = ({ children, label, id, helper = null, error }) => {
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="text-sm flex flex-col">
       <label className="font-medium text-slate-500 mb-1" htmlFor={id}>
         {label}
       </label>
       {input}
-      {!error && helper && <p className="text-xs text-slate-500">{helper}</p>}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      <div className="mt-1">
+        {!error && helper && <p className="text-xs text-slate-500">{helper}</p>}
+        {error && <p className="text-xs text-red-500">{error}</p>}
+      </div>
     </div>
   );
 };

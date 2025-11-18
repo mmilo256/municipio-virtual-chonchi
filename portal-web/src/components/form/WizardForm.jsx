@@ -1,8 +1,19 @@
 import FormActions from './FormActions';
 import FormStepper from './FormStepper';
 
-const WizardForm = ({ steps, values, currentStep, handleChange, nextStep, prevStep }) => {
+const WizardForm = ({
+  steps,
+  values,
+  currentStep,
+  handleChange,
+  nextStep,
+  prevStep,
+  totalSteps,
+  onSubmit,
+}) => {
   const StepComponent = steps[currentStep]?.component;
+
+  const isLastStep = currentStep === totalSteps - 1;
 
   return (
     <form className="flex flex-col md:flex-row gap-4">
@@ -14,7 +25,12 @@ const WizardForm = ({ steps, values, currentStep, handleChange, nextStep, prevSt
         <p className="text-slate-500 text-sm mb-4">{steps[currentStep].description}</p>
         {StepComponent && <StepComponent values={values} onChange={handleChange} />}
         <div className="mt-6">
-          <FormActions onPrev={prevStep} onNext={nextStep} />
+          <FormActions
+            onSubmit={onSubmit}
+            isLastStep={isLastStep}
+            onPrev={prevStep}
+            onNext={nextStep}
+          />
         </div>
       </div>
     </form>

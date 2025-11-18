@@ -6,6 +6,10 @@ import useWizardForm from '../../stores/useWizardForm';
 const PermisosTransitoriosForm = () => {
   const initialValues = createInitialValues();
 
+  const onSubmit = () => {
+    alert('Formulario enviado exitosamente');
+  };
+
   const { currentStep, values, totalSteps, handleChange, nextStep, prevStep } = useWizardForm({
     initialValues,
     steps,
@@ -27,6 +31,7 @@ const PermisosTransitoriosForm = () => {
         totalSteps={totalSteps}
         nextStep={nextStep}
         prevStep={prevStep}
+        onSubmit={onSubmit}
       />
     </div>
   );

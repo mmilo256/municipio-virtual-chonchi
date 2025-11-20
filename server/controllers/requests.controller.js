@@ -1,3 +1,4 @@
+import Document from '../models/documentModel.js';
 import {
   createNewRequest,
   getLogs,
@@ -99,8 +100,37 @@ export const updateRequestStatus = async (req, res) => {
 // Crear una nueva solicitud para un usuario
 export const createRequest = async (req, res) => {
   try {
-    const request = await createNewRequest(req.body, req.files);
-    res.json({ message: 'Solicitud enviada exitosamente', request }); // Enviar una respuesta exitosa
+    const request = await createNewRequest(req.body);
+    return res.json({ message: 'Solicitud enviada exitosamente', request }); // Enviar una respuesta exitosa
+  } catch (error) {
+    console.log(error);
+    res.json({ message: 'No se pudo ingresar la solicitud.', error: error.message });
+  }
+};
+
+/* Adjuntar documentos de la solicitud */
+
+export const adjuntarDocumento = async (req, res) => {
+  const { id } = req.params;
+  const { originalname, path } = req.file;
+  const { tipoDocumento } = req.body;
+
+  const data = {
+    ruta: path,
+    originalname,
+    nombre: tipoDocumento,
+    tipo: 'adjunto',
+    solicitud_id: id,
+  };
+
+  console.log(data);
+
+  try {
+    await Document.create(data);
+    return res.json({
+      body: req.body,
+      file: req.file,
+    }); // Enviar una respuesta exitosa
   } catch (error) {
     console.log(error);
     res.json({ message: 'No se pudo ingresar la solicitud.', error: error.message });
@@ -111,6 +141,7 @@ export const createRequest = async (req, res) => {
 export const getUploadedDocuments = async (req, res) => {
   const { id } = req.params;
   const { type } = req.query;
+
   try {
     const docs = await getDocumentsByRequest(id, type);
     res.status(200).json(docs);

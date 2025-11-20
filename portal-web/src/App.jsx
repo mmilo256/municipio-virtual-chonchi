@@ -11,6 +11,7 @@ import Requests from './pages/Requests';
 import RequestTracking from './pages/RequestTracking';
 import ProcedureDetails from './pages/ProcedureDetails';
 import PermisosTransitoriosForm from './pages/tramites/PermisosTransitoriosForm';
+import FechaEleccionDirectorioForm from './pages/tramites/FechaEleccionDirectorioForm';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -68,11 +69,30 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* --------------------------TRÁMITES-------------------------- */}
+
         <Route
           path="/:id/permisos-transitorios/formulario"
           element={
             <PrivateRoute>
               <PermisosTransitoriosForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/:id/fecha-eleccion-directorio/formulario"
+          element={
+            <PrivateRoute>
+              <FechaEleccionDirectorioForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/:id/acta-directorio/formulario"
+          element={
+            <PrivateRoute>
+              <FechaEleccionDirectorioForm />
             </PrivateRoute>
           }
         />

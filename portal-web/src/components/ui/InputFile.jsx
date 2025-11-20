@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-const InputFile = ({ id }) => {
+const InputFile = ({ id, values, onChange, accept }) => {
   // Referencia al input oculto
   const hiddenInput = useRef(null);
 
@@ -11,10 +11,10 @@ const InputFile = ({ id }) => {
   return (
     <div>
       <input
-        /* onChange={(e) => {
-          setFile((prev) => ({ ...prev, [name]: e.target.files[0] }));
-        }} */
         name={id}
+        id={id}
+        accept={accept}
+        onChange={onChange}
         ref={hiddenInput}
         type="file"
         className="hidden"
@@ -28,7 +28,11 @@ const InputFile = ({ id }) => {
           >
             Subir archivo
           </button>
-          <p className="px-2 text-slate-500">Ningún archivo seleccionado</p>
+          {values[id] ? (
+            <p className="px-2 text-customBlack">{values[id].name}</p>
+          ) : (
+            <p className="px-2 text-slate-400">Ningún archivo seleccionado</p>
+          )}
         </div>
       </div>
     </div>

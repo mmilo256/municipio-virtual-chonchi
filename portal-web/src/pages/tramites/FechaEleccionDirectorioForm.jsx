@@ -1,18 +1,18 @@
 import { useParams } from 'react-router-dom';
 import WizardForm from '../../components/form/WizardForm';
-import steps from '../../formularios/administracion-municipal/permisos-transitorios/config';
-import createInitialValues from '../../formularios/administracion-municipal/permisos-transitorios/initialValues';
+import steps from '../../formularios/secretaria-municipal/fecha-eleccion-directorio/config';
+import createInitialValues from '../../formularios/secretaria-municipal/fecha-eleccion-directorio/initialValues';
 import {
   crearSolicitud,
   adjuntarDocumento,
-} from '../../services/tramites/administracion-municipal/permisosTransitoriosApi';
+} from '../../services/tramites/secretaria-municipal/fechaEleccionDirectorioApi';
 import useWizardForm from '../../stores/useWizardForm';
 import useAuthStore from '../../stores/useAuthStore';
-import validateStep from '../../formularios/administracion-municipal/permisos-transitorios/validation';
+import validateStep from '../../formularios/secretaria-municipal/fecha-eleccion-directorio/validation';
 import { useState } from 'react';
 import FormCompleted from './FormCompleted';
 
-const PermisosTransitoriosForm = () => {
+const FechaEleccionDirectorioForm = () => {
   const initialValues = createInitialValues();
   const { id } = useParams();
   const usuarioId = useAuthStore((state) => state?.sessionData?.id);
@@ -24,16 +24,7 @@ const PermisosTransitoriosForm = () => {
   const onSubmit = async () => {
     setLoading(true);
     /* Separa documentos del resto de respuestas */
-    const {
-      docCI,
-      docRutTributario,
-      docVigenciaPersonaJuridica,
-      docOcupacionRecinto,
-      docDeclaracionJurada,
-      docCertificadoAntecedentes,
-      docFirmaPresidente,
-      ...respuestas
-    } = values;
+    const { docElecDate, ...respuestas } = values;
 
     /* Se envía las respuestas del formulario y se recibe el ID de la solicitud */
 
@@ -49,15 +40,7 @@ const PermisosTransitoriosForm = () => {
 
       /* Se usa el ID de la solicitud para subir los archivos adjuntos */
 
-      const documentos = [
-        { file: docCI, tipo: 'docCI' },
-        { file: docRutTributario, tipo: 'docRutTributario' },
-        { file: docVigenciaPersonaJuridica, tipo: 'docVigenciaPersonaJuridica' },
-        { file: docOcupacionRecinto, tipo: 'docOcupacionRecinto' },
-        { file: docDeclaracionJurada, tipo: 'docDeclaracionJurada' },
-        { file: docCertificadoAntecedentes, tipo: 'docCertificadoAntecedentes' },
-        { file: docFirmaPresidente, tipo: 'docFirmaPresidente' },
-      ];
+      const documentos = [{ file: docElecDate, tipo: 'docElecDate' }];
 
       // 4️⃣ Subir archivos uno por uno
       for (const doc of documentos) {
@@ -84,6 +67,7 @@ const PermisosTransitoriosForm = () => {
     values,
     totalSteps,
     handleChange,
+    setValues,
     nextStep,
     prevStep,
     errors,
@@ -102,12 +86,15 @@ const PermisosTransitoriosForm = () => {
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
       <h1 className="text-3xl font-medium text-secondary mb-1">
-        Autorización Especial Transitoria
+        Comunicación Fecha de Elección de Directorio
       </h1>
-      <p className="text-sm text-gray-600 mb-6">Completa los pasos para enviar tu solicitud.</p>
+      <p className="text-sm text-gray-600 mb-6">
+        Completa los pasos para informar sobre la fecha de elección de directorio.
+      </p>
 
       <WizardForm
         steps={steps}
+        setValues={setValues}
         isLoading={loading}
         handleChange={handleChange}
         initialValues={initialValues}
@@ -123,4 +110,4 @@ const PermisosTransitoriosForm = () => {
   );
 };
 
-export default PermisosTransitoriosForm;
+export default FechaEleccionDirectorioForm;

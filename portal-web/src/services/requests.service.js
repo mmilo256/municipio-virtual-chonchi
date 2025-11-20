@@ -53,7 +53,7 @@ export const fetchRequestsByUserId = async (id, page = 1, pageSize = 10) => {
 };
 
 // Función para enviar una nueva solicitud con los datos proporcionados
-export const sendRequest = async (data) => {
+export const createRequest = async (data) => {
   const config = {
     headers: {
       'Content-Type': 'multipart/form-data',

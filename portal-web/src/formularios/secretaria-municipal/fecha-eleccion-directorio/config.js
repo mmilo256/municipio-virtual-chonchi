@@ -3,7 +3,6 @@ import Paso02 from './pasos/Paso02';
 import Paso03 from './pasos/Paso03';
 import Paso04 from './pasos/Paso04';
 import Paso05 from './pasos/Paso05';
-import Paso06 from './pasos/Paso06';
 
 const steps = [
   {
@@ -14,33 +13,27 @@ const steps = [
   },
   {
     id: 'datos-organizacion',
-    label: 'Datos de la organización',
+    label: 'Información de la Organización Comunitaria',
     description: '',
     component: Paso02,
   },
   {
-    id: 'datos-presidente',
-    label: 'Datos del representante legal',
+    id: 'datos-comision',
+    label: 'Identificación de la Comisión Electoral',
     description: '',
     component: Paso03,
   },
   {
-    id: 'detalle-permiso',
-    label: 'Detalles del permiso',
+    id: 'datos-eleccion',
+    label: 'Datos de la elección',
     description: '',
     component: Paso04,
-  },
-  {
-    id: 'antecedentes',
-    label: 'Antecedentes',
-    description: 'Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB.',
-    component: Paso05,
   },
   {
     id: 'confirmacion',
     label: 'Confirmación del formulario',
     description: '',
-    component: Paso06,
+    component: Paso05,
   },
 ];
 

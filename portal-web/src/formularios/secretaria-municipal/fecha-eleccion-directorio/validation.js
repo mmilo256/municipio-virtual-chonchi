@@ -3,6 +3,7 @@ import {
   validatePhone,
   validateRut,
   validateRequired,
+  validateComMembers,
 } from '../../../utils/validators';
 
 const validateStep = (stepIndex, values) => {
@@ -23,15 +24,8 @@ const validateStep = (stepIndex, values) => {
 
   /* PASO 03 */
   if (stepIndex === 2) {
-    if (validateRequired(values.presidentName))
-      errors.presidentName = validateRequired(values.presidentName);
-    if (validateRut(values.presidentRut)) errors.presidentRut = validateRut(values.presidentRut);
-    if (validateRequired(values.presidentAddress))
-      errors.presidentAddress = validateRequired(values.presidentAddress);
-    if (validateEmail(values.presidentEmail))
-      errors.presidentEmail = validateEmail(values.presidentEmail);
-    if (validatePhone(values.presidentPhone))
-      errors.presidentPhone = validatePhone(values.presidentPhone);
+    if (validateComMembers(values.comMembers))
+      errors.comMembers = validateComMembers(values.comMembers);
   }
 
   /* PASO 04 */

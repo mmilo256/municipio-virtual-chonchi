@@ -11,14 +11,7 @@ const createInitialValues = () => {
     orgName: '',
     orgNum: '',
     orgType: '',
-    comMembers: [
-      {
-        name: '',
-        lastName: '',
-        rut: '',
-        email: '',
-      },
-    ],
+    comMembers: [],
     elecDate: '',
     docElecDate: null,
   };

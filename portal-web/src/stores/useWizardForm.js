@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
   const [values, setValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
 
@@ -39,7 +39,6 @@ const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
 
   const nextStep = () => {
     const { isValid } = runValidation();
-    console.log(isValid);
     if (!isValid) return;
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);

@@ -20,7 +20,8 @@ const steps = [
   {
     id: 'datos-comision',
     label: 'Identificación de la Comisión Electoral',
-    description: '',
+    description:
+      'Ingrese los datos de cada integrante de la Comisión Electoral. El usuario solicitante debe ser parte de la Comisión, sino, no podrá realizar la solicitud.',
     component: Paso03,
   },
   {

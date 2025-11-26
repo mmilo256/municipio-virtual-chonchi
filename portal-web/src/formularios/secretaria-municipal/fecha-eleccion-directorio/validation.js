@@ -3,7 +3,7 @@ import {
   validatePhone,
   validateRut,
   validateRequired,
-  validateComMembers,
+  validateComissionMember,
 } from '../../../utils/validators';
 
 const validateStep = (stepIndex, values) => {
@@ -24,49 +24,30 @@ const validateStep = (stepIndex, values) => {
 
   /* PASO 03 */
   if (stepIndex === 2) {
-    if (validateComMembers(values.comMembers))
-      errors.comMembers = validateComMembers(values.comMembers);
+    if (validateRequired(values.comName1)) errors.comName1 = validateRequired(values.comName1);
+    if (validateRequired(values.comLastName1))
+      errors.comLastName1 = validateRequired(values.comLastName1);
+    if (validateRut(values.comRut1)) errors.comRut1 = validateRut(values.comRut1);
+    if (validateEmail(values.comEmail1)) errors.comEmail1 = validateEmail(values.comEmail1);
+    if (validateRequired(values.comName2)) errors.comName2 = validateRequired(values.comName2);
+    if (validateRequired(values.comLastName2))
+      errors.comLastName2 = validateRequired(values.comLastName2);
+    if (validateRut(values.comRut2)) errors.comRut2 = validateRut(values.comRut2);
+    if (validateEmail(values.comEmail2)) errors.comEmail2 = validateEmail(values.comEmail2);
+    if (validateRequired(values.comName3)) errors.comName3 = validateRequired(values.comName3);
+    if (validateRequired(values.comLastName3))
+      errors.comLastName3 = validateRequired(values.comLastName3);
+    if (validateRut(values.comRut3)) errors.comRut3 = validateRut(values.comRut3);
+    if (validateEmail(values.comEmail3)) errors.comEmail3 = validateEmail(values.comEmail3);
+    if (validateComissionMember(values.comIsValid))
+      errors.comIsValid = validateComissionMember(values.comIsValid);
   }
 
   /* PASO 04 */
   if (stepIndex === 3) {
-    if (validateRequired(values.permissionName))
-      errors.permissionName = validateRequired(values.permissionName);
-    if (validateRequired(values.permissionPlace))
-      errors.permissionPlace = validateRequired(values.permissionPlace);
-    if (validateRequired(values.permissionStartDate))
-      errors.permissionStartDate = validateRequired(values.permissionStartDate);
-    if (validateRequired(values.permissionStartTime))
-      errors.permissionStartTime = validateRequired(values.permissionStartTime);
-    if (validateRequired(values.permissionEndDate))
-      errors.permissionEndDate = validateRequired(values.permissionEndDate);
-    if (validateRequired(values.permissionEndTime))
-      errors.permissionEndTime = validateRequired(values.permissionEndTime);
-    if (validateRequired(values.permissionAlcohol))
-      errors.permissionAlcohol = validateRequired(values.permissionAlcohol);
-    if (validateRequired(values.permissionFood))
-      errors.permissionFood = validateRequired(values.permissionFood);
-    if (validateRequired(values.permissionDescription))
-      errors.permissionDescription = validateRequired(values.permissionDescription);
-    if (validateRequired(values.permissionPurpose))
-      errors.permissionPurpose = validateRequired(values.permissionPurpose);
-  }
-
-  /* PASO 05 */
-  if (stepIndex === 4) {
-    if (validateRequired(values.docCI)) errors.docCI = validateRequired(values.docCI);
-    if (validateRequired(values.docRutTributario))
-      errors.docRutTributario = validateRequired(values.docRutTributario);
-    if (validateRequired(values.docVigenciaPersonaJuridica))
-      errors.docVigenciaPersonaJuridica = validateRequired(values.docVigenciaPersonaJuridica);
-    if (validateRequired(values.docOcupacionRecinto))
-      errors.docOcupacionRecinto = validateRequired(values.docOcupacionRecinto);
-    if (validateRequired(values.docDeclaracionJurada))
-      errors.docDeclaracionJurada = validateRequired(values.docDeclaracionJurada);
-    if (validateRequired(values.docCertificadoAntecedentes))
-      errors.docCertificadoAntecedentes = validateRequired(values.docCertificadoAntecedentes);
-    if (validateRequired(values.docFirmaPresidente))
-      errors.docFirmaPresidente = validateRequired(values.docFirmaPresidente);
+    if (validateRequired(values.elecDate)) errors.elecDate = validateRequired(values.elecDate);
+    if (validateRequired(values.docElecDate))
+      errors.docElecDate = validateRequired(values.docElecDate);
   }
 
   return errors;

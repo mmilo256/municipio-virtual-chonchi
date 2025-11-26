@@ -4,8 +4,13 @@ import InputSelect from '../../../../components/ui/InputSelect';
 
 const Paso02 = ({ values, onChange, errors }) => {
   const options = [
-    { value: 'junta de vecinos', label: 'Junta de vecinos' },
+    { value: 'junta de vecinos', label: 'Junta de Vecinos' },
+    { value: 'comunidad indigena', label: 'Comunidad Indígena' },
     { value: 'club deportivo', label: 'Club Deportivo' },
+    { value: 'fundacion', label: 'Fundación' },
+    { value: 'empresa', label: 'Empresa' },
+    { value: 'agrupacion', label: 'Agrupación' },
+    { value: 'otro', label: 'Otro' },
   ];
 
   return (
@@ -23,7 +28,14 @@ const Paso02 = ({ values, onChange, errors }) => {
         label="RUT de la organización"
         helper="Ingrese el RUT sin puntos y con guión"
       >
-        <InputText value={values.orgRut} onChange={onChange} placeholder="Ej: 12345678-9" />
+        <InputText
+          value={values.orgRut}
+          maxLength={10}
+          onChange={(event) => {
+            onChange(event, 'rut');
+          }}
+          placeholder="Ej: 12345678-9"
+        />
       </FormField>
       <FormField error={errors.orgAddress} id="orgAddress" label="Dirección">
         <InputText
@@ -41,7 +53,14 @@ const Paso02 = ({ values, onChange, errors }) => {
         />
       </FormField>
       <FormField error={errors.orgPhone} id="orgPhone" label="Teléfono">
-        <InputText value={values.orgPhone} onChange={onChange} placeholder="Ej: 912345678" />
+        <InputText
+          value={values.orgPhone}
+          maxLength={12}
+          onChange={(event) => {
+            onChange(event, 'phone');
+          }}
+          placeholder="Ej: 912345678"
+        />
       </FormField>
       <FormField error={errors.orgType} id="orgType" label="Tipo de organización">
         <InputSelect value={values.orgType} onChange={onChange} options={options} />

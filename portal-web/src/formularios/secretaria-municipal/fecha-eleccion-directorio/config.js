@@ -27,7 +27,8 @@ const steps = [
   {
     id: 'datos-eleccion',
     label: 'Datos de la elección',
-    description: '',
+    description:
+      'Recuerde que el aviso o comunicación de la fecha de elección debe ingresarse o depositarse en Secretaría Municipal, con al menos 15 días hábiles de anticipación al día de la elección.',
     component: Paso04,
   },
   {

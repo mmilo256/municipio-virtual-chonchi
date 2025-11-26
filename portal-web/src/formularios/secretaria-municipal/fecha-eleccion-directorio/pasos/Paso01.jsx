@@ -25,9 +25,11 @@ const Paso01 = ({ values, onChange, errors }) => {
       </FormField>
       <FormField error={errors.phone} id="phone" label="Número de teléfono">
         <InputText
-          type="number"
           value={values.phone}
-          onChange={onChange}
+          maxLength={12}
+          onChange={(event) => {
+            onChange(event, 'phone');
+          }}
           placeholder="Ej: 912345678"
         />
       </FormField>

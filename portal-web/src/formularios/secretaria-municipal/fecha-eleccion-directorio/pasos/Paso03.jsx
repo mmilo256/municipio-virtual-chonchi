@@ -1,140 +1,123 @@
 import InputText from '../../../../components/ui/InputText';
 import FormField from '../../../../components/form/FormField';
-import Button from '../../../../components/ui/buttons/Button';
-import { FaTimes } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import useAuthStore from '../../../../stores/useAuthStore';
 
-const Paso03 = ({ values, setValues, errors }) => {
-  const members = values.comMembers;
+const Paso03 = ({ values, onChange, setValues, errors }) => {
+  const userRut = useAuthStore((state) => state.sessionData.run);
+  const { comRut1, comRut2, comRut3 } = values;
 
-  const [memberError, setMemberError] = useState(false);
-
-  const [currentMember, setCurrentMember] = useState({
-    name: '',
-    lastName: '',
-    rut: '',
-    email: '',
-  });
-
-  const handleMemberChange = (value, field) => {
-    setCurrentMember((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const addMember = () => {
-    if (currentMember.name && currentMember.lastName && currentMember.rut && currentMember.email) {
+  useEffect(() => {
+    if (userRut === comRut1 || userRut === comRut2 || userRut === comRut3) {
       setValues((prev) => ({
         ...prev,
-        comMembers: [
-          ...prev.comMembers,
-          {
-            name: currentMember.name,
-            lastName: currentMember.lastName,
-            rut: currentMember.rut,
-            email: currentMember.email,
-          },
-        ],
+        comIsValid: true,
       }));
-      setMemberError(false);
-      setCurrentMember({
-        name: '',
-        lastName: '',
-        rut: '',
-        email: '',
-      });
     } else {
-      setMemberError(true);
+      setValues((prev) => ({
+        ...prev,
+        comIsValid: false,
+      }));
     }
-  };
-
-  const removeMember = () => {
-    console.log();
-  };
+  }, [userRut, comRut1, comRut2, comRut3, setValues]);
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-2 gap-4">
-        <FormField id="comName1" label="Nombres">
-          <InputText
-            value={currentMember?.name}
-            onChange={(e) => {
-              handleMemberChange(e.target.value, 'name');
-            }}
-            placeholder="Ej: Juan Alberto"
-          />
+      <div className="grid grid-cols-2 border gap-x-4 gap-y-2 bg-slate-100 p-4 rounded">
+        <p className="col-span-2 font-medium text-slate-700">Integrante 1</p>
+        <FormField error={errors.comName1} id="comName1" label="Nombres">
+          <InputText value={values.comName1} onChange={onChange} placeholder="Ej: Juan Alberto" />
         </FormField>
-        <FormField id="comLastName1" label="Apellidos">
+        <FormField error={errors.comLastName1} id="comLastName1" label="Apellidos">
           <InputText
-            value={currentMember?.lastName}
-            onChange={(e) => {
-              handleMemberChange(e.target.value, 'lastName');
-            }}
+            value={values.comLastName1}
+            onChange={onChange}
             placeholder="Ej: López Pérez"
           />
         </FormField>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <FormField id="comRut1" label="RUT">
+        <FormField error={errors.comRut1} id="comRut1" label="RUT">
           <InputText
-            value={currentMember?.rut}
-            onChange={(e) => {
-              handleMemberChange(e.target.value, 'rut');
+            value={values.comRut1}
+            maxLength={10}
+            onChange={(event) => {
+              onChange(event, 'rut');
             }}
-            placeholder="Ej: 12345678-9"
+            placeholder="Ej: 1234567-8"
           />
         </FormField>
-        <FormField id="comEmail1" label="Correo electrónico">
+        <FormField error={errors.comEmail1} id="comEmail1" label="Correo electrónico">
           <InputText
-            value={currentMember?.email}
-            onChange={(e) => {
-              handleMemberChange(e.target.value, 'email');
-            }}
-            placeholder="Ej: correo@ejemplo.com"
+            value={values.comEmail1}
+            onChange={onChange}
+            placeholder="Ej: correo@ejemplo.cl"
           />
         </FormField>
       </div>
-      {memberError && (
-        <p className="text-red-500 text-xs">
-          Debe rellenar todos los campos para agregar un integrante
-        </p>
-      )}
-      <div className="py-4">
-        <Button onClick={addMember} fullWidth label="Agregar integrante" variant="secondary" />
-      </div>
-      <div className="bg-slate-100 p-4 rounded">
-        <h3 className="mb-2 font-bold text-customBlack">Integrantes de la comisión</h3>
-        <FormField id="comMembers" error={errors['comMembers']}>
-          <ul
-            onClick={() => {
-              console.log(members);
+
+      <div className="grid grid-cols-2 border gap-x-4 gap-y-2 bg-slate-100 p-4 rounded">
+        <p className="col-span-2 font-medium text-slate-700">Integrante 2</p>
+        <FormField error={errors.comName2} id="comName2" label="Nombres">
+          <InputText value={values.comName2} onChange={onChange} placeholder="Ej: Juan Alberto" />
+        </FormField>
+        <FormField error={errors.comLastName2} id="comLastName2" label="Apellidos">
+          <InputText
+            value={values.comLastName2}
+            onChange={onChange}
+            placeholder="Ej: López Pérez"
+          />
+        </FormField>
+        <FormField error={errors.comRut2} id="comRut2" label="RUT">
+          <InputText
+            value={values.comRut2}
+            maxLength={10}
+            onChange={(event) => {
+              onChange(event, 'rut');
             }}
-            className="flex"
-          >
-            {members.map((member, index) => (
-              <li
-                key={index}
-                className="flex items-center mb-2 bg-white py-1 px-2 rounded justify-between border-b pb-2"
-              >
-                <div>
-                  <p className="text-sm font-medium">{`${member?.name} ${member?.lastName}`}</p>
-                  <p className="text-xs">{`${member?.rut} | ${member?.email}`}</p>
-                </div>
-                <button
-                  onClick={() => {
-                    removeMember(member);
-                  }}
-                  type="button"
-                  className="text-red-500 hover:bg-red-500 hover:text-white h-6 w-6 flex items-center justify-center rounded-full"
-                >
-                  <FaTimes />
-                </button>
-              </li>
-            ))}
-          </ul>
+            placeholder="Ej: 1234567-8"
+          />
+        </FormField>
+        <FormField error={errors.comEmail2} id="comEmail2" label="Correo electrónico">
+          <InputText
+            value={values.comEmail2}
+            onChange={onChange}
+            placeholder="Ej: correo@ejemplo.cl"
+          />
         </FormField>
       </div>
+
+      <div className="grid grid-cols-2 border gap-x-4 gap-y-2 bg-slate-100 p-4 rounded">
+        <p className="col-span-2 font-medium text-slate-700">Integrante 3</p>
+        <FormField error={errors.comName3} id="comName3" label="Nombres">
+          <InputText value={values.comName3} onChange={onChange} placeholder="Ej: Juan Alberto" />
+        </FormField>
+        <FormField error={errors.comLastName3} id="comLastName3" label="Apellidos">
+          <InputText
+            value={values.comLastName3}
+            onChange={onChange}
+            placeholder="Ej: López Pérez"
+          />
+        </FormField>
+        <FormField error={errors.comRut3} id="comRut3" label="RUT">
+          <InputText
+            value={values.comRut3}
+            maxLength={10}
+            onChange={(event) => {
+              onChange(event, 'rut');
+            }}
+            placeholder="Ej: 1234567-8"
+          />
+        </FormField>
+        <FormField error={errors.comEmail3} id="comEmail3" label="Correo electrónico">
+          <InputText
+            value={values.comEmail3}
+            onChange={onChange}
+            placeholder="Ej: correo@ejemplo.cl"
+          />
+        </FormField>
+      </div>
+      <FormField error={errors.comIsValid}>
+        <input type="text" hidden value={values.comIsValid} onChange={onChange} />
+      </FormField>
     </div>
   );
 };

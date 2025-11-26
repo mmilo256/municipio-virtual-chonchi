@@ -13,10 +13,12 @@ const WizardForm = ({
   totalSteps,
   isLoading,
   onSubmit,
+  goBack,
   setValues,
 }) => {
   const StepComponent = steps[currentStep]?.component;
 
+  const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === totalSteps - 1;
 
   useEffect(() => {
@@ -66,6 +68,8 @@ const WizardForm = ({
         <div className="mt-6">
           <FormActions
             onSubmit={onSubmit}
+            goBack={goBack}
+            isFirstStep={isFirstStep}
             isLastStep={isLastStep}
             isLoading={isLoading}
             onPrev={prevStep}

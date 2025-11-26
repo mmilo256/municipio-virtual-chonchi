@@ -4,8 +4,9 @@ import InputSelect from '../../../../components/ui/InputSelect';
 
 const Paso02 = ({ values, onChange, errors }) => {
   const options = [
-    { value: 'junta de vecinos', label: 'Junta de vecinos' },
-    { value: 'club deportivo', label: 'Club Deportivo' },
+    { value: 'junta de vecinos - territoriales', label: 'Junta de Vecinos - Territoriales' },
+    { value: 'organizacion funcional', label: 'Organización Funcional' },
+    { value: 'union comunal', label: 'Unión Comunal' },
   ];
 
   return (
@@ -18,7 +19,14 @@ const Paso02 = ({ values, onChange, errors }) => {
         />
       </FormField>
       <FormField error={errors.orgNum} id="orgNum" label="Personalidad Jurídica N°">
-        <InputText value={values.orgNum} onChange={onChange} placeholder="Ej: 12345678" />
+        <InputText
+          value={values.orgNum}
+          maxLength={8}
+          onChange={(event) => {
+            onChange(event, 'phone');
+          }}
+          placeholder="Ej: 12345678"
+        />
       </FormField>
       <FormField error={errors.orgType} id="orgType" label="Tipo de Organización Comunitaria">
         <InputSelect

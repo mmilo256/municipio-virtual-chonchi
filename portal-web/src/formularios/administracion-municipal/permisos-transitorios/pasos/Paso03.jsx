@@ -13,7 +13,14 @@ const Paso03 = ({ values, onChange, errors }) => {
         id="presidentRut"
         label="RUT"
       >
-        <InputText value={values.presidentRut} onChange={onChange} placeholder="Ej: 12345678-9" />
+        <InputText
+          value={values.presidentRut}
+          maxLength={10}
+          onChange={(event) => {
+            onChange(event, 'rut');
+          }}
+          placeholder="Ej: 12345678-9"
+        />
       </FormField>
       <FormField error={errors.presidentAddress} id="presidentAddress" label="Dirección">
         <InputText
@@ -30,10 +37,24 @@ const Paso03 = ({ values, onChange, errors }) => {
         />
       </FormField>
       <FormField error={errors.presidentPhone} id="presidentPhone" label="Teléfono">
-        <InputText value={values.presidentPhone} onChange={onChange} placeholder="Ej: 912345678" />
+        <InputText
+          value={values.presidentPhone}
+          maxLength={12}
+          onChange={(event) => {
+            onChange(event, 'phone');
+          }}
+          placeholder="Ej: 912345678"
+        />
       </FormField>
       <FormField opcional error={errors.presidentPhone2} id="presidentPhone2" label="Teléfono 2">
-        <InputText value={values.presidentPhone2} onChange={onChange} placeholder="Ej: 912345678" />
+        <InputText
+          value={values.presidentPhone2}
+          maxLength={12}
+          onChange={(event) => {
+            onChange(event, 'phone');
+          }}
+          placeholder="Ej: 912345678"
+        />
       </FormField>
     </div>
   );

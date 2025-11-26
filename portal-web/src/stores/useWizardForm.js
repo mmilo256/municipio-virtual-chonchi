@@ -1,9 +1,19 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
-  const [currentStep, setCurrentStep] = useState(2);
+const useWizardForm = ({
+  initialValues,
+  steps,
+  onSubmit,
+  validateStep,
+  idTramite,
+  slugTramite,
+}) => {
+  const [currentStep, setCurrentStep] = useState(4);
   const [values, setValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   /* TOTAL DE PASOS DEL FORMULARIO */
 
@@ -11,8 +21,20 @@ const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
 
   /* DETECTAR CUANDO EL VALOR DE UN CAMPO DEL FORMULARIO CAMBIA */
 
-  const handleChange = (event) => {
+  const handleChange = (event, validation) => {
     const { name, value, type, checked, files } = event.target;
+
+    let newValue = value;
+
+    if (validation === 'phone') {
+      newValue = newValue.replace(/[^0-9+]/g, '');
+    }
+
+    if (validation === 'rut') {
+      newValue = newValue
+        .replace(/[^0-9kK-]/g, '') // permite solo 0-9, K, k y '-'
+        .replace(/k/g, 'K'); // convierte k a K (opcional pero recomendado)
+    }
 
     setValues((prev) => ({
       ...prev,
@@ -21,7 +43,7 @@ const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
           ? checked
           : type === 'file'
             ? files?.[0] || null // 👈 un solo archivo
-            : value,
+            : newValue,
     }));
   };
 
@@ -52,6 +74,10 @@ const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
     }
   };
 
+  const goBack = () => {
+    navigate(`/${idTramite}/${slugTramite}`);
+  };
+
   /* FUNCIÓN PARA EL ENVÍO DEL FORMULARIO */
 
   const handleSubmit = async (event) => {
@@ -70,6 +96,7 @@ const useWizardForm = ({ initialValues, steps, onSubmit, validateStep }) => {
   return {
     currentStep,
     values,
+    goBack,
     totalSteps,
     errors,
     handleChange,

@@ -69,6 +69,7 @@ const FechaEleccionDirectorioForm = () => {
     handleChange,
     setValues,
     nextStep,
+    goBack,
     prevStep,
     errors,
     handleSubmit,
@@ -77,6 +78,8 @@ const FechaEleccionDirectorioForm = () => {
     steps,
     onSubmit,
     validateStep,
+    idTramite: id,
+    slugTramite: 'fecha-eleccion-directorio',
   });
 
   if (isSubmitted) {
@@ -96,6 +99,7 @@ const FechaEleccionDirectorioForm = () => {
         steps={steps}
         setValues={setValues}
         isLoading={loading}
+        goBack={goBack}
         handleChange={handleChange}
         initialValues={initialValues}
         values={values}

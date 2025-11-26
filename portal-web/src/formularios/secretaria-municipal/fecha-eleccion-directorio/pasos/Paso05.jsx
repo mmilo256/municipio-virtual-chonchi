@@ -1,54 +1,139 @@
-import FormField from '../../../../components/form/FormField';
-import InputFile from '../../../../components/ui/InputFile';
+import Accordion from '../../../../components/ui/Accordion';
+import { formatDate } from '../../../../utils/utils';
 
-const Paso05 = ({ onChange, values, errors }) => {
+const Paso05 = ({ values }) => {
+  const {
+    name,
+    rut,
+    email,
+    phone,
+    orgName,
+    orgNum,
+    orgType,
+    comName1,
+    comLastName1,
+    comRut1,
+    comEmail1,
+    comName2,
+    comLastName2,
+    comRut2,
+    comEmail2,
+    comName3,
+    comLastName3,
+    comRut3,
+    comEmail3,
+    elecDate,
+    docElecDate,
+  } = values;
+
+  const itemStyles = 'mb-2';
+
   return (
-    <div className="flex flex-col gap-4">
-      <FormField
-        error={errors.docCI}
-        id="docCI"
-        label="Cédula de identidad del representante legal"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-      <FormField error={errors.docRutTributario} id="docRutTributario" label="RUT Tributario">
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-      <FormField
-        error={errors.docVigenciaPersonaJuridica}
-        id="docVigenciaPersonaJuridica"
-        label="Certificado de antecedentes para fines especiales"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-      <FormField
-        error={errors.docOcupacionRecinto}
-        id="docOcupacionRecinto"
-        label="Certificado de vigencia de Persona Jurídica"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-      <FormField
-        error={errors.docDeclaracionJurada}
-        id="docDeclaracionJurada"
-        label="Documento que acredita la ocupación legal del recinto"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-      <FormField
-        error={errors.docCertificadoAntecedentes}
-        id="docCertificadoAntecedentes"
-        label="Declaración jurada simple Ley 19.925 de alcoholes"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-      <FormField
-        error={errors.docFirmaPresidente}
-        id="docFirmaPresidente"
-        label="Firma del representante legal"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
+    <div className="text-sm">
+      {/* Acordeones para mostrar los datos organizados */}
+      <Accordion title="1. Datos del solicitante">
+        <div className=" pl-2">
+          <div className={itemStyles}>
+            <p>
+              <strong>Nombre del solicitante </strong>
+            </p>
+            <p>{name || ''}</p>
+          </div>
+          <div className={itemStyles}>
+            <p>
+              <strong>RUT </strong>
+            </p>
+            <p>{rut || ''}</p>
+          </div>
+          <div className={itemStyles}>
+            <p>
+              <strong>Correo electrónico </strong>
+            </p>
+            <p>{email || ''}</p>
+          </div>
+          <div className={itemStyles}>
+            <p>
+              <strong>Teléfono </strong>
+            </p>
+            <p>{phone || ''}</p>
+          </div>
+        </div>
+      </Accordion>
+
+      <Accordion title="2. Información de la Organización Comunitaria">
+        <div className=" pl-2">
+          <div className={itemStyles}>
+            <p>
+              <strong>Nombre de la organización </strong>
+            </p>
+            <p>{orgName || ''}</p>
+          </div>
+          <div className={itemStyles}>
+            <p>
+              <strong>Personalidad Jurídica N° </strong>
+            </p>
+            <p>{orgNum || ''}</p>
+          </div>
+          <div className={itemStyles}>
+            <p>
+              <strong>Tipo de organización </strong>
+            </p>
+            <p>{orgType || ''}</p>
+          </div>
+        </div>
+      </Accordion>
+
+      <Accordion title="3. Identificación de la Comisión Electoral">
+        <div className=" pl-2">
+          <div className={itemStyles}>
+            <ul className="mb-2">
+              <p>
+                <strong>Integrante 1 </strong>
+              </p>
+              <li>Nombre completo: {`${comName1} ${comLastName1}`}</li>
+              <li>RUT: {comRut1}</li>
+              <li>Correo electrónico: {comEmail1}</li>
+            </ul>
+            <ul className="mb-2">
+              <p>
+                <strong>Integrante 2 </strong>
+              </p>
+              <li>Nombre completo: {`${comName2} ${comLastName2}`}</li>
+              <li>RUT: {comRut2}</li>
+              <li>Correo electrónico: {comEmail2}</li>
+            </ul>
+            <ul className="mb-2">
+              <p>
+                <strong>Integrante 3 </strong>
+              </p>
+              <li>Nombre completo: {`${comName3} ${comLastName3}`}</li>
+              <li>RUT: {comRut3}</li>
+              <li>Correo electrónico: {comEmail3}</li>
+            </ul>
+          </div>
+        </div>
+      </Accordion>
+
+      <Accordion title="4. Datos de la elección">
+        <div className=" pl-2">
+          <div className={itemStyles}>
+            <p>
+              <strong>Fecha de la elección </strong>
+            </p>
+            <p>{formatDate(elecDate) || ''}</p>
+          </div>
+          <div className={itemStyles}>
+            <a
+              className="text-blue-500"
+              target="_blank"
+              href={docElecDate && URL.createObjectURL(docElecDate)}
+              rel="noreferrer"
+            >
+              Comunicación de fecha de la elección
+            </a>
+          </div>
+        </div>
+      </Accordion>
     </div>
   );
 };

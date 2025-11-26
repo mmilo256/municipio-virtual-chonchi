@@ -86,6 +86,7 @@ const PermisosTransitoriosForm = () => {
     handleChange,
     nextStep,
     prevStep,
+    goBack,
     errors,
     handleSubmit,
   } = useWizardForm({
@@ -93,6 +94,8 @@ const PermisosTransitoriosForm = () => {
     steps,
     onSubmit,
     validateStep,
+    idTramite: id,
+    slugTramite: 'permisos-transitorios',
   });
 
   if (isSubmitted) {
@@ -111,6 +114,7 @@ const PermisosTransitoriosForm = () => {
         isLoading={loading}
         handleChange={handleChange}
         initialValues={initialValues}
+        goBack={goBack}
         values={values}
         errors={errors}
         currentStep={currentStep}

@@ -9,7 +9,7 @@ const useWizardForm = ({
   idTramite,
   slugTramite,
 }) => {
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(3);
   const [values, setValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
 

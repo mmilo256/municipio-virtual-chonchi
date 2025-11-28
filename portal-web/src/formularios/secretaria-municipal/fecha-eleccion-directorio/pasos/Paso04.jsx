@@ -1,10 +1,19 @@
 import InputText from '../../../../components/ui/InputText';
 import FormField from '../../../../components/form/FormField';
 import InputFile from '../../../../components/ui/InputFile';
+import { agregarDiasHabiles } from '../../../../utils/utils';
 
 const Paso04 = ({ values, onChange, errors }) => {
+  if (values.elecDate) {
+    const quie = agregarDiasHabiles(values.elecDate, 1);
+    console.log(quie);
+  }
+
   return (
     <div className="flex flex-col gap-2">
+      <button type="button" className="p-2 border hover:bg-blue-50">
+        Debug
+      </button>
       <FormField error={errors.elecDate} id="elecDate" label="Fecha de la elección">
         <InputText type="date" value={values.elecDate} onChange={onChange} />
       </FormField>

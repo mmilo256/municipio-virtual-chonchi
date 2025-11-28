@@ -1,3 +1,5 @@
+import { agregarDiasHabiles } from './utils';
+
 const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const regexPhone = /^(?:\+?56)?0?9\d{8}$/;
 const regexRut = /^\d{7,8}-[\dkK]$/;
@@ -28,4 +30,11 @@ export const validateRut = (rut) => {
 export const validateComissionMember = (isValid) => {
   if (!isValid)
     return 'El usuario solicitante debe ser parte de la comisión para realizar la solicitud';
+};
+
+// FECHA DE ELECCIÓN DE DIRECTORIO
+export const validateDate = (date) => {
+  if (!date) return 'Debe ingresar una fecha válida';
+  const proxDiaHabil = agregarDiasHabiles(date, 15);
+  console.log(proxDiaHabil);
 };

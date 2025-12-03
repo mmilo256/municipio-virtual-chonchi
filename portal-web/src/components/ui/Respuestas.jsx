@@ -1,4 +1,4 @@
-import RespuestasPermisosTransitorios from '../formularios/permisos-transitorios/RespuestasPermisosTransitorios';
+import RespuestasPermisosTransitorios from '../../formularios/administracion-municipal/permisos-transitorios/RespuestasPermisosTransitorios';
 
 const Respuestas = ({ tramiteId, data, docs }) => {
   let component;
@@ -6,8 +6,12 @@ const Respuestas = ({ tramiteId, data, docs }) => {
     case 1:
       component = <RespuestasPermisosTransitorios data={data} docs={docs} />;
       break;
+    case 3:
+      component = <RespuestasPermisosTransitorios data={data} docs={docs} />;
+      break;
+
     default:
-      <p>No hay respuestas</p>;
+      component;
       break;
   }
   return component;

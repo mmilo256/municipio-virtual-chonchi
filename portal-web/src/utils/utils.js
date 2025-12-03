@@ -27,7 +27,22 @@ export const esFeriado = (date) => {
 };
 
 // Sumar días hábiles
-export const agregarDiasHabiles = (startDate, days) => {
+export const agregarDiasHabiles = (date, days) => {
+  let added = 0;
+
+  while (added < days) {
+    date.setDate(date.getDate() + 1);
+    const day = date.getDay();
+    const weekend = day === 0 || day === 6;
+    if (!weekend && !esFeriado(date)) {
+      added++;
+    }
+  }
+  return date;
+};
+
+// Sumar días hábiles
+/* export const agregarDiasHabiles = (startDate, days) => {
   const splittedDate = startDate.split('-');
   const dateYear = splittedDate[0];
   const dateMonth = Number(splittedDate[1]) - 1;
@@ -45,7 +60,7 @@ export const agregarDiasHabiles = (startDate, days) => {
     }
   }
   return date;
-};
+}; */
 
 // Formatear rut
 export const formatRut = (value) => {

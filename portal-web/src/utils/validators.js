@@ -35,6 +35,13 @@ export const validateComissionMember = (isValid) => {
 // FECHA DE ELECCIÓN DE DIRECTORIO
 export const validateDate = (date) => {
   if (!date) return 'Debe ingresar una fecha válida';
-  const proxDiaHabil = agregarDiasHabiles(date, 15);
-  console.log(proxDiaHabil);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const proxDiaHabil = agregarDiasHabiles(today, 15);
+  const dateArray = date.split('-');
+  const newDate = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+
+  if (date && newDate < proxDiaHabil)
+    return 'La fecha de elección debe ingresarse con mínimo 15 días hábiles de anticipación';
 };

@@ -1,13 +1,17 @@
+import { useParams } from 'react-router-dom';
 import RespuestasPermisosTransitorios from '../../formularios/administracion-municipal/permisos-transitorios/RespuestasPermisosTransitorios';
+import RespuestasFechaEleccionDirectorio from '../../formularios/secretaria-municipal/fecha-eleccion-directorio/RespuestasFechaEleccionDirectorio';
 
-const Respuestas = ({ tramiteId, data, docs }) => {
+const Respuestas = ({ data, docs }) => {
+  const { slug } = useParams();
+
   let component;
-  switch (tramiteId) {
-    case 1:
+  switch (slug) {
+    case 'permisos-transitorios':
       component = <RespuestasPermisosTransitorios data={data} docs={docs} />;
       break;
-    case 3:
-      component = <RespuestasPermisosTransitorios data={data} docs={docs} />;
+    case 'fecha-eleccion-directorio':
+      component = <RespuestasFechaEleccionDirectorio data={data} docs={docs} />;
       break;
 
     default:

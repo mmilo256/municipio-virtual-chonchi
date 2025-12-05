@@ -23,7 +23,7 @@ const PermisosTransitoriosForm = () => {
 
   const onSubmit = async () => {
     setLoading(true);
-    /* Separa documentos del resto de respuestas */
+
     const {
       docCI,
       docRutTributario,
@@ -35,47 +35,65 @@ const PermisosTransitoriosForm = () => {
       ...respuestas
     } = values;
 
-    /* Se envía las respuestas del formulario y se recibe el ID de la solicitud */
-
     const data = {
       respuestas,
       tramite_id: id,
       usuarioId,
     };
 
+    let requestId = null;
+
     try {
+      // 1️⃣ Crear solicitud
       const requestData = await crearSolicitud(data);
-      const requestId = requestData?.request?.id;
+      requestId = requestData?.request?.id;
 
-      /* Se usa el ID de la solicitud para subir los archivos adjuntos */
-
-      const documentos = [
-        { file: docCI, tipo: 'docCI' },
-        { file: docRutTributario, tipo: 'docRutTributario' },
-        { file: docVigenciaPersonaJuridica, tipo: 'docVigenciaPersonaJuridica' },
-        { file: docOcupacionRecinto, tipo: 'docOcupacionRecinto' },
-        { file: docDeclaracionJurada, tipo: 'docDeclaracionJurada' },
-        { file: docCertificadoAntecedentes, tipo: 'docCertificadoAntecedentes' },
-        { file: docFirmaPresidente, tipo: 'docFirmaPresidente' },
-      ];
-
-      // 4️⃣ Subir archivos uno por uno
-      for (const doc of documentos) {
-        if (doc.file) {
-          const formData = new FormData();
-          formData.append('archivo', doc.file);
-          formData.append('tipoDocumento', doc.tipo);
-
-          await adjuntarDocumento(formData, requestId);
-        }
+      if (!requestId) {
+        throw new Error('No se recibió un ID de solicitud válido');
       }
-
-      setIsSubmitted(true);
     } catch (e) {
-      alert('No se pudo enviar la cosa');
-      console.error(e);
+      console.error('Error creando solicitud', e);
+      alert('No se pudo enviar la solicitud. Inténtalo nuevamente más tarde.');
+      setLoading(false);
+      return; // 👈 importante: no sigas con los documentos
+    }
+
+    // 2️⃣ Si llegaste aquí, la solicitud SÍ existe
+    const documentos = [
+      { file: docCI, tipo: 'docCI' },
+      { file: docRutTributario, tipo: 'docRutTributario' },
+      { file: docVigenciaPersonaJuridica, tipo: 'docVigenciaPersonaJuridica' },
+      { file: docOcupacionRecinto, tipo: 'docOcupacionRecinto' },
+      { file: docDeclaracionJurada, tipo: 'docDeclaracionJurada' },
+      { file: docCertificadoAntecedentes, tipo: 'docCertificadoAntecedentes' },
+      { file: docFirmaPresidente, tipo: 'docFirmaPresidente' },
+    ].filter((doc) => doc.file);
+
+    let huboErrorEnAdjuntos = false;
+
+    try {
+      for (const doc of documentos) {
+        const formData = new FormData();
+        formData.append('archivo', doc.file);
+        formData.append('tipoDocumento', doc.tipo);
+
+        await adjuntarDocumento(formData, requestId);
+      }
+    } catch (e) {
+      console.error('Error adjuntando documentos', e);
+      huboErrorEnAdjuntos = true;
     } finally {
       setLoading(false);
+    }
+
+    // 3️⃣ Mensaje según cómo haya ido
+    if (huboErrorEnAdjuntos) {
+      alert(
+        'La solicitud fue enviada, pero hubo problemas al adjuntar uno o más documentos. Por favor contacte a la municipalidad o intente nuevamente subirlos.',
+      );
+    } else {
+      setIsSubmitted(true);
+      // acá tu mensaje bonito de éxito
     }
   };
 

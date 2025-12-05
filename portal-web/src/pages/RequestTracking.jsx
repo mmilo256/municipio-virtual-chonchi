@@ -17,15 +17,16 @@ const RequestTracking = () => {
   const { id } = useParams();
   const [requestData, setRequestData] = useState({});
   const [requestDocs, setRequestDocs] = useState([]);
-  const [tramiteId, setTramiteId] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
+  const { slug } = useParams();
+
   const breadcrumbs = [
     { label: 'Solicitudes', href: '/solicitudes' },
-    { label: `Solicitud #${id}`, href: `/solicitudes/${id}` },
+    { label: `Solicitud #${id}`, href: `/solicitudes/${slug}/${id}` },
   ];
 
   // Estado para almacenar los logs de la solicitud
@@ -80,7 +81,6 @@ const RequestTracking = () => {
       setLoading(true);
       try {
         const response = await fetchRequestById(id);
-        setTramiteId(response?.tramite_id);
         const formattedFormData = JSON.parse(response.respuestas);
         setRequestData(formattedFormData);
       } catch (e) {
@@ -113,7 +113,7 @@ const RequestTracking = () => {
         {!loading ? (
           <>
             <StatusTracker data={logs} /> {/* Componente que muestra el seguimiento de los logs */}
-            <Respuestas tramiteId={tramiteId} data={requestData} docs={requestDocs} />
+            <Respuestas data={requestData} docs={requestDocs} />
           </>
         ) : (
           <p>Cargando información...</p>

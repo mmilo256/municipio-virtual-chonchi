@@ -67,7 +67,7 @@ export const getUserRequests = async (user_id, pageSize, offset) => {
     order: [['createdAt', 'DESC']],
     include: {
       model: Procedure,
-      attributes: ['titulo'],
+      attributes: ['titulo', 'nombre'],
     },
   });
   const totalPages = Math.ceil(count / pageSize) === 0 ? 1 : Math.ceil(count / pageSize);

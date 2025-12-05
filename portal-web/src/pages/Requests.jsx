@@ -40,7 +40,10 @@ const Requests = () => {
         fecha: formatDate(solicitud.createdAt, 2), // Fecha de la solicitud formateada
         estado: <StatusTag status={solicitud.estado} />, // Muestra el estado con el componente StatusTag
         acciones: (
-          <Link to={`${solicitud.id}`} className="text-blue-500 underline">
+          <Link
+            to={`${solicitud.tramite.nombre}/${solicitud.id}`}
+            className="text-blue-500 underline"
+          >
             Seguimiento
           </Link>
         ), // Enlace para ver el seguimiento de la solicitud

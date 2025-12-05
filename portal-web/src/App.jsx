@@ -12,6 +12,7 @@ import RequestTracking from './pages/RequestTracking';
 import ProcedureDetails from './pages/ProcedureDetails';
 import PermisosTransitoriosForm from './pages/tramites/PermisosTransitoriosForm';
 import FechaEleccionDirectorioForm from './pages/tramites/FechaEleccionDirectorioForm';
+import ActaDirectorioForm from './pages/tramites/ActaDirectorioForm';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -53,7 +54,7 @@ function App() {
           }
         />
         <Route
-          path="/solicitudes/:id"
+          path="/solicitudes/:slug/:id"
           element={
             <PrivateRoute>
               <RequestTracking />
@@ -92,7 +93,7 @@ function App() {
           path="/:id/acta-directorio/formulario"
           element={
             <PrivateRoute>
-              <FechaEleccionDirectorioForm />
+              <ActaDirectorioForm />
             </PrivateRoute>
           }
         />

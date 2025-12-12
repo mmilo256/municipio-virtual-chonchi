@@ -4,7 +4,8 @@ import Paso03 from './pasos/Paso03';
 import Paso04 from './pasos/Paso04';
 import Paso05 from './pasos/Paso05';
 import Paso06 from './pasos/Paso06';
-/* import Paso05 from './pasos/Paso08'; */
+import Paso07 from './pasos/Paso07';
+import Paso08 from './pasos/Paso08';
 
 const steps = [
   {
@@ -34,13 +35,13 @@ const steps = [
   },
   {
     id: 'antecedentes-directorio-titular',
-    label: 'Certificado de Antecedentes del Directorio Titular',
+    label: 'Certificados de Antecedentes del Directorio Titular',
     description: '',
     component: Paso05,
   },
   {
     id: 'antecedentes-directorio-suplente',
-    label: 'Certificado de Antecedentes del Directorio Suplente',
+    label: 'Certificados de Antecedentes del Directorio Suplente',
     description: '',
     component: Paso06,
   },
@@ -48,13 +49,13 @@ const steps = [
     id: 'ingreso-formularios',
     label: 'Ingreso de Formularios',
     description: '',
-    component: Paso05,
+    component: Paso07,
   },
   {
     id: 'confirmacion',
     label: 'Confirmación del formulario',
     description: '',
-    component: Paso05,
+    component: Paso08,
   },
 ];
 

@@ -47,8 +47,39 @@ const validateStep = (stepIndex, values) => {
   /* PASO 04 */
   if (stepIndex === 3) {
     if (validateDate(values.elecDate)) errors.elecDate = validateDate(values.elecDate);
-    if (validateRequired(values.docElecDate))
-      errors.docElecDate = validateRequired(values.docElecDate);
+    if (validateRequired(values.docActa)) errors.docActa = validateRequired(values.docActa);
+    if (validateRequired(values.docRegistroSociosActualizado))
+      errors.docRegistroSociosActualizado = validateRequired(values.docRegistroSociosActualizado);
+    if (validateRequired(values.docRegistroSociosVotacion))
+      errors.docRegistroSociosVotacion = validateRequired(values.docRegistroSociosVotacion);
+  }
+
+  /* PASO 05 */
+  if (stepIndex === 4) {
+    if (validateRequired(values.docAntPresidente))
+      errors.docAntPresidente = validateRequired(values.docAntPresidente);
+    if (validateRequired(values.docAntSecretario))
+      errors.docAntSecretario = validateRequired(values.docAntSecretario);
+    if (validateRequired(values.docAntTesorero))
+      errors.docAntTesorero = validateRequired(values.docAntTesorero);
+    if (validateRequired(values.docAntTesorero))
+      errors.docAntPrimerDirector = validateRequired(values.docAntPrimerDirector);
+    if (validateRequired(values.docAntSegundoDirector))
+      errors.docAntSegundoDirector = validateRequired(values.docAntSegundoDirector);
+  }
+
+  /* PASO 06 */
+  if (stepIndex === 5) {
+    if (validateRequired(values.docAntPresidente))
+      errors.docAntPresidente = validateRequired(values.docAntPresidente);
+    if (validateRequired(values.docAntSecretario))
+      errors.docAntSecretario = validateRequired(values.docAntSecretario);
+    if (validateRequired(values.docAntTesorero))
+      errors.docAntTesorero = validateRequired(values.docAntTesorero);
+    if (validateRequired(values.docAntTesorero))
+      errors.docAntPrimerDirector = validateRequired(values.docAntPrimerDirector);
+    if (validateRequired(values.docAntSegundoDirector))
+      errors.docAntSegundoDirector = validateRequired(values.docAntSegundoDirector);
   }
 
   return errors;

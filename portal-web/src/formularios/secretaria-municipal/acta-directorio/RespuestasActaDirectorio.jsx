@@ -1,7 +1,8 @@
-import Accordion from '../../../../components/ui/Accordion';
-import { formatDate } from '../../../../utils/utils';
+import { formatDate } from '../../../utils/utils';
+import Accordion from '../../../components/ui/Accordion';
+import { API_URL } from '../../../config';
 
-const Paso08 = ({ values }) => {
+const RespuestasActaDirectorio = ({ data, docs }) => {
   const {
     name,
     rut,
@@ -24,26 +25,13 @@ const Paso08 = ({ values }) => {
     comEmail3,
     elecDate,
     numIntegrantes,
-    docActa,
-    docRegistroSociosActualizado,
-    docRegistroSociosVotacion,
-    docAntPresidente,
-    docAntSecretario,
-    docAntTesorero,
-    docAntPrimerDirector,
-    docAntSegundoDirector,
-    docAntSup1,
-    docAntSup2,
-    docAntSup3,
-    docAntSup4,
-    docAntSup5,
-    docActaComision,
-    docActaReunion,
-    docActaInscripcion,
-    docOtrosAntecedentes,
-  } = values;
+  } = data;
 
   const itemStyles = 'mb-2';
+
+  const openDocument = (id) => {
+    window.open(`${API_URL}/documents/${id}/view`);
+  };
 
   return (
     <div className="text-sm">
@@ -147,9 +135,9 @@ const Paso08 = ({ values }) => {
           </div>
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[0]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docActa && URL.createObjectURL(docActa)}
               rel="noreferrer"
             >
               Acta de Elección del Directorio
@@ -158,11 +146,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[1]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={
-                docRegistroSociosActualizado && URL.createObjectURL(docRegistroSociosActualizado)
-              }
               rel="noreferrer"
             >
               Registro de socios actualizado
@@ -171,9 +157,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[2]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docRegistroSociosVotacion && URL.createObjectURL(docRegistroSociosVotacion)}
               rel="noreferrer"
             >
               Registro de socios que votaron
@@ -186,9 +172,9 @@ const Paso08 = ({ values }) => {
         <div className=" pl-2">
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[3]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntPresidente && URL.createObjectURL(docAntPresidente)}
               rel="noreferrer"
             >
               Presidente
@@ -197,9 +183,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[4]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSecretario && URL.createObjectURL(docAntSecretario)}
               rel="noreferrer"
             >
               Secretario/a
@@ -208,9 +194,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[5]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntTesorero && URL.createObjectURL(docAntTesorero)}
               rel="noreferrer"
             >
               Tesorero/a
@@ -219,9 +205,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[6]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntPrimerDirector && URL.createObjectURL(docAntPrimerDirector)}
               rel="noreferrer"
             >
               Primer Director
@@ -230,9 +216,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[7]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSegundoDirector && URL.createObjectURL(docAntSegundoDirector)}
               rel="noreferrer"
             >
               Segundo Director
@@ -245,9 +231,9 @@ const Paso08 = ({ values }) => {
         <div className=" pl-2">
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[8]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSup1 && URL.createObjectURL(docAntSup1)}
               rel="noreferrer"
             >
               Suplente 1
@@ -256,9 +242,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[9]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSup2 && URL.createObjectURL(docAntSup2)}
               rel="noreferrer"
             >
               Suplente 2
@@ -267,9 +253,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[10]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSup3 && URL.createObjectURL(docAntSup3)}
               rel="noreferrer"
             >
               Suplente 3
@@ -278,9 +264,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[11]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSup4 && URL.createObjectURL(docAntSup4)}
               rel="noreferrer"
             >
               Suplente 4
@@ -289,9 +275,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[12]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docAntSup5 && URL.createObjectURL(docAntSup5)}
               rel="noreferrer"
             >
               Suplente 5
@@ -304,9 +290,9 @@ const Paso08 = ({ values }) => {
         <div className=" pl-2">
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[13]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docActaComision && URL.createObjectURL(docActaComision)}
               rel="noreferrer"
             >
               Acta de Elección Comisión Electoral (Formulario 1)
@@ -315,9 +301,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[14]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docActaReunion && URL.createObjectURL(docActaReunion)}
               rel="noreferrer"
             >
               Acta de Reunión de Comisión Electoral pra fijar fecha de inscripción de candidatos
@@ -327,9 +313,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[15]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docActaInscripcion && URL.createObjectURL(docActaInscripcion)}
               rel="noreferrer"
             >
               Acta Comisión Electoral inscripción de Candidatos, con su respectivo anexo (Formulario
@@ -339,9 +325,9 @@ const Paso08 = ({ values }) => {
 
           <div className={itemStyles}>
             <a
-              className="text-blue-500"
+              onClick={() => openDocument(docs[16]?.id)}
+              className="text-blue-500 hover:underline cursor-pointer"
               target="_blank"
-              href={docOtrosAntecedentes && URL.createObjectURL(docOtrosAntecedentes)}
               rel="noreferrer"
             >
               Otros antecedentes relevantes para el proceso de elección del directorio
@@ -353,4 +339,4 @@ const Paso08 = ({ values }) => {
   );
 };
 
-export default Paso08;
+export default RespuestasActaDirectorio;

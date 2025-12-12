@@ -5,47 +5,32 @@ const Paso07 = ({ values, onChange, errors }) => {
   return (
     <div className="flex flex-col gap-2">
       <FormField
-        error={errors.docAntSup1}
-        helper="Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB."
-        id="docAntSup1"
-        label="Suplente 1"
+        error={errors.docActaComision}
+        id="docActaComision"
+        label="Acta de Elección Comisión Electoral (Formulario 1)"
       >
         <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
       </FormField>
       <FormField
-        error={errors.docAntSup2}
-        helper="Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB."
-        id="docAntSup2"
-        label="Suplente 2"
-      >
-        <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
-      </FormField>
-
-      <FormField
-        error={errors.docAntSup3}
-        helper="Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB."
-        id="docAntSup3"
-        label="Suplente 3"
+        error={errors.docActaReunion}
+        id="docActaReunion"
+        label="Acta de Reunión de Comisión Electoral para Fijar Fecha de Inscripción de Candidatos (Formulario 2)"
       >
         <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
       </FormField>
 
       <FormField
-        error={errors.docAntSup4}
-        helper="Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB."
-        id="docAntSup4"
-        label="Suplente 4"
-        opcional
+        error={errors.docActaInscripcion}
+        id="docActaInscripcion"
+        label="Acta Comisión Electoral Inscripción de Candidatos, con su respectivo anexo (Formulario 4)"
       >
         <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
       </FormField>
 
       <FormField
-        error={errors.docAntSup5}
-        helper="Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB."
-        id="docAntSup5"
-        label="Suplente 5"
-        opcional
+        error={errors.docOtrosAntecedentes}
+        id="docOtrosAntecedentes"
+        label="Otros Antecedentes Relevantes Para el Proceso de Elección del Directorio"
       >
         <InputFile values={values} accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={onChange} />
       </FormField>

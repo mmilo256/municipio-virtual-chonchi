@@ -38,7 +38,7 @@ const Respuestas = ({ data, docs, direct = false }) => {
         <div className=" pl-2">
           <div className={itemStyles}>
             <p>
-              <strong>Nombre del solicitante </strong>
+              <strong>Nombre del solicitantecuiiii </strong>
             </p>
             <p>{name || ''}</p>
           </div>

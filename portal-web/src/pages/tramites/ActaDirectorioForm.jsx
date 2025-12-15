@@ -24,7 +24,26 @@ const ActaDirectorioForm = () => {
   const onSubmit = async () => {
     setLoading(true);
     /* Separa documentos del resto de respuestas */
-    const { docElecDate, ...respuestas } = values;
+    const {
+      docActa,
+      docRegistroSociosActualizado,
+      docRegistroSociosVotacion,
+      docAntPresidente,
+      docAntSecretario,
+      docAntTesorero,
+      docAntPrimerDirector,
+      docAntSegundoDirector,
+      docAntSup1,
+      docAntSup2,
+      docAntSup3,
+      docAntSup4,
+      docAntSup5,
+      docActaComision,
+      docActaReunion,
+      docActaInscripcion,
+      docOtrosAntecedentes,
+      ...respuestas
+    } = values;
 
     /* Se envía las respuestas del formulario y se recibe el ID de la solicitud */
 
@@ -34,31 +53,69 @@ const ActaDirectorioForm = () => {
       usuarioId,
     };
 
+    let requestId = null;
+
     try {
+      // 1️⃣ Crear solicitud
       const requestData = await crearSolicitud(data);
-      const requestId = requestData?.request?.id;
+      requestId = requestData?.request?.id;
 
-      /* Se usa el ID de la solicitud para subir los archivos adjuntos */
-
-      const documentos = [{ file: docElecDate, tipo: 'docElecDate' }];
-
-      // 4️⃣ Subir archivos uno por uno
-      for (const doc of documentos) {
-        if (doc.file) {
-          const formData = new FormData();
-          formData.append('archivo', doc.file);
-          formData.append('tipoDocumento', doc.tipo);
-
-          await adjuntarDocumento(formData, requestId);
-        }
+      if (!requestId) {
+        throw new Error('No se recibió un ID de solicitud válido');
       }
-
-      setIsSubmitted(true);
     } catch (e) {
-      alert('No se pudo enviar la cosa');
-      console.error(e);
+      console.error('Error creando solicitud', e);
+      alert('No se pudo enviar la solicitud. Inténtalo nuevamente más tarde.');
+      setLoading(false);
+      return; // 👈 importante: no sigas con los documentos
+    }
+
+    // 2️⃣ Si llegaste aquí, la solicitud SÍ existe
+    const documentos = [
+      { file: docActa, tipo: 'docActa' },
+      { file: docRegistroSociosActualizado, tipo: 'docRegistroSociosActualizado' },
+      { file: docRegistroSociosVotacion, tipo: 'docRegistroSociosVotacion' },
+      { file: docAntPresidente, tipo: 'docAntPresidente' },
+      { file: docAntSecretario, tipo: 'docAntSecretario' },
+      { file: docAntTesorero, tipo: 'docAntTesorero' },
+      { file: docAntPrimerDirector, tipo: 'docAntPrimerDirector' },
+      { file: docAntSegundoDirector, tipo: 'docAntSegundoDirector' },
+      { file: docAntSup1, tipo: 'docAntSup1' },
+      { file: docAntSup2, tipo: 'docAntSup2' },
+      { file: docAntSup3, tipo: 'docAntSup3' },
+      { file: docAntSup4, tipo: 'docAntSup4' },
+      { file: docAntSup5, tipo: 'docAntSup5' },
+      { file: docActaComision, tipo: 'docActaComision' },
+      { file: docActaReunion, tipo: 'docActaReunion' },
+      { file: docActaInscripcion, tipo: 'docActaInscripcion' },
+      { file: docOtrosAntecedentes, tipo: 'docOtrosAntecedentes' },
+    ].filter((doc) => doc.file);
+
+    let huboErrorEnAdjuntos = false;
+
+    try {
+      for (const doc of documentos) {
+        const formData = new FormData();
+        formData.append('archivo', doc.file);
+        formData.append('tipoDocumento', doc.tipo);
+
+        await adjuntarDocumento(formData, requestId);
+      }
+    } catch (e) {
+      console.error('Error adjuntando documentos', e);
+      huboErrorEnAdjuntos = true;
     } finally {
       setLoading(false);
+    }
+
+    // 3️⃣ Mensaje según cómo haya ido
+    if (huboErrorEnAdjuntos) {
+      alert(
+        'La solicitud fue enviada, pero hubo problemas al adjuntar uno o más documentos. Por favor contacte a la municipalidad o intente nuevamente subirlos.',
+      );
+    } else {
+      setIsSubmitted(true);
+      // acá tu mensaje bonito de éxito
     }
   };
 

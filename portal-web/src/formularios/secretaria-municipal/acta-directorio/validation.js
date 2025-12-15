@@ -4,7 +4,7 @@ import {
   validateRut,
   validateRequired,
   validateComissionMember,
-  validateDate,
+  validarFechaActaEleccion,
 } from '../../../utils/validators';
 
 const validateStep = (stepIndex, values) => {
@@ -46,7 +46,8 @@ const validateStep = (stepIndex, values) => {
 
   /* PASO 04 */
   if (stepIndex === 3) {
-    if (validateDate(values.elecDate)) errors.elecDate = validateDate(values.elecDate);
+    if (validarFechaActaEleccion(values.elecDate))
+      errors.elecDate = validarFechaActaEleccion(values.elecDate);
     if (validateRequired(values.docActa)) errors.docActa = validateRequired(values.docActa);
     if (validateRequired(values.docRegistroSociosActualizado))
       errors.docRegistroSociosActualizado = validateRequired(values.docRegistroSociosActualizado);

@@ -29,6 +29,8 @@ const RespuestasActaDirectorio = ({ data, docs }) => {
 
   const itemStyles = 'mb-2';
 
+  console.log(docs);
+
   const openDocument = (id) => {
     window.open(`${API_URL}/documents/${id}/view`);
   };

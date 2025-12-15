@@ -123,8 +123,6 @@ export const adjuntarDocumento = async (req, res) => {
     solicitud_id: id,
   };
 
-  console.log(data);
-
   try {
     await Document.create(data);
     return res.json({

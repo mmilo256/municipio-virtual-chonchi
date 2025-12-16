@@ -48,6 +48,8 @@ const validateStep = (stepIndex, values) => {
   if (stepIndex === 3) {
     if (validarFechaActaEleccion(values.elecDate))
       errors.elecDate = validarFechaActaEleccion(values.elecDate);
+    if (validateRequired(values.numIntegrantes))
+      errors.numIntegrantes = validateRequired(values.numIntegrantes);
     if (validateRequired(values.docActa)) errors.docActa = validateRequired(values.docActa);
     if (validateRequired(values.docRegistroSociosActualizado))
       errors.docRegistroSociosActualizado = validateRequired(values.docRegistroSociosActualizado);

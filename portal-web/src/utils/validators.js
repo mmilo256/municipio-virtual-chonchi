@@ -50,16 +50,24 @@ export const validarFechaActaEleccion = (date) => {
   if (!date) return 'Debe ingresar una fecha válida';
   const [d, m, y] = date.split('-');
   const newDate = new Date(d, m - 1, y);
-
-  console.log(newDate);
+  const proxDate = new Date(d, m - 1, y);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const proxDiaHabil = agregarDiasHabiles(newDate, 5);
+  const proxDiaHabil = agregarDiasHabiles(proxDate, 5);
 
-  console.log({ proxDiaHabil, newDate });
+  if (today > proxDiaHabil) {
+    return 'El depósito del acta debe efectuarse a más tardar el quinto día hábil posterior a la fecha de elección.';
+  } else if (today < newDate) {
+    console.log(newDate);
+    return 'La fecha de la elección no puede ser posterior a la fecha de hoy.';
+  }
 
-  if (date && newDate < proxDiaHabil)
-    return 'La fecha de elección debe ingresarse con mínimo 15 días hábiles de anticipación';
+  /* if ((date && today >= newDate) || today < proxDiaHabil) {
+    console.log('ta to biem');
+        return 'El depósito del acta debe efectuarse a más tardar el quinto día hábil posterior a la fecha de elección'
+  } else {
+    console.log('Ta to mal');
+  } */
 };

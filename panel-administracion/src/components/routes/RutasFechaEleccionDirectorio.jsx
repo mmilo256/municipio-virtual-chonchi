@@ -2,11 +2,11 @@ import { Route, Routes } from 'react-router-dom';
 import FormularioDocumentoAsociado from '../pages/common/FormularioDocumentoAsociado';
 import Solicitudes from '../pages/common/Solicitudes';
 import { PROCEDURES_ID } from '../../../config';
-import IndexPermisosTransitorios from '../tramites/permisos-transitorios/IndexPermisosTransitorios';
+import IndexFechaEleccionDirectorio from '../tramites/fecha-eleccion-directorio/IndexFechaEleccionDirectorio';
 
-const RutasReparacionCaminos = () => {
-  const tramite = 'Reparación de caminos';
-  const tramiteHref = '/reparacion-caminos';
+const RutasFechaEleccionDirectorio = () => {
+  const tramite = 'Comunicación fecha de elección de directorio';
+  const tramiteHref = '/fecha-eleccion-directorio';
 
   const data = {
     tramite,
@@ -20,17 +20,17 @@ const RutasReparacionCaminos = () => {
           index
           element={
             <Solicitudes
-              tramiteId={PROCEDURES_ID.reparacionCaminos}
-              title={'Solicitudes de Reparación de Caminos'}
+              tramiteId={PROCEDURES_ID.fechaEleccionDirectorio}
+              title={`Solicitudes de ${tramite}`}
               breadcrumbsData={data}
             />
           }
         />
-        <Route path="/:id" element={<IndexPermisosTransitorios />} />
+        <Route path="/:id" element={<IndexFechaEleccionDirectorio />} />
         <Route path="/:id/documentos-asociados" element={<FormularioDocumentoAsociado />} />
       </Routes>
     </div>
   );
 };
 
-export default RutasReparacionCaminos;
+export default RutasFechaEleccionDirectorio;

@@ -23,6 +23,8 @@ const DetallesSolicitud = () => {
   // Hook personalizado que obtiene los detalles de la solicitud
   const { request, status, unsignedDoc, signedDoc, loading, setStatus } = useRequestDetails(id);
 
+  console.log('AAA');
+
   // Hook para gestionar los estados de los modales
   const {
     rejectModal, // Estado del modal de rechazo

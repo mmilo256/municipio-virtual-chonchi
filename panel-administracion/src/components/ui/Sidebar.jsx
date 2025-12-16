@@ -37,6 +37,16 @@ const Sidebar = ({ state, setState }) => {
                 Permisos Transitorios
               </Link>
             </li>
+            <li>
+              <Link to="fecha-eleccion-directorio" className="hover:underline">
+                Comunicación fecha de elección de directorio
+              </Link>
+            </li>
+            <li>
+              <Link to="acta-directorio" className="hover:underline">
+                Depósito de acta de elección de directorio
+              </Link>
+            </li>
           </ul>
         ) : (
           <div></div>

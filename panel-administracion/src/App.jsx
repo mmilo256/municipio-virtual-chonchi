@@ -7,7 +7,8 @@ import Protected from './components/common/Protected';
 import useAuthStore from './stores/useAuthStore';
 import { useEffect, useState } from 'react';
 import { verifySession } from './services/authServices';
-import RutasReparacionCaminos from './components/routes/RutasReparacionCaminos';
+import RutasFechaEleccionDirectorio from './components/routes/RutasFechaEleccionDirectorio';
+import RutasActaDirectorio from './components/routes/RutasActaDirectorio';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -48,7 +49,8 @@ const App = () => {
         >
           <Route index element={<Home />} />
           <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} />
-          <Route path="/reparacion-caminos/*" element={<RutasReparacionCaminos />} />
+          <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
+          <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} />
         </Route>
       </Routes>
     </div>

@@ -9,7 +9,7 @@ const useWizardForm = ({
   idTramite,
   slugTramite,
 }) => {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(0);
   const [values, setValues] = useState(initialValues || {});
   const [errors, setErrors] = useState({});
 
@@ -60,7 +60,8 @@ const useWizardForm = ({
   /* NAVEGACIÓN ENTRE PASOS DEL FORMULARIO */
 
   const nextStep = () => {
-    const { isValid } = runValidation();
+    /* const { isValid } = runValidation(); */
+    const isValid = true;
     if (!isValid) return;
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);

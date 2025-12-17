@@ -41,7 +41,7 @@ const DetalleSolicitud = ({
       </div>
       {/* Fecha de la solicitud */}
       <p className="text-slate-500">
-        <strong>Fecha de solicitud: </strong>
+        <strong>Fecha de ingreso: </strong>
         {formatDate(requestData.createdAt, 'DD [de] MMMM [de] YYYY [a las] HH:mm')}
       </p>
       {/* Acciones disponibles */}

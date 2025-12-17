@@ -2,27 +2,20 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   fetchDocumentosAdjuntos,
-  fetchDocumentosAsociados,
   fetchRequestById,
   updateRequestStatus,
 } from '../../../services/requestsServices';
 import AccionesPermisosTransitorios from './AccionesPermisosTransitorios';
 import DetalleSolicitud from '../DetalleSolicitud';
-import RespuestasPermisosTransitorios from './RespuestasPermisosTransitorios';
-import DocsPermisosTransitorios from './DocsPermisosTransitorios';
-import DocumentosSubidos from '../DocumentosSubidos';
+import RespuestasActaDirectorio from './RespuestasActaDirectorio';
 
 const IndexActaDirectorio = () => {
   const { id } = useParams();
   const [requestData, setRequestData] = useState({});
-  const [uploadedDocs, setUploadedDocs] = useState([]);
   const [docsAdjuntos, setDocsAdjuntos] = useState([]);
   const [requestStatus, setRequestStatus] = useState('');
-  const [refresh, setRefresh] = useState(false);
 
   const [loading, setLoading] = useState(false);
-
-  console.log(requestData);
 
   // Cambiar el estado a "en revision" en caso de que se abra la solicitud por primera vez
   useEffect(() => {
@@ -46,14 +39,6 @@ const IndexActaDirectorio = () => {
       setDocsAdjuntos(response);
     })();
   }, [id]);
-
-  // Cargar documentos asociados
-  useEffect(() => {
-    (async () => {
-      const data = await fetchDocumentosAsociados(id);
-      setUploadedDocs(data);
-    })();
-  }, [id, refresh]);
 
   // Cargar respuestas del formulario
   useEffect(() => {
@@ -99,11 +84,13 @@ const IndexActaDirectorio = () => {
         />
       }
       requestData={requestData}
-      respuestas={<RespuestasPermisosTransitorios respuestas={requestData.respuestas} />}
-      documentosForm={<DocsPermisosTransitorios docs={docsAdjuntos} />}
-      documentosSubidos={
-        <DocumentosSubidos status={requestStatus} setRefresh={setRefresh} docs={uploadedDocs} />
+      respuestas={
+        <RespuestasActaDirectorio respuestas={requestData.respuestas} documentos={docsAdjuntos} />
       }
+      /* documentosForm={<DocsPermisosTransitorios docs={docsAdjuntos} />} */
+      /* documentosSubidos={
+        <DocumentosSubidos status={requestStatus} setRefresh={setRefresh} docs={uploadedDocs} />
+      } */
     />
   );
 };

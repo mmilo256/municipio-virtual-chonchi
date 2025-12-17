@@ -5,9 +5,9 @@ import {
   fetchRequestById,
   updateRequestStatus,
 } from '../../../services/requestsServices';
-import AccionesPermisosTransitorios from './AccionesFechaEleccionDirectorio';
 import DetalleSolicitud from '../DetalleSolicitud';
 import RespuestasFechaEleccionDirectorio from './RespuestasFechaEleccionDirectorio';
+import AccionesFechaEleccionDirectorio from './AccionesFechaEleccionDirectorio';
 
 const IndexFechaEleccionDirectorio = () => {
   const { id } = useParams();
@@ -76,7 +76,7 @@ const IndexFechaEleccionDirectorio = () => {
       breadcrumbs={detailBreadcrumbs}
       loading={loading}
       actions={
-        <AccionesPermisosTransitorios
+        <AccionesFechaEleccionDirectorio
           status={requestStatus}
           setStatus={setRequestStatus}
           request={requestData}

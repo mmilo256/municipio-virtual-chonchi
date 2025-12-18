@@ -65,24 +65,28 @@ const validateStep = (stepIndex, values) => {
       errors.docAntSecretario = validateRequired(values.docAntSecretario);
     if (validateRequired(values.docAntTesorero))
       errors.docAntTesorero = validateRequired(values.docAntTesorero);
-    if (validateRequired(values.docAntTesorero))
-      errors.docAntPrimerDirector = validateRequired(values.docAntPrimerDirector);
-    if (validateRequired(values.docAntSegundoDirector))
-      errors.docAntSegundoDirector = validateRequired(values.docAntSegundoDirector);
   }
 
   /* PASO 06 */
   if (stepIndex === 5) {
-    if (validateRequired(values.docAntPresidente))
-      errors.docAntPresidente = validateRequired(values.docAntPresidente);
-    if (validateRequired(values.docAntSecretario))
-      errors.docAntSecretario = validateRequired(values.docAntSecretario);
-    if (validateRequired(values.docAntTesorero))
-      errors.docAntTesorero = validateRequired(values.docAntTesorero);
-    if (validateRequired(values.docAntTesorero))
-      errors.docAntPrimerDirector = validateRequired(values.docAntPrimerDirector);
-    if (validateRequired(values.docAntSegundoDirector))
-      errors.docAntSegundoDirector = validateRequired(values.docAntSegundoDirector);
+    if (validateRequired(values.docAntSup1))
+      errors.docAntSup1 = validateRequired(values.docAntSup1);
+    if (validateRequired(values.docAntSup2))
+      errors.docAntSup2 = validateRequired(values.docAntSup2);
+    if (validateRequired(values.docAntSup3))
+      errors.docAntSup3 = validateRequired(values.docAntSup3);
+  }
+
+  /* PASO 07 */
+  if (stepIndex === 6) {
+    if (validateRequired(values.docActaComision))
+      errors.docActaComision = validateRequired(values.docActaComision);
+    if (validateRequired(values.docActaReunion))
+      errors.docActaReunion = validateRequired(values.docActaReunion);
+    if (validateRequired(values.docActaInscripcion))
+      errors.docActaInscripcion = validateRequired(values.docActaInscripcion);
+    if (validateRequired(values.docOtrosAntecedentes))
+      errors.docOtrosAntecedentes = validateRequired(values.docOtrosAntecedentes);
   }
 
   return errors;

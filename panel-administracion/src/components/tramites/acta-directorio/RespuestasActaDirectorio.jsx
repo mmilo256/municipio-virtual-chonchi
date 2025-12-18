@@ -100,7 +100,7 @@ const RespuestasActaDirectorio = ({ respuestas = [], documentos = [] }) => {
 
       {/* Sección 3: Detalles del permiso */}
       <Accordion title="Datos de la elección">
-        <div className="grid grid-cols-3 gap-y-1">
+        <div className="grid grid-cols-2">
           <p>
             <strong>Fecha de la elección:</strong>{' '}
             {formatDate(elecDate, 'DD [de] MMMM [de] YYYY') || ''}
@@ -108,7 +108,7 @@ const RespuestasActaDirectorio = ({ respuestas = [], documentos = [] }) => {
           <p>
             <strong>Número de integrantes:</strong> {numIntegrantes}
           </p>
-          <ul className="flex flex-col underline">
+          <ul className="flex flex-col underline gap-2">
             <a
               className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
               target="_blank"
@@ -146,107 +146,176 @@ const RespuestasActaDirectorio = ({ respuestas = [], documentos = [] }) => {
       </Accordion>
 
       <Accordion title="Certificados de Antecedentes del Directorio Titular">
-        <div className="grid grid-cols-3 gap-y-1">
-          <ul className="flex flex-col underline">
+        <div>
+          <ul className="flex flex-col underline gap-2">
             <a
               className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
               target="_blank"
               onClick={() => {
-                openDocument(docActa.id);
+                openDocument(docAntPresidente.id);
               }}
               rel="noreferrer"
             >
-              nombre
+              Presidente
             </a>
 
             <a
               className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
               target="_blank"
               onClick={() => {
-                openDocument(docActa.id);
+                openDocument(docAntSecretario.id);
               }}
               rel="noreferrer"
             >
-              nombre
+              Secretario/a
             </a>
 
             <a
               className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
               target="_blank"
               onClick={() => {
-                openDocument(docActa.id);
+                openDocument(docAntTesorero.id);
               }}
               rel="noreferrer"
             >
-              nombre
+              Tesorero/a
             </a>
 
             <a
               className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
               target="_blank"
               onClick={() => {
-                openDocument(docActa.id);
+                openDocument(docAntPrimerDirector.id);
               }}
               rel="noreferrer"
             >
-              nombre
+              Primer director
             </a>
 
             <a
               className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
               target="_blank"
               onClick={() => {
-                openDocument(docActa.id);
+                openDocument(docAntSegundoDirector.id);
               }}
               rel="noreferrer"
             >
-              nombre
+              Segundo director
             </a>
           </ul>
         </div>
       </Accordion>
 
-      <Accordion title="Certificados de Antecedentes del Directorio Titular">
-        <div className="grid grid-cols-3 gap-y-1">
-          <p>
-            <strong>Fecha de la elección:</strong>{' '}
-            {formatDate(elecDate, 'DD [de] MMMM [de] YYYY') || ''}
-          </p>
-          <p>
-            <strong>Número de integrantes:</strong> {numIntegrantes}
-          </p>
-          <a
-            className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
-            target="_blank"
-            onClick={() => {
-              openDocument(docActa.id);
-            }}
-            rel="noreferrer"
-          >
-            Acta de elección del directorio
-          </a>
+      <Accordion title="Certificados de Antecedentes del Directorio Suplente">
+        <div>
+          <ul className="flex flex-col underline gap-2">
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docAntSup1.id);
+              }}
+              rel="noreferrer"
+            >
+              Suplente 1
+            </a>
 
-          <a
-            className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
-            target="_blank"
-            onClick={() => {
-              openDocument(docRegistroSociosActualizado.id);
-            }}
-            rel="noreferrer"
-          >
-            Registro de socios actualizado
-          </a>
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docAntSup2.id);
+              }}
+              rel="noreferrer"
+            >
+              Suplente 2
+            </a>
 
-          <a
-            className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
-            target="_blank"
-            onClick={() => {
-              openDocument(docRegistroSociosVotacion.id);
-            }}
-            rel="noreferrer"
-          >
-            Registro de socios que votaron
-          </a>
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docAntSup3.id);
+              }}
+              rel="noreferrer"
+            >
+              Suplente 3
+            </a>
+
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docAntSup4.id);
+              }}
+              rel="noreferrer"
+            >
+              Suplente 4
+            </a>
+
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docAntSup5.id);
+              }}
+              rel="noreferrer"
+            >
+              Suplente 5
+            </a>
+          </ul>
+        </div>
+      </Accordion>
+
+      <Accordion title="Ingreso de formularios">
+        <div>
+          <ul className="flex flex-col underline gap-2">
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docActaComision.id);
+              }}
+              rel="noreferrer"
+            >
+              Acta de Elección Comisión Electoral (Formulario 1)
+            </a>
+
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docActaReunion.id);
+              }}
+              rel="noreferrer"
+            >
+              Acta de Reunión de Comisión Electoral para fijar fecha de inscripción de candidatos
+              (Formulario 2)
+            </a>
+
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docActaInscripcion.id);
+              }}
+              rel="noreferrer"
+            >
+              Acta Comisión Electoral inscripción de candidatos, con su respectivo anexo (Formulario
+              4)
+            </a>
+
+            <a
+              className="text-blue-500 hover:text-secondary hover:cursor-pointer hover:underline"
+              target="_blank"
+              onClick={() => {
+                openDocument(docOtrosAntecedentes.id);
+              }}
+              rel="noreferrer"
+            >
+              Otros antecedentes relevantes para el proceso de elección del directorio
+            </a>
+          </ul>
         </div>
       </Accordion>
     </>

@@ -24,7 +24,7 @@ const ProcedureDetails = () => {
   }, [id]);
 
   return (
-    <Container className="text-sm">
+    <Container>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <div className="mb-4">
         {!loading ? (

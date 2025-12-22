@@ -60,10 +60,10 @@ const Home = () => {
           procedures?.map((card, index) => (
             <Card
               key={index}
-              title={card.titulo}
-              desc={card.descripcion_corta}
+              title={card?.titulo}
+              desc={card?.descripcion_corta}
               href={`/${card.id}/${card.nombre}`}
-              direccion={card.direcciones_municipale.nombre}
+              direccion={card?.direcciones_municipale?.nombre}
             />
           ))
         ) : (

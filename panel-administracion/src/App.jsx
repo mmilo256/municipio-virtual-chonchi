@@ -25,7 +25,7 @@ const App = () => {
       setLoading(true);
       try {
         const data = await obtenerTramites();
-        const filteredData = data.filter(tramite => arrayRoles.includes(tramite.nombre))
+        const filteredData = data.filter(tramite => arrayRoles.includes(tramite?.nombre))
         setProcedures(filteredData);
       } catch (e) {
         console.log(e);

@@ -15,6 +15,10 @@ const NAVIGATION = [
     name: 'Solicitudes',
     href: '/solicitudes',
   },
+  {
+    name: 'Volver al sitio',
+    href: 'https://municipalidadchonchi.cl/web',
+  },
 ];
 
 const Navbar = () => {
@@ -65,7 +69,7 @@ const Navbar = () => {
           </div>
           {/* Menú de navegación para pantallas grandes */}
           <div className="hidden md:flex items-center gap-8">
-            <ul className="flex gap-4 text-customBlack">
+            <ul className="flex gap-6 text-customBlack">
               {NAVIGATION.map((item, index) => (
                 <li key={index}>
                   <NavLink className="hover:text-primary" to={item.href}>

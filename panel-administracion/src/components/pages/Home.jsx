@@ -6,23 +6,28 @@ import { obtenerTramites } from '../../services/proceduresServices';
 import Breadcrumbs from '../ui/Breadcrumbs';
 
 const Home = () => {
-  const [procedures, setProcedures] = useState([]);
+  
   const { sessionData } = useAuthStore();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Obtener los trámites según los permisos del usuario
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const data = await obtenerTramites();
-        setProcedures(data);
-      } catch (e) {
-        console.log(e);
-      }
-      setLoading(false);
-    })();
-  }, [sessionData]);
+  const [procedures, setProcedures] = useState([]);
+  
+    const arrayRoles = sessionData?.rol?.split(",")
+  
+    // Obtener los trámites según los permisos del usuario
+    useEffect(() => {
+      (async () => {
+        setLoading(true);
+        try {
+          const data = await obtenerTramites();
+          const filteredData = data.filter(tramite => arrayRoles.includes(tramite.nombre))
+          setProcedures(filteredData);
+        } catch (e) {
+          console.log(e);
+        }
+        setLoading(false);
+      })();
+    }, [sessionData]);
 
   return (
     <div>
@@ -39,6 +44,7 @@ const Home = () => {
                   to={procedure.nombre}
                   text={procedure.titulo}
                   description={procedure.descripcion_corta}
+                  direccionMunicipal={procedure.direcciones_municipale.nombre}
                 />
               ))
             ) : (

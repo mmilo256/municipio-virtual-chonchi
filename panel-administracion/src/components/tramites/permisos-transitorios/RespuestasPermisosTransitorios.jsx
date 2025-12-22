@@ -2,6 +2,7 @@ import { formatDate } from '../../../utils/format';
 import Accordion from '../../ui/Accordion';
 
 const RespuestasPermisosTransitorios = ({ respuestas = [] }) => {
+
   return (
     <>
       {/* Sección 1: Datos de la organización */}
@@ -73,11 +74,11 @@ const RespuestasPermisosTransitorios = ({ respuestas = [] }) => {
           </p>
           <p>
             <strong>Consumo y/o venta de bebidas alcohólicas:</strong>{' '}
-            {respuestas?.permissionAlcohol === 'true' ? 'Si' : 'No'}
+            {respuestas?.permissionAlcohol == 1 ? 'Si' : 'No'}
           </p>
           <p>
             <strong>Consumo y/o venta de alimentos:</strong>{' '}
-            {respuestas?.permissionFood === 'true' ? 'Si' : 'No'}
+            {respuestas?.permissionFood == 1 ? 'Si' : 'No'}
           </p>
           <p>
             <strong>Descripción de la actividad:</strong> {respuestas?.permissionDescription}

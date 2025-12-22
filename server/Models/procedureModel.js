@@ -9,16 +9,16 @@ const Procedure = sequelize.define('tramites', {
   },
   nombre: DataTypes.STRING,
   titulo: DataTypes.STRING,
-  descripcion: DataTypes.STRING,
-  descripcion_corta: DataTypes.STRING,
-  info_adicional: DataTypes.STRING,
-  requisitos: DataTypes.STRING,
-  costo: DataTypes.INTEGER,
+  descripcion: DataTypes.TEXT,
+  descripcion_corta: DataTypes.TEXT,
+  info_adicional: DataTypes.TEXT,
+  requisitos: DataTypes.TEXT,
+  costo: DataTypes.STRING,
   modalidad_pago: DataTypes.STRING,
   direccion: DataTypes.STRING,
   horario_atencion: DataTypes.STRING,
   email: DataTypes.STRING,
-  telefono: DataTypes.INTEGER,
+  telefono: DataTypes.STRING,
 });
 
 export default Procedure;

@@ -1,20 +1,32 @@
 import { Link } from 'react-router-dom';
 
 const Card = ({ title, desc, href, direccion }) => {
+
+  let colorDireccion
+
+  switch (direccion) {
+    case "Administración Municipal":
+      colorDireccion = "text-teal-600"
+      break;
+      case "Secretaría Municipal":
+        colorDireccion = "text-violet-600"
+        break
+  }
+
   return (
     <Link
       to={href}
-      className="relative flex flex-col gap-4 shadow hover:-translate-y-0.5 p-5 shadow-slate-600 group text-center bg-white hover:text-white transition-all duration-300 hover:bg-primary group"
+      className="rounded p-4 flex flex-col gap-2 shadow hover:-translate-y-0.5 shadow-slate-600 group text-center bg-white hover:text-white transition-all duration-300 hover:bg-primary group"
     >
-      <p className="group-hover:text-white transition-all h-8 flex items-center justify-center text-customBlack text-xl font-semibold">
-        {title}
-      </p>
-      <p className="group-hover:text-white transition-all h-8 flex items-center justify-center text-slate-600">
-        {desc}
-      </p>
-      <span className="absolute -top-1 -left-1 text-xs bg-blue-600 font-bold text-white rounded-full px-2 py-1">
+      <span className={`text-xs font-bold rounded-full ${colorDireccion} group-hover:text-white transition-all`}>
         {direccion}
       </span>
+      <p className="group-hover:text-white transition-all flex items-center justify-center text-slate-800 text-xl font-semibold">
+        {title}
+      </p>
+      <p className="group-hover:text-white transition-all flex items-center justify-center text-slate-600">
+        {desc}
+      </p>
     </Link>
   );
 };

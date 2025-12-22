@@ -32,13 +32,17 @@ const ProcedureDetails = () => {
             {procedure?.titulo}
           </Heading>
         ) : (
-          <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-10 my-4">{''}</p>
+          <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse my-4">{''}</p>
         )}
       </div>
       <div className="block md:hidden mb-2">
-        <Button href="formulario" type="link" variant="secondary" fullWidth>
-          Iniciar trámite
-        </Button>
+        <Button
+              href="formulario"
+              type="link"
+              label="Iniciar trámite"
+              variant="primary"
+              fullWidth
+            />
       </div>
       <div className="grid md:grid-cols-9 gap-5 text-slate-700">
         <main className="md:col-span-6 pr-10">
@@ -49,7 +53,7 @@ const ProcedureDetails = () => {
             {!loading ? (
               <p className="text-justify">{procedure?.descripcion}</p>
             ) : (
-              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-14"></p>
+              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
             )}
           </article>
           <article className="mb-4">
@@ -57,9 +61,19 @@ const ProcedureDetails = () => {
               Requisitos
             </Heading>
             {!loading ? (
-              <p className="text-justify h-8">{procedure?.requisitos}</p>
+              <p className="text-justify">{procedure?.requisitos}</p>
             ) : (
-              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-8"></p>
+              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
+            )}
+          </article>
+          <article className="mb-4">
+            <Heading align="left" level={4}>
+              Información Adicional
+            </Heading>
+            {!loading ? (
+              <p className="text-justify">{procedure?.info_adicional}</p>
+            ) : (
+              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
             )}
           </article>
           <article className="mb-4">
@@ -95,7 +109,7 @@ const ProcedureDetails = () => {
           {!loading ? (
             <p className="break-words">{procedure?.direccion}</p>
           ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse h-5"></p>
+            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
           )}
           <Heading align="left" level={4}>
             Horario de atención
@@ -103,7 +117,7 @@ const ProcedureDetails = () => {
           {!loading ? (
             <p className="break-words">{procedure?.horario_atencion}</p>
           ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse h-5"></p>
+            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
           )}
           <Heading align="left" level={4}>
             Correo electrónico
@@ -111,7 +125,7 @@ const ProcedureDetails = () => {
           {!loading ? (
             <p className="break-words">{procedure?.email}</p>
           ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse h-5"></p>
+            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
           )}
           <Heading align="left" level={4}>
             Teléfono(s)
@@ -119,7 +133,7 @@ const ProcedureDetails = () => {
           {!loading ? (
             <p className="break-words">{procedure?.telefono}</p>
           ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse h-5"></p>
+            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
           )}
           <div className="mt-4 hidden md:block">
             <Button

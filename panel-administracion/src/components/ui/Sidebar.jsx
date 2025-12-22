@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
 import { MdNavigateNext } from 'react-icons/md';
+import useAuthStore from '../../stores/useAuthStore';
 
-const Sidebar = ({ state, setState }) => {
+const Sidebar = ({ state, setState, navigation }) => {
   const onToggleSidebar = () => {
     setState((prev) => !prev);
   };
@@ -26,27 +27,19 @@ const Sidebar = ({ state, setState }) => {
       </button>
       <div className="h-full flex flex-col justify-between">
         {state ? (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-6">
             <li>
               <Link to="/" className="hover:underline">
                 Inicio
               </Link>
             </li>
-            <li>
-              <Link to="permisos-transitorios" className="hover:underline">
-                Permisos Transitorios
+            {navigation.map(item => (
+              <li key={item.slug}>
+              <Link to={item.slug} className="hover:underline">
+                {item.titulo}
               </Link>
             </li>
-            <li>
-              <Link to="fecha-eleccion-directorio" className="hover:underline">
-                Comunicación fecha de elección de directorio
-              </Link>
-            </li>
-            <li>
-              <Link to="acta-directorio" className="hover:underline">
-                Depósito de acta de elección de directorio
-              </Link>
-            </li>
+            ))}
           </ul>
         ) : (
           <div></div>

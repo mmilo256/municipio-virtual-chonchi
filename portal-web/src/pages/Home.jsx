@@ -30,7 +30,7 @@ const Home = () => {
       {/* Sección de encabezado con una imagen de fondo */}
       <div
         style={{ backgroundPosition: 'center 70%' }}
-        className="relative bg-[url('/chonchi-aereo.jpg')] bg-cover bg-center py-32 mb-2"
+        className="relative bg-[url('/chonchi-aereo.jpg')] bg-cover bg-center py-52 mb-2"
       >
         <div className="absolute inset-0 bg-customBlack bg-opacity-80 flex flex-col justify-center items-center">
           {/* Contenedor de texto centralizado */}
@@ -55,7 +55,7 @@ const Home = () => {
       </Heading>
 
       {/* Componente para mostrar los procedimientos en un grid de tarjetas */}
-      <Container className="py-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <Container className="py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {!loading ? (
           procedures?.map((card, index) => (
             <Card

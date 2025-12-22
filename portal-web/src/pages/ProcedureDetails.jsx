@@ -23,6 +23,8 @@ const ProcedureDetails = () => {
     })();
   }, [id]);
 
+  console.log(procedure);
+
   return (
     <Container>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
@@ -36,13 +38,7 @@ const ProcedureDetails = () => {
         )}
       </div>
       <div className="block md:hidden mb-2">
-        <Button
-              href="formulario"
-              type="link"
-              label="Iniciar trámite"
-              variant="primary"
-              fullWidth
-            />
+        <Button href="formulario" type="link" label="Iniciar trámite" variant="primary" fullWidth />
       </div>
       <div className="grid md:grid-cols-9 gap-5 text-slate-700">
         <main className="md:col-span-6 pr-10">

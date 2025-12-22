@@ -32,7 +32,7 @@ const Login = () => {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/admin" />;
+    return <Navigate to="/" />;
   }
 
   return (

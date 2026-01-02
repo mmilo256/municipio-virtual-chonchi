@@ -1,0 +1,36 @@
+{
+  "requisitos": [
+    {
+      "type": "list",
+      "items": [
+        {
+          "type": "text",
+          "content": "La comunicación debe realizarse con al menos 15 días hábiles de anticipación a la fecha de la elección."
+        },
+        {
+          "type": "text",
+          "content": "El usuario solicitante debe ser parte de la Comisión Electoral"
+        },
+        {
+          "type": "text",
+          "content": "Debe tener digitalizado el documento con la comunicación de la fecha de elección"
+        }
+      ]
+    }
+  ],
+  "info_adicional": [
+    {
+      "type": "list",
+      "items": [
+        {
+          "type": "text",
+          "content": "Este trámite no constituye una autorización, sino una toma de conocimiento por parte de la municipalidad."
+        },
+        {
+          "type": "text",
+          "content": "El ingreso de información incompleta o fuera de plazo puede generar observaciones."
+        }
+      ]
+    }
+  ]
+}

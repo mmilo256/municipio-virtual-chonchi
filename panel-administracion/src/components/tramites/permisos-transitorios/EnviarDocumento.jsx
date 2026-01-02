@@ -11,7 +11,7 @@ import { sendEmail } from '../../../services/emailServices';
 import { obtenerDecretos } from '../../../services/permisosTransitoriosServices';
 import { approveTemplate } from '../../../email-templates/permisos-transitorios/approveTemplate';
 import Modal from '../../ui/Modal';
-import { API_URL } from '../../../../config';
+import { API_URL, DESTINATARIOS_PT } from '../../../../config';
 
 const EnviarDocumento = () => {
   const { id } = useParams();
@@ -49,11 +49,7 @@ const EnviarDocumento = () => {
   }, [id]);
 
   // Lista de destinatarios
-  const destList = [
-    { nombre: 'Solicitante', email: userEmail },
-    { nombre: 'Bomberos', email: 'bomberos@gmail.com' },
-    { nombre: 'Carabineros', email: 'carabineros@gmail.com' },
-  ];
+  const destList = [...DESTINATARIOS_PT, { nombre: 'Usuario solicitante', email: userEmail }];
 
   // Validación de los campos
   useEffect(() => {

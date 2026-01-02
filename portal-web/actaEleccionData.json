@@ -1,0 +1,77 @@
+{
+  "requisitos": [
+    {
+      "type": "list",
+      "items": [
+        {
+          "type": "text",
+          "content": "El acta debe depositarse dentro de los 5 días hábiles posteriores a la fecha de la elección."
+        },
+        {
+          "type": "text",
+          "content": "El usuario solicitante debe ser parte de la Comisión Electoral"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "Además, debe contar con los siguientes documentos digitalizados antes de iniciar la solicitud"
+    },
+    {
+      "type": "list",
+      "items": [
+        {
+          "type": "text",
+          "content": "Acta de Elección del Directorio"
+        },
+        {
+          "type": "text",
+          "content": "Registro de Socios actualizado"
+        },
+        {
+          "type": "text",
+          "content": "Registro de Socios que votaron"
+        },
+        {
+          "type": "text",
+          "content": "Certificados de antecedentes de los miembros titulares"
+        },
+        {
+          "type": "text",
+          "content": "Certificados de antecedentes de los miembros suplentes"
+        },
+        {
+          "type": "text",
+          "content": "Acta de Elección Comisión Electoral (Formulario 1)"
+        },
+        {
+          "type": "text",
+          "content": "Acta de Reunión de Comisión Electoral para Fijar Fecha de Inscripción de Candidatos (Formulario 2)"
+        },
+        {
+          "type": "text",
+          "content": "Acta Comisión Electoral Inscripción de Candidatos, con su respectivo anexo (Formulario 4)"
+        },
+        {
+          "type": "text",
+          "content": "Otros Antecedentes Relevantes Para el Proceso de Elección del Directorio"
+        }
+      ]
+    }
+  ],
+  "info_adicional": [
+    {
+      "type": "list",
+      "items": [
+        {
+          "type": "text",
+          "content": "La información del acta debe ser coherente con la fecha previamente informada."
+        },
+        {
+          "type": "text",
+          "content": "En caso de errores u omisiones, la municipalidad podrá formular observaciones o rechazar el trámite."
+        }
+      ]
+    }
+  ]
+}

@@ -47,6 +47,7 @@ const PermisosTransitorios = () => {
               titulo="Subir decreto firmado"
               estado="firmado"
               tipo="generado"
+              esDecretoPT
               estadoSolicitud="aprobada"
               breadcrumbsData={{ ...data, pagina: 'subir-decreto' }}
             />

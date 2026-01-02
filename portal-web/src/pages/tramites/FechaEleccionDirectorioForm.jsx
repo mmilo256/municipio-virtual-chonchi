@@ -11,6 +11,10 @@ import useAuthStore from '../../stores/useAuthStore';
 import validateStep from '../../formularios/secretaria-municipal/fecha-eleccion-directorio/validation';
 import { useState } from 'react';
 import FormCompleted from './FormCompleted';
+import { formatDate } from '../../utils/utils';
+import { sendEmail } from '../../services/emailServices';
+import { CORREOS_FUNCIONARIOS } from '../../config';
+import templateSolicitudEnviada from '../../email/templateSolicitudEnviada';
 
 const FechaEleccionDirectorioForm = () => {
   const initialValues = createInitialValues();
@@ -20,6 +24,9 @@ const FechaEleccionDirectorioForm = () => {
   const [loading, setLoading] = useState(false);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const fechaHoy = new Date();
+  const fechaHoyFormatted = formatDate(fechaHoy, 2);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -32,6 +39,13 @@ const FechaEleccionDirectorioForm = () => {
       respuestas,
       tramite_id: id,
       usuarioId,
+    };
+
+    const infoSolicitante = {
+      name: values.name,
+      rut: values.rut,
+      email: values.email,
+      phone: values.phone,
     };
 
     try {
@@ -52,6 +66,17 @@ const FechaEleccionDirectorioForm = () => {
           await adjuntarDocumento(formData, requestId);
         }
       }
+
+      await sendEmail(
+        CORREOS_FUNCIONARIOS.fechaEleccionDirectorio,
+        'Municipio Virtual Chonchi: Nueva solicitud',
+        templateSolicitudEnviada(
+          requestId,
+          'Comunicación Fecha de Elección de Directorio',
+          infoSolicitante,
+          fechaHoyFormatted,
+        ),
+      );
 
       setIsSubmitted(true);
     } catch (e) {

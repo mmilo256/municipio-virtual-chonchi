@@ -60,8 +60,8 @@ const useWizardForm = ({
   /* NAVEGACIÓN ENTRE PASOS DEL FORMULARIO */
 
   const nextStep = () => {
-    const { isValid } = runValidation();
-    /* const isValid = true; */
+    /* const { isValid } = runValidation(); */
+    const isValid = true;
     if (!isValid) return;
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);

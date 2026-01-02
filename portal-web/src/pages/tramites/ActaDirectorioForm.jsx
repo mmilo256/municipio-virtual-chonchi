@@ -11,6 +11,10 @@ import useAuthStore from '../../stores/useAuthStore';
 import validateStep from '../../formularios/secretaria-municipal/acta-directorio/validation';
 import { useState } from 'react';
 import FormCompleted from './FormCompleted';
+import { formatDate } from '../../utils/utils';
+import { sendEmail } from '../../services/emailServices';
+import { CORREOS_FUNCIONARIOS } from '../../config';
+import templateSolicitudEnviada from '../../email/templateSolicitudEnviada';
 
 const ActaDirectorioForm = () => {
   const initialValues = createInitialValues();
@@ -20,6 +24,9 @@ const ActaDirectorioForm = () => {
   const [loading, setLoading] = useState(false);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const fechaHoy = new Date();
+  const fechaHoyFormatted = formatDate(fechaHoy, 2);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -51,6 +58,13 @@ const ActaDirectorioForm = () => {
       respuestas,
       tramite_id: id,
       usuarioId,
+    };
+
+    const infoSolicitante = {
+      name: values.name,
+      rut: values.rut,
+      email: values.email,
+      phone: values.phone,
     };
 
     let requestId = null;
@@ -101,6 +115,16 @@ const ActaDirectorioForm = () => {
 
         await adjuntarDocumento(formData, requestId);
       }
+      await sendEmail(
+        CORREOS_FUNCIONARIOS.actaDirectorio,
+        'Municipio Virtual Chonchi: Nueva solicitud',
+        templateSolicitudEnviada(
+          requestId,
+          'Depósito de Acta de Elección de Directorio',
+          infoSolicitante,
+          fechaHoyFormatted,
+        ),
+      );
     } catch (e) {
       console.error('Error adjuntando documentos', e);
       huboErrorEnAdjuntos = true;

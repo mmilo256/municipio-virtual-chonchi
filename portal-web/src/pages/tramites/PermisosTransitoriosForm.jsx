@@ -11,11 +11,18 @@ import useAuthStore from '../../stores/useAuthStore';
 import validateStep from '../../formularios/administracion-municipal/permisos-transitorios/validation';
 import { useState } from 'react';
 import FormCompleted from './FormCompleted';
+import { sendEmail } from '../../services/emailServices';
+import templateSolicitudEnviada from '../../email/templateSolicitudEnviada';
+import { formatDate } from '../../utils/utils';
+import { CORREOS_FUNCIONARIOS } from '../../config';
 
 const PermisosTransitoriosForm = () => {
   const initialValues = createInitialValues();
   const { id } = useParams();
   const usuarioId = useAuthStore((state) => state?.sessionData?.id);
+
+  const fechaHoy = new Date();
+  const fechaHoyFormatted = formatDate(fechaHoy, 2);
 
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +41,13 @@ const PermisosTransitoriosForm = () => {
       docFirmaPresidente,
       ...respuestas
     } = values;
+
+    const infoSolicitante = {
+      name: values.name,
+      rut: values.rut,
+      email: values.email,
+      phone: values.phone,
+    };
 
     const data = {
       respuestas,
@@ -76,9 +90,18 @@ const PermisosTransitoriosForm = () => {
         const formData = new FormData();
         formData.append('archivo', doc.file);
         formData.append('tipoDocumento', doc.tipo);
-
         await adjuntarDocumento(formData, requestId);
       }
+      await sendEmail(
+        CORREOS_FUNCIONARIOS.permisosTransitorios,
+        'Municipio Virtual Chonchi: Nueva solicitud',
+        templateSolicitudEnviada(
+          requestId,
+          'Autorización Especial Transitoria',
+          infoSolicitante,
+          fechaHoyFormatted,
+        ),
+      );
     } catch (e) {
       console.error('Error adjuntando documentos', e);
       huboErrorEnAdjuntos = true;

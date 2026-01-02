@@ -5,11 +5,14 @@ import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Heading from '../components/ui/Heading';
 import Button from '../components/ui/buttons/Button';
 import { useParams } from 'react-router-dom';
+import DetailsRenderer from '../components/detailsRenderer';
 
 const ProcedureDetails = () => {
   const { id } = useParams();
   const [procedure, setProcedure] = useState({});
   const [loading, setLoading] = useState(false);
+  const [requisitos, setRequisitos] = useState([]);
+  const [infoAdicional, setInfoAdicional] = useState([]);
 
   const breadcrumbs = [{ label: procedure.titulo, href: `/${procedure.nombre}` }];
 
@@ -18,12 +21,14 @@ const ProcedureDetails = () => {
     (async () => {
       setLoading(true);
       const data = await fetchProcedureById(id);
+      const reqArray = JSON.parse(data?.requisitos);
+      const infoArray = JSON.parse(data?.info_adicional);
+      setRequisitos(reqArray);
+      setInfoAdicional(infoArray);
       setProcedure(data);
       setLoading(false);
     })();
   }, [id]);
-
-  console.log(procedure);
 
   return (
     <Container>
@@ -57,7 +62,7 @@ const ProcedureDetails = () => {
               Requisitos
             </Heading>
             {!loading ? (
-              <p className="text-justify">{procedure?.requisitos}</p>
+              <DetailsRenderer blocks={requisitos} />
             ) : (
               <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
             )}
@@ -67,7 +72,7 @@ const ProcedureDetails = () => {
               Información Adicional
             </Heading>
             {!loading ? (
-              <p className="text-justify">{procedure?.info_adicional}</p>
+              <DetailsRenderer blocks={infoAdicional} />
             ) : (
               <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
             )}
@@ -82,13 +87,13 @@ const ProcedureDetails = () => {
               <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-8"></p>
             )}
           </article>
-          {procedure?.costo !== 0 && (
+          {procedure?.modalidad_pago !== '' && (
             <article className="mb-4">
               <Heading align="left" level={4}>
                 Modalidad de pago
               </Heading>
               {!loading ? (
-                <p>{procedure?.modaldad_pago}</p>
+                <p>{procedure?.modalidad_pago}</p>
               ) : (
                 <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-8"></p>
               )}

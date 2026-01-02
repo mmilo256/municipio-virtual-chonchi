@@ -7,7 +7,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '../ui/Breadcrumbs';
 import { ToastContainer, toast } from 'react-toastify';
 
-const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud, breadcrumbsData }) => {
+const FormularioSubirDocumento = ({
+  titulo,
+  estado,
+  tipo,
+  estadoSolicitud,
+  breadcrumbsData,
+  esDecretoPT = false,
+}) => {
   const [name, setName] = useState('');
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -55,6 +62,12 @@ const FormularioSubirDocumento = ({ titulo, estado, tipo, estadoSolicitud, bread
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       {/* Título del formulario */}
       <h1 className="text-2xl font-bold my-4">{titulo}</h1>
+      {esDecretoPT && (
+        <p className="bg-amber-200 text-amber-800 text-sm p-2 rounded border border-amber-300 my-4">
+          Debe subir un único archivo PDF que incluya el decreto firmado y todos los documentos
+          adjuntos
+        </p>
+      )}
       <form encType="multipart/form-data" onSubmit={uploadDocument}>
         <Input name="uploadedDoc" label="Nombre" value={name} onChange={setName} />
         <Upload name="uploadedDoc" files={file} setFiles={setFile} />

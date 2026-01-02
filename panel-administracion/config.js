@@ -7,3 +7,15 @@ export const PROCEDURES_ID = {
   fechaEleccionDirectorio: 3,
   actaDirectorio: 4,
 };
+
+export const DESTINATARIOS_PT = [
+  { nombre: 'Oficina de partes', email: 'ofpartes@municipalidadchonchi.cl' },
+  { nombre: 'Carabineros de Chile', email: 'tenenciachonchi.chiloe@gmail.com' },
+  { nombre: 'Carabineros de Chile 2', email: 'tenencia.chonchi@gmail.com' },
+  { nombre: 'Oficina de Organizaciones Comunitarias', email: 'vgomez@municipalidadchonchi.cl' },
+  {
+    nombre: 'Oficina de Organizaciones Comunitarias 2',
+    email: 'rarismendiz@municipalidadchonchi.cl',
+  },
+  { nombre: 'Servicio de Impuestos Internos', email: 'maria.jaude@sii.cl' },
+];

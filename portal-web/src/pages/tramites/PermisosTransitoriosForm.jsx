@@ -11,9 +11,7 @@ import useAuthStore from '../../stores/useAuthStore';
 import validateStep from '../../formularios/administracion-municipal/permisos-transitorios/validation';
 import { useState } from 'react';
 import FormCompleted from './FormCompleted';
-import { sendEmail } from '../../services/emailServices';
-import templateSolicitudEnviada from '../../email/templateSolicitudEnviada';
-import { formatDate } from '../../utils/utils';
+import { correosSolicitud, formatDate } from '../../utils/utils';
 import { CORREOS_FUNCIONARIOS } from '../../config';
 
 const PermisosTransitoriosForm = () => {
@@ -92,15 +90,15 @@ const PermisosTransitoriosForm = () => {
         formData.append('tipoDocumento', doc.tipo);
         await adjuntarDocumento(formData, requestId);
       }
-      await sendEmail(
+      await correosSolicitud(
         CORREOS_FUNCIONARIOS.permisosTransitorios,
-        'Municipio Virtual Chonchi: Nueva solicitud',
-        templateSolicitudEnviada(
-          requestId,
-          'Autorización Especial Transitoria',
-          infoSolicitante,
-          fechaHoyFormatted,
-        ),
+        CORREOS_FUNCIONARIOS.ofPartes,
+        infoSolicitante.email,
+        infoSolicitante.name,
+        infoSolicitante.phone,
+        'Autorización Especial Transitoria',
+        requestId,
+        fechaHoyFormatted,
       );
     } catch (e) {
       console.error('Error adjuntando documentos', e);

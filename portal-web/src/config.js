@@ -1,7 +1,7 @@
-/* export const API_URL = 'http://localhost:10000/api/portal';
-export const HOME_URL = 'http://localhost:10000/'; */
-export const API_URL = 'https://municipiovirtualchonchi.cl/api/portal';
-export const HOME_URL = 'https://municipiovirtualchonchi.cl/';
+export const API_URL = 'http://localhost:10000/api/portal';
+export const HOME_URL = 'http://localhost:10000/';
+/* export const API_URL = 'https://municipiovirtualchonchi.cl/api/portal';
+export const HOME_URL = 'https://municipiovirtualchonchi.cl/'; */
 export const LOGOUT_URL = 'https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout';
 
 export const ORG_TYPES = [
@@ -21,8 +21,10 @@ export const PROCEDURES_ID = {
   actaEleccionDirectorio: 4,
 };
 
+// Funcionarios a quienes se les notifica cuando llega una nueva solicitud
 export const CORREOS_FUNCIONARIOS = {
-  permisosTransitorios: ['emiliosotoandrade256@gmail.com', 'esoto@municipalidadchonchi.cl'],
-  fechaEleccionDirectorio: ['emiliosotoandrade256@gmail.com', 'esoto@municipalidadchonchi.cl'],
-  actaDirectorio: ['emiliosotoandrade256@gmail.com', 'esoto@municipalidadchonchi.cl'],
+  ofPartes: 'esoto@municipalidadchonchi.cl',
+  permisosTransitorios: ['esoto@municipalidadchonchi.cl'],
+  fechaEleccionDirectorio: ['esoto@municipalidadchonchi.cl'],
+  actaDirectorio: ['esoto@municipalidadchonchi.cl'],
 };

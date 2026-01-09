@@ -13,6 +13,8 @@ const ProcedureDetails = () => {
   const [loading, setLoading] = useState(false);
   const [requisitos, setRequisitos] = useState([]);
   const [infoAdicional, setInfoAdicional] = useState([]);
+  const [contactoTelefonos, setContactoTelefonos] = useState([]);
+  const [emails, setEmails] = useState([]);
 
   const breadcrumbs = [{ label: procedure.titulo, href: `/${procedure.nombre}` }];
 
@@ -23,6 +25,10 @@ const ProcedureDetails = () => {
       const data = await fetchProcedureById(id);
       const reqArray = JSON.parse(data?.requisitos);
       const infoArray = JSON.parse(data?.info_adicional);
+      const telefonosArray = JSON.parse(data?.telefono);
+      const emailsArray = JSON.parse(data?.email);
+      setEmails(emailsArray);
+      setContactoTelefonos(telefonosArray);
       setRequisitos(reqArray);
       setInfoAdicional(infoArray);
       setProcedure(data);
@@ -124,7 +130,7 @@ const ProcedureDetails = () => {
             Correo electrónico
           </Heading>
           {!loading ? (
-            <p className="break-words">{procedure?.email}</p>
+            <DetailsRenderer blocks={emails} />
           ) : (
             <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
           )}
@@ -132,7 +138,7 @@ const ProcedureDetails = () => {
             Teléfono(s)
           </Heading>
           {!loading ? (
-            <p className="break-words">{procedure?.telefono}</p>
+            <DetailsRenderer blocks={contactoTelefonos} />
           ) : (
             <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
           )}

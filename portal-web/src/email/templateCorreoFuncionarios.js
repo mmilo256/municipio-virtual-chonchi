@@ -193,7 +193,7 @@ const templateCorreoFuncionarios = (
             <!-- CTA -->
             <div style="margin-top: 24px">
               <a
-                href="https://municipiovirtualchonchi.cl/solicitudes"
+                href="https://municipiovirtualchonchi.cl/admin"
                 target="_blank"
                 style="
                   display: block;

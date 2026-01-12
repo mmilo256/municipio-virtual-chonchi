@@ -92,7 +92,6 @@ const PermisosTransitoriosForm = () => {
       }
       await correosSolicitud(
         CORREOS_FUNCIONARIOS.permisosTransitorios,
-        CORREOS_FUNCIONARIOS.ofPartes,
         infoSolicitante.email,
         infoSolicitante.name,
         infoSolicitante.phone,

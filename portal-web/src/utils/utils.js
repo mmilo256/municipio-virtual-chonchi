@@ -1,6 +1,5 @@
 import { FERIADOS } from '../constants';
 import templateCorreoFuncionarios from '../email/templateCorreoFuncionarios';
-import { templateCorreoPartes } from '../email/templateCorreoPartes';
 import templateSolicitudCreadaSolicitante from '../email/templateSolicitudCreadaSolicitante';
 import { sendEmail } from '../services/emailServices';
 
@@ -48,7 +47,6 @@ export const agregarDiasHabiles = (date, days) => {
 // Correos electrónicos automáticos al momento de enviar la solicitud
 export const correosSolicitud = async (
   correosFuncionarios,
-  correoPartes,
   correoSolicitante,
   nombreSolicitante,
   telefonoSolicitante,
@@ -59,7 +57,7 @@ export const correosSolicitud = async (
   // Correo electrónico al solicitante
   await sendEmail(
     correoSolicitante,
-    'Municipio Virtual Chonchi: Solicitante',
+    `Municipio Virtual Chonchi | Solicitud #${idSolicitud} recibida correctamente`,
     templateSolicitudCreadaSolicitante(
       nombreSolicitante,
       nombreTramite,
@@ -68,17 +66,10 @@ export const correosSolicitud = async (
     ),
   );
 
-  // Correo electrónico oficina de partes
-  await sendEmail(
-    correoPartes,
-    'Municipio Virtual Chonchi: Partes',
-    templateCorreoPartes(nombreTramite, fechaSolicitud, correoSolicitante, telefonoSolicitante),
-  );
-
   // Correo electrónico funcionario(s)
   await sendEmail(
     correosFuncionarios,
-    'Municipio Virtual Chonchi: Funcionarios',
+    `Municipio Virtual Chonchi | Nueva solicitud #${idSolicitud} - ${nombreTramite}`,
     templateCorreoFuncionarios(
       nombreTramite,
       idSolicitud,

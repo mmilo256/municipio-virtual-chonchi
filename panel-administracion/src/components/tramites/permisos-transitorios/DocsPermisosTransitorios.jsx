@@ -190,6 +190,28 @@ const DocsPermisosTransitorios = ({ docs = [] }) => {
             />
           ),
         },
+        {
+          link: (
+            <button
+              type="button"
+              className="text-blue-500 underline"
+              onClick={() => {
+                openDocument(docs[7].id);
+              }}
+            >
+              Formulario Autoridad Sanitaria
+            </button>
+          ),
+          href: (
+            <TableButton
+              onClick={() => {
+                onDownloadDocument(docs[7].id);
+              }}
+              color="blue"
+              text="Descargar"
+            />
+          ),
+        },
       ];
       await setData(reqDocs);
     })();

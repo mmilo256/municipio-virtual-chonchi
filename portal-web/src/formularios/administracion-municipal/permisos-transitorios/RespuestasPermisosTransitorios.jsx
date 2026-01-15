@@ -34,6 +34,8 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
 
   const itemStyles = 'mb-2';
 
+  console.log(docs);
+
   const openDocument = (id) => {
     window.open(`${API_URL}/documents/${id}/view`);
   };
@@ -236,7 +238,7 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
               }}
               className="block text-left"
             >
-              Certificado de antecedentes para fines especiales
+              Certificado de vigencia de Persona Jurídica
             </button>
             <button
               type="button"
@@ -245,7 +247,7 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
               }}
               className="block text-left"
             >
-              Certificado de vigencia de Persona Jurídica
+              Documento que acredita la ocupación legal del recinto
             </button>
             <button
               type="button"
@@ -254,7 +256,7 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
               }}
               className="block text-left"
             >
-              Documento que acredita la ocupación legal del recinto
+              Declaración jurada simple Ley 19.925 de alcoholes
             </button>
             <button
               type="button"
@@ -263,7 +265,7 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
               }}
               className="block text-left"
             >
-              Declaración jurada simple Ley 19.925 de alcoholes
+              Certificado de antecedentes para fines especiales
             </button>
             <button
               type="button"
@@ -273,6 +275,15 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
               className="block text-left"
             >
               Firma del representante legal
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                openDocument(docs[7].id);
+              }}
+              className="block text-left"
+            >
+              Formulario Autoridad Sanitaria
             </button>
           </ul>
         </Accordion>
@@ -286,19 +297,22 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
               RUT tributario
             </a>
             <a target="_blank" href={docs[2].ruta} className="block text-left" rel="noreferrer">
-              Certificado de antecedentes para fines especiales
-            </a>
-            <a target="_blank" href={docs[3].ruta} className="block text-left" rel="noreferrer">
               Certificado de vigencia de Persona Jurídica
             </a>
-            <a target="_blank" href={docs[4].ruta} className="block text-left" rel="noreferrer">
+            <a target="_blank" href={docs[3].ruta} className="block text-left" rel="noreferrer">
               Documento que acredita la ocupación legal del recinto
             </a>
-            <a target="_blank" href={docs[5].ruta} className="block text-left" rel="noreferrer">
+            <a target="_blank" href={docs[4].ruta} className="block text-left" rel="noreferrer">
               Declaración jurada simple Ley 19.925 de alcoholes
+            </a>
+            <a target="_blank" href={docs[5].ruta} className="block text-left" rel="noreferrer">
+              Certificado de antecedentes para fines especiales
             </a>
             <a target="_blank" href={docs[6].ruta} className="block text-left" rel="noreferrer">
               Firma del representante legal
+            </a>
+            <a target="_blank" href={docs[7].ruta} className="block text-left" rel="noreferrer">
+              Formulario Autoridad Sanitaria
             </a>
           </ul>
         </Accordion>

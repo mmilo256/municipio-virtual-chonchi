@@ -71,12 +71,14 @@ const validateStep = (stepIndex, values) => {
       errors.docVigenciaPersonaJuridica = validateRequired(values.docVigenciaPersonaJuridica);
     if (validateRequired(values.docOcupacionRecinto))
       errors.docOcupacionRecinto = validateRequired(values.docOcupacionRecinto);
-    if (validateRequired(values.docDeclaracionJurada))
-      errors.docDeclaracionJurada = validateRequired(values.docDeclaracionJurada);
-    if (validateRequired(values.docCertificadoAntecedentes))
-      errors.docCertificadoAntecedentes = validateRequired(values.docCertificadoAntecedentes);
+    /* if (validateRequired(values.docDeclaracionJurada))
+      errors.docDeclaracionJurada = validateRequired(values.docDeclaracionJurada); */
+    /* if (validateRequired(values.docCertificadoAntecedentes))
+      errors.docCertificadoAntecedentes = validateRequired(values.docCertificadoAntecedentes); */
     if (validateRequired(values.docFirmaPresidente))
       errors.docFirmaPresidente = validateRequired(values.docFirmaPresidente);
+    /* if (validateRequired(values.docAutoridadSanitaria))
+      errors.docAutoridadSanitaria = validateRequired(values.docAutoridadSanitaria); */
   }
 
   return errors;

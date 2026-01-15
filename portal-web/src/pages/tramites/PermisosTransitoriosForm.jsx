@@ -37,6 +37,7 @@ const PermisosTransitoriosForm = () => {
       docDeclaracionJurada,
       docCertificadoAntecedentes,
       docFirmaPresidente,
+      docAutoridadSanitaria,
       ...respuestas
     } = values;
 
@@ -79,9 +80,12 @@ const PermisosTransitoriosForm = () => {
       { file: docDeclaracionJurada, tipo: 'docDeclaracionJurada' },
       { file: docCertificadoAntecedentes, tipo: 'docCertificadoAntecedentes' },
       { file: docFirmaPresidente, tipo: 'docFirmaPresidente' },
+      { file: docAutoridadSanitaria, tipo: 'docAutoridadSanitaria' },
     ].filter((doc) => doc.file);
 
     let huboErrorEnAdjuntos = false;
+
+    console.log(documentos);
 
     try {
       for (const doc of documentos) {

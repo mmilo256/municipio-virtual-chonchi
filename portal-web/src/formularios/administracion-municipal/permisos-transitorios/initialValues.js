@@ -37,6 +37,7 @@ const createInitialValues = () => {
     docDeclaracionJurada: null,
     docCertificadoAntecedentes: null,
     docFirmaPresidente: null,
+    docAutoridadSanitaria: null,
   };
 };
 

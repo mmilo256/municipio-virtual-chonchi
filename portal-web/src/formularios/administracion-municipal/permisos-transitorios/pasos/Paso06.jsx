@@ -36,6 +36,7 @@ const Paso06 = ({ values }) => {
     docDeclaracionJurada,
     docCertificadoAntecedentes,
     docFirmaPresidente,
+    docAutoridadSanitaria,
   } = values;
 
   const itemStyles = 'mb-2';
@@ -265,6 +266,14 @@ const Paso06 = ({ values }) => {
             rel="noreferrer"
           >
             Firma del representante legal
+          </a>
+          <a
+            target="_blank"
+            href={docAutoridadSanitaria && URL.createObjectURL(docAutoridadSanitaria)}
+            className="block text-left"
+            rel="noreferrer"
+          >
+            Formulario Autoridad Sanitaria
           </a>
         </ul>
       </Accordion>

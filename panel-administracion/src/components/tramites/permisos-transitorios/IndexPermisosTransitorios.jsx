@@ -23,6 +23,8 @@ const IndexPermisosTransitorios = () => {
   const [decretoFirmado, setDecretoFirmado] = useState({});
   const [refresh, setRefresh] = useState(false);
 
+  const [origin, setOrigin] = useState('');
+
   const [loading, setLoading] = useState(false);
 
   // Cargar los decretos si existen
@@ -37,7 +39,7 @@ const IndexPermisosTransitorios = () => {
   // Cambiar el estado a "en revision" en caso de que se abra la solicitud por primera vez
   useEffect(() => {
     (async () => {
-      if (requestStatus === 'pendiente') {
+      if (requestStatus === 'pendiente' && origin !== 'fisico') {
         try {
           await updateRequestStatus(id, 'en revision');
           setRequestStatus('en revision');
@@ -47,7 +49,7 @@ const IndexPermisosTransitorios = () => {
         }
       }
     })();
-  }, [id, requestStatus]);
+  }, [id, requestStatus, origin]);
 
   // Cargar documentos adjuntos
   useEffect(() => {
@@ -83,6 +85,7 @@ const IndexPermisosTransitorios = () => {
         };
         setRequestStatus(data.estado);
         setRequestData(data);
+        setOrigin(response.origen);
       } catch (error) {
         console.log(error);
       }
@@ -100,6 +103,7 @@ const IndexPermisosTransitorios = () => {
       status={requestStatus}
       breadcrumbs={detailBreadcrumbs}
       loading={loading}
+      origen={origin}
       actions={
         <AccionesPermisosTransitorios
           status={requestStatus}

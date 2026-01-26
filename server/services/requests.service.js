@@ -32,16 +32,32 @@ export const getLogs = async (request_id) => {
   return logs;
 };
 
-export const getRequestsByProcedure = async (procedure_id, pageSize, offset, filters) => {
+export const getRequestsByProcedure = async (procedure_id, pageSize, offset, filters, search) => {
   const whereClause = {
     tramite_id: procedure_id,
   };
 
+  // Filtro por estado
   if (filters) {
-    const statusArray = filters.split(',');
-    whereClause.estado = {
-      [Op.in]: statusArray,
-    };
+    const statusArray = filters
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (statusArray.length) {
+      whereClause.estado = {
+        [Op.in]: statusArray,
+      };
+    }
+  }
+
+  // Search por orgName u orgRut
+  if (search && search.trim() !== '') {
+    const s = search.trim();
+
+    whereClause[Op.or] = [
+      { orgName: { [Op.like]: `%${s}%` } },
+      { orgRut: { [Op.like]: `%${s}%` } },
+    ];
   }
 
   const { rows, count } = await Request.findAndCountAll({
@@ -52,11 +68,15 @@ export const getRequestsByProcedure = async (procedure_id, pageSize, offset, fil
       model: User,
       attributes: ['nombres', 'apellidos', 'run'],
     },
+    distinct: true, // importante con include + paginación
   });
 
-  const totalPages = Math.ceil(count / pageSize) === 0 ? 1 : Math.ceil(count / pageSize);
+  const totalPages = Math.max(1, Math.ceil(count / pageSize));
 
-  return { requests: rows, totalPages };
+  return {
+    requests: rows,
+    totalPages,
+  };
 };
 
 export const getUserRequests = async (user_id, pageSize, offset) => {
@@ -115,16 +135,18 @@ export const uploadDocument = async (file, requestId, status, type, name) => {
 
 export const createNewRequest = async (data) => {
   const requestData = {
-    estado: 'pendiente', // Establecer el estado inicial de la solicitud
-    respuestas: JSON.stringify(data.respuestas),
+    estado: data.estado || 'pendiente', // Establecer el estado inicial de la solicitud
+    respuestas: data.respuestas ? JSON.stringify(data.respuestas) : null,
     tramite_id: data.tramite_id,
     usuario_id: data.usuarioId, // Combinar los datos adicionales con los documentos
+    funcionario_id: data?.funcionario_id || null,
+    origen: data.origen || null,
+    orgName: data.respuestas?.orgName || null,
+    orgRut: data.respuestas?.orgRut || null,
   };
   try {
     // Crear la solicitud en la base de datos
     const request = await Request.create(requestData);
-
-    console.log(request.id);
 
     // Registrar el estado inicial de la solicitud en el log de estados
     await RequestsStatusLog.create({ solicitud_id: request.id, estado: 'pendiente' });

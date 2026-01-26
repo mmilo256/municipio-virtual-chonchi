@@ -1,5 +1,28 @@
 import apiClient from './apiClient';
 
+// Función para enviar una nueva solicitud con los datos proporcionados
+export const adjuntarDocumento = async (data, solicitudId) => {
+  try {
+    // Realiza una solicitud POST para enviar la nueva solicitud con los datos proporcionados
+    const response = await apiClient.post(`/requests/${solicitudId}/adjuntar-documento`, data);
+    return response.data;
+  } catch (error) {
+    // Si ocurre un error, lanza una excepción con el mensaje de error
+    console.log(error);
+    throw error.message;
+  }
+};
+
+export const crearSolicitud = async (requestData) => {
+  try {
+    const response = await apiClient.post(`/requests`, requestData);
+    const data = response.data;
+    return data;
+  } catch (e) {
+    throw e.message;
+  }
+};
+
 export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {
   try {
     await apiClient.delete(`/requests/${solicitudId}/documentos-asociados/${documentoId}`);
@@ -69,11 +92,20 @@ export const fetchRequestById = async (requestId) => {
   }
 };
 
-export const fetchRequestsByProcedure = async (procedureId, page = 1, pageSize = 10, filters) => {
+export const fetchRequestsByProcedure = async (
+  procedureId,
+  page = 1,
+  pageSize = 10,
+  filters,
+  search = '',
+) => {
   let queryString = `/requests/procedure/${procedureId}?page=${page}&pageSize=${pageSize}`;
 
   if (filters) {
     queryString += `&filters=${filters}`;
+  }
+  if (search !== '') {
+    queryString += `&search=${search}`;
   }
 
   try {

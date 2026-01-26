@@ -15,9 +15,12 @@ const Request = sequelize.define('solicitudes', {
     'aprobada',
     'finalizada',
   ),
+  origen: DataTypes.ENUM('fisico', 'digital'),
   folio: DataTypes.INTEGER,
   respuestas: DataTypes.TEXT,
   documentos: DataTypes.TEXT,
+  orgName: DataTypes.TEXT,
+  orgRut: DataTypes.TEXT,
 });
 
 export default Request;

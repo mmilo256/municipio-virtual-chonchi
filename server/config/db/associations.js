@@ -17,6 +17,9 @@ const defineAssociations = async () => {
   // Solicitud - Usuario
   Request.belongsTo(User, { foreignKey: 'usuario_id' });
   User.hasMany(Request, { foreignKey: 'usuario_id' });
+  // Solicitud - Funcionario
+  Request.belongsTo(Employee, { foreignKey: 'funcionario_id' });
+  Employee.hasMany(Request, { foreignKey: 'funcionario_id' });
   // Solicitud - Logs
   RequestsStatusLog.belongsTo(Request, { foreignKey: 'solicitud_id' });
   Request.hasMany(RequestsStatusLog, { foreignKey: 'solicitud_id' });

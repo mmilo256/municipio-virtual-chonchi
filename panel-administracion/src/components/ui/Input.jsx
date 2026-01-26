@@ -1,4 +1,4 @@
-const Input = ({ type = 'text', label, value, onChange, name, className }) => {
+const Input = ({ type = 'text', label, value, onChange, name, className, placeholder }) => {
   let input;
   const inputStyles = 'block rounded p-1 text-black outline-none border-2 focus:border-blue-300';
 
@@ -26,6 +26,7 @@ const Input = ({ type = 'text', label, value, onChange, name, className }) => {
           }}
           className={inputStyles}
           type={type}
+          placeholder={placeholder}
         />
       );
       break;

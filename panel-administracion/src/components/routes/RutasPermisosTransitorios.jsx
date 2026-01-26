@@ -1,10 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
-import Solicitudes from '../pages/common/Solicitudes';
 import { PROCEDURES_ID } from '../../../config';
 import IndexPermisosTransitorios from '../tramites/permisos-transitorios/IndexPermisosTransitorios';
 import FormularioSubirDocumento from '../tramites/FormularioSubirDocumento';
 import GenerarDecretoPermisosTransitorios from '../tramites/permisos-transitorios/GenerarDecretoPermisosTransitorios';
 import EnviarDocumento from '../tramites/permisos-transitorios/EnviarDocumento';
+import ListadoSolicitudesPermisosTransitorios from '../tramites/permisos-transitorios/ListadoSolicitudesPermisosTransitorios';
+import AgregarPermisoTransitorio from '../pages/AgregarPermisoTransitorio';
 
 const PermisosTransitorios = () => {
   const tramite = 'Autorización Especial Transitoria';
@@ -21,13 +22,14 @@ const PermisosTransitorios = () => {
         <Route
           index
           element={
-            <Solicitudes
+            <ListadoSolicitudesPermisosTransitorios
               tramiteId={PROCEDURES_ID.permisosTransitorios}
               title={'Solicitudes de Autorización Especial Transitoria'}
               breadcrumbsData={data}
             />
           }
         />
+        <Route path="/agregar" element={<AgregarPermisoTransitorio />} />
         <Route path="/:id" element={<IndexPermisosTransitorios />} />
         <Route
           path="/:id/subir-documento"

@@ -52,6 +52,7 @@ const PermisosTransitoriosForm = () => {
       respuestas,
       tramite_id: id,
       usuarioId,
+      origen: 'digital',
     };
 
     let requestId = null;

@@ -19,10 +19,6 @@ const App = () => {
 
   const arrayRoles = sessionData?.rol?.split(',');
 
-  useEffect(() => {
-    console.log('hola');
-  }, []);
-
   // Obtener los trámites según los permisos del usuario
   useEffect(() => {
     (async () => {

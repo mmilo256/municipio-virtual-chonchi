@@ -40,10 +40,11 @@ export const getAllRequestsByProcedure = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
   const filters = req.query.filters;
+  const search = req.query.search;
   const offset = (page - 1) * pageSize;
 
   try {
-    const requests = await getRequestsByProcedure(id, pageSize, offset, filters);
+    const requests = await getRequestsByProcedure(id, pageSize, offset, filters, search);
     res.status(200).json(requests);
   } catch (e) {
     res.status(500).json({ error: e.message, message: 'Error interno del servidor' });

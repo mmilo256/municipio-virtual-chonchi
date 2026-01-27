@@ -6,6 +6,7 @@ import Heading from '../components/ui/Heading';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import CardSkeleton from '../components/ui/Skeletons/CardSkeleton';
 import Card from '../components/ui/Card';
+import { FaInfoCircle } from 'react-icons/fa';
 
 const Home = () => {
   // Declaración del estado para almacenar los procedimientos.
@@ -30,7 +31,7 @@ const Home = () => {
       {/* Sección de encabezado con una imagen de fondo */}
       <div
         style={{ backgroundPosition: 'center 70%' }}
-        className="relative bg-[url('/chonchi-aereo.jpg')] bg-cover bg-center py-52 mb-2"
+        className="relative bg-[url('/chonchi-aereo.jpg')] bg-cover bg-center py-28 mb-2"
       >
         <div className="absolute inset-0 bg-customBlack bg-opacity-80 flex flex-col justify-center items-center">
           {/* Contenedor de texto centralizado */}
@@ -48,6 +49,13 @@ const Home = () => {
       </div>
       {/* Subtítulo de la sección de servicios */}
       <Container>
+        <p className="flex items-center gap-2 text-sm md:text-base bg-sky-100 p-3 my-4 border-l-4 font-medium text-sky-700 border-sky-500 shadow rounded">
+          <FaInfoCircle size={24} />
+          <span>
+            Este portal se encuentra en proceso de ampliación. Se irán incorporando nuevos trámites
+            de forma progresiva.
+          </span>
+        </p>
         <Breadcrumbs />
       </Container>
       <Heading className="text-center" level={3}>

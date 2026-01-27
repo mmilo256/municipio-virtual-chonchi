@@ -33,7 +33,7 @@ const steps = [
   {
     id: 'antecedentes',
     label: 'Antecedentes',
-    description: 'Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 2 MB.',
+    description: 'Formatos permitidos: PDF, DOCX, JPG, PNG. Tamaño máximo: 5 MB.',
     component: Paso05,
   },
   {

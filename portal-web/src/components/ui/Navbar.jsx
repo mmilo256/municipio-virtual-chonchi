@@ -55,7 +55,7 @@ const Navbar = () => {
                     onClick={() => {
                       setToggleMenu(!toggleMenu);
                     }}
-                    className="block border-b border-b-slate-500 p-3"
+                    className="block border-b hover:bg-slate-700 active:bg-slate-500 border-b-slate-500 py-10 px-4"
                     to={item.href}
                   >
                     {item.name}

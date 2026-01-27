@@ -34,8 +34,6 @@ const RespuestasPermisosTransitorios = ({ data, docs, direct = false }) => {
 
   const itemStyles = 'mb-2';
 
-  console.log(docs);
-
   const openDocument = (id) => {
     window.open(`${API_URL}/documents/${id}/view`);
   };

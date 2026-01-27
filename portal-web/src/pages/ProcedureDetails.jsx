@@ -51,8 +51,8 @@ const ProcedureDetails = () => {
       <div className="block md:hidden mb-2">
         <Button href="formulario" type="link" label="Iniciar trámite" variant="primary" fullWidth />
       </div>
-      <div className="grid md:grid-cols-9 gap-5 text-slate-700">
-        <main className="md:col-span-6 pr-10">
+      <div className="grid lg:grid-cols-9 gap-4 text-slate-700">
+        <main className="lg:col-span-6">
           <article className="mb-4">
             <Heading align="left" level={4}>
               Descripción
@@ -106,7 +106,7 @@ const ProcedureDetails = () => {
             </article>
           )}
         </main>
-        <div className="md:col-span-3 max-h-min shadow-sm rounded p-5 bg-white shadow-slate-400">
+        <div className="lg:col-span-3 max-h-min shadow-sm rounded p-4 text-sm bg-white shadow-slate-400">
           <Heading align="center" level={3}>
             Contacto y atención
           </Heading>

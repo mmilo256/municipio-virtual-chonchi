@@ -14,7 +14,7 @@ const DetailsRenderer = ({ blocks }) => {
 
           case 'list':
             return (
-              <ul key={index} className="list-disc pl-6 space-y-2">
+              <ul key={index} className="">
                 {block.items?.map((item, itemIndex) => {
                   switch (item.type) {
                     case 'text':

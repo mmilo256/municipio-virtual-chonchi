@@ -15,6 +15,8 @@ const useWizardForm = ({
 
   const navigate = useNavigate();
 
+  const MAX_MB = 5;
+
   /* TOTAL DE PASOS DEL FORMULARIO */
 
   const totalSteps = steps.length;
@@ -36,13 +38,20 @@ const useWizardForm = ({
         .replace(/k/g, 'K'); // convierte k a K (opcional pero recomendado)
     }
 
+    const archivoGrandeError = () => {
+      alert(`El archivo no puede pesar más de ${MAX_MB} MB.`);
+      return null;
+    };
+
     setValues((prev) => ({
       ...prev,
       [name]:
         type === 'checkbox'
           ? checked
           : type === 'file'
-            ? files?.[0] || null // 👈 un solo archivo
+            ? files[0]?.size > MAX_MB * 1024 * 1024
+              ? archivoGrandeError()
+              : files?.[0] || null // 👈 un solo archivo
             : newValue,
     }));
   };
@@ -60,8 +69,8 @@ const useWizardForm = ({
   /* NAVEGACIÓN ENTRE PASOS DEL FORMULARIO */
 
   const nextStep = () => {
-    /* const { isValid } = runValidation(); */
-    const isValid = true;
+    const { isValid } = runValidation();
+    /* const isValid = true; */
     if (!isValid) return;
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);

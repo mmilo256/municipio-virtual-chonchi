@@ -1,67 +1,19 @@
-{
-  "requisitos": [
-    {
-      "type": "text",
-      "content": "Antes de iniciar, tenga todos los documentos en formato digital (PDF o imagen legible). Documentos incompletos o ilegibles pueden generar observaciones o rechazo."
-    },
-    {
-      "type": "list",
-      "items": [
-        { "type": "text", "content": "Cédula de identidad del representante legal" },
-        { "type": "text", "content": "RUT tributario de la organización" },
-        { "type": "text", "content": "Certificado de antecedentes para fines especiales" },
-        { "type": "text", "content": "Certificado de vigencia de la persona jurídica" },
-        { "type": "text", "content": "Documento que acredite la ocupación legal del recinto" },
-        { "type": "text", "content": "Declaración jurada simple – Ley N° 19.925 sobre alcoholes" },
-        {
-          "type": "text",
-          "content": "Certificado de antecedentes para fines especiales del presidente de la organización (sólo si la autorización es con venta y consumo de alcohol)"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "content": "Además debe contar con el siguiente documento digitalizado y firmado por el representante legal de la organización:"
-    },
-    {
-      "type": "list",
-      "items": [
-        {
-          "type": "link",
-          "content": "Documento firmado por el representante legal",
-          "href": "#"
-        }
-      ]
-    }
-  ],
-  "info_adicional": [
-    {
-      "type": "list",
-      "items": [
-        { "type": "text", "content": "NO debe tener rendiciones pendientes con la Municipalidad" },
-        {
-          "type": "text",
-          "content": "NO debe tener más de 3 permisos en el mismo año para el expendio de alcohol (exceptuando fechas nacionales y eventos turísticos)"
-        },
-        {
-          "type": "text",
-          "content": "La solicitud debe realizarse con al menos 5 días hábiles de anticipación y será evaluada por la Dirección de Administración Municipal."
-        },
-        { "type": "text", "content": "Las autorizaciones se otorgarán por un máximo de 3 días." },
-        {
-          "type": "text",
-          "content": "Tras la actividad, la organización deberá informar el uso de los fondos a la Dirección de Desarrollo Comunitario en un plazo de 30 días."
-        },
-        {
-          "type": "text",
-          "content": "La limpieza y seguridad son responsabilidad de los organizadores."
-        }
-      ]
-    }
-  ]
-}
-
-
-
-
-[{"type": "list"}]
+[
+  {
+    "type": "list",
+    "items": [
+      {
+        "type": "text",
+        "content": "El acta debe depositarse dentro de los 5 días hábiles posteriores a la fecha de la elección."
+      },
+      {
+        "type": "text",
+        "content": "La información del acta debe ser coherente con la fecha previamente informada."
+      },
+      {
+        "type": "text",
+        "content": "En caso de errores u omisiones, la municipalidad podrá formular observaciones o rechazar el trámite."
+      }
+    ]
+  }
+]

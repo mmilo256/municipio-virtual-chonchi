@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const Card = ({ title, desc, href, direccion }) => {
+const Card = ({ title, desc, href, direccion, habilitado = true }) => {
   let colorDireccion;
 
   switch (direccion) {
@@ -14,18 +14,22 @@ const Card = ({ title, desc, href, direccion }) => {
 
   return (
     <Link
-      to={href}
-      className="rounded p-4 flex flex-col gap-2 shadow hover:-translate-y-0.5 shadow-slate-600 group text-center bg-white hover:text-white transition-all duration-300 hover:bg-primary group"
+      to={habilitado && href}
+      className={`rounded p-4 flex flex-col gap-2 shadow shadow-slate-600 group text-center bg-white transition-all duration-300 ${habilitado && 'hover:-translate-y-0.5 hover:bg-primary hover:text-white'}`}
     >
       <span
-        className={`text-xs font-bold rounded-full ${colorDireccion} group-hover:text-white transition-all`}
+        className={`text-xs font-bold rounded-full ${colorDireccion} transition-all ${habilitado && 'group-hover:text-white'}`}
       >
         {direccion}
       </span>
-      <p className="group-hover:text-white transition-all flex items-center justify-center text-slate-800 text-xl font-semibold">
+      <p
+        className={`transition-all flex items-center justify-center text-slate-800 text-xl font-semibold ${habilitado && 'group-hover:text-white'}`}
+      >
         {title}
       </p>
-      <p className="group-hover:text-white transition-all flex items-center justify-center text-slate-600">
+      <p
+        className={`transition-all flex items-center justify-center text-slate-600 ${habilitado && 'group-hover:text-white'}`}
+      >
         {desc}
       </p>
     </Link>

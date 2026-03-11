@@ -1,81 +1,143 @@
-export const rejectTemplate = (userFullName, reason, title) => {
+export const rejectTemplate = (userFullName, reason) => {
   return `
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .header {
-      text-align: center;
-      padding: 10px 0;
-      border-bottom: 2px solid #007bff;
-    }
-    .header h1 {
-      margin: 0;
-      color: #007bff;
-      font-size: 24px;
-    }
-    .content {
-      padding: 20px 0;
-    }
-    .content p {
-      margin: 10px 0;
-      color: #333333;
-      line-height: 1.5;
-    }
-    .footer {
-      text-align: center;
-      padding: 10px 0;
-      font-size: 12px;
-      color: #777777;
-    }
-    .btn {
-      display: inline-block;
-      margin: 10px 0;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>Municipalidad de Chonchi</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Municipio Virtual Chonchi</title>
+  </head>
+
+  <body style="margin: 0; padding: 0; background-color: #f1f5f9">
+    <!-- Wrapper -->
+    <div style="width: 100%; padding: 32px 16px; box-sizing: border-box">
+      <!-- Container -->
+      <div style="max-width: 560px; margin: 0 auto">
+        <!-- Card -->
+        <div
+          style="
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+          "
+        >
+          <!-- Header -->
+          <div style="padding: 32px 24px 16px 24px">
+            <div style="text-align: center">
+              <img
+                style="width: 60%; margin-bottom: 20px"
+                src="https://municipalidadchonchi.cl/web/wp-content/uploads/2020/07/logo-municipalidad-de-chonchi.png"
+                alt="Municipalidad de Chonchi"
+              />
+              <div style="font-family: Arial, Helvetica, sans-serif">
+                <div style="margin-top: 4px; font-size: 20px; font-weight: 700; color: #3b4a6d">
+                  Municipio Virtual Chonchi
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div style="padding: 0 24px 32px 24px; font-family: Arial, Helvetica, sans-serif">
+            <!-- Saludo -->
+            <div style="font-size: 18px; font-weight: 700; color: #0f172a">
+              Estimada/o ${userFullName},
+            </div>
+
+            <!-- Texto principal -->
+            <div style="margin-top: 12px; font-size: 14px; line-height: 1.6; color: #334155">
+              Lamentamos informarle que su solicitud para un
+              <strong>permiso transitorio</strong> ha sido <strong>rechazada</strong>.
+            </div>
+
+            <!-- Motivo rechazo -->
+            <div
+              style="
+                margin-top: 20px;
+                background-color: #fef2f2;
+                border: 1px solid #fecaca;
+                border-radius: 12px;
+                padding: 16px;
+              "
+            >
+              <div
+                style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #991b1b"
+              >
+                MOTIVO DEL RECHAZO
+              </div>
+
+              <div style="margin-top: 8px; font-size: 14px; color: #7f1d1d; line-height: 1.6">
+                ${reason}
+              </div>
+            </div>
+
+            <!-- Info adicional -->
+            <div
+              style="
+                margin-top: 24px;
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 16px;
+              "
+            >
+              <div style="font-size: 14px; font-weight: 700; color: #0f172a">
+                Información adicional
+              </div>
+
+              <div style="margin-top: 8px; font-size: 14px; line-height: 1.6; color: #334155">
+                Si tiene alguna duda o desea más información, no dude en ponerse en contacto con
+                nosotros a través de los canales oficiales de la municipalidad.
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div style="margin-top: 24px">
+              <a
+                href="https://municipiovirtualchonchi.cl"
+                target="_blank"
+                style="
+                  display: block;
+                  width: 100%;
+                  text-align: center;
+                  background-color: #0f172a;
+                  color: #ffffff;
+                  text-decoration: none;
+                  font-weight: 700;
+                  font-size: 14px;
+                  padding: 12px 16px;
+                  border-radius: 12px;
+                  box-sizing: border-box;
+                "
+              >
+                Ir a Municipio Virtual Chonchi
+              </a>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div
+            style="
+              background-color: #f8fafc;
+              padding: 20px 24px;
+              text-align: center;
+              font-family: Arial, Helvetica, sans-serif;
+            "
+          >
+            <div style="font-size: 12px; color: #64748b">
+              Ilustre Municipalidad de Chonchi · Municipio Virtual Chonchi
+            </div>
+            <div style="margin-top: 8px; font-size: 11px; color: #94a3b8">
+              Este es un correo electrónico generado automáticamente. Por favor, no responder a este
+              mensaje.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="content">
-      <p>Estimado/a ${userFullName},</p>
-      <p>Lamentamos informarle que su solicitud para un permiso transitorio ha sido <strong>rechazada</strong>.</p>
-      <p>Motivo del rechazo:</p>
-      <p><em>${reason}</em></p>
-      <p>Si tiene alguna duda o desea más información, no dude en ponerse en contacto con nosotros.</p>
-      <p>Atentamente,</p>
-      <p><strong>Municipalidad de Chonchi</strong></p>
-    </div>
-    <div class="footer">
-      <p>Este es un mensaje automático, por favor no responda a este correo.</p>
-      <p>&copy; 2024 Municipalidad de Chonchi. Todos los derechos reservados.</p>
-    </div>
-  </div>
-</body>
+  </body>
 </html>
+
 `;
 };

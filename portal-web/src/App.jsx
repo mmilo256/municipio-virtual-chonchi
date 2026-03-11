@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 // import { PROCEDURES_ID } from './config';
-import Login from './pages/Login';
+// import Login from './pages/Login';
 import Home from './pages/Home';
 import Requests from './pages/Requests';
 import RequestTracking from './pages/RequestTracking';
@@ -13,6 +13,8 @@ import ProcedureDetails from './pages/ProcedureDetails';
 import PermisosTransitoriosForm from './pages/tramites/PermisosTransitoriosForm';
 import FechaEleccionDirectorioForm from './pages/tramites/FechaEleccionDirectorioForm';
 import ActaDirectorioForm from './pages/tramites/ActaDirectorioForm';
+import AudienciasAlcaldeForm from './pages/tramites/audienciasAlcaldeForm';
+import Login2 from './pages/Login2';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -36,7 +38,7 @@ function App() {
   return (
     <div className="font-roboto bg-slate-50">
       <Routes>
-        <Route index element={<Login />} />
+        <Route index element={<Login2 />} />
         <Route
           path="/inicio"
           element={
@@ -94,6 +96,14 @@ function App() {
           element={
             <PrivateRoute>
               <ActaDirectorioForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/:id/audiencias-alcalde/formulario"
+          element={
+            <PrivateRoute>
+              <AudienciasAlcaldeForm />
             </PrivateRoute>
           }
         />

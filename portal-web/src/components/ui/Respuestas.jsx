@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import RespuestasPermisosTransitorios from '../../formularios/administracion-municipal/permisos-transitorios/RespuestasPermisosTransitorios';
 import RespuestasFechaEleccionDirectorio from '../../formularios/secretaria-municipal/fecha-eleccion-directorio/RespuestasFechaEleccionDirectorio';
 import RespuestasActaDirectorio from '../../formularios/secretaria-municipal/acta-directorio/RespuestasActaDirectorio';
+import RespuestasAudienciasAlcalde from '../../formularios/administracion-municipal/audiencias-alcalde/RespuestasAudienciasAlcalde';
 
 const Respuestas = ({ data, docs }) => {
   const { slug } = useParams();
@@ -16,6 +17,9 @@ const Respuestas = ({ data, docs }) => {
       break;
     case 'acta-directorio':
       component = <RespuestasActaDirectorio data={data} docs={docs} />;
+      break;
+    case 'audiencias-alcalde':
+      component = <RespuestasAudienciasAlcalde data={data} />;
       break;
 
     default:

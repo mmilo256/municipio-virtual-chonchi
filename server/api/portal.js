@@ -10,7 +10,7 @@ const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/email', authMiddleware, emailRoutes);
-router.use('/procedures', authMiddleware, proceduresRoutes);
+router.use('/procedures', proceduresRoutes);
 router.use('/requests', authMiddleware, requestsRoutes);
 router.use('/documents', authMiddleware, documentsRoutes);
 

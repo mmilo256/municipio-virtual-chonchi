@@ -1,5 +1,3 @@
-export const approveTemplate = (userFullName) => {
-  return `
 <!doctype html>
 <html lang="es">
   <head>
@@ -42,35 +40,33 @@ export const approveTemplate = (userFullName) => {
           <div style="padding: 0 24px 32px 24px; font-family: Arial, Helvetica, sans-serif">
             <!-- Saludo -->
             <div style="font-size: 18px; font-weight: 700; color: #0f172a">
-              Estimada/o ${userFullName},
+              Estimada/o {{nombreUsuario}},
             </div>
 
             <!-- Texto principal -->
             <div style="margin-top: 12px; font-size: 14px; line-height: 1.6; color: #334155">
-              Nos complace informarle que su solicitud para un
-              <strong>permiso transitorio</strong> ha sido <strong>aprobada</strong>.
+              Lamentamos informarle que su solicitud para un
+              <strong>permiso transitorio</strong> ha sido <strong>rechazada</strong>.
             </div>
 
-            <!-- Aprobación -->
+            <!-- Motivo rechazo -->
             <div
               style="
                 margin-top: 20px;
-                background-color: #ecfdf5;
-                border: 1px solid #a7f3d0;
+                background-color: #fef2f2;
+                border: 1px solid #fecaca;
                 border-radius: 12px;
                 padding: 16px;
               "
             >
               <div
-                style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #065f46"
+                style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #991b1b"
               >
-                SOLICITUD APROBADA
+                MOTIVO DEL RECHAZO
               </div>
 
-              <div style="margin-top: 8px; font-size: 14px; color: #065f46; line-height: 1.6">
-                Adjunto a este correo encontrará el
-                <strong>decreto correspondiente</strong> que formaliza la aprobación de su
-                solicitud.
+              <div style="margin-top: 8px; font-size: 14px; color: #7f1d1d; line-height: 1.6">
+                {{motivoRechazo}}
               </div>
             </div>
 
@@ -85,28 +81,13 @@ export const approveTemplate = (userFullName) => {
               "
             >
               <div style="font-size: 14px; font-weight: 700; color: #0f172a">
-                Información importante
+                Información adicional
               </div>
 
-              <ul
-                style="
-                  margin: 10px 0 0 18px;
-                  padding: 0;
-                  color: #334155;
-                  font-size: 14px;
-                  line-height: 1.6;
-                "
-              >
-                <li style="margin: 0 0 6px 0">
-                  Debe conservar el decreto adjunto como respaldo oficial.
-                </li>
-                <li style="margin: 0 0 6px 0">
-                  El permiso aprobado deberá cumplirse según la normativa vigente.
-                </li>
-                <li style="margin: 0">
-                  Ante cualquier duda, puede contactarse con la municipalidad.
-                </li>
-              </ul>
+              <div style="margin-top: 8px; font-size: 14px; line-height: 1.6; color: #334155">
+                Si tiene alguna duda o desea más información, no dude en ponerse en contacto con
+                nosotros a través de los canales oficiales de la municipalidad.
+              </div>
             </div>
 
             <!-- CTA -->
@@ -155,6 +136,3 @@ export const approveTemplate = (userFullName) => {
     </div>
   </body>
 </html>
-
-`;
-};

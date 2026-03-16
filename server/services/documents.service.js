@@ -1,11 +1,11 @@
-import Document from '../models/documentModel.js';
+import Documento from '../models/Documento.js';
 import fs from 'fs/promises';
 import path from 'path';
 
 // Borrar un documento asociado a una solicitud
 export const deleteDocumentService = async (id) => {
   try {
-    const document = await Document.findByPk(id);
+    const document = await Documento.findByPk(id);
     if (!document) {
       throw new Error('No se encontró el documento');
     }
@@ -17,7 +17,7 @@ export const deleteDocumentService = async (id) => {
     await fs.unlink(documentPath);
 
     // Borrar registro de la base de datos
-    await Document.destroy({ where: { id } });
+    await Documento.destroy({ where: { id } });
   } catch (error) {
     console.error(error);
     throw new Error('No se pudo borrar el documento');
@@ -25,7 +25,7 @@ export const deleteDocumentService = async (id) => {
 };
 
 export const getDocumentService = async (id) => {
-  const document = await Document.findByPk(id);
+  const document = await Documento.findByPk(id);
   if (!document) {
     return { message: 'No se encontró el documentus' };
   }
@@ -34,7 +34,7 @@ export const getDocumentService = async (id) => {
 
 export const downloadDocumentService = async (id) => {
   try {
-    const document = await Document.findByPk(id);
+    const document = await Documento.findByPk(id);
     if (!document) {
       throw new Error('No se encontró el documento');
     }

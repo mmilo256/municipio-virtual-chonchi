@@ -3,7 +3,7 @@ import {
   downloadDocumentService,
   getDocumentService,
 } from '../services/documents.service.js';
-import Document from '../models/documentModel.js';
+import Documento from '../models/Documento.js';
 import fs from 'fs';
 import path from 'path';
 import mime from 'mime';
@@ -38,7 +38,7 @@ export const getDocument = async (req, res) => {
 export const viewDocument = async (req, res) => {
   const { id } = req.params;
   try {
-    const doc = await Document.findByPk(id);
+    const doc = await Documento.findByPk(id);
     if (!doc) return res.status(404).json({ message: 'No encontrado' });
 
     const fullPath = path.resolve(doc.ruta); // ej: /services/munivirtual-api/uploads/...

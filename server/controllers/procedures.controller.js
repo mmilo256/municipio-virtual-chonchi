@@ -1,12 +1,12 @@
-import Procedure from '../models/procedureModel.js';
-import Direccion from '../models/DireccionModel.js';
+import Tramite from '../models/Tramite.js';
+import Direccion from '../models/Direccion.js';
 
 // Obtener todos los trámites disponibles
 export const getAllProcedures = async (req, res) => {
   try {
     // Consultar todos los trámites de la base de datos
-    const procedures = await Procedure.findAll({
-      attributes: ['id', 'descripcion_corta', 'nombre', 'titulo'],
+    const procedures = await Tramite.findAll({
+      attributes: ['id', 'descripcion_corta', 'slug', 'titulo'],
       include: {
         model: Direccion,
         attributes: ['nombre'],
@@ -23,7 +23,7 @@ export const getAllProcedures = async (req, res) => {
 export const getProcedureById = async (req, res) => {
   const { id } = req.params;
   try {
-    const procedure = await Procedure.findByPk(id);
+    const procedure = await Tramite.findByPk(id);
     res.json(procedure);
   } catch (error) {
     res.json({ message: 'No se pudo encontrar el trámite', error: error.message });
@@ -58,7 +58,7 @@ export const createProcedure = async (req, res) => {
     telefono,
   };
   try {
-    const newProcedure = await Procedure.create(data);
+    const newProcedure = await Tramite.create(data);
     res.json({ message: 'Trámite creado correctamente', procedure: newProcedure });
   } catch (error) {
     console.log(error);

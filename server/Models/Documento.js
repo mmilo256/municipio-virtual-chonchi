@@ -1,7 +1,7 @@
 import { sequelize } from '../config/db/config.js';
 import { DataTypes } from 'sequelize';
 
-const Document = sequelize.define('documentos', {
+const Documento = sequelize.define('documentos', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,4 +15,4 @@ const Document = sequelize.define('documentos', {
   tipo: DataTypes.ENUM('adjunto', 'subido', 'generado'),
 });
 
-export default Document;
+export default Documento;

@@ -1,13 +1,13 @@
 import { sequelize } from '../config/db/config.js';
 import { DataTypes } from 'sequelize';
 
-const Procedure = sequelize.define('tramites', {
+const Tramite = sequelize.define('tramites', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  nombre: DataTypes.STRING,
+  slug: DataTypes.STRING,
   titulo: DataTypes.STRING,
   descripcion: DataTypes.TEXT,
   descripcion_corta: DataTypes.TEXT,
@@ -19,6 +19,7 @@ const Procedure = sequelize.define('tramites', {
   horario_atencion: DataTypes.STRING,
   email: DataTypes.STRING,
   telefono: DataTypes.STRING,
+  activo: DataTypes.BOOLEAN,
 });
 
-export default Procedure;
+export default Tramite;

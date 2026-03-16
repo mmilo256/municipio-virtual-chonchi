@@ -1,7 +1,7 @@
 import { sequelize } from '../config/db/config.js';
 import { DataTypes } from 'sequelize';
 
-const Employee = sequelize.define('funcionarios', {
+const Usuario = sequelize.define('usuarios', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -9,12 +9,7 @@ const Employee = sequelize.define('funcionarios', {
   },
   nombres: DataTypes.STRING,
   apellidos: DataTypes.STRING,
-  username: DataTypes.STRING,
-  password: DataTypes.STRING,
-  email: DataTypes.STRING,
   run: DataTypes.STRING,
-  rol: DataTypes.STRING,
-  salt: DataTypes.STRING,
 });
 
-export default Employee;
+export default Usuario;

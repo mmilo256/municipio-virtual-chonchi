@@ -29,7 +29,7 @@ const Button = ({
   return (
     <button
       onClick={onClick}
-      className={`block ${isLoading && 'cursor-wait'} flex justify-center p-2 rounded ${wFull && 'w-full'} ${buttonVariant}`}
+      className={`block ${isLoading && 'cursor-wait'} disabled:bg-slate-400 flex justify-center p-2 rounded ${wFull && 'w-full'} ${buttonVariant}`}
       disabled={isLoading || !isValid}
       type={type}
     >

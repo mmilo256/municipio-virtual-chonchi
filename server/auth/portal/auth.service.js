@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { config } from '../../config/config.js';
-import User from '../../models/userModel.js';
+import Usuario from '../../models/Usuario.js';
 
 const { clientId, clientSecret, redirectUri } = config.oauth;
 
@@ -81,12 +81,12 @@ export const insertUser = async (userData) => {
     };
 
     // Verificar si el usuario ya existe en la base de datos, si no, agregarlo
-    const userExists = await User.findOne({ where: { run: userRut } });
+    const userExists = await Usuario.findOne({ where: { run: userRut } });
 
     let userId;
 
     if (!userExists) {
-      const newUser = await User.create(newUserData);
+      const newUser = await Usuario.create(newUserData);
       userId = newUser.id;
     } else {
       userId = userExists.id;

@@ -1,4 +1,4 @@
-import Document from '../../models/documentModel.js';
+import Documento from '../../models/Documento.js';
 import { generarDecretoService, obtenerDecretosService } from './service.js';
 
 // Subir documento firmado
@@ -8,7 +8,7 @@ export const subirDecretoFirmado = async (req, res) => {
   console.log(file); // Imprime el archivo para fines de depuración
 
   // Guarda la información del decreto firmado en la base de datos
-  await Document.create({
+  await Documento.create({
     ruta: file.path,
     nombre: file.filename,
     tipo: 'generado',

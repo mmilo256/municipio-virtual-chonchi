@@ -1,13 +1,12 @@
 import { sequelize } from '../config/db/config.js';
 import { DataTypes } from 'sequelize';
 
-const Log = sequelize.define('logs', {
+const FuncionarioTramite = sequelize.define('asignaciones_tramites', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  accion: DataTypes.STRING,
 });
 
-export default Log;
+export default FuncionarioTramite;

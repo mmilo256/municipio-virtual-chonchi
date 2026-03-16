@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from '../auth/admin/auth.routes.js';
 import proceduresRoutes from '../routes/procedures.routes.js';
+import funcionariosRoutes from '../routes/funcionarios.routes.js';
 import requestsRoutes from '../routes/requests.routes.js';
 import documentsRoutes from '../routes/documents.routes.js';
 import emailRoutes from '../routes/email.routes.js';
@@ -11,6 +12,7 @@ const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/procedures', authMiddleware, proceduresRoutes);
+router.use('/funcionarios', authMiddleware, funcionariosRoutes);
 router.use('/requests', authMiddleware, requestsRoutes);
 router.use('/documents', authMiddleware, documentsRoutes);
 router.use('/email', authMiddleware, emailRoutes);

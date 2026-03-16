@@ -1,4 +1,4 @@
-import Document from '../models/documentModel.js';
+import Documento from '../models/Documento.js';
 import {
   createNewRequest,
   getLogs,
@@ -125,7 +125,7 @@ export const adjuntarDocumento = async (req, res) => {
   };
 
   try {
-    await Document.create(data);
+    await Documento.create(data);
     return res.json({
       body: req.body,
       file: req.file,

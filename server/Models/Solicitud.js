@@ -1,7 +1,7 @@
 import { sequelize } from '../config/db/config.js';
 import { DataTypes } from 'sequelize';
 
-const Request = sequelize.define('solicitudes', {
+const Solicitud = sequelize.define('solicitudes', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -23,4 +23,4 @@ const Request = sequelize.define('solicitudes', {
   orgRut: DataTypes.TEXT,
 });
 
-export default Request;
+export default Solicitud;

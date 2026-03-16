@@ -1,25 +1,25 @@
 import { Op } from 'sequelize';
 // import { sequelize } from '../config/db/config.js';
-import Document from '../models/documentModel.js';
-import Procedure from '../models/procedureModel.js';
-import Request from '../models/requestModel.js';
-import RequestsStatusLog from '../models/RequestsStatusLogModel.js';
-import User from '../models/userModel.js';
+import Documento from '../models/Documento.js';
+import Tramite from '../models/Tramite.js';
+import Solicitud from '../models/Solicitud.js';
+import Log from '../models/Log.js';
+import Usuario from '../models/Usuario.js';
 
 export const getRequests = async (where = null) => {
   let options = {};
   if (where) {
     options.where = where;
   }
-  const requests = await Request.findAll(options);
+  const requests = await Solicitud.findAll(options);
   return requests;
 };
 
 export const getRequestById = async (id) => {
-  const request = await Request.findByPk(id, {
+  const request = await Solicitud.findByPk(id, {
     include: [
       {
-        model: Procedure,
+        model: Tramite,
         attributes: ['titulo'],
       },
     ],
@@ -28,7 +28,7 @@ export const getRequestById = async (id) => {
 };
 
 export const getLogs = async (request_id) => {
-  const logs = await RequestsStatusLog.findAll({ where: { solicitud_id: request_id } });
+  const logs = await Log.findAll({ where: { solicitud_id: request_id } });
   return logs;
 };
 
@@ -60,12 +60,12 @@ export const getRequestsByProcedure = async (procedure_id, pageSize, offset, fil
     ];
   }
 
-  const { rows, count } = await Request.findAndCountAll({
+  const { rows, count } = await Solicitud.findAndCountAll({
     limit: pageSize,
     offset,
     where: whereClause,
     include: {
-      model: User,
+      model: Usuario,
       attributes: ['nombres', 'apellidos', 'run'],
     },
     distinct: true, // importante con include + paginación
@@ -80,13 +80,13 @@ export const getRequestsByProcedure = async (procedure_id, pageSize, offset, fil
 };
 
 export const getUserRequests = async (user_id, pageSize, offset) => {
-  const { rows, count } = await Request.findAndCountAll({
+  const { rows, count } = await Solicitud.findAndCountAll({
     limit: pageSize,
     offset,
     where: { usuario_id: user_id },
     order: [['createdAt', 'DESC']],
     include: {
-      model: Procedure,
+      model: Tramite,
       attributes: ['titulo', 'nombre'],
     },
   });
@@ -97,8 +97,8 @@ export const getUserRequests = async (user_id, pageSize, offset) => {
 
 export const updateRequestStatusService = async (id, status) => {
   try {
-    await Request.update({ estado: status }, { where: { id } });
-    await RequestsStatusLog.create({ estado: status, solicitud_id: id });
+    await Solicitud.update({ estado: status }, { where: { id } });
+    await Log.create({ estado: status, solicitud_id: id });
     return { message: 'Estado actualizado exitosamente', status, requestId: id };
   } catch (error) {
     throw { error, message: 'No se pudo actualizar el estado de la solicitud' };
@@ -107,7 +107,7 @@ export const updateRequestStatusService = async (id, status) => {
 
 export const getDocumentsByRequest = async (requestId, type) => {
   try {
-    const docs = await Document.findAll({ where: { solicitud_id: requestId, tipo: type } });
+    const docs = await Documento.findAll({ where: { solicitud_id: requestId, tipo: type } });
     return docs;
   } catch (error) {
     console.log(error);
@@ -125,7 +125,7 @@ export const uploadDocument = async (file, requestId, status, type, name) => {
       nombre: name || 'sin nombre',
       solicitud_id: requestId,
     };
-    const newDoc = await Document.create(doc);
+    const newDoc = await Documento.create(doc);
     return newDoc;
   } catch (error) {
     console.log(error);
@@ -146,10 +146,10 @@ export const createNewRequest = async (data) => {
   };
   try {
     // Crear la solicitud en la base de datos
-    const request = await Request.create(requestData);
+    const request = await Solicitud.create(requestData);
 
     // Registrar el estado inicial de la solicitud en el log de estados
-    await RequestsStatusLog.create({ solicitud_id: request.id, estado: 'pendiente' });
+    await Log.create({ solicitud_id: request.id, estado: 'pendiente' });
     return request;
   } catch (error) {
     console.error(error);
@@ -168,7 +168,7 @@ export const createNewRequest = async (data) => {
   };
   try {
     // Crear la solicitud en la base de datos
-    const request = await Request.create(requestData, { transaction: t });
+    const request = await Solicitud.create(requestData, { transaction: t });
 
     const documents = files.map((file) => {
       const str = file.fieldname;
@@ -188,7 +188,7 @@ export const createNewRequest = async (data) => {
     await Document.bulkCreate(documents, { transaction: t });
 
     // Registrar el estado inicial de la solicitud en el log de estados
-    await RequestsStatusLog.create(
+    await Log.create(
       { solicitud_id: request.id, estado: 'pendiente' },
       { transaction: t },
     );

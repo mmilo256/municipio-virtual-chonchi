@@ -10,6 +10,7 @@ import { verifySession } from './services/authServices';
 import RutasFechaEleccionDirectorio from './components/routes/RutasFechaEleccionDirectorio';
 import RutasActaDirectorio from './components/routes/RutasActaDirectorio';
 import { obtenerTramites } from './services/proceduresServices';
+import RutasFuncionarios from './components/routes/RutasFuncionarios';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData, sessionData } = useAuthStore();
@@ -17,16 +18,13 @@ const App = () => {
 
   const [procedures, setProcedures] = useState([]);
 
-  const arrayRoles = sessionData?.rol?.split(',');
-
   // Obtener los trámites según los permisos del usuario
   useEffect(() => {
     (async () => {
       setLoading(true);
       try {
         const data = await obtenerTramites();
-        const filteredData = data.filter((tramite) => arrayRoles.includes(tramite?.nombre));
-        setProcedures(filteredData);
+        setProcedures(data);
       } catch (e) {
         console.log(e);
       }
@@ -69,6 +67,7 @@ const App = () => {
         >
           <Route index element={<Home loading={loading} procedures={procedures} />} />
           <Route path="/admin/admin" element={<Navigate to="/" replace />} />
+          <Route path="/funcionarios/*" element={<RutasFuncionarios />} />
           <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} />
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
           <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} />

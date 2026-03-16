@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import Employee from '../../models/employeeModel.js';
+import Funcionario from '../../models/Funcionario.js';
 import { hashPassword } from '../../utils/encryption.utils.js';
 import { generateJWT, generateRandomToken } from '../../utils/token.utils.js';
 
@@ -14,7 +14,7 @@ export const createEmployee = async (data) => {
   const hashedPassword = hashPassword(password, salt);
 
   // Crea un nuevo empleado en la base de datos
-  const employee = await Employee.create({
+  const employee = await Funcionario.create({
     nombres,
     apellidos,
     username,
@@ -35,7 +35,7 @@ export const loginUser = async (username, pass) => {
   }
 
   // Verificar si el usuario existe en la base de datos
-  const user = await Employee.findOne({ where: { username } });
+  const user = await Funcionario.findOne({ where: { username } });
 
   if (!user) {
     throw { status: 404, message: 'No se encontró el usuario' };

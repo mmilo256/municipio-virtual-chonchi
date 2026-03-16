@@ -1,10 +1,10 @@
 import { formatDate } from '../../utils/format.utils.js';
 import { generarDocumento } from '../../utils/document.utils.js';
-import Document from '../../models/documentModel.js';
+import Documento from '../../models/Documento.js';
 
 export const obtenerDecretosService = async (requestId) => {
   try {
-    const decretos = await Document.findAll({
+    const decretos = await Documento.findAll({
       where: { solicitud_id: requestId, tipo: 'generado' },
     });
     const decretoSinFirma = decretos.find((doc) => doc.estado === 'sin firmar');
@@ -64,7 +64,7 @@ export const generarDecretoService = async (requestId, data) => {
     originalname: filename,
   };
 
-  const nuevoDecreto = await Document.create(dataDecreto);
+  const nuevoDecreto = await Documento.create(dataDecreto);
 
   return nuevoDecreto;
 };

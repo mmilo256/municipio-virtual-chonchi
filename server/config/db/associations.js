@@ -28,6 +28,9 @@ const defineAssociations = async () => {
   // Solicitud - Documento
   Documento.belongsTo(Solicitud, { foreignKey: 'solicitud_id' });
   Solicitud.hasMany(Documento, { foreignKey: 'solicitud_id', as: 'documentosAsociados' });
+  // Funcionario - Trámite
+  Funcionario.belongsToMany(Tramite, { through: 'funcionario_tramites' });
+  Tramite.belongsToMany(Funcionario, { through: 'funcionario_tramites' });
 };
 
 export default defineAssociations;

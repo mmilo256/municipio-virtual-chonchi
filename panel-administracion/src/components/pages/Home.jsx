@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useAuthStore from '../../stores/useAuthStore';
 import HomeSection from '../home/HomeSection';
 import ProcedureButton from '../home/ProcedureButton';
-import { obtenerTramites } from '../../services/proceduresServices';
+import { obtenerTramites } from '../../services/tramites.service';
 import Breadcrumbs from '../ui/Breadcrumbs';
 
 const Home = () => {
@@ -16,8 +16,8 @@ const Home = () => {
     (async () => {
       setLoading(true);
       try {
-        const data = await obtenerTramites();
-        setProcedures(data);
+        const response = await obtenerTramites();
+        setProcedures(response.data);
       } catch (e) {
         console.log(e);
       }

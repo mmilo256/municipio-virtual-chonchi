@@ -1,7 +1,7 @@
-import { sequelize } from '../config/db/config.js';
+/* import { sequelize } from '../config/db/config.js';
 import { DataTypes } from 'sequelize';
 
-const FuncionarioTramite = sequelize.define('asignaciones_tramites', {
+const FuncionarioTramite = sequelize.define('funcionario_tramites', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -9,4 +9,4 @@ const FuncionarioTramite = sequelize.define('asignaciones_tramites', {
   },
 });
 
-export default FuncionarioTramite;
+export default FuncionarioTramite; */

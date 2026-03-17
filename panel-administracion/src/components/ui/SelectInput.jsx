@@ -1,4 +1,12 @@
-const SelectInput = ({ label, value, onChange, name, className, options = [] }) => {
+const SelectInput = ({
+  label,
+  value,
+  onChange,
+  name,
+  className,
+  options = [{ label: '', value: '' }],
+  defaultText = 'Seleccionar',
+}) => {
   const inputStyles = 'block rounded p-1 text-black outline-none border-2 focus:border-blue-300';
 
   return (
@@ -12,9 +20,10 @@ const SelectInput = ({ label, value, onChange, name, className, options = [] }) 
         }}
         className={inputStyles}
       >
+        <option disabled value="">{`${defaultText}`}</option>
         {options.map((op) => (
-          <option key={op} value={op}>
-            {op}
+          <option key={op.value} value={op.value}>
+            {op.label}
           </option>
         ))}
       </select>

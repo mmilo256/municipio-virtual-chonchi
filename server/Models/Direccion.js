@@ -7,6 +7,7 @@ const Direccion = sequelize.define('direcciones_municipales', {
     primaryKey: true,
     autoIncrement: true,
   },
+  slug: DataTypes.STRING,
   nombre: DataTypes.STRING,
 });
 

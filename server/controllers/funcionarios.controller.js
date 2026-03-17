@@ -9,10 +9,10 @@ export const obtenerFuncionarios = async (req, res) => {
     const funcionarios = await Funcionario.findAll({
       attributes: ['id', 'nombres', 'apellidos', 'username', 'email', 'run', 'rol', 'activo'],
     });
-    res.status(200).json(funcionarios);
+    res.status(200).json({ data: funcionarios, message: 'Funcionarios obtenidos exitosamente' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'No se pudo obtener los funcionarios' });
+    res.status(500).json({ error, message: 'No se pudo obtener los funcionarios' });
   }
 };
 

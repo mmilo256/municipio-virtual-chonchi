@@ -123,7 +123,10 @@ const FormFuncionario = () => {
     }
   };
 
-  const rolOptions = ['Funcionario', 'Administrador'];
+  const rolOptions = [
+    { label: 'Administrador', value: 'Administrador' },
+    { label: 'Funcionario', value: 'Funcionario' },
+  ];
 
   return (
     <div className="mb-4 max-w-[50rem] mx-auto">

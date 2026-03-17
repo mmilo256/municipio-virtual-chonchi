@@ -16,8 +16,8 @@ const Funcionarios = () => {
     (async () => {
       setLoading(true);
       try {
-        const data = await obtenerFuncionarios();
-        const formattedData = data.map((fun) => ({
+        const response = await obtenerFuncionarios();
+        const formattedData = response.data.map((fun) => ({
           rut: fun.run,
           nombres: fun.nombres,
           apellidos: fun.apellidos,
@@ -64,9 +64,10 @@ const Funcionarios = () => {
         setCurrentFilters={setCurrentFilters}
         setCurrentPage={setCurrentPage}
       /> */}
+
       {!loading ? (
         funcionarios.length === 0 ? (
-          <p>No hay solicitudes pendientes</p>
+          <p>No hay funcionarios registrados</p>
         ) : (
           <>
             <BaseTable data={funcionarios} columns={columns} />
@@ -78,7 +79,7 @@ const Funcionarios = () => {
           </>
         )
       ) : (
-        <p>Cargando solicitudes...</p>
+        <p>Cargando funcionarios...</p>
       )}
     </div>
   );

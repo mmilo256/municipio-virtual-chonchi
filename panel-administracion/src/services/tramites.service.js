@@ -14,3 +14,8 @@ export const crearTramite = async (data) => {
   const response = await apiClient.post('/tramites', data);
   return response.data;
 };
+
+export const editarTramite = async (id, data) => {
+  const response = await apiClient.patch(`/tramites/${id}`, data);
+  return response.data;
+};

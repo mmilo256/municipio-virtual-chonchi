@@ -8,7 +8,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Textarea from '../../ui/Textarea';
 import { obtenerDireccionesMunicipales } from '../../../services/direccionesMunicipales.service';
 import SelectInput from '../../ui/SelectInput';
-import { crearTramite, obtenerTramitePorId } from '../../../services/tramites.service';
+import {
+  crearTramite,
+  editarTramite,
+  obtenerTramitePorId,
+} from '../../../services/tramites.service';
 
 const FormTramite = () => {
   // Estados
@@ -38,8 +42,6 @@ const FormTramite = () => {
   const [funcionarios, setFuncionarios] = useState([]);
   const [funcionariosFiltrados, setFuncionariosFiltrados] = useState([]);
 
-  console.log(funcionariosAutorizados);
-
   // Cargar datos del trámite si existe el ID
   useEffect(() => {
     (async () => {
@@ -63,7 +65,7 @@ const FormTramite = () => {
         setTelefono(tramite.telefono);
         setDireccionMunicipal(tramite.direccion_id);
         setActivo(tramite.activo);
-        /* setFuncionariosAutorizados(funAutorizados); */
+        setFuncionariosAutorizados(funAutorizados);
       }
     })();
   }, [id]);
@@ -76,6 +78,7 @@ const FormTramite = () => {
         label: e.nombre,
         value: e.id,
       }));
+
       setDireccionesMunicipales(direccionesMunicipalesData);
 
       const funcionariosResponse = await obtenerFuncionarios();
@@ -148,6 +151,39 @@ const FormTramite = () => {
       const newArray = funcionariosAutorizados.filter((fun) => fun !== item);
       return newArray;
     });
+  };
+
+  const editarInfoTramite = async () => {
+    const values = {};
+
+    values.activo = activo;
+
+    if (titulo !== '') values.titulo = titulo;
+    if (slug !== '') values.slug = slug;
+    if (descripcion !== '') values.descripcion = descripcion;
+    if (descripcionCorta !== '') values.descripcionCorta = descripcionCorta;
+    if (infoAdicional !== '') values.infoAdicional = infoAdicional;
+    if (requisitos !== '') values.requisitos = requisitos;
+    if (costo !== '') values.costo = costo;
+    if (modalidadPago !== '') values.modalidadPago = modalidadPago;
+    if (direccion !== '') values.direccion = direccion;
+    if (horarioAtencion !== '') values.horarioAtencion = horarioAtencion;
+    if (email !== '') values.email = email;
+    if (telefono !== '') values.telefono = telefono;
+    if (direccionMunicipal !== '') values.direccionMunicipal = direccionMunicipal;
+    if (funcionariosAutorizados.length !== 0)
+      values.funcionariosAutorizados = funcionariosAutorizados;
+
+    setLoading(true);
+
+    try {
+      const response = await editarTramite(id, values);
+      toast.success(response.message);
+    } catch (error) {
+      toast.warning(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Crear trámite
@@ -289,28 +325,6 @@ const FormTramite = () => {
             onChange={setFuncionarioActual}
             options={funcionariosFiltrados}
           />
-          {/* <label className="block mb-3">
-            <p>Seleccionar funcionario</p>
-            <select
-              className="block rounded p-1 text-black outline-none border-2 focus:border-blue-300 w-full"
-              value={funcionarioActual}
-              onChange={(e) => {
-                setFuncionarioActual(e.target.value);
-              }}
-            >
-              <option disabled value="">
-                Seleccionar
-              </option>
-              {funcionariosAutorizados.map((funcionario) => {
-                console.log(funcionario);
-                return (
-                  <option key={funcionario.id} value={funcionario.id}>
-                    {funcionario.nombre}
-                  </option>
-                );
-              })}
-            </select>
-          </label> */}
           <Button
             isValid={funcionarioActual}
             onClick={agregarFuncionario}
@@ -321,15 +335,16 @@ const FormTramite = () => {
         <div>
           <p>Funcionarios autorizados</p>
           <ul className="bg-[#fff] p-2 rounded border space-y-2">
-            {/* {funcionariosAutorizados.length === 0 ? (
+            {funcionariosAutorizados.length === 0 ? (
               <p className="text-slate-500 italic text-sm">
                 No hay funcionarios autorizados para gestionar solicitudes de este trámite
               </p>
             ) : (
               funcionariosAutorizados.map((funcionario, index) => {
-                const nombreFuncionario = funcionarios.find(
+                const funcionarioEncontrado = funcionarios.find(
                   (fun) => fun.value === Number(funcionario),
-                ).label;
+                );
+                const nombreFuncionario = funcionarioEncontrado?.label || 'funko pop';
                 return (
                   <li key={index} className="flex items-center justify-between border-b py-2">
                     <p className="text-sm">{nombreFuncionario}</p>
@@ -345,14 +360,14 @@ const FormTramite = () => {
                   </li>
                 );
               })
-            )} */}
+            )}
           </ul>
         </div>
       </form>
       <div className="flex gap-4 justify-end mt-4">
         <Button onClick={goBack} variant="primary" text="Volver" />
         <Button
-          onClick={agregarTramite}
+          onClick={id ? editarInfoTramite : agregarTramite}
           isLoading={loading}
           variant="secondary"
           text={id ? 'Guardar cambios' : 'Agregar trámite'}

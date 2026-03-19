@@ -2,7 +2,93 @@ import Tramite from '../models/Tramite.js';
 import Direccion from '../models/Direccion.js';
 import { sequelize } from '../config/db/config.js';
 import Funcionario from '../models/Funcionario.js';
+import { Op } from 'sequelize';
 /* import FuncionarioTramite from '../models/FuncionarioTramite.js'; */
+
+export const editarTramite = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    titulo,
+    slug,
+    descripcion,
+    descripcionCorta: descripcion_corta,
+    infoAdicional: info_adicional,
+    requisitos,
+    costo,
+    modalidadPago: modalidad_pago,
+    direccion,
+    horarioAtencion: horario_atencion,
+    email,
+    telefono,
+    activo,
+    direccionMunicipal: direccion_id,
+    funcionariosAutorizados,
+  } = req.body;
+
+  const tramiteExiste = await Tramite.findByPk(id, {
+    include: [{ model: Funcionario, attributes: ['id'], through: { attributes: [] } }],
+  });
+
+  if (!tramiteExiste) {
+    return res.status(404).json({ error: true, message: 'No se encontró el trámite' });
+  }
+
+  const slugExiste = await Tramite.findOne({ where: { slug, id: { [Op.ne]: id } } });
+
+  if (slugExiste) {
+    return res.status(400).json({ error: true, message: 'Ya existe un trámite con este nombre' });
+  }
+
+  const values = {};
+
+  if (titulo !== undefined && titulo !== tramiteExiste.titulo) values.titulo = titulo;
+  if (slug !== undefined && slug !== tramiteExiste.slug) values.slug = slug;
+  if (descripcion !== undefined && descripcion !== tramiteExiste.descripcion)
+    values.descripcion = descripcion;
+  if (descripcion_corta !== undefined && descripcion_corta !== tramiteExiste.descripcion_corta)
+    values.descripcion_corta = descripcion_corta;
+  if (info_adicional !== undefined && info_adicional !== tramiteExiste.info_adicional)
+    values.info_adicional = info_adicional;
+  if (requisitos !== undefined && requisitos !== tramiteExiste.requisitos)
+    values.requisitos = requisitos;
+  if (costo !== undefined && costo !== tramiteExiste.costo) values.costo = costo;
+  if (modalidad_pago !== undefined && modalidad_pago !== tramiteExiste.modalidad_pago)
+    values.modalidad_pago = modalidad_pago;
+  if (direccion !== undefined && direccion !== tramiteExiste.direccion)
+    values.direccion = direccion;
+  if (horario_atencion !== undefined && horario_atencion !== tramiteExiste.horario_atencion)
+    values.horario_atencion = horario_atencion;
+  if (email !== undefined && email !== tramiteExiste.email) values.email = email;
+  if (telefono !== undefined && telefono !== tramiteExiste.telefono) values.telefono = telefono;
+  if (activo !== undefined && activo !== tramiteExiste.activo) values.activo = activo;
+  if (direccion_id !== undefined && direccion_id !== tramiteExiste.direccion_id)
+    values.direccion_id = direccion_id;
+
+  const formattedFuncionarios = tramiteExiste.toJSON().funcionarios.map((fun) => fun.id);
+
+  const mismosFuncionarios =
+    JSON.stringify([...funcionariosAutorizados].sort((a, b) => a - b)) ===
+    JSON.stringify([...formattedFuncionarios].sort((a, b) => a - b));
+
+  const t = await sequelize.transaction();
+
+  try {
+    if (Object.values(values).length === 0 && mismosFuncionarios) {
+      await t.rollback();
+      return res.status(400).json({ error: true, message: 'No se realizó ningún cambio' });
+    }
+
+    await tramiteExiste.update(values, { transaction: t });
+
+    await tramiteExiste.setFuncionarios(funcionariosAutorizados, { transaction: t });
+    await t.commit();
+    res.status(200).json({ data: tramiteExiste, message: 'El trámite ha sido editado' });
+  } catch (error) {
+    await t.rollback();
+    res.status(400).json({ error, message: 'No se pudo editar el trámite' });
+  }
+};
 
 export const crearTramite = async (req, res) => {
   const {
@@ -52,8 +138,6 @@ export const crearTramite = async (req, res) => {
   try {
     const tramite = await Tramite.create(tramiteData, { transaction: t });
     await tramite.setFuncionarios(funcionarios, { transaction: t });
-
-    console.log(tramite);
     await t.commit();
     res.status(200).json({ data: tramite, message: 'Trámite creado exitosamente' });
   } catch (error) {

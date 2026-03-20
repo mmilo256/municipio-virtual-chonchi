@@ -34,15 +34,17 @@ const Home = () => {
         <HomeSection title="Solicitudes por trámite">
           <div className="grid grid-cols-2 gap-2">
             {!loading ? (
-              procedures.map((procedure, index) => (
-                <ProcedureButton
-                  key={index}
-                  to={procedure.nombre}
-                  text={procedure.titulo}
-                  description={procedure.descripcion_corta}
-                  direccionMunicipal={procedure.direcciones_municipale.nombre}
-                />
-              ))
+              procedures.map((procedure, index) => {
+                return (
+                  <ProcedureButton
+                    key={index}
+                    to={procedure.slug}
+                    text={procedure.titulo}
+                    description={procedure.descripcion_corta}
+                    direccionMunicipal={procedure.direcciones_municipale.nombre}
+                  />
+                );
+              })
             ) : (
               <div className="h-[8.5rem] w-full bg-slate-200 animate-pulse rounded"></div>
             )}

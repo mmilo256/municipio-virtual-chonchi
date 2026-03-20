@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Funcionarios from '../pages/admin_pages/Funcionarios';
 import FormFuncionario from '../pages/admin_pages/FormFuncionario';
 
-const RutasFuncionarios = () => {
+const RutasGestionFuncionarios = () => {
   return (
     <div>
       <Routes>
@@ -14,4 +14,4 @@ const RutasFuncionarios = () => {
   );
 };
 
-export default RutasFuncionarios;
+export default RutasGestionFuncionarios;

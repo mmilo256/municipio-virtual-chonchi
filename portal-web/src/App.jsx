@@ -65,7 +65,7 @@ function App() {
         />
 
         <Route
-          path="/:id/:slug"
+          path="/:slug"
           element={
             <PrivateRoute>
               <ProcedureDetails />
@@ -75,7 +75,7 @@ function App() {
 
         {/* --------------------------TRÁMITES-------------------------- */}
 
-        <Route
+        {/* <Route
           path="/:id/permisos-transitorios/formulario"
           element={
             <PrivateRoute>
@@ -106,7 +106,7 @@ function App() {
               <AudienciasAlcaldeForm />
             </PrivateRoute>
           }
-        />
+        /> */}
       </Routes>
     </div>
   );

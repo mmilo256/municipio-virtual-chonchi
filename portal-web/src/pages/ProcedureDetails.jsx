@@ -1,147 +1,79 @@
 import { useEffect, useState } from 'react';
-import { fetchProcedureById } from '../services/procedures.service';
+import { obtenerTramitePorSlug } from '../services/tramites.service';
 import Container from '../components/ui/Container';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
-import Heading from '../components/ui/Heading';
 import Button from '../components/ui/buttons/Button';
 import { useParams } from 'react-router-dom';
-import DetailsRenderer from '../components/detailsRenderer';
 
 const ProcedureDetails = () => {
-  const { id } = useParams();
-  const [procedure, setProcedure] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [requisitos, setRequisitos] = useState([]);
-  const [infoAdicional, setInfoAdicional] = useState([]);
-  const [contactoTelefonos, setContactoTelefonos] = useState([]);
-  const [emails, setEmails] = useState([]);
+  const { slug } = useParams();
+  const [tramite, setTramite] = useState({});
 
-  const breadcrumbs = [{ label: procedure.titulo, href: `/${procedure.nombre}` }];
+  const breadcrumbs = [{ label: tramite.titulo, href: `/${tramite.slug}` }];
 
-  // Obtener toda la información del trámite
+  console.log(tramite);
+
+  // Obtener metadatos del trámite
   useEffect(() => {
     (async () => {
-      setLoading(true);
-      const data = await fetchProcedureById(id);
-      const reqArray = JSON.parse(data?.requisitos);
-      const infoArray = JSON.parse(data?.info_adicional);
-      const telefonosArray = JSON.parse(data?.telefono);
-      const emailsArray = JSON.parse(data?.email);
-      setEmails(emailsArray);
-      setContactoTelefonos(telefonosArray);
-      setRequisitos(reqArray);
-      setInfoAdicional(infoArray);
-      setProcedure(data);
-      setLoading(false);
+      const response = await obtenerTramitePorSlug(slug);
+      setTramite(response.data);
     })();
-  }, [id]);
+  }, [slug]);
 
   return (
     <Container>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <div className="mb-4">
-        {!loading ? (
-          <Heading className="text-center md:text-left text-2xl md:text-2xl">
-            {procedure?.titulo}
-          </Heading>
-        ) : (
-          <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse my-4">{''}</p>
-        )}
+        <h1 className="text-3xl text-center md:text-left my-10">{tramite.titulo}</h1>
       </div>
-      <div className="block md:hidden mb-2">
+      <div className="block md:hidden mb-6">
         <Button href="formulario" type="link" label="Iniciar trámite" variant="primary" fullWidth />
       </div>
       <div className="grid lg:grid-cols-9 gap-4 text-slate-700">
-        <main className="lg:col-span-6">
-          <article className="mb-4">
-            <Heading align="left" level={4}>
-              Descripción
-            </Heading>
-            {!loading ? (
-              <p className="text-justify">{procedure?.descripcion}</p>
-            ) : (
-              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
-            )}
-          </article>
-          <article className="mb-4">
-            <Heading align="left" level={4}>
-              Requisitos
-            </Heading>
-            {!loading ? (
-              <DetailsRenderer blocks={requisitos} />
-            ) : (
-              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
-            )}
-          </article>
-          <article className="mb-4">
-            <Heading align="left" level={4}>
-              Información Adicional
-            </Heading>
-            {!loading ? (
-              <DetailsRenderer blocks={infoAdicional} />
-            ) : (
-              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse"></p>
-            )}
-          </article>
-          <article className="mb-4">
-            <Heading align="left" level={4}>
-              Costo
-            </Heading>
-            {!loading ? (
-              <p>{procedure?.costo || 'No tiene costo'}</p>
-            ) : (
-              <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-8"></p>
-            )}
-          </article>
-          {procedure?.modalidad_pago !== '' && (
-            <article className="mb-4">
-              <Heading align="left" level={4}>
-                Modalidad de pago
-              </Heading>
-              {!loading ? (
-                <p>{procedure?.modalidad_pago}</p>
-              ) : (
-                <p className="bg-gray-200 rounded-full w-[40rem] animate-pulse h-8"></p>
-              )}
-            </article>
-          )}
+        <main className="space-y-6 lg:col-span-6">
+          <div>
+            <h2 className="text-xl font-bold mb-1">Descripción</h2>
+            <p>{tramite.descripcion}</p>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold mb-1">Requisitos</h2>
+            <p>{tramite.requisitos}</p>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold mb-1">Información Adicional</h2>
+            <p>{tramite.info_adicional}</p>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold mb-1">Costo</h2>
+            <p>{tramite.costo}</p>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold mb-1">Modalidad de pago</h2>
+            <p>{tramite.modalidad_pago}</p>
+          </div>
         </main>
-        <div className="lg:col-span-3 max-h-min shadow-sm rounded p-4 text-sm bg-white shadow-slate-400">
-          <Heading align="center" level={3}>
-            Contacto y atención
-          </Heading>
-          <Heading align="left" level={4}>
-            Dirección
-          </Heading>
-          {!loading ? (
-            <p className="break-words">{procedure?.direccion}</p>
-          ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
-          )}
-          <Heading align="left" level={4}>
-            Horario de atención
-          </Heading>
-          {!loading ? (
-            <p className="break-words">{procedure?.horario_atencion}</p>
-          ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
-          )}
-          <Heading align="left" level={4}>
-            Correo electrónico
-          </Heading>
-          {!loading ? (
-            <DetailsRenderer blocks={emails} />
-          ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
-          )}
-          <Heading align="left" level={4}>
-            Teléfono(s)
-          </Heading>
-          {!loading ? (
-            <DetailsRenderer blocks={contactoTelefonos} />
-          ) : (
-            <p className="bg-gray-200 rounded-full w-[90%] animate-pulse"></p>
-          )}
+        <div className="lg:col-span-3 max-h-min shadow-sm rounded p-4 text-sm bg-white shadow-slate-400 space-y-4">
+          <h2 className="text-2xl font-bold">Contacto y atención</h2>
+          <div>
+            <h3 className="text-xl font-bold">Dirección</h3>
+            <p className="break-words">{tramite?.direccion}</p>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold">Horario de atención</h3>
+            <p className="break-words">{tramite?.horario_atencion}</p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold">Correo electrónico</h3>
+            <p className="break-words">{tramite?.email}</p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold">Teléfono</h3>
+            <p className="break-words">{tramite?.telefono}</p>
+          </div>
+
           <div className="mt-4 hidden md:block">
             <Button
               href="formulario"

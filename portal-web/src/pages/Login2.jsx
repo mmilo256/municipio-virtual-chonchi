@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchAllProcedures } from '../services/procedures.service';
+import { obtenerTramites } from '../services/tramites.service';
 import Container from '../components/ui/Container';
 import Heading from '../components/ui/Heading';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
@@ -9,18 +9,20 @@ import { FaInfoCircle } from 'react-icons/fa';
 import BotonClaveUnica from '../components/ui/buttons/BotonClaveUnica';
 
 const Login2 = () => {
-  const [procedures, setProcedures] = useState([]);
+  const [tramites, setTramites] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // useEffect para cargar los procedimientos cuando el componente se monta.
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const data = await fetchAllProcedures();
-      setProcedures(data);
+      const response = await obtenerTramites();
+      setTramites(response.data);
       setLoading(false);
     })();
   }, []); // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
+
+  console.log(tramites);
 
   return (
     <>
@@ -60,7 +62,7 @@ const Login2 = () => {
       {/* Componente para mostrar los procedimientos en un grid de tarjetas */}
       <Container className="py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {!loading ? (
-          procedures?.map((card, index) => (
+          tramites?.map((card, index) => (
             <Card
               habilitado={false}
               key={index}

@@ -5,6 +5,9 @@ import Usuario from '../../models/Usuario.js';
 import Documento from '../../models/Documento.js';
 import Log from '../../models/Log.js';
 import Direccion from '../../models/Direccion.js';
+import Formulario from '../../models/Formulario.js';
+import PasoFormulario from '../../models/PasoFormulario.js';
+import CampoFormulario from '../../models/CampoFormulario.js';
 
 const defineAssociations = async () => {
   // Solicitud - Trámite
@@ -31,6 +34,15 @@ const defineAssociations = async () => {
   // Funcionario - Trámite
   Funcionario.belongsToMany(Tramite, { through: 'funcionario_tramites' });
   Tramite.belongsToMany(Funcionario, { through: 'funcionario_tramites' });
+  // Formulario - PasoFormulario
+  Formulario.hasMany(PasoFormulario, { foreignKey: 'formulario_id' });
+  PasoFormulario.belongsTo(Formulario, { foreignKey: 'formulario_id' });
+  // PasoFormulario - CampoFormulario
+  PasoFormulario.hasMany(CampoFormulario, { foreignKey: 'paso_id' });
+  CampoFormulario.belongsTo(PasoFormulario, { foreignKey: 'paso_id' });
+  // Tramite - Formulario
+  Tramite.belongsTo(Formulario, { foreignKey: 'formulario_id' });
+  Formulario.hasMany(Tramite, { foreignKey: 'formulario_id' });
 };
 
 export default defineAssociations;

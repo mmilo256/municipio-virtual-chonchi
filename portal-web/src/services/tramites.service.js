@@ -1,18 +1,15 @@
 import apiClient from './apiClient';
 
 // Función para obtener todos los trámites disponibles
-export const fetchAllProcedures = async () => {
-  try {
-    // Realiza una solicitud GET para obtener todos los trámites disponibles
-    const response = await apiClient.get(`/procedures`);
+export const obtenerTramites = async () => {
+  const response = await apiClient.get('/tramites');
+  const data = response.data;
+  return data;
+};
 
-    // Extrae y devuelve los trámites desde la respuesta
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error.message;
-  }
+export const obtenerTramitePorSlug = async (slug) => {
+  const response = await apiClient.get(`/tramites/slug/${slug}`);
+  return response.data;
 };
 
 // Función para obtener un trámite específico por su ID

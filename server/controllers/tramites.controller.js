@@ -151,7 +151,7 @@ export const obtenerTramites = async (req, res) => {
   try {
     // Consultar todos los trámites de la base de datos
     const procedures = await Tramite.findAll({
-      attributes: ['id', 'titulo', 'slug', 'activo'],
+      attributes: ['id', 'titulo', 'descripcion_corta', 'slug', 'activo'],
       include: {
         model: Direccion,
         attributes: ['id', 'nombre'],
@@ -183,6 +183,32 @@ export const obtenerTramitePorId = async (req, res) => {
     });
 
     res.status(200).json({ data: tramite, message: 'Tramites obtenidos correctamente' }); // Enviar la lista de trámites como respuesta
+  } catch (error) {
+    // Registrar el error en caso de fallo
+    console.error(error);
+    res.status(500).json({ message: 'No se pudo obtener los trámites' });
+  }
+};
+
+// Obtener todos los trámites disponibles
+export const obtenerTramitePorSlug = async (req, res) => {
+  const { slug } = req.params;
+
+  try {
+    // Consultar todos los trámites de la base de datos
+    const tramite = await Tramite.findOne({
+      where: { slug },
+      include: [
+        { model: Direccion, attributes: ['id', 'nombre'] },
+        {
+          model: Funcionario,
+          attributes: ['id', 'nombres', 'apellidos'],
+          through: { attributes: [] },
+        },
+      ],
+    });
+
+    res.status(200).json({ data: tramite, message: 'Tramite obtenido correctamente' }); // Enviar la lista de trámites como respuesta
   } catch (error) {
     // Registrar el error en caso de fallo
     console.error(error);

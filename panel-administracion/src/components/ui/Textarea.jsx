@@ -1,6 +1,6 @@
 const Textarea = ({ label, value, onChange, name, className, placeholder }) => {
   const inputStyles =
-    'block rounded p-1 text-black outline-none border-2 focus:border-blue-300 resize-none h-28';
+    'block rounded p-1 text-black outline-none border-2 focus:border-blue-300 h-28';
 
   return (
     <label className={`flex flex-col mb-3 ${className}`}>

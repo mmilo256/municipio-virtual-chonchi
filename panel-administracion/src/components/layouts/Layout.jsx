@@ -9,6 +9,7 @@ const Layout = () => {
   const NAVIGATION = [
     { label: 'Gestionar funcionarios', href: 'funcionarios' },
     { label: 'Gestionar tramites', href: 'tramites' },
+    { label: 'Gestionar formularios', href: 'formularios' },
   ];
 
   return (

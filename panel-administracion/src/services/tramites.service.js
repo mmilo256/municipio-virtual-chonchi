@@ -10,6 +10,11 @@ export const obtenerTramitePorId = async (id) => {
   return response.data;
 };
 
+export const obtenerTramitePorSlug = async (slug) => {
+  const response = await apiClient.get(`/tramites/slug/${slug}`);
+  return response.data;
+};
+
 export const crearTramite = async (data) => {
   const response = await apiClient.post('/tramites', data);
   return response.data;

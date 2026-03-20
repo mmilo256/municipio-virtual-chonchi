@@ -1,15 +1,24 @@
-import { Route, Routes } from 'react-router-dom';
-import Tramites from '../pages/admin_pages/Tramites';
-import FormTramite from '../pages/admin_pages/FormTramite';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { obtenerTramitePorSlug } from '../../services/tramites.service';
 
 const RutasTramites = () => {
+  const { slug } = useParams();
+
+  const [tramite, setTramite] = useState({});
+
+  console.log(tramite);
+
+  useEffect(() => {
+    (async () => {
+      const response = await obtenerTramitePorSlug(slug);
+      setTramite(response.data);
+    })();
+  }, [slug]);
+
   return (
     <div>
-      <Routes>
-        <Route index element={<Tramites />} />
-        <Route path="/agregar" element={<FormTramite />} />
-        <Route path="/:id/editar" element={<FormTramite />} />
-      </Routes>
+      <pre>{JSON.stringify(tramite, null, 4)}</pre>
     </div>
   );
 };

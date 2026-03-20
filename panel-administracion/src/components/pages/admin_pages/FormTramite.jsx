@@ -245,12 +245,14 @@ const FormTramite = () => {
         <Input name="titulo" value={titulo} onChange={setTitulo} label="Nombre del trámite" />
         <Input name="slug" value={slug} onChange={setSlug} label="Slug" />
         <Textarea
+          className="col-span-2"
           name="descripcion"
           value={descripcion}
           onChange={setDescripcion}
           label="Descripción"
         />
         <Textarea
+          className="col-span-2"
           name="descripcion-corta"
           value={descripcionCorta}
           onChange={setDescripcionCorta}

@@ -18,12 +18,8 @@ const Formularios = () => {
       try {
         const response = await obtenerFormularios();
         const formattedData = response.data.map((fun) => ({
-          rut: fun.run,
-          nombres: fun.nombres,
-          apellidos: fun.apellidos,
-          usuario: fun.username,
-          email: fun.email,
-          rol: fun.rol,
+          titulo: fun.titulo,
+          descripcion: fun.descripcion,
           activo: fun.activo ? (
             <span className="bg-green-200 text-green-800 py-0.5 px-2 text-xs rounded-full">
               Activo
@@ -44,12 +40,12 @@ const Formularios = () => {
     })();
   }, []);
 
-  const columns = ['RUT', 'Nombres', 'Apellidos', 'Usuario', 'Email', 'Rol', 'Activo', 'Acciones'];
+  const columns = ['Título', 'Descripción', 'Activo', 'Acciones'];
 
   const navigate = useNavigate();
 
   const agregarFuncionario = () => {
-    navigate('agregar');
+    navigate('crear');
   };
 
   return (
@@ -57,7 +53,7 @@ const Formularios = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <h1 className="text-2xl font-bold my-4">Administrar formularios</h1>
       <div className="mb-2">
-        <Button onClick={agregarFuncionario} variant="secondary" text="Agregar funcionario" />
+        <Button onClick={agregarFuncionario} variant="secondary" text="Agregar formulario" />
       </div>
       {/* <TableFilters
         currentFilters={currentFilters}

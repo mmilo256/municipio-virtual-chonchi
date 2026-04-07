@@ -44,7 +44,7 @@ const Formularios = () => {
 
   const navigate = useNavigate();
 
-  const agregarFuncionario = () => {
+  const agregarFormulario = () => {
     navigate('crear');
   };
 
@@ -53,7 +53,7 @@ const Formularios = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <h1 className="text-2xl font-bold my-4">Administrar formularios</h1>
       <div className="mb-2">
-        <Button onClick={agregarFuncionario} variant="secondary" text="Agregar formulario" />
+        <Button onClick={agregarFormulario} variant="secondary" text="Agregar formulario" />
       </div>
       {/* <TableFilters
         currentFilters={currentFilters}

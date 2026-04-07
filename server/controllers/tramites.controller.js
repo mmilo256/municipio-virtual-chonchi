@@ -23,6 +23,7 @@ export const editarTramite = async (req, res) => {
     telefono,
     activo,
     direccionMunicipal: direccion_id,
+    formularioSeleccionado: formulario_id,
     funcionariosAutorizados,
   } = req.body;
 
@@ -64,6 +65,8 @@ export const editarTramite = async (req, res) => {
   if (activo !== undefined && activo !== tramiteExiste.activo) values.activo = activo;
   if (direccion_id !== undefined && direccion_id !== tramiteExiste.direccion_id)
     values.direccion_id = direccion_id;
+  if (formulario_id !== undefined && formulario_id !== tramiteExiste.formulario_id)
+    values.formulario_id = formulario_id;
 
   const formattedFuncionarios = tramiteExiste.toJSON().funcionarios.map((fun) => fun.id);
 
@@ -106,6 +109,7 @@ export const crearTramite = async (req, res) => {
     telefono,
     activo,
     direccionMunicipal,
+    formulario_id,
     funcionarios,
   } = req.body;
 
@@ -131,6 +135,7 @@ export const crearTramite = async (req, res) => {
     telefono,
     activo,
     direccion_id: direccionMunicipal,
+    formulario_id,
   };
 
   const t = await sequelize.transaction();

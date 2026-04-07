@@ -1,11 +1,14 @@
 import { Op } from 'sequelize';
 import Formulario from '../models/Formulario.js';
+import PasoFormulario from '../models/PasoFormulario.js';
 
 // Obtener un formulario según su ID
 export const obtenerFormularioPorId = async (req, res) => {
   const { id } = req.params;
   try {
-    const form = await Formulario.findByPk(id);
+    const form = await Formulario.findByPk(id, {
+      include: { model: PasoFormulario, attributes: ['id', 'titulo', 'descripcion', 'orden'] },
+    });
     res.status(200).json({ data: form, message: 'Formulario obtenido correctamente' });
   } catch (error) {
     res.status(500).json({ error, message: 'No se pudo obtener el formulario' });

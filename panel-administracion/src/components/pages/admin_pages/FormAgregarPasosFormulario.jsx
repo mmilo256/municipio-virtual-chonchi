@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Breadcrumbs from '../../ui/Breadcrumbs';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
@@ -9,6 +9,8 @@ import { crearPasosFormulario } from '../../../services/pasosFormularios.service
 
 const FormAgregarPasosFormulario = () => {
   const { id } = useParams();
+
+  const [editMode, setEditMode] = useState(false);
 
   const [formulario, setFormulario] = useState({});
   const [pasosFormulario, setPasosFormulario] = useState([]);
@@ -22,6 +24,10 @@ const FormAgregarPasosFormulario = () => {
     (async () => {
       const response = await obtenerFormularioPorId(id);
       setFormulario(response.data);
+      if (response.data.pasos_formularios.length > 0) {
+        setEditMode(true);
+        setPasosFormulario(response.data.pasos_formularios);
+      }
     })();
   }, [id]);
 
@@ -33,6 +39,12 @@ const FormAgregarPasosFormulario = () => {
     { label: 'Pasos formulario', href: `/formularios/${id}/pasos` },
   ];
 
+  // Resetear campos
+  const resetForm = () => {
+    setTituloPasoActual('');
+    setDescripcionPasoActual('');
+  };
+
   // Guardar pasos
   const onGuardarCambios = async () => {
     const data = {
@@ -41,20 +53,31 @@ const FormAgregarPasosFormulario = () => {
     };
     try {
       const response = await crearPasosFormulario(data);
+      toast.success(response.message);
       console.log(response);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
   // Agregar pasos al formulario
   const onAgregarPaso = () => {
-    const data = {
-      titulo: tituloPasoActual,
-      descripcion: descripcionPasoActual,
-      orden: pasosFormulario.length + 1,
-    };
-    setPasosFormulario((prev) => [...prev, data]);
+    if (tituloPasoActual) {
+      const tituloExiste = pasosFormulario.some((paso) => paso.titulo === tituloPasoActual);
+      if (!tituloExiste) {
+        const data = {
+          titulo: tituloPasoActual,
+          descripcion: descripcionPasoActual,
+          orden: pasosFormulario.length + 1,
+        };
+        setPasosFormulario((prev) => [...prev, data]);
+        resetForm();
+      } else {
+        toast.warning('Ya existe un paso con este título');
+      }
+    } else {
+      toast.warning('El título del paso es obligatorio');
+    }
   };
 
   // Quitar un paso del formulario
@@ -67,14 +90,7 @@ const FormAgregarPasosFormulario = () => {
     <div className="mb-4 max-w-[50rem] mx-auto">
       <ToastContainer />
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <h1
-        onClick={() => {
-          console.log(pasosFormulario);
-        }}
-        className="text-2xl font-bold my-4"
-      >
-        {id ? 'Editar formulario' : 'Crear formulario'}
-      </h1>
+      <h1 className="text-2xl font-bold my-4">{editMode ? 'Modificar pasos' : 'Agregar pasos'}</h1>
       <div className="p-4 bg-[#fff] shadow rounded shadow-slate-500 mb-4">
         <h2 className="font-bold mb-2">Formulario creado</h2>
         <p className="text-sm mb-1">
@@ -90,6 +106,10 @@ const FormAgregarPasosFormulario = () => {
           <span className="text-slate-500">{formulario.activo ? 'Activo' : 'Inactivo'}</span>
         </p>
       </div>
+      <p className="bg-amber-100 p-2 rounded mb-4 border text-amber-800 border-amber-300">
+        ADVERTENCIA: Al modificar los pasos de un formulario, tendrá que volver a configurar los
+        campos de cada paso.
+      </p>
       <form className="space-y-4">
         <div className="p-4 bg-[#fff] shadow rounded shadow-slate-500">
           <h2 className="font-bold">Agregar paso</h2>
@@ -109,30 +129,34 @@ const FormAgregarPasosFormulario = () => {
           <p className="text-sm text-slate-500 mb-4">
             Administre el orden y contenido general de cada paso
           </p>
-          {pasosFormulario.length !== 0
-            ? pasosFormulario.map((paso) => (
-                <div
-                  key={paso.titulo}
-                  className="flex justify-between items-start p-4 rounded bg-[#fff] shadow shadow-slate-400 mb-4"
-                >
-                  <div>
-                    <h3 className="font-bold">{paso.titulo}</h3>
-                    <p className="text-sm text-slate-500">{paso.descripcion}</p>
-                  </div>
-                  {
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onEliminarPaso(paso.titulo);
-                      }}
-                      className="border border-red-500 text-red-500 bg-red-100 px-3 py-1 text-sm rounded"
-                    >
-                      Eliminar
-                    </button>
-                  }
+          {pasosFormulario.length !== 0 ? (
+            pasosFormulario.map((paso) => (
+              <div
+                key={paso.titulo}
+                className="flex justify-between items-start p-4 rounded bg-[#fff] shadow shadow-slate-400 mb-4"
+              >
+                <div>
+                  <h3 className="font-bold">{paso.titulo}</h3>
+                  <p className="text-sm text-slate-500">{paso.descripcion}</p>
                 </div>
-              ))
-            : ''}
+                {
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onEliminarPaso(paso.titulo);
+                    }}
+                    className="border border-red-500 text-red-500 bg-red-100 px-3 py-1 text-sm rounded"
+                  >
+                    Eliminar
+                  </button>
+                }
+              </div>
+            ))
+          ) : (
+            <p className="italic text-slate-500 text-sm bg-[#fff] border p-2 rounded">
+              Este formulario no tiene pasos asignados
+            </p>
+          )}
         </div>
       </form>
       <div className="flex gap-4 justify-end mt-4">

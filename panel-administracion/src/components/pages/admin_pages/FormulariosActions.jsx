@@ -11,7 +11,7 @@ const FormulariosActions = ({ id }) => {
     navigate(`${id}/pasos`);
   };
 
-  const onClickEditarPasos = () => {
+  const onClickConfigurarCampos = () => {
     navigate(`${id}/pasos/editar`);
   };
 
@@ -30,10 +30,10 @@ const FormulariosActions = ({ id }) => {
         Agregar pasos
       </button>
       <button
-        onClick={onClickEditarPasos}
+        onClick={onClickConfigurarCampos}
         className="py-0.5 px-4 bg-orange-500 text-xs hover:bg-orange-400 text-amber-50 rounded"
       >
-        Editar pasos
+        Configurar campos
       </button>
     </div>
   );

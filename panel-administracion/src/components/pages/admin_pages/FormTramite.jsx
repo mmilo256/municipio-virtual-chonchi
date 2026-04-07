@@ -13,6 +13,7 @@ import {
   editarTramite,
   obtenerTramitePorId,
 } from '../../../services/tramites.service';
+import { obtenerFormularios } from '../../../services/formularios.service';
 
 const FormTramite = () => {
   // Estados
@@ -42,6 +43,9 @@ const FormTramite = () => {
   const [funcionarios, setFuncionarios] = useState([]);
   const [funcionariosFiltrados, setFuncionariosFiltrados] = useState([]);
 
+  const [formularios, setFormularios] = useState([]);
+  const [formularioSeleccionado, setFormularioSeleccionado] = useState('');
+
   // Cargar datos del trámite si existe el ID
   useEffect(() => {
     (async () => {
@@ -66,9 +70,22 @@ const FormTramite = () => {
         setDireccionMunicipal(tramite.direccion_id);
         setActivo(tramite.activo);
         setFuncionariosAutorizados(funAutorizados);
+        setFormularioSeleccionado(tramite.formulario_id ?? '');
       }
     })();
   }, [id]);
+
+  // Cargar listado de formularios
+  useEffect(() => {
+    (async () => {
+      const response = await obtenerFormularios();
+      const data = response.data.map((form) => ({
+        label: form.titulo,
+        value: form.id,
+      }));
+      setFormularios(data);
+    })();
+  }, []);
 
   // Obtener funcionarios y direcciones municipales
   useEffect(() => {
@@ -132,6 +149,7 @@ const FormTramite = () => {
     setActivo(true);
     setFuncionarioActual('');
     setFuncionariosAutorizados([]);
+    setFormularioSeleccionado('');
   };
 
   // Volver a la página anterior
@@ -171,6 +189,7 @@ const FormTramite = () => {
     if (email !== '') values.email = email;
     if (telefono !== '') values.telefono = telefono;
     if (direccionMunicipal !== '') values.direccionMunicipal = direccionMunicipal;
+    if (formularioSeleccionado !== '') values.formularioSeleccionado = formularioSeleccionado;
     if (funcionariosAutorizados.length !== 0)
       values.funcionariosAutorizados = funcionariosAutorizados;
 
@@ -222,6 +241,7 @@ const FormTramite = () => {
       activo,
       direccionMunicipal: Number(direccionMunicipal),
       funcionarios: funcionariosAutorizados,
+      formulario_id: Number(formularioSeleccionado),
     };
 
     setLoading(true);
@@ -315,6 +335,18 @@ const FormTramite = () => {
           </label>
         </div>
 
+        <div className="my-4 col-span-2 flex items-center gap-4">
+          <span className="font-bold">Formulario</span>
+          <hr className="w-full" />
+        </div>
+        <SelectInput
+          className="col-span-2"
+          label="Seleccionar formulario"
+          value={formularioSeleccionado}
+          onChange={setFormularioSeleccionado}
+          name="formulario"
+          options={formularios}
+        />
         <div className="my-4 col-span-2 flex items-center gap-4">
           <span className="font-bold">Permisos</span>
           <hr className="w-full" />

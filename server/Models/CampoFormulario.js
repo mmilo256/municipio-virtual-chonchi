@@ -10,9 +10,9 @@ const CampoFormulario = sequelize.define('campos_formularios', {
   etiqueta: DataTypes.STRING,
   nombre_interno: DataTypes.STRING,
   placeholder: DataTypes.STRING,
-  tipo: DataTypes.ENUM(['text', 'textarea', 'select']),
+  tipo: DataTypes.ENUM(['texto', 'email', 'telefono', 'rut']),
   orden: DataTypes.INTEGER,
-  opciones: DataTypes.JSON,
+  opciones: DataTypes.STRING,
   texto_ayuda: DataTypes.STRING,
   obligatorio: DataTypes.BOOLEAN,
 });

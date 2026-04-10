@@ -57,10 +57,13 @@ const FormConfigurarCampos = () => {
   ];
 
   const tiposCampos = [
-    { label: 'Texto', value: 'texto' },
+    { label: 'Texto (corto)', value: 'text' },
+    { label: 'Texto (largo)', value: 'textarea' },
     { label: 'Email', value: 'email' },
-    { label: 'Teléfono', value: 'telefono' },
+    { label: 'Teléfono', value: 'phone' },
     { label: 'RUT', value: 'rut' },
+    { label: 'Selección', value: 'select' },
+    { label: 'Archivo', value: 'file' },
   ];
 
   const agregarCampo = () => {

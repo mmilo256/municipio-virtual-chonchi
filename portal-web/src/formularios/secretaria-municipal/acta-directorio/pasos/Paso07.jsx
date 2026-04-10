@@ -1,5 +1,5 @@
 import FormField from '../../../../components/form/FormField';
-import InputFile from '../../../../components/ui/InputFile';
+import InputFile from '../../../../components/form/Inputs/InputFile';
 
 const Paso07 = ({ values, onChange, errors }) => {
   return (

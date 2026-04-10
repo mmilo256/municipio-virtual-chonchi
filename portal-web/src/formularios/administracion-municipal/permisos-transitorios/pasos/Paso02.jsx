@@ -1,6 +1,6 @@
-import InputText from '../../../../components/ui/InputText';
 import FormField from '../../../../components/form/FormField';
-import InputSelect from '../../../../components/ui/InputSelect';
+import InputSelect from '../../../../components/form/Inputs/InputSelect';
+import InputText from '../../../../components/form/Inputs/InputText';
 
 const Paso02 = ({ values, onChange, errors }) => {
   const options = [

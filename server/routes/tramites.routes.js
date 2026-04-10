@@ -2,6 +2,7 @@ import e from 'express';
 import {
   crearTramite,
   editarTramite,
+  obtenerFormularioPorSlugDeTramite,
   obtenerTramitePorId,
   obtenerTramitePorSlug,
   obtenerTramites,
@@ -12,6 +13,7 @@ const router = e.Router();
 router.get('/', obtenerTramites);
 router.get('/:id', obtenerTramitePorId);
 router.get('/slug/:slug', obtenerTramitePorSlug);
+router.get('/:slug/formulario', obtenerFormularioPorSlugDeTramite);
 router.post('/', crearTramite);
 router.patch('/:id', editarTramite);
 

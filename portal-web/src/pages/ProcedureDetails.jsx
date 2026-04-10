@@ -11,8 +11,6 @@ const ProcedureDetails = () => {
 
   const breadcrumbs = [{ label: tramite.titulo, href: `/${tramite.slug}` }];
 
-  console.log(tramite);
-
   // Obtener metadatos del trámite
   useEffect(() => {
     (async () => {

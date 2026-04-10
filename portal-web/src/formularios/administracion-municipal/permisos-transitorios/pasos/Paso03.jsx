@@ -1,4 +1,4 @@
-import InputText from '../../../../components/ui/InputText';
+import InputText from '../../../../components/form/Inputs/InputText';
 import FormField from '../../../../components/form/FormField';
 
 const Paso03 = ({ values, onChange, errors }) => {

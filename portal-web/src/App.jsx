@@ -15,6 +15,7 @@ import FechaEleccionDirectorioForm from './pages/tramites/FechaEleccionDirectori
 import ActaDirectorioForm from './pages/tramites/ActaDirectorioForm';
 import AudienciasAlcaldeForm from './pages/tramites/audienciasAlcaldeForm';
 import Login2 from './pages/Login2';
+import FormularioTramite from './formularios/FormularioTramite';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -69,6 +70,15 @@ function App() {
           element={
             <PrivateRoute>
               <ProcedureDetails />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/:slug/formulario"
+          element={
+            <PrivateRoute>
+              <FormularioTramite />
             </PrivateRoute>
           }
         />

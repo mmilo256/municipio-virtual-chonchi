@@ -171,6 +171,7 @@ const FormTramite = () => {
     });
   };
 
+  // Editar trámite
   const editarInfoTramite = async () => {
     const values = {};
 
@@ -241,7 +242,7 @@ const FormTramite = () => {
       activo,
       direccionMunicipal: Number(direccionMunicipal),
       funcionarios: funcionariosAutorizados,
-      formulario_id: Number(formularioSeleccionado),
+      formulario_id: Number(formularioSeleccionado) !== 0 ? Number(formularioSeleccionado) : null,
     };
 
     setLoading(true);

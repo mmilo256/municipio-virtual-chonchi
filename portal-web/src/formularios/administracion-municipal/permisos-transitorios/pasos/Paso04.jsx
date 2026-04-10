@@ -1,7 +1,7 @@
-import InputText from '../../../../components/ui/InputText';
+import InputText from '../../../../components/form/Inputs/InputText';
 import FormField from '../../../../components/form/FormField';
-import InputSelect from '../../../../components/ui/InputSelect';
-import InputTextarea from '../../../../components/ui/InputTextarea';
+import InputSelect from '../../../../components/form/Inputs/InputSelect';
+import InputTextarea from '../../../../components/form/Inputs/InputTextarea';
 
 const Paso04 = ({ values, onChange, errors }) => {
   const options = [

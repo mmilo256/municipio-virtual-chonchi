@@ -1,6 +1,15 @@
 import { useRef } from 'react';
 
-const InputFile = ({ id, values, onChange, accept }) => {
+const InputFile = ({
+  etiqueta,
+  slug,
+  value,
+  textoAyuda,
+  obligatorio,
+  config,
+  onChange,
+  accept,
+}) => {
   // Referencia al input oculto
   const hiddenInput = useRef(null);
 
@@ -9,10 +18,14 @@ const InputFile = ({ id, values, onChange, accept }) => {
   };
 
   return (
-    <div>
+    <label htmlFor={slug}>
+      <p className="text-sm font-medium text-slate-500 mb-1">
+        {etiqueta}{' '}
+        {!obligatorio && <span className="pl-1 text-slate-400 font-normal">(opcional)</span>}
+      </p>
       <input
-        name={id}
-        id={id}
+        name={slug}
+        id={slug}
         accept={accept}
         onChange={onChange}
         ref={hiddenInput}
@@ -28,14 +41,15 @@ const InputFile = ({ id, values, onChange, accept }) => {
           >
             Subir archivo
           </button>
-          {values[id] ? (
-            <p className="px-2 text-customBlack">{values[id].name}</p>
+          {value ? (
+            <p className="px-2 text-customBlack">{value.name}</p>
           ) : (
             <p className="px-2 text-slate-400">Ningún archivo seleccionado</p>
           )}
         </div>
       </div>
-    </div>
+      <span className="text-xs text-slate-500">{textoAyuda}</span>
+    </label>
   );
 };
 

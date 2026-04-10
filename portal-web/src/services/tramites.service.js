@@ -12,6 +12,11 @@ export const obtenerTramitePorSlug = async (slug) => {
   return response.data;
 };
 
+export const obtenerFormularioDelTramite = async (slug) => {
+  const response = await apiClient.get(`/tramites/${slug}/formulario`);
+  return response.data;
+};
+
 // Función para obtener un trámite específico por su ID
 export const fetchProcedureById = async (id) => {
   try {

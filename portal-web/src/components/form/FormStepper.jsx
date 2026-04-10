@@ -1,9 +1,9 @@
-const FormStepper = ({ steps, currentStep }) => {
+const FormStepper = ({ pasos = [{ id: 1, label: 'label' }], pasoActual = 0 }) => {
   return (
     <div className="flex flex-col gap-4">
-      {steps.map((step, index) => {
-        const isActive = index === currentStep;
-        const isCompleted = index < currentStep;
+      {pasos.map((paso, index) => {
+        const isActive = index === pasoActual;
+        const isCompleted = index < pasoActual;
 
         const circleClasses = [
           'w-8 min-w-8 h-8 min-h-8 flex items-center justify-center rounded-full text-sm font-semibold',
@@ -24,13 +24,10 @@ const FormStepper = ({ steps, currentStep }) => {
         ].join(' ');
 
         return (
-          <div className="flex gap-4 w-72 text-sm md:text-base" key={step.id}>
-            {/* <span className="flex font-medium text-sm items-center justify-center bg-secondary text-white w-8 h-8 rounded-full">
-              {index + 1}
-            </span> */}
+          <div className="flex gap-4 w-72 text-sm md:text-base items-center" key={paso.id}>
             <span className={circleClasses}>{index + 1}</span>
             <div className="text-slate-600">
-              <p className={titleClasses}>{step.label}</p>
+              <p className={titleClasses}>{paso.titulo}</p>
             </div>
           </div>
         );

@@ -3,7 +3,23 @@ import Direccion from '../models/Direccion.js';
 import { sequelize } from '../config/db/config.js';
 import Funcionario from '../models/Funcionario.js';
 import { Op } from 'sequelize';
+import Formulario from '../models/Formulario.js';
+import PasoFormulario from '../models/PasoFormulario.js';
+import CampoFormulario from '../models/CampoFormulario.js';
 /* import FuncionarioTramite from '../models/FuncionarioTramite.js'; */
+
+export const obtenerFormularioPorSlugDeTramite = async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const { formulario_id } = await Tramite.findOne({ where: { slug } });
+    const formulario = await Formulario.findByPk(formulario_id, {
+      include: [{ model: PasoFormulario, include: [{ model: CampoFormulario }] }],
+    });
+    res.status(200).json({ data: formulario, message: 'Formulario obtenido correctamente' });
+  } catch (error) {
+    res.status(500).json({ error, message: 'No se pudo obtener el formulario del trámite' });
+  }
+};
 
 export const editarTramite = async (req, res) => {
   const { id } = req.params;
@@ -137,6 +153,8 @@ export const crearTramite = async (req, res) => {
     direccion_id: direccionMunicipal,
     formulario_id,
   };
+
+  console.log(tramiteData);
 
   const t = await sequelize.transaction();
 

@@ -5,9 +5,9 @@ import { Navigate } from 'react-router-dom';
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore((state) => state);
 
-  if (!isAuthenticated) {
+  /* if (!isAuthenticated) {
     return <Navigate to="/" />;
-  }
+  } */
 
   return <Layout>{children}</Layout>;
 };

@@ -1,7 +1,7 @@
-import InputText from '../../../../components/ui/InputText';
-import FormField from '../../../../components/form/FormField';
 import { useEffect } from 'react';
 import useAuthStore from '../../../../stores/useAuthStore';
+import FormField from '../../../../components/form/FormField';
+import InputText from '../../../../components/form/Inputs/InputText';
 
 const Paso03 = ({ values, onChange, setValues, errors }) => {
   const userRut = useAuthStore((state) => state.sessionData.run);

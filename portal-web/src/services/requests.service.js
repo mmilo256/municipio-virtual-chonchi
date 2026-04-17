@@ -56,15 +56,9 @@ export const fetchRequestsByUserId = async (id, page = 1, pageSize = 10) => {
 export const createRequest = async (data) => {
   const config = {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   };
-  try {
-    // Realiza una solicitud POST para enviar la nueva solicitud con los datos proporcionados
-    await apiClient.post(`/requests`, data, config);
-  } catch (error) {
-    // Si ocurre un error, lanza una excepción con el mensaje de error
-    console.log(error);
-    throw error.message;
-  }
+  const response = await apiClient.post(`/requests`, data, config);
+  return response.data;
 };

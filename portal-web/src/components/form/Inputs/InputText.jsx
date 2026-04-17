@@ -3,6 +3,7 @@ import { validarCampo } from '../../../utils/validaciones';
 
 const InputText = ({
   etiqueta,
+  mostrarErrores,
   value,
   tipo,
   onChange,
@@ -15,7 +16,7 @@ const InputText = ({
 }) => {
   const [touched, setTouched] = useState(false);
 
-  const error = touched ? validarCampo(tipo, value, config, obligatorio) : null;
+  const error = touched || mostrarErrores ? validarCampo(tipo, value, config, obligatorio) : null;
 
   return (
     <label htmlFor={slug}>

@@ -100,12 +100,15 @@ export const updateRequestStatus = async (req, res) => {
 
 // Crear una nueva solicitud para un usuario
 export const createRequest = async (req, res) => {
+  const { tramite, formularioId, canal, respuestas } = req.body;
+  const { id, nombres, apellidos, run } = req.user;
+  const estado = 'pendiente';
+
   try {
-    const request = await createNewRequest(req.body);
-    return res.json({ message: 'Solicitud enviada exitosamente', request }); // Enviar una respuesta exitosa
+    res.status(201).json({ message: 'Solicitud enviada exitosamente' });
   } catch (error) {
-    console.log(error);
-    res.json({ message: 'No se pudo ingresar la solicitud.', error: error.message });
+    console.error(error);
+    res.status(500).json({ message: 'No se pudo ingresar la solicitud.' });
   }
 };
 

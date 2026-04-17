@@ -12,6 +12,7 @@ const InputRenderer = ({
   slug,
   placeholder,
   opciones,
+  mostrarErrores,
   obligatorio,
   textoAyuda,
   config,
@@ -21,6 +22,7 @@ const InputRenderer = ({
     case 'text':
       return (
         <InputText
+          mostrarErrores={mostrarErrores}
           tipo={tipo}
           etiqueta={etiqueta}
           obligatorio={obligatorio}
@@ -36,6 +38,7 @@ const InputRenderer = ({
     case 'textarea':
       return (
         <InputTextarea
+          mostrarErrores={mostrarErrores}
           tipo={tipo}
           etiqueta={etiqueta}
           textoAyuda={textoAyuda}
@@ -51,6 +54,7 @@ const InputRenderer = ({
     case 'select':
       return (
         <InputSelect
+          mostrarErrores={mostrarErrores}
           etiqueta={etiqueta}
           obligatorio={obligatorio}
           value={value}
@@ -65,6 +69,7 @@ const InputRenderer = ({
     case 'file':
       return (
         <InputFile
+          mostrarErrores={mostrarErrores}
           obligatorio={obligatorio}
           textoAyuda={textoAyuda}
           etiqueta={etiqueta}
@@ -77,6 +82,7 @@ const InputRenderer = ({
     default:
       return (
         <InputText
+          mostrarErrores={mostrarErrores}
           etiqueta={etiqueta}
           textoAyuda={textoAyuda}
           obligatorio={obligatorio}

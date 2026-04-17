@@ -7,6 +7,8 @@ const Solicitud = sequelize.define('solicitudes', {
     primaryKey: true,
     autoIncrement: true,
   },
+  codigo: DataTypes.STRING,
+  tramite_id: '2',
   estado: DataTypes.ENUM(
     'pendiente',
     'en revision',

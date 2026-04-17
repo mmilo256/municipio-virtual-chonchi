@@ -7,6 +7,7 @@ const InputTextarea = ({
   onChange,
   slug,
   placeholder,
+  mostrarErrores,
   tipo,
   textoAyuda,
   obligatorio,
@@ -15,7 +16,7 @@ const InputTextarea = ({
 }) => {
   const [touched, setTouched] = useState(false);
 
-  const error = touched ? validarCampo(tipo, value, config, obligatorio) : null;
+  const error = touched || mostrarErrores ? validarCampo(tipo, value, config, obligatorio) : null;
 
   return (
     <label htmlFor={slug}>

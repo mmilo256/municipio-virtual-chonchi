@@ -29,7 +29,7 @@
       "mensaje": "Debe tener máximo 100 caracteres"
     }
   },
-  "telefono": {
+  "phone": {
     "regex": {
       "value": "^\\+?56?9\\d{8}$",
       "mensaje": "Ingrese un número de teléfono válido"
@@ -40,13 +40,16 @@
     }
   },
   "rut": {
-    "formato": "xxxxxxxx-x",
+    "regex": {
+      "value": "^\\d{7,8}-[\\dkK]$",
+      "mensaje": "El RUT no es válido"
+    },
     "maxLength": {
       "value": 10,
       "mensaje": "Debe tener máximo 10 caracteres"
     }
   },
-  "archivo": {
+  "file": {
     "maxSize": {
       "value": 5,
       "mensaje": "El archivo no debe superar los 5 MB"

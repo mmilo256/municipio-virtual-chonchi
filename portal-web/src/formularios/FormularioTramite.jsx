@@ -1,16 +1,23 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { obtenerFormularioDelTramite } from '../services/tramites.service';
 import { useState } from 'react';
 import FormStepper from '../components/form/FormStepper';
 import InputRenderer from '../components/form/Inputs/InputRenderer';
+import { sanitizarValor } from '../utils/sanitizadores';
+import { validarCampo } from '../utils/validaciones';
+import { createRequest } from '../services/requests.service';
 
 const FormularioTramite = () => {
   const { slug } = useParams();
 
+  const navigate = useNavigate();
+
   const [formulario, setFormulario] = useState({});
   const [pasoActual, setPasoActual] = useState(0);
   const [respuestas, setRespuestas] = useState({});
+
+  const [mostrarErroresPaso, setMostrarErroresPaso] = useState(false);
 
   const totalPasos = formulario.pasos_formularios?.length;
 
@@ -23,16 +30,81 @@ const FormularioTramite = () => {
   }, [slug]);
 
   // Manejar cambio de estado de las respuestas
-  const handleChange = (slug, valor) => {
+  const handleChange = (campo, valor) => {
+    const nuevoValor = sanitizarValor(campo, valor);
     setRespuestas((prev) => ({
       ...prev,
-      [slug]: valor,
+      [campo.nombre_interno]: nuevoValor,
     }));
   };
 
-  // Enviar formulario
-  const enviarFormulario = () => {
-    console.log(respuestas);
+  // Validar paso actual
+  const validarPasoActual = () => {
+    const campos = formulario.pasos_formularios?.[pasoActual]?.campos_formularios || [];
+
+    const errores = {};
+
+    campos.forEach((campo) => {
+      const valor = respuestas[campo.nombre_interno];
+      const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio);
+
+      if (error) {
+        errores[campo.nombre_interno] = error;
+      }
+    });
+
+    return Object.values(errores).length === 0;
+  };
+
+  // Volver al paso anterior
+  const volverAlPasoAnterior = () => {
+    if (pasoActual > 0) {
+      setPasoActual((prev) => prev - 1);
+    } else {
+      navigate('../' + slug);
+    }
+  };
+
+  const enviarFormulario = async () => {
+    // Ir al paso siguiente
+    const esValido = validarPasoActual();
+    console.log(esValido);
+    if (!esValido) {
+      setMostrarErroresPaso(true);
+      return;
+    }
+    setMostrarErroresPaso(false);
+    if (pasoActual < totalPasos - 1) {
+      setPasoActual((prev) => prev + 1);
+    } else {
+      // Enviar formulario
+      const newRespuestas = [];
+      formulario.pasos_formularios.forEach((paso) => {
+        paso.campos_formularios.forEach((campo) => {
+          const valor = respuestas[campo.nombre_interno];
+
+          if (valor !== undefined && valor !== null && valor !== '') {
+            newRespuestas.push({
+              campo_id: campo.id,
+              valor,
+            });
+          }
+        });
+      });
+
+      const data = {
+        tramite: slug,
+        formularioId: formulario.id,
+        canal: 'web',
+        respuestas: newRespuestas,
+      };
+
+      try {
+        await createRequest(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -55,6 +127,7 @@ const FormularioTramite = () => {
                   <InputRenderer
                     tipo={campo.tipo}
                     key={campo.id}
+                    mostrarErrores={mostrarErroresPaso}
                     placeholder={campo.placeholder}
                     textoAyuda={campo.texto_ayuda}
                     opciones={campo.opciones}
@@ -64,16 +137,19 @@ const FormularioTramite = () => {
                     value={respuestas[campo.nombre_interno] || ''}
                     onChange={(e) => {
                       if (campo.tipo === 'archivo') {
-                        handleChange(campo.nombre_interno, e.target.files[0] || null);
+                        handleChange(campo, e.target.files[0] || null);
                       } else {
-                        handleChange(campo.nombre_interno, e.target.value);
+                        handleChange(campo, e.target.value);
                       }
                     }}
                   />
                 );
               })}
             </form>
-            <div className="mt-4 w-fit ml-auto">
+            <div className="flex gap-2 justify-end mt-6">
+              <button onClick={volverAlPasoAnterior} className="border border-slate-400 p-2">
+                Atrás
+              </button>
               <button onClick={enviarFormulario} className="border border-slate-400 p-2">
                 Siguiente
               </button>

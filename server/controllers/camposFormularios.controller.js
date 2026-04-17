@@ -1,3 +1,4 @@
+import { camposConfig } from '../data/campos.config.js';
 import CampoFormulario from '../models/CampoFormulario.js';
 
 export const crearCamposFormulario = async (req, res) => {
@@ -11,6 +12,32 @@ export const crearCamposFormulario = async (req, res) => {
         value: opcion,
       }));
 
+    // CONFIGURACIONES CAMPOS
+    const { text, textarea, email, phone, rut, file } = camposConfig;
+    let thisConfig;
+    switch (campo.tipoCampo) {
+      case 'text':
+        thisConfig = text;
+        break;
+      case 'textarea':
+        thisConfig = textarea;
+        break;
+      case 'email':
+        thisConfig = email;
+        break;
+      case 'phone':
+        thisConfig = phone;
+        break;
+      case 'rut':
+        thisConfig = rut;
+        break;
+      case 'file':
+        thisConfig = file;
+        break;
+      default:
+        break;
+    }
+
     return {
       etiqueta: campo.etiqueta,
       nombre_interno: campo.slug,
@@ -19,6 +46,7 @@ export const crearCamposFormulario = async (req, res) => {
       opciones: newOpciones,
       texto_ayuda: campo.textoAyuda,
       obligatorio: campo.obligatorio,
+      config: thisConfig,
       paso_id: pasoId,
     };
   });

@@ -10,8 +10,31 @@ export const validarCampo = (tipo, valor, config, obligatorio) => {
       return validarTelefono(valor, config, obligatorio);
     case 'rut':
       return validarRut(valor, config, obligatorio);
+    case 'select':
+      return validarSelect(valor, config, obligatorio);
     default:
       break;
+  }
+};
+
+const validarSelect = (valor = '', config = {}, obligatorio) => {
+  if (obligatorio && valor.length <= 0) {
+    return 'Este campo es obligatorio';
+  }
+
+  if (valor.length <= 0 || valor === '') return null;
+
+  if (!config) return null;
+
+  if (config.maxLength && valor.length > config.maxLength.value) {
+    return config.maxLength.mensaje;
+  }
+
+  if (config.regex && config.regex.value) {
+    const regex = new RegExp(config.regex.value);
+    if (!regex.test(valor)) {
+      return config.regex.mensaje;
+    }
   }
 };
 

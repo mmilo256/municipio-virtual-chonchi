@@ -1,4 +1,8 @@
+import { where } from 'sequelize';
+import { sequelize } from '../config/db/config.js';
 import Documento from '../models/Documento.js';
+import Solicitud from '../models/Solicitud.js';
+import Tramite from '../models/Tramite.js';
 import {
   createNewRequest,
   getLogs,
@@ -10,6 +14,7 @@ import {
   getDocumentsByRequest,
   updateRequestStatusService,
 } from '../services/requests.service.js';
+import Respuesta from '../models/Respuesta.js';
 
 // Obtener todas las solicitudes realizadas
 export const getAllRequests = async (req, res) => {
@@ -100,15 +105,63 @@ export const updateRequestStatus = async (req, res) => {
 
 // Crear una nueva solicitud para un usuario
 export const createRequest = async (req, res) => {
-  const { tramite, formularioId, canal, respuestas } = req.body;
-  const { id, nombres, apellidos, run } = req.user;
-  const estado = 'pendiente';
-
+  const t = await sequelize.transaction();
   try {
-    res.status(201).json({ message: 'Solicitud enviada exitosamente' });
+    const { tramite: tramiteSlug, formularioId, canal, respuestas } = req.body;
+    const { id: usuarioId, usuarioNombres, usuarioApellidos, usuarioRun } = req.user;
+
+    // Validar que exista el trámite
+    const tramiteExiste = await Tramite.findOne({
+      attributes: ['id', 'titulo'],
+      where: { slug: tramiteSlug },
+      transaction: t,
+    });
+    if (!tramiteExiste) {
+      await t.rollback();
+      return res.status(404).json({ error: true, message: 'No se encontró el trámite.' });
+    }
+
+    // Guardar solicitud
+    const datosSolicitud = {
+      estado: 'pendiente',
+      origen: canal,
+      tramite_id: tramiteExiste.id,
+      usuario_id: usuarioId,
+      funcionario_id: null,
+      codigo: null,
+    };
+
+    const nuevaSolicitud = await Solicitud.create(datosSolicitud, { transaction: t });
+
+    // Crear código único de solicitud
+    const anoActual = new Date().getFullYear();
+    const newId = String(nuevaSolicitud.id).padStart(6, '0');
+    const newCodigo = `MVC-${anoActual}-${newId}`;
+
+    await nuevaSolicitud.update({ codigo: newCodigo }, { transaction: t });
+
+    // Guardar respuestas
+    const respuestasFormateadas = respuestas.map((respuesta) => ({
+      valor: respuesta.valor,
+      solicitud_id: nuevaSolicitud.id,
+      campo_id: respuesta.campo_id,
+    }));
+
+    await Respuesta.bulkCreate(respuestasFormateadas, { transaction: t });
+
+    await t.commit();
+    return res.status(201).json({
+      data: {
+        codigo: newCodigo,
+        tramite: tramiteExiste,
+        fechaSolicitud: nuevaSolicitud.createdAt,
+      },
+      message: 'Solicitud enviada exitosamente',
+    });
   } catch (error) {
+    await t.rollback();
     console.error(error);
-    res.status(500).json({ message: 'No se pudo ingresar la solicitud.' });
+    return res.status(500).json({ message: 'No se pudo ingresar la solicitud.' });
   }
 };
 
@@ -132,7 +185,7 @@ export const adjuntarDocumento = async (req, res) => {
     return res.json({
       body: req.body,
       file: req.file,
-    }); // Enviar una respuesta exitosa
+    });
   } catch (error) {
     console.log(error);
     res.json({ message: 'No se pudo ingresar la solicitud.', error: error.message });

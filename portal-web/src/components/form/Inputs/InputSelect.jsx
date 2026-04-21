@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { validarCampo } from '../../../utils/validaciones';
+
 const InputSelect = ({
   etiqueta,
   value,
@@ -8,7 +11,13 @@ const InputSelect = ({
   obligatorio,
   opciones,
   config,
+  mostrarErrores,
 }) => {
+  const [touched, setTouched] = useState(false);
+
+  const error =
+    touched || mostrarErrores ? validarCampo('select', value, config, obligatorio) : null;
+
   return (
     <label htmlFor={slug}>
       <p className="text-sm font-medium text-slate-500 mb-1">
@@ -32,7 +41,11 @@ const InputSelect = ({
           </option>
         ))}
       </select>
-      <span className="text-xs text-slate-500">{textoAyuda}</span>
+      {error ? (
+        <span className="text-xs text-red-500">{error}</span>
+      ) : (
+        <span className="text-xs text-slate-500">{textoAyuda}</span>
+      )}
     </label>
   );
 };

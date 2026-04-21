@@ -8,7 +8,6 @@ const Solicitud = sequelize.define('solicitudes', {
     autoIncrement: true,
   },
   codigo: DataTypes.STRING,
-  tramite_id: '2',
   estado: DataTypes.ENUM(
     'pendiente',
     'en revision',
@@ -18,11 +17,6 @@ const Solicitud = sequelize.define('solicitudes', {
     'finalizada',
   ),
   origen: DataTypes.ENUM('fisico', 'digital'),
-  folio: DataTypes.INTEGER,
-  respuestas: DataTypes.TEXT,
-  documentos: DataTypes.TEXT,
-  orgName: DataTypes.TEXT,
-  orgRut: DataTypes.TEXT,
 });
 
 export default Solicitud;

@@ -7,6 +7,7 @@ import InputRenderer from '../components/form/Inputs/InputRenderer';
 import { sanitizarValor } from '../utils/sanitizadores';
 import { validarCampo } from '../utils/validaciones';
 import { createRequest } from '../services/requests.service';
+import Accordion from '../components/ui/Accordion';
 
 const FormularioTramite = () => {
   const { slug } = useParams();
@@ -19,8 +20,6 @@ const FormularioTramite = () => {
 
   const [mostrarErroresPaso, setMostrarErroresPaso] = useState(false);
 
-  const totalPasos = formulario.pasos_formularios?.length;
-
   // Cargar formulario
   useEffect(() => {
     (async () => {
@@ -28,6 +27,19 @@ const FormularioTramite = () => {
       setFormulario(response.data);
     })();
   }, [slug]);
+
+  const pasosOriginales = formulario.pasos_formularios || [];
+  const newPasos = [
+    ...pasosOriginales,
+    {
+      id: 'confirmacion',
+      titulo: 'Confirmar formulario',
+      descripcion: 'Confirma tus respuestas antes de enviar el formulario',
+      campos_formularios: [],
+    },
+  ];
+
+  const totalPasos = newPasos?.length - 1;
 
   // Manejar cambio de estado de las respuestas
   const handleChange = (campo, valor) => {
@@ -40,7 +52,7 @@ const FormularioTramite = () => {
 
   // Validar paso actual
   const validarPasoActual = () => {
-    const campos = formulario.pasos_formularios?.[pasoActual]?.campos_formularios || [];
+    const campos = newPasos?.[pasoActual]?.campos_formularios || [];
 
     const errores = {};
 
@@ -68,18 +80,17 @@ const FormularioTramite = () => {
   const enviarFormulario = async () => {
     // Ir al paso siguiente
     const esValido = validarPasoActual();
-    console.log(esValido);
     if (!esValido) {
       setMostrarErroresPaso(true);
       return;
     }
     setMostrarErroresPaso(false);
-    if (pasoActual < totalPasos - 1) {
+    if (pasoActual < totalPasos) {
       setPasoActual((prev) => prev + 1);
     } else {
       // Enviar formulario
       const newRespuestas = [];
-      formulario.pasos_formularios.forEach((paso) => {
+      newPasos.forEach((paso) => {
         paso.campos_formularios.forEach((campo) => {
           const valor = respuestas[campo.nombre_interno];
 
@@ -95,12 +106,14 @@ const FormularioTramite = () => {
       const data = {
         tramite: slug,
         formularioId: formulario.id,
-        canal: 'web',
+        canal: 'digital',
         respuestas: newRespuestas,
       };
 
       try {
-        await createRequest(data);
+        const response = await createRequest(data);
+        console.log(response);
+        alert(response.message);
       } catch (error) {
         console.log(error);
       }
@@ -112,46 +125,55 @@ const FormularioTramite = () => {
       <h1 className="text-3xl font-medium text-secondary mb-1">{formulario.titulo}</h1>
       <p className="text-sm text-gray-600 mb-6">{formulario.descripcion}</p>
       <div className="grid grid-cols-3">
-        <FormStepper pasos={formulario.pasos_formularios} pasoActual={pasoActual} />
-        {formulario.pasos_formularios?.length > 0 && (
+        <FormStepper pasos={newPasos} pasoActual={pasoActual} />
+        {newPasos?.length > 0 && (
           <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-2">
             <h2 className="text-2xl font-medium text-secondary mb-1">
-              {`${pasoActual + 1}. ${formulario.pasos_formularios[pasoActual].titulo}`}
+              {`${pasoActual + 1}. ${newPasos[pasoActual].titulo}`}
             </h2>
-            <p className="text-sm text-slate-500 mb-4">
-              {formulario.pasos_formularios[pasoActual].descripcion}
-            </p>
-            <form className="flex flex-col gap-y-4">
-              {formulario.pasos_formularios[pasoActual].campos_formularios.map((campo) => {
-                return (
-                  <InputRenderer
-                    tipo={campo.tipo}
-                    key={campo.id}
-                    mostrarErrores={mostrarErroresPaso}
-                    placeholder={campo.placeholder}
-                    textoAyuda={campo.texto_ayuda}
-                    opciones={campo.opciones}
-                    config={JSON.parse(campo.config)}
-                    obligatorio={campo.obligatorio}
-                    etiqueta={campo.etiqueta}
-                    value={respuestas[campo.nombre_interno] || ''}
-                    onChange={(e) => {
-                      if (campo.tipo === 'archivo') {
-                        handleChange(campo, e.target.files[0] || null);
-                      } else {
-                        handleChange(campo, e.target.value);
-                      }
-                    }}
-                  />
-                );
-              })}
+            <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual].descripcion}</p>
+            <form className={`flex flex-col ${pasoActual === totalPasos ? 'gap-y-2' : 'gap-y-4'}`}>
+              {pasoActual === totalPasos
+                ? formulario?.pasos_formularios?.map((paso) => (
+                    <Accordion title={paso.titulo} key={paso.id}>
+                      {paso.campos_formularios.map((campo) => (
+                        <div key={campo.id} className="space-x-1">
+                          <strong>{campo.etiqueta}:</strong>
+                          <span>{respuestas[campo.nombre_interno]}</span>
+                        </div>
+                      ))}
+                    </Accordion>
+                  ))
+                : newPasos[pasoActual].campos_formularios.map((campo) => {
+                    return (
+                      <InputRenderer
+                        tipo={campo.tipo}
+                        key={campo.id}
+                        mostrarErrores={mostrarErroresPaso}
+                        placeholder={campo.placeholder}
+                        textoAyuda={campo.texto_ayuda}
+                        opciones={campo.opciones}
+                        config={JSON.parse(campo.config)}
+                        obligatorio={campo.obligatorio}
+                        etiqueta={campo.etiqueta}
+                        value={respuestas[campo.nombre_interno] || ''}
+                        onChange={(e) => {
+                          if (campo.tipo === 'archivo') {
+                            handleChange(campo, e.target.files[0] || null);
+                          } else {
+                            handleChange(campo, e.target.value);
+                          }
+                        }}
+                      />
+                    );
+                  })}
             </form>
             <div className="flex gap-2 justify-end mt-6">
               <button onClick={volverAlPasoAnterior} className="border border-slate-400 p-2">
                 Atrás
               </button>
               <button onClick={enviarFormulario} className="border border-slate-400 p-2">
-                Siguiente
+                {pasoActual === totalPasos ? 'Enviar formulario' : 'Siguiente'}
               </button>
             </div>
           </div>

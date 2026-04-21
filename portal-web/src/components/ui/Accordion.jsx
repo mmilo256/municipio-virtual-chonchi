@@ -21,7 +21,7 @@ const Accordion = ({ title, children, isOpen = false }) => {
         <span className="font-black">{title}</span>
       </button>
       <div
-        className={`bg-[#fff] ${open ? 'p-2 h-auto' : 'h-0'} shadow text-customBlack mb-2 border-t rounded-b overflow-hidden`}
+        className={`bg-[#fff] ${open ? 'p-2 h-auto' : 'h-0'} shadow text-customBlack rounded-b overflow-hidden`}
       >
         {children}
       </div>

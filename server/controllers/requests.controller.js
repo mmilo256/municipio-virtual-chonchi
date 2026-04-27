@@ -69,9 +69,28 @@ export const getAllRequestsByUserId = async (req, res) => {
 
   try {
     // Buscar el usuario por su RUN e incluir sus solicitudes asociadas
-    const requests = await getUserRequests(id, pageSize, offset);
-    res.status(200).json(requests); // Devolver todas las solicitudes del usuario
+    const { rows, count } = await Solicitud.findAndCountAll({
+      limit: pageSize,
+      offset,
+      where: { usuario_id: id },
+      order: [['createdAt', 'DESC']],
+      include: {
+        model: Tramite,
+        attributes: ['titulo', 'slug'],
+      },
+    });
+
+    const totalPages = Math.ceil(count / pageSize) === 0 ? 1 : Math.ceil(count / pageSize);
+
+    const data = {
+      totalPages,
+      solicitudes: rows,
+    };
+
+    /* const requests = await Solicitud.findAll({ where: { usuario_id: id } }); */
+    res.status(200).json({ data, message: 'Solicitudes obtenidas correctamente' }); // Devolver todas las solicitudes del usuario
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message, message: 'No se pudo obtener las solicitudes.' });
   }
 };

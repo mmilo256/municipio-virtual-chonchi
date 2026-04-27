@@ -28,14 +28,14 @@ const Requests = () => {
   useEffect(() => {
     (async () => {
       // Llama al servicio para obtener las solicitudes del usuario por RUT
-      const data = await fetchRequestsByUserId(sessionData.id, currentPage, pageSize);
+      const { data } = await fetchRequestsByUserId(sessionData.id, currentPage, pageSize);
 
       // Guarda el total de páginas en un estado
       setTotalPages(data.totalPages);
 
       // Formatea los datos obtenidos para mostrarlos en la tabla
-      const formattedData = data?.requests?.map((solicitud) => ({
-        id: solicitud.id, // ID de la solicitud
+      const formattedData = data?.solicitudes?.map((solicitud) => ({
+        id: solicitud.codigo, // ID de la solicitud
         tramite: solicitud.tramite.titulo, // Título del trámite
         fecha: formatDate(solicitud.createdAt, 2), // Fecha de la solicitud formateada
         estado: <StatusTag status={solicitud.estado} />, // Muestra el estado con el componente StatusTag
@@ -57,7 +57,7 @@ const Requests = () => {
 
   // Definición de las columnas y datos de la tabla
   const table = {
-    columns: ['ID', 'Trámite', 'Fecha de solicitud', 'Estado', 'Acciones'], // Encabezados de la tabla
+    columns: ['Código', 'Trámite', 'Fecha de solicitud', 'Estado', 'Acciones'], // Encabezados de la tabla
     data: requests, // Datos de las solicitudes
   };
 

@@ -107,8 +107,8 @@ export const updateRequestStatus = async (req, res) => {
 export const createRequest = async (req, res) => {
   const t = await sequelize.transaction();
   try {
-    const { tramite: tramiteSlug, formularioId, canal, respuestas } = req.body;
-    const { id: usuarioId, usuarioNombres, usuarioApellidos, usuarioRun } = req.user;
+    const { tramite: tramiteSlug, canal, respuestas, infoContacto } = req.body;
+    const { id: usuarioId, nombres, apellidos, run } = req.user;
 
     // Validar que exista el trámite
     const tramiteExiste = await Tramite.findOne({
@@ -129,6 +129,9 @@ export const createRequest = async (req, res) => {
       usuario_id: usuarioId,
       funcionario_id: null,
       codigo: null,
+      email_contacto: infoContacto.email || null,
+      telefono_contacto: infoContacto.telefono || null,
+      direccion_contacto: infoContacto.direccion || null,
     };
 
     const nuevaSolicitud = await Solicitud.create(datosSolicitud, { transaction: t });
@@ -153,8 +156,14 @@ export const createRequest = async (req, res) => {
     return res.status(201).json({
       data: {
         codigo: newCodigo,
-        tramite: tramiteExiste,
         fechaSolicitud: nuevaSolicitud.createdAt,
+        tramite: tramiteExiste,
+        solicitante: {
+          nombre: `${nombres} ${apellidos}`,
+          run,
+          email: infoContacto.email,
+          telefono: infoContacto.telefono,
+        },
       },
       message: 'Solicitud enviada exitosamente',
     });

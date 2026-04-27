@@ -8,6 +8,7 @@ const InputRenderer = ({
   etiqueta,
   value,
   onChange,
+  disabled,
   tipo,
   slug,
   placeholder,
@@ -26,6 +27,7 @@ const InputRenderer = ({
           tipo={tipo}
           etiqueta={etiqueta}
           obligatorio={obligatorio}
+          disabled={disabled}
           textoAyuda={textoAyuda}
           value={value}
           onChange={onChange}
@@ -42,6 +44,7 @@ const InputRenderer = ({
           tipo={tipo}
           etiqueta={etiqueta}
           textoAyuda={textoAyuda}
+          disabled={disabled}
           obligatorio={obligatorio}
           value={value}
           onChange={onChange}
@@ -57,6 +60,7 @@ const InputRenderer = ({
           mostrarErrores={mostrarErrores}
           etiqueta={etiqueta}
           obligatorio={obligatorio}
+          disabled={disabled}
           value={value}
           onChange={onChange}
           textoAyuda={textoAyuda}
@@ -71,6 +75,7 @@ const InputRenderer = ({
         <InputFile
           mostrarErrores={mostrarErrores}
           obligatorio={obligatorio}
+          disabled={disabled}
           textoAyuda={textoAyuda}
           etiqueta={etiqueta}
           config={config}
@@ -86,6 +91,7 @@ const InputRenderer = ({
           etiqueta={etiqueta}
           textoAyuda={textoAyuda}
           obligatorio={obligatorio}
+          disabled={disabled}
           tipo={tipo}
           value={value}
           onChange={onChange}

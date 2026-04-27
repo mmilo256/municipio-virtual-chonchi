@@ -8,15 +8,27 @@ import { sanitizarValor } from '../utils/sanitizadores';
 import { validarCampo } from '../utils/validaciones';
 import { createRequest } from '../services/requests.service';
 import Accordion from '../components/ui/Accordion';
+import useAuthStore from '../stores/useAuthStore';
+import { camposContacto } from '../data/camposContacto';
 
 const FormularioTramite = () => {
   const { slug } = useParams();
 
   const navigate = useNavigate();
 
+  const user = useAuthStore((state) => state.sessionData);
+  const userNombreCompleto = `${user.nombres} ${user.apellidos}`;
+
   const [formulario, setFormulario] = useState({});
   const [pasoActual, setPasoActual] = useState(0);
   const [respuestas, setRespuestas] = useState({});
+  const [infoContacto, setInfoContacto] = useState({
+    nombreCompleto: userNombreCompleto || '',
+    rut: user.run || '',
+    email: '',
+    telefono: '',
+    direccion: '',
+  });
 
   const [mostrarErroresPaso, setMostrarErroresPaso] = useState(false);
 
@@ -29,17 +41,31 @@ const FormularioTramite = () => {
   }, [slug]);
 
   const pasosOriginales = formulario.pasos_formularios || [];
+
   const newPasos = [
-    ...pasosOriginales,
+    {
+      id: 'contacto',
+      titulo: 'Información de contacto',
+      tipoPaso: 'contacto',
+      descripcion:
+        'Estos datos se utilizarán para comunicarnos contigo y avisarte sobre el estado de tu solicitud.',
+      campos_formularios: [],
+    },
+    ...pasosOriginales.map((paso) => ({
+      ...paso,
+      tipoPaso: 'dinamico',
+    })),
     {
       id: 'confirmacion',
       titulo: 'Confirmar formulario',
+      tipoPaso: 'confirmacion',
       descripcion: 'Confirma tus respuestas antes de enviar el formulario',
       campos_formularios: [],
     },
   ];
 
   const totalPasos = newPasos?.length - 1;
+  const paso = newPasos?.[pasoActual];
 
   // Manejar cambio de estado de las respuestas
   const handleChange = (campo, valor) => {
@@ -50,22 +76,48 @@ const FormularioTramite = () => {
     }));
   };
 
+  const handleChangeContacto = (campo, valor) => {
+    const nuevoValor = sanitizarValor(campo, valor);
+    setInfoContacto((prev) => ({
+      ...prev,
+      [campo.nombre_interno]: nuevoValor,
+    }));
+  };
+
   // Validar paso actual
   const validarPasoActual = () => {
-    const campos = newPasos?.[pasoActual]?.campos_formularios || [];
+    if (paso.tipoPaso === 'contacto') {
+      const errores = {};
 
-    const errores = {};
+      camposContacto.forEach((campo) => {
+        const valor = infoContacto[campo.nombre_interno];
+        const error = validarCampo(campo.tipo, valor, campo.config, campo.obligatorio);
 
-    campos.forEach((campo) => {
-      const valor = respuestas[campo.nombre_interno];
-      const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio);
+        if (error) {
+          errores[campo.nombre_interno] = error;
+        }
+      });
 
-      if (error) {
-        errores[campo.nombre_interno] = error;
-      }
-    });
+      return Object.keys(errores).length === 0;
+    }
 
-    return Object.values(errores).length === 0;
+    if (paso.tipoPaso === 'dinamico') {
+      const campos = paso.campos_formularios || [];
+      const errores = {};
+
+      campos.forEach((campo) => {
+        const valor = respuestas[campo.nombre_interno];
+        const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio);
+
+        if (error) {
+          errores[campo.nombre_interno] = error;
+        }
+      });
+
+      return Object.keys(errores).length === 0;
+    }
+
+    return true;
   };
 
   // Volver al paso anterior
@@ -80,6 +132,7 @@ const FormularioTramite = () => {
   const enviarFormulario = async () => {
     // Ir al paso siguiente
     const esValido = validarPasoActual();
+    console.log(esValido);
     if (!esValido) {
       setMostrarErroresPaso(true);
       return;
@@ -108,16 +161,23 @@ const FormularioTramite = () => {
         formularioId: formulario.id,
         canal: 'digital',
         respuestas: newRespuestas,
+        infoContacto,
       };
 
       try {
         const response = await createRequest(data);
-        console.log(response);
-        alert(response.message);
+        navigate(`../${slug}/enviado`, { state: { solicitud: response.data } });
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  const renderValorRespuesta = (valor) => {
+    if (valor instanceof File) return valor.name;
+    if (typeof valor === 'boolean') return valor ? 'Sí' : 'No';
+    if (valor === undefined || valor === null || valor === '') return 'No ingresado';
+    return valor;
   };
 
   return (
@@ -133,40 +193,85 @@ const FormularioTramite = () => {
             </h2>
             <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual].descripcion}</p>
             <form className={`flex flex-col ${pasoActual === totalPasos ? 'gap-y-2' : 'gap-y-4'}`}>
-              {pasoActual === totalPasos
-                ? formulario?.pasos_formularios?.map((paso) => (
+              {paso.tipoPaso === 'contacto' &&
+                camposContacto.map((campo) => (
+                  <InputRenderer
+                    disabled={campo.disabled}
+                    tipo={campo.tipo}
+                    key={campo.id}
+                    mostrarErrores={mostrarErroresPaso}
+                    placeholder={campo.placeholder}
+                    textoAyuda={campo.texto_ayuda}
+                    opciones={campo.opciones}
+                    config={campo.config}
+                    obligatorio={campo.obligatorio}
+                    etiqueta={campo.etiqueta}
+                    value={infoContacto[campo.nombre_interno] || ''}
+                    onChange={(e) => {
+                      handleChangeContacto(campo, e.target.value);
+                    }}
+                  />
+                ))}
+              {paso.tipoPaso === 'dinamico' &&
+                newPasos[pasoActual].campos_formularios.map((campo) => {
+                  return (
+                    <InputRenderer
+                      tipo={campo.tipo}
+                      key={campo.id}
+                      mostrarErrores={mostrarErroresPaso}
+                      placeholder={campo.placeholder}
+                      textoAyuda={campo.texto_ayuda}
+                      opciones={campo.opciones}
+                      config={JSON.parse(campo.config)}
+                      obligatorio={campo.obligatorio}
+                      etiqueta={campo.etiqueta}
+                      value={respuestas[campo.nombre_interno] || ''}
+                      onChange={(e) => {
+                        if (campo.tipo === 'archivo') {
+                          handleChange(campo, e.target.files[0] || null);
+                        } else {
+                          handleChange(campo, e.target.value);
+                        }
+                      }}
+                    />
+                  );
+                })}
+              {paso.tipoPaso === 'confirmacion' && (
+                <>
+                  <Accordion isOpen title="Información de contacto">
+                    <div className="space-x-1">
+                      <strong>Nombre completo:</strong>
+                      <span>{renderValorRespuesta(infoContacto.nombreCompleto)}</span>
+                    </div>
+                    <div className="space-x-1">
+                      <strong>RUT:</strong>
+                      <span>{renderValorRespuesta(infoContacto.rut)}</span>
+                    </div>
+                    <div className="space-x-1">
+                      <strong>Correo electrónico:</strong>
+                      <span>{renderValorRespuesta(infoContacto.email)}</span>
+                    </div>
+                    <div className="space-x-1">
+                      <strong>Número de teléfono:</strong>
+                      <span>{renderValorRespuesta(infoContacto.telefono)}</span>
+                    </div>
+                    <div className="space-x-1">
+                      <strong>Dirección:</strong>
+                      <span>{renderValorRespuesta(infoContacto.direccion)}</span>
+                    </div>
+                  </Accordion>
+                  {formulario?.pasos_formularios?.map((paso) => (
                     <Accordion title={paso.titulo} key={paso.id}>
                       {paso.campos_formularios.map((campo) => (
                         <div key={campo.id} className="space-x-1">
                           <strong>{campo.etiqueta}:</strong>
-                          <span>{respuestas[campo.nombre_interno]}</span>
+                          <span>{renderValorRespuesta(respuestas[campo.nombre_interno])}</span>
                         </div>
                       ))}
                     </Accordion>
-                  ))
-                : newPasos[pasoActual].campos_formularios.map((campo) => {
-                    return (
-                      <InputRenderer
-                        tipo={campo.tipo}
-                        key={campo.id}
-                        mostrarErrores={mostrarErroresPaso}
-                        placeholder={campo.placeholder}
-                        textoAyuda={campo.texto_ayuda}
-                        opciones={campo.opciones}
-                        config={JSON.parse(campo.config)}
-                        obligatorio={campo.obligatorio}
-                        etiqueta={campo.etiqueta}
-                        value={respuestas[campo.nombre_interno] || ''}
-                        onChange={(e) => {
-                          if (campo.tipo === 'archivo') {
-                            handleChange(campo, e.target.files[0] || null);
-                          } else {
-                            handleChange(campo, e.target.value);
-                          }
-                        }}
-                      />
-                    );
-                  })}
+                  ))}
+                </>
+              )}
             </form>
             <div className="flex gap-2 justify-end mt-6">
               <button onClick={volverAlPasoAnterior} className="border border-slate-400 p-2">

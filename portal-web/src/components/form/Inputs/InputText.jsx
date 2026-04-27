@@ -3,6 +3,7 @@ import { validarCampo } from '../../../utils/validaciones';
 
 const InputText = ({
   etiqueta,
+  disabled,
   mostrarErrores,
   value,
   tipo,
@@ -32,6 +33,7 @@ const InputText = ({
         }}
         id={slug}
         name={slug}
+        disabled={disabled}
         type={tipo}
         placeholder={placeholder}
         minLength={config?.minLength?.value}

@@ -17,6 +17,9 @@ const Solicitud = sequelize.define('solicitudes', {
     'finalizada',
   ),
   origen: DataTypes.ENUM('fisico', 'digital'),
+  email_contacto: DataTypes.STRING,
+  telefono_contacto: DataTypes.STRING,
+  direccion_contacto: DataTypes.STRING,
 });
 
 export default Solicitud;

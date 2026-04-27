@@ -10,12 +10,9 @@ import Home from './pages/Home';
 import Requests from './pages/Requests';
 import RequestTracking from './pages/RequestTracking';
 import ProcedureDetails from './pages/ProcedureDetails';
-import PermisosTransitoriosForm from './pages/tramites/PermisosTransitoriosForm';
-import FechaEleccionDirectorioForm from './pages/tramites/FechaEleccionDirectorioForm';
-import ActaDirectorioForm from './pages/tramites/ActaDirectorioForm';
-import AudienciasAlcaldeForm from './pages/tramites/audienciasAlcaldeForm';
 import Login2 from './pages/Login2';
 import FormularioTramite from './formularios/FormularioTramite';
+import SolicitudEnviada from './formularios/SolicitudEnviada';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -79,6 +76,15 @@ function App() {
           element={
             <PrivateRoute>
               <FormularioTramite />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/:slug/enviado"
+          element={
+            <PrivateRoute>
+              <SolicitudEnviada />
             </PrivateRoute>
           }
         />

@@ -1,19 +1,9 @@
 import apiClient from './apiClient';
 
 // Función para obtener el historial de estados de una solicitud específica
-export const fetchRequestStatusLogs = async (request_id) => {
-  try {
-    // Realiza una solicitud GET para obtener el historial de estados de una solicitud usando su ID
-    const response = await apiClient.get(`/requests/${request_id}/historial`);
-
-    // Extrae y devuelve los datos del historial de estados
-    const data = response.data;
-    return data;
-  } catch (error) {
-    // Si ocurre un error, lanza una excepción con el mensaje de error
-    console.log(error);
-    throw error.message;
-  }
+export const obtenerSolicitudPorCodigo = async (codigo) => {
+  const response = await apiClient.get(`/requests/${codigo}`);
+  return response.data;
 };
 
 export const fetchRequestById = async (requestId) => {

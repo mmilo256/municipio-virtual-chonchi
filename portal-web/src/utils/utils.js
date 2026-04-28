@@ -3,6 +3,13 @@ import templateCorreoFuncionarios from '../email/templateCorreoFuncionarios';
 import templateSolicitudCreadaSolicitante from '../email/templateSolicitudCreadaSolicitante';
 import { sendEmail } from '../services/emailServices';
 
+export const renderValorRespuesta = (valor) => {
+  if (valor instanceof File) return valor.name;
+  if (typeof valor === 'boolean') return valor ? 'Sí' : 'No';
+  if (valor === undefined || valor === null || valor === '') return 'No ingresado';
+  return valor;
+};
+
 // Obtener la fecha de hoy
 export const getTodayDate = () => {
   return new Date().toISOString().split('T')[0];

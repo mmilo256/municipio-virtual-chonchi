@@ -1,20 +1,21 @@
-import { where } from 'sequelize';
 import { sequelize } from '../config/db/config.js';
 import Documento from '../models/Documento.js';
 import Solicitud from '../models/Solicitud.js';
 import Tramite from '../models/Tramite.js';
 import {
-  createNewRequest,
   getLogs,
   getRequests,
   getRequestsByProcedure,
-  getUserRequests,
   getRequestById as getRequestByIdService,
   uploadDocument as uploadDocumentService,
   getDocumentsByRequest,
   updateRequestStatusService,
 } from '../services/requests.service.js';
 import Respuesta from '../models/Respuesta.js';
+import HistorialEstadosSolicitudes from '../models/HistorialEstadosSolicitudes.js';
+import Formulario from '../models/Formulario.js';
+import PasoFormulario from '../models/PasoFormulario.js';
+import CampoFormulario from '../models/CampoFormulario.js';
 
 // Obtener todas las solicitudes realizadas
 export const getAllRequests = async (req, res) => {
@@ -36,6 +37,69 @@ export const getRequestById = async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: 'Error interno del servidor.', error: e.message });
+  }
+};
+
+export const obtenerSolicitudPorCodigo = async (req, res) => {
+  try {
+    const { codigo } = req.params;
+    const { nombres, apellidos, run } = req.user;
+    const solicitud = await Solicitud.findOne({
+      attributes: [
+        'id',
+        'codigo',
+        'createdAt',
+        'estado',
+        'email_contacto',
+        'telefono_contacto',
+        'direccion_contacto',
+      ],
+      where: { codigo },
+      include: [
+        {
+          model: Respuesta,
+          attributes: ['campo_id', 'valor'],
+        },
+        {
+          model: Tramite,
+          attributes: ['id', 'titulo'],
+          include: [
+            {
+              model: Formulario,
+              attributes: ['id', 'titulo', 'descripcion'],
+              include: [
+                {
+                  model: PasoFormulario,
+                  attributes: ['titulo', 'descripcion'],
+                  include: [
+                    {
+                      model: CampoFormulario,
+                      attributes: ['id', 'etiqueta'],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const historialEstados = await HistorialEstadosSolicitudes.findAll({
+      where: {
+        solicitud_id: solicitud.id,
+      },
+    });
+
+    return res.status(200).json({
+      data: { solicitud, historialEstados, contacto: { nombres, apellidos, run } },
+      message: 'Historial obtenido correctamente',
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: true, message: 'No se pudo obtener el historial de estados de la solicitud' });
   }
 };
 
@@ -170,6 +234,14 @@ export const createRequest = async (req, res) => {
     }));
 
     await Respuesta.bulkCreate(respuestasFormateadas, { transaction: t });
+
+    // Guardar registro de cambio de estado de la solicitud
+    const logData = {
+      estado: 'pendiente',
+      solicitud_id: nuevaSolicitud.id,
+      mensaje: 'xD',
+    };
+    await HistorialEstadosSolicitudes.create(logData, { transaction: t });
 
     await t.commit();
     return res.status(201).json({

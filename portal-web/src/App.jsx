@@ -54,7 +54,7 @@ function App() {
           }
         />
         <Route
-          path="/solicitudes/:slug/:id"
+          path="/solicitudes/:codigo"
           element={
             <PrivateRoute>
               <RequestTracking />

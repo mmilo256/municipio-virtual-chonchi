@@ -9,6 +9,7 @@ import Formulario from '../../models/Formulario.js';
 import PasoFormulario from '../../models/PasoFormulario.js';
 import CampoFormulario from '../../models/CampoFormulario.js';
 import Respuesta from '../../models/Respuesta.js';
+import HistorialEstadosSolicitudes from '../../models/HistorialEstadosSolicitudes.js';
 
 const defineAssociations = async () => {
   // Solicitud - Trámite
@@ -50,7 +51,9 @@ const defineAssociations = async () => {
   // Respuesta - Campo Formulario
   CampoFormulario.hasMany(Respuesta, { foreignKey: 'campo_id' });
   Respuesta.belongsTo(CampoFormulario, { foreignKey: 'campo_id' });
-  //Solicitud - Documento
+  //Solicitud - Historial Estados Solicitud
+  Solicitud.hasMany(HistorialEstadosSolicitudes, { foreignKey: 'solicitud_id' });
+  HistorialEstadosSolicitudes.belongsTo(Solicitud, { foreignKey: 'solicitud_id' });
   // ...
 };
 

@@ -1,38 +1,32 @@
-import { useNavigate, useParams } from 'react-router-dom'; // Para obtener parámetros de la URL (como el ID de la solicitud)
+import { useParams } from 'react-router-dom'; // Para obtener parámetros de la URL (como el ID de la solicitud)
 import { useEffect, useState } from 'react'; // Hooks de React para efectos y estados
-import {
-  fetchDocumentosAdjuntos,
-  fetchRequestById,
-  fetchRequestStatusLogs,
-} from '../services/requests.service';
-import { formatDate } from '../utils/utils';
+import { obtenerSolicitudPorCodigo } from '../services/requests.service';
 import Container from '../components/ui/Container';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
-import Heading from '../components/ui/Heading';
+import Accordion from '../components/ui/Accordion';
+import { formatDate, renderValorRespuesta } from '../utils/utils';
 import StatusTracker from '../components/ui/StatusTracker';
-import Respuestas from '../components/ui/Respuestas';
+import StatusTag from '../components/ui/StatusTag';
 
 const RequestTracking = () => {
   // Obtiene el ID de la solicitud desde los parámetros de la URL
-  const { id } = useParams();
-  const [requestData, setRequestData] = useState({});
-  const [requestDocs, setRequestDocs] = useState([]);
+  const { codigo, slug } = useParams();
 
-  const [loading, setLoading] = useState(false);
+  const [solicitud, setSolicitud] = useState({});
+  const [historial, setHistorial] = useState([]);
+  const [contacto, setContacto] = useState({});
 
-  const navigate = useNavigate();
+  const pasos = solicitud.tramite?.formulario?.pasos_formularios ?? [];
 
-  const { slug } = useParams();
+  const respuestas = Object.fromEntries(
+    (solicitud.respuestas || []).map((r) => [r.campo_id, r.valor]),
+  );
 
   const breadcrumbs = [
     { label: 'Solicitudes', href: '/solicitudes' },
-    { label: `Solicitud #${id}`, href: `/solicitudes/${slug}/${id}` },
+    { label: `Solicitud ${codigo}`, href: `/solicitudes/${slug}/${codigo}` },
   ];
 
-  // Estado para almacenar los logs de la solicitud
-  const [logs, setLogs] = useState([]);
-
-  // Función para definir un mensaje según el estado de la solicitud
   const setMessage = (status) => {
     let message;
     switch (status) {
@@ -60,64 +54,98 @@ const RequestTracking = () => {
     return message;
   };
 
-  // Hook useEffect que se ejecuta al cargar el componente
   useEffect(() => {
     (async () => {
-      // Obtiene los logs de estado de la solicitud
-      const data = await fetchRequestStatusLogs(id);
-      // Formatea los datos de los logs
-      const formattedData = data.map((log, index) => ({
-        status: log.estado, // Estado de la solicitud
-        updated_at: formatDate(log.createdAt, 2), // Fecha de la actualización, formateada
-        message: setMessage(log.estado), // Mensaje correspondiente al estado
-        active: index === data.length - 1 ? true : false, // Marca el último log como activo
-      }));
-      setLogs(formattedData); // Guarda los logs formateados en el estado
-    })();
-  }, [id]); // El efecto se ejecuta nuevamente si cambia el ID de la solicitud
-
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
       try {
-        const response = await fetchRequestById(id);
-        const formattedFormData = JSON.parse(response.respuestas);
-        setRequestData(formattedFormData);
-      } catch (e) {
-        alert('No se pudo cargar la información');
-        console.log(e);
-        navigate('../');
+        const response = await obtenerSolicitudPorCodigo(codigo);
+        setSolicitud(response.data.solicitud);
+        const rawH = response.data.historialEstados;
+        const formattedHistorial = rawH.map((item, index) => ({
+          fecha: item.createdAt,
+          estado: item.estado,
+          id: item.id,
+          mensaje: setMessage(item.estado),
+          activo: index === rawH.length - 1 ? true : false,
+        }));
+        setHistorial(formattedHistorial);
+        setContacto(response.data.contacto);
+      } catch (error) {
+        console.error(error);
       }
-      setLoading(false);
     })();
-  }, [id, navigate]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetchDocumentosAdjuntos(id);
-      const docs = response.map((doc) => ({
-        id: doc.id,
-        originalName: doc.originalname,
-        slug: doc.nombre,
-      }));
-      setRequestDocs(docs);
-    })();
-  }, [id]);
+  }, [codigo]);
 
   return (
     <Container>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <Heading level={3}>Seguimiento de solicitud #{id}</Heading>{' '}
-      {/* Título de la página con el ID de la solicitud */}
-      <div className="md:grid md:grid-cols-2 md:gap-2 bg-white p-4 rounded shadow">
-        {!loading ? (
-          <>
-            <StatusTracker data={logs} /> {/* Componente que muestra el seguimiento de los logs */}
-            <Respuestas data={requestData} docs={requestDocs} />
-          </>
-        ) : (
-          <p>Cargando información...</p>
-        )}
+      <h1 className="text-3xl font-bold mt-4">Detalle de solicitud</h1>
+      <p className="text-slate-600 mb-4">Revise el estado de su solicitud y sus respuestas.</p>
+      <div className="bg-white p-4 rounded border shadow flex justify-between mb-4">
+        <div>
+          <p className="text-sm text-slate-600">CÓDIGO</p>
+          <p className="font-bold">{solicitud?.codigo}</p>
+        </div>
+        <div>
+          <p className="text-sm text-slate-600">TRÁMITE</p>
+          <p className="font-bold">{solicitud?.tramite?.titulo}</p>
+        </div>
+        <div>
+          <p className="text-sm text-slate-600">FECHA SOLICITUD</p>
+          <p className="font-bold">{formatDate(solicitud?.createdAt, 2)}</p>
+        </div>
+        <div>
+          <p className="text-sm text-slate-600">ESTADO</p>
+          <p className="font-bold">
+            <StatusTag status={solicitud?.estado} />
+          </p>
+        </div>
+      </div>
+      <div className="p-4 bg-white rounded border shadow grid grid-cols-2 gap-4">
+        <div>
+          <h2 className="text-xl font-bold">Respuestas del formulario</h2>
+          <p className="text-slate-600 mb-4">
+            Información ingresada por el solicitante, agrupada por pasos.
+          </p>
+          <div className="space-y-1">
+            <Accordion isOpen title="Información de contacto">
+              <div className="space-x-1">
+                <strong>Nombre completo:</strong>
+                <span>{renderValorRespuesta(`${contacto.nombres} ${contacto.apellidos}`)}</span>
+              </div>
+              <div className="space-x-1">
+                <strong>RUT:</strong>
+                <span>{renderValorRespuesta(contacto.run)}</span>
+              </div>
+              <div className="space-x-1">
+                <strong>Correo electrónico:</strong>
+                <span>{renderValorRespuesta(solicitud.email_contacto)}</span>
+              </div>
+              <div className="space-x-1">
+                <strong>Número de teléfono:</strong>
+                <span>{renderValorRespuesta(solicitud.telefono_contacto)}</span>
+              </div>
+              <div className="space-x-1">
+                <strong>Dirección:</strong>
+                <span>{renderValorRespuesta(solicitud.direccion_contacto)}</span>
+              </div>
+            </Accordion>
+            {pasos.map((paso) => (
+              <Accordion key={paso.titulo} title={paso.titulo}>
+                {paso.campos_formularios.map((campo) => (
+                  <p key={campo.id}>
+                    <strong>{campo.etiqueta}</strong>
+                    {': ' + respuestas[campo.id]}
+                  </p>
+                ))}
+              </Accordion>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 className="text-xl font-bold">Seguimiento</h2>
+          <p className="text-slate-600 mb-4">Revise el estado de su solicitud.</p>
+          <StatusTracker data={historial} />
+        </div>
       </div>
     </Container>
   );

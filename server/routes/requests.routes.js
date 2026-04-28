@@ -6,9 +6,9 @@ import {
   getAllRequests,
   getAllRequestsByProcedure,
   getAllRequestsByUserId,
-  getRequestById,
   getStatusLog,
   getUploadedDocuments,
+  obtenerSolicitudPorCodigo,
   updateRequestStatus,
   uploadDocument,
 } from '../controllers/requests.controller.js';
@@ -21,7 +21,7 @@ const router = e.Router();
 
 router.get('/', getAllRequests);
 router.post('/', createRequest);
-router.get('/:id', getRequestById);
+router.get('/:codigo', obtenerSolicitudPorCodigo);
 router.patch('/:id', updateRequestStatus);
 router.get('/user/:id', getAllRequestsByUserId);
 router.get('/:id/documents', getUploadedDocuments);

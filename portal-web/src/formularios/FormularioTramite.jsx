@@ -10,6 +10,7 @@ import { createRequest } from '../services/requests.service';
 import Accordion from '../components/ui/Accordion';
 import useAuthStore from '../stores/useAuthStore';
 import { camposContacto } from '../data/camposContacto';
+import { renderValorRespuesta } from '../utils/utils';
 
 const FormularioTramite = () => {
   const { slug } = useParams();
@@ -29,6 +30,8 @@ const FormularioTramite = () => {
     telefono: '',
     direccion: '',
   });
+
+  const [loading, setLoading] = useState(false);
 
   const [mostrarErroresPaso, setMostrarErroresPaso] = useState(false);
 
@@ -132,7 +135,6 @@ const FormularioTramite = () => {
   const enviarFormulario = async () => {
     // Ir al paso siguiente
     const esValido = validarPasoActual();
-    console.log(esValido);
     if (!esValido) {
       setMostrarErroresPaso(true);
       return;
@@ -165,19 +167,15 @@ const FormularioTramite = () => {
       };
 
       try {
+        setLoading(true);
         const response = await createRequest(data);
         navigate(`../${slug}/enviado`, { state: { solicitud: response.data } });
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
-  };
-
-  const renderValorRespuesta = (valor) => {
-    if (valor instanceof File) return valor.name;
-    if (typeof valor === 'boolean') return valor ? 'Sí' : 'No';
-    if (valor === undefined || valor === null || valor === '') return 'No ingresado';
-    return valor;
   };
 
   return (
@@ -278,7 +276,11 @@ const FormularioTramite = () => {
                 Atrás
               </button>
               <button onClick={enviarFormulario} className="border border-slate-400 p-2">
-                {pasoActual === totalPasos ? 'Enviar formulario' : 'Siguiente'}
+                {pasoActual === totalPasos
+                  ? loading
+                    ? 'Cargando...'
+                    : 'Enviar formulario'
+                  : 'Siguiente'}
               </button>
             </div>
           </div>

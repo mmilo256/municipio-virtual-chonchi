@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { emailRegex } from '../../../utils/regex';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaRegLightbulb } from 'react-icons/fa';
-import { fetchRequestById, updateRequestStatus } from '../../../services/requestsServices';
+import { fetchRequestById, updateRequestStatus } from '../../../services/solicitudes.service';
 import { sendEmail } from '../../../services/emailServices';
 import { obtenerDecretos } from '../../../services/permisosTransitoriosServices';
 import { approveTemplate } from '../../../email-templates/permisos-transitorios/approveTemplate';

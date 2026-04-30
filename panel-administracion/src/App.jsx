@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import Layout from './components/layouts/Layout';
-import RutasPermisosTransitorios from './components/routes/RutasPermisosTransitorios';
+/* import RutasPermisosTransitorios from './components/routes/RutasPermisosTransitorios'; */
 import Protected from './components/common/Protected';
 import useAuthStore from './stores/useAuthStore';
 import { useEffect, useState } from 'react';
@@ -10,10 +10,12 @@ import { verifySession } from './services/authServices';
 /* import RutasFechaEleccionDirectorio from './components/routes/RutasFechaEleccionDirectorio';
 import RutasActaDirectorio from './components/routes/RutasActaDirectorio'; */
 import { obtenerTramites } from './services/tramites.service';
-import RutasTramites from './components/routes/RutasTramites';
+/* import RutasTramites from './components/routes/RutasTramites'; */
 import RutasGestionFuncionarios from './components/routes/RutasGestionFuncionarios';
 import RutasGestionTramites from './components/routes/RutasGestionTramites';
 import RutasGestionFormularios from './components/routes/RutasGestionFormularios';
+import Solicitudes from './components/pages/Solicitudes';
+import DetalleSolicitud from './components/pages/DetalleSolicitud';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData, sessionData } = useAuthStore();
@@ -73,8 +75,9 @@ const App = () => {
           <Route path="/funcionarios/*" element={<RutasGestionFuncionarios />} />
           <Route path="/tramites/*" element={<RutasGestionTramites />} />
           <Route path="/formularios/*" element={<RutasGestionFormularios />} />
-          <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} />
-          <Route path="/:slug/*" element={<RutasTramites />} />
+          {/* <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} /> */}
+          <Route path="/:slug" element={<Solicitudes />} />
+          <Route path="/:slug/:codigo" element={<DetalleSolicitud />} />
           {/* 
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
           <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} /> */}

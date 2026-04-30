@@ -11,10 +11,9 @@ const Solicitud = sequelize.define('solicitudes', {
   estado: DataTypes.ENUM(
     'pendiente',
     'en revision',
-    'rechazada',
-    'por firmar',
+    'requiere correccion',
     'aprobada',
-    'finalizada',
+    'rechazada',
   ),
   origen: DataTypes.ENUM('fisico', 'digital'),
   email_contacto: DataTypes.STRING,

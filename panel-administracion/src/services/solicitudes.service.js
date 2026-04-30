@@ -1,5 +1,37 @@
 import apiClient from './apiClient';
 
+export const cambiarEstadoSolicitud = async (codigo, estado) => {
+  const response = await apiClient.patch(`/solicitudes/${codigo}`, { estado });
+  return response.data;
+};
+
+// Obtener todas las solicitudes de un trámite en específico
+export const obtenerSolicitudesPorTramite = async (
+  slug,
+  page = 1,
+  pageSize = 10,
+  filters,
+  search = '',
+) => {
+  let queryString = `/solicitudes/tramite/${slug}?page=${page}&pageSize=${pageSize}`;
+
+  if (filters) {
+    queryString += `&filters=${filters}`;
+  }
+  if (search !== '') {
+    queryString += `&search=${search}`;
+  }
+
+  const response = await apiClient.get(queryString);
+  return response.data;
+};
+
+// Obtener el detalle de una solicitud por su código
+export const obtenerSolicitudPorCodigo = async (codigo) => {
+  const response = await apiClient.get(`/solicitudes/${codigo}`);
+  return response.data;
+};
+
 // Función para enviar una nueva solicitud con los datos proporcionados
 export const adjuntarDocumento = async (data, solicitudId) => {
   try {
@@ -74,42 +106,9 @@ export const subirDocumentoAsociado = async (id, data, status = null, type = nul
   }
 };
 
-export const updateRequestStatus = async (requestId, status) => {
-  try {
-    await apiClient.patch(`/requests/${requestId}`, { status });
-  } catch (error) {
-    throw error.message;
-  }
-};
-
 export const fetchRequestById = async (requestId) => {
   try {
     const response = await apiClient.get(`/requests/${requestId}`);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    throw error.message;
-  }
-};
-
-export const fetchRequestsByProcedure = async (
-  procedureId,
-  page = 1,
-  pageSize = 10,
-  filters,
-  search = '',
-) => {
-  let queryString = `/requests/procedure/${procedureId}?page=${page}&pageSize=${pageSize}`;
-
-  if (filters) {
-    queryString += `&filters=${filters}`;
-  }
-  if (search !== '') {
-    queryString += `&search=${search}`;
-  }
-
-  try {
-    const response = await apiClient.get(queryString);
     const data = response.data;
     return data;
   } catch (error) {

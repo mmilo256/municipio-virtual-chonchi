@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Breadcrumbs from '../ui/Breadcrumbs';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
-import { crearSolicitud } from '../../services/requestsServices';
+import { crearSolicitud } from '../../services/solicitudes.service';
 import SelectInput from '../ui/SelectInput';
 import { useNavigate } from 'react-router-dom';
 

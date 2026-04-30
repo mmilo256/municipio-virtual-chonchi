@@ -4,14 +4,14 @@ import {
   adjuntarDocumento,
   createRequest,
   getAllRequests,
-  getAllRequestsByProcedure,
+  obtenerSolicitudesPorTramite,
   getAllRequestsByUserId,
   getStatusLog,
   getUploadedDocuments,
   obtenerSolicitudPorCodigo,
-  updateRequestStatus,
   uploadDocument,
-} from '../controllers/requests.controller.js';
+  actualizarEstadoSolicitud,
+} from '../controllers/solicitudes.controller.js';
 
 const uploadPublic = setUpload();
 const uploadAdmin = setUpload('documents/');
@@ -22,12 +22,12 @@ const router = e.Router();
 router.get('/', getAllRequests);
 router.post('/', createRequest);
 router.get('/:codigo', obtenerSolicitudPorCodigo);
-router.patch('/:id', updateRequestStatus);
+router.patch('/:codigo', actualizarEstadoSolicitud);
 router.get('/user/:id', getAllRequestsByUserId);
 router.get('/:id/documents', getUploadedDocuments);
 router.post('/:id/documents', uploadAdmin.any('uploadedDoc'), uploadDocument);
 router.post('/:id/adjuntar-documento', uploadPublic.single('archivo'), adjuntarDocumento);
-router.get('/procedure/:id', getAllRequestsByProcedure);
+router.get('/tramite/:slug', obtenerSolicitudesPorTramite);
 router.get('/:id/historial', getStatusLog);
 
 export default router;

@@ -2,7 +2,7 @@ import Input from '../ui/Input';
 import Upload from '../ui/Upload';
 import Button from '../ui/Button';
 import { useState } from 'react';
-import { subirDocumentoAsociado, updateRequestStatus } from '../../services/requestsServices';
+import { subirDocumentoAsociado, updateRequestStatus } from '../../services/solicitudes.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '../ui/Breadcrumbs';
 import { ToastContainer, toast } from 'react-toastify';

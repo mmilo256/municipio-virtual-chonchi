@@ -5,38 +5,47 @@ import Tramite from '../models/Tramite.js';
 import {
   getLogs,
   getRequests,
-  getRequestsByProcedure,
   getRequestById as getRequestByIdService,
   uploadDocument as uploadDocumentService,
   getDocumentsByRequest,
-  updateRequestStatusService,
 } from '../services/requests.service.js';
 import Respuesta from '../models/Respuesta.js';
 import HistorialEstadosSolicitudes from '../models/HistorialEstadosSolicitudes.js';
 import Formulario from '../models/Formulario.js';
 import PasoFormulario from '../models/PasoFormulario.js';
 import CampoFormulario from '../models/CampoFormulario.js';
+import { Op } from 'sequelize';
+import Usuario from '../models/Usuario.js';
 
-// Obtener todas las solicitudes realizadas
-export const getAllRequests = async (req, res) => {
+export const actualizarEstadoSolicitud = async (req, res) => {
+  const { codigo } = req.params;
+  const { estado } = req.body;
   try {
-    const requests = await getRequests();
-    res.json(requests);
+    const solicitud = await Solicitud.findOne({ where: { codigo } });
+
+    if (!solicitud) {
+      return res
+        .status(404)
+        .json({ error: true, message: 'No existe solicitud asociada a este código' });
+    }
+
+    await solicitud.update({ estado });
+
+    const historialEstado = {
+      estado,
+      solicitud_id: solicitud.id,
+    };
+
+    await HistorialEstadosSolicitudes.create(historialEstado);
+    return res.status(200).json({
+      data: { codigo, estado, solicitud },
+      message: 'Estado de la solicitud actualizado correctamente',
+    });
   } catch (error) {
-    console.log(error);
-    res.json({ message: 'No se pudo obtener las solicitudes.', error: error.message });
-  }
-};
-
-// Obtener una solicitud según su ID
-export const getRequestById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const request = await getRequestByIdService(id);
-    res.status(200).json(request);
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({ message: 'Error interno del servidor.', error: e.message });
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: error.message, message: 'No se pudo actualizar el estado de la solicitud' });
   }
 };
 
@@ -104,19 +113,88 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
 };
 
 // Obtener todas las solicitudes de un trámite en específico (SOLICITUDES DEL PANEL DE ADMINISTRACIÓN)
-export const getAllRequestsByProcedure = async (req, res) => {
-  const { id } = req.params;
+export const obtenerSolicitudesPorTramite = async (req, res) => {
+  const { slug } = req.params;
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
   const filters = req.query.filters;
   const search = req.query.search;
   const offset = (page - 1) * pageSize;
 
+  if (!slug) {
+    return res.status(404).json({ error: true, message: 'No existe este trámite' });
+  }
+
+  const tramite = await Tramite.findOne({ where: { slug } });
+
   try {
-    const requests = await getRequestsByProcedure(id, pageSize, offset, filters, search);
-    res.status(200).json(requests);
+    const whereClause = {
+      tramite_id: tramite.id,
+    };
+
+    // Filtro por estado
+    if (filters) {
+      const statusArray = filters
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (statusArray.length) {
+        whereClause.estado = {
+          [Op.in]: statusArray,
+        };
+      }
+    }
+
+    // Search por orgName u orgRut
+    if (search && search.trim() !== '') {
+      const s = search.trim();
+
+      whereClause[Op.or] = [
+        { orgName: { [Op.like]: `%${s}%` } },
+        { orgRut: { [Op.like]: `%${s}%` } },
+      ];
+    }
+
+    const { rows, count } = await Solicitud.findAndCountAll({
+      limit: pageSize,
+      offset,
+      where: whereClause,
+      include: {
+        model: Usuario,
+        attributes: ['nombres', 'apellidos', 'run'],
+      },
+      distinct: true, // importante con include + paginación
+    });
+
+    const totalPages = Math.max(1, Math.ceil(count / pageSize));
+
+    return res.status(200).json({ rows, totalPages });
   } catch (e) {
-    res.status(500).json({ error: e.message, message: 'Error interno del servidor' });
+    console.error(e);
+    return res.status(500).json({ error: e.message, mensaje: 'Error interno del servidor' });
+  }
+};
+
+// Obtener todas las solicitudes realizadas
+export const getAllRequests = async (req, res) => {
+  try {
+    const requests = await getRequests();
+    res.json(requests);
+  } catch (error) {
+    console.log(error);
+    res.json({ message: 'No se pudo obtener las solicitudes.', error: error.message });
+  }
+};
+
+// Obtener una solicitud según su ID
+export const getRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = await getRequestByIdService(id);
+    res.status(200).json(request);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: 'Error interno del servidor.', error: e.message });
   }
 };
 
@@ -169,20 +247,6 @@ export const getStatusLog = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({ message: 'No se pudo obtener el log', error: error.message });
-  }
-};
-
-export const updateRequestStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  try {
-    const request = await updateRequestStatusService(id, status);
-    res.status(200).json(request);
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: error.message, message: 'No se pudo actualizar el estado de la solicitud' });
   }
 };
 
@@ -239,7 +303,6 @@ export const createRequest = async (req, res) => {
     const logData = {
       estado: 'pendiente',
       solicitud_id: nuevaSolicitud.id,
-      mensaje: 'xD',
     };
     await HistorialEstadosSolicitudes.create(logData, { transaction: t });
 

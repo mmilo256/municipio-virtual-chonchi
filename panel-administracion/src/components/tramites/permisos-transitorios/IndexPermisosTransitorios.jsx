@@ -5,9 +5,9 @@ import {
   fetchDocumentosAsociados,
   fetchRequestById,
   updateRequestStatus,
-} from '../../../services/requestsServices';
+} from '../../../services/solicitudes.service';
 import AccionesPermisosTransitorios from './AccionesPermisosTransitorios';
-import DetalleSolicitud from '../DetalleSolicitud';
+import DetalleSolicitud from '../../pages/DetalleSolicitud';
 import RespuestasPermisosTransitorios from './RespuestasPermisosTransitorios';
 import DocsPermisosTransitorios from './DocsPermisosTransitorios';
 import DocumentosSubidos from '../DocumentosSubidos';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchRequestsByProcedure } from '../../../services/requestsServices';
+import { obtenerSolicitudesPorTramite } from '../../../services/solicitudes.service';
 import { formatDate } from '../../../utils/format';
 import StatusTag from '../../ui/StatusTag';
 import { Link, useNavigate } from 'react-router-dom';
@@ -30,7 +30,7 @@ const ListadoSolicitudesPermisosTransitorios = ({ title, tramiteId, breadcrumbsD
       setLoading(true);
       const filters = currentFilters.length !== 0 ? currentFilters.join(',') : null;
       try {
-        const data = await fetchRequestsByProcedure(
+        const data = await obtenerSolicitudesPorTramite(
           tramiteId,
           currentPage,
           pageSize,

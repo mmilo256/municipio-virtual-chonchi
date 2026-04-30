@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Input from '../../ui/Input';
 import { rejectTemplate } from '../../../email-templates/permisos-transitorios/rejectTemplate.js';
 import { sendEmail } from '../../../services/emailServices.js';
-import { updateRequestStatus } from '../../../services/requestsServices.js';
+import { updateRequestStatus } from '../../../services/solicitudes.service.js';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../../../config.js';
 

@@ -2,13 +2,13 @@ import apiClient from './apiClient';
 
 // Función para obtener el historial de estados de una solicitud específica
 export const obtenerSolicitudPorCodigo = async (codigo) => {
-  const response = await apiClient.get(`/requests/${codigo}`);
+  const response = await apiClient.get(`/solicitudes/${codigo}`);
   return response.data;
 };
 
 export const fetchRequestById = async (requestId) => {
   try {
-    const response = await apiClient.get(`/requests/${requestId}`);
+    const response = await apiClient.get(`/solicitudes/${requestId}`);
     const data = response.data;
     return data;
   } catch (error) {
@@ -18,7 +18,7 @@ export const fetchRequestById = async (requestId) => {
 
 export const fetchDocumentosAdjuntos = async (id) => {
   try {
-    const response = await apiClient.get(`/requests/${id}/documents?type=adjunto`);
+    const response = await apiClient.get(`/solicitudes/${id}/documents?type=adjunto`);
     const data = response.data;
     return data;
   } catch (error) {
@@ -30,7 +30,9 @@ export const fetchDocumentosAdjuntos = async (id) => {
 export const fetchRequestsByUserId = async (id, page = 1, pageSize = 10) => {
   try {
     // Realiza una solicitud GET para obtener las solicitudes asociadas al ID proporcionado
-    const response = await apiClient.get(`/requests/user/${id}?page=${page}&pageSize=${pageSize}`);
+    const response = await apiClient.get(
+      `/solicitudes/user/${id}?page=${page}&pageSize=${pageSize}`,
+    );
 
     // Extrae y devuelve las solicitudes desde la respuesta
     const data = response.data;

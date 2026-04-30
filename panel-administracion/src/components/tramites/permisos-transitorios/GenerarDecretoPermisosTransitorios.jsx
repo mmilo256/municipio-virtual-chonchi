@@ -3,7 +3,7 @@ import Input from '../../ui/Input';
 import Button from '../../ui/Button';
 import { useEffect, useState } from 'react';
 import { generarDecreto } from '../../../services/permisosTransitoriosServices';
-import { updateRequestStatus } from '../../../services/requestsServices';
+import { updateRequestStatus } from '../../../services/solicitudes.service';
 import Breadcrumbs from '../../ui/Breadcrumbs';
 
 const GenerarDecretoPermisosTransitorios = () => {

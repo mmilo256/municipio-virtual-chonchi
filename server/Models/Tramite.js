@@ -20,6 +20,7 @@ const Tramite = sequelize.define('tramites', {
   email: DataTypes.STRING,
   telefono: DataTypes.STRING,
   activo: DataTypes.BOOLEAN,
+  config: DataTypes.JSON,
 });
 
 export default Tramite;

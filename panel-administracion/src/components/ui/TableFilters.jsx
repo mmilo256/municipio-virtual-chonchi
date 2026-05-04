@@ -3,10 +3,9 @@ import { useState } from 'react';
 const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => {
   const [btnPendiente, setBtnPendiente] = useState(false);
   const [btnEnRevision, setBtnEnRevision] = useState(false);
-  const [btnPorFirmar, setBtnPorFirmar] = useState(false);
+  const [btnRequiereCorreccion, setBtnRequiereCorreccion] = useState(false);
   const [btnAprobada, setBtnAprobada] = useState(false);
   const [btnRechazada, setBtnRechazada] = useState(false);
-  const [btnFinalizada, setBtnFinalizada] = useState(false);
 
   const onFilter = async (status) => {
     setCurrentPage(1);
@@ -17,17 +16,14 @@ const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => 
       case 'en revision':
         setBtnEnRevision(!btnEnRevision);
         break;
-      case 'por firmar':
-        setBtnPorFirmar(!btnPorFirmar);
+      case 'requiere correccion':
+        setBtnRequiereCorreccion(!btnRequiereCorreccion);
         break;
       case 'aprobada':
         setBtnAprobada(!btnAprobada);
         break;
       case 'rechazada':
         setBtnRechazada(!btnRechazada);
-        break;
-      case 'finalizada':
-        setBtnFinalizada(!btnFinalizada);
         break;
       default:
         break;
@@ -67,11 +63,11 @@ const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => 
         </button>
         <button
           onClick={() => {
-            onFilter('por firmar');
+            onFilter('requiere correccion');
           }}
-          className={`block rounded-full py-1 px-4 ${btnPorFirmar ? activeButtonStyles : inactiveButtonStyles}`}
+          className={`block rounded-full py-1 px-4 ${btnRequiereCorreccion ? activeButtonStyles : inactiveButtonStyles}`}
         >
-          Por firmar
+          Requiere corrección
         </button>
         <button
           onClick={() => {
@@ -88,14 +84,6 @@ const TableFilters = ({ currentFilters, setCurrentFilters, setCurrentPage }) => 
           className={`block rounded-full py-1 px-4 ${btnRechazada ? activeButtonStyles : inactiveButtonStyles}`}
         >
           Rechazadas
-        </button>
-        <button
-          onClick={() => {
-            onFilter('finalizada');
-          }}
-          className={`block rounded-full py-1 px-4 ${btnFinalizada ? activeButtonStyles : inactiveButtonStyles}`}
-        >
-          Finalizadas
         </button>
       </div>
     </>

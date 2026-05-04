@@ -19,16 +19,28 @@ const DetalleSolicitud = () => {
   const respuestas = Object.fromEntries(
     (infoSolicitud?.respuestas || []).map((r) => [r.campo_id, r.valor]),
   );
+  const estado = infoSolicitud?.estado;
+  const aprobacionConfig = infoSolicitud?.tramite?.config;
+  console.log(aprobacionConfig);
 
   useEffect(() => {
     (async () => {
-      const response = await obtenerSolicitudPorCodigo(codigo);
-      setSolicitud(response.data);
+      try {
+        setLoading(true);
+        const response = await obtenerSolicitudPorCodigo(codigo);
+        setSolicitud(response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [codigo]);
 
-  const cambiarEstadoSolicitud = async (codigo, estado) => {
-    console.log(`Estado de la solicitud ${codigo} cambiado a: ${estado}`);
+  const onAprobarSolicitud = () => {
+    if (!aprobacionConfig) {
+      alert('Ta seguro?');
+    }
   };
 
   return (
@@ -48,14 +60,29 @@ const DetalleSolicitud = () => {
         <strong>Fecha de ingreso: </strong>
         {formatDate(infoSolicitud?.createdAt, 'DD [de] MMMM [de] YYYY [a las] HH:mm')}
       </p>
-      <button
-        onClick={() => {
-          cambiarEstadoSolicitud(codigo, 'en revision');
-        }}
-        className="border px-4 py-1 my-4 bg-[#fff] hover:bg-slate-300"
-      >
-        Cambiar estado
-      </button>
+      {estado === 'en revision' && (
+        <div className="space-x-4 my-4">
+          <button
+            onClick={onAprobarSolicitud}
+            className="font-bold bg-green-500 rounded text-[#fff] p-2"
+          >
+            Aprobar solicitud
+          </button>
+          <button className="font-bold bg-red-500 rounded text-[#fff] p-2">
+            Rechazar solicitud
+          </button>
+          <button className="font-bold bg-amber-500 rounded text-[#fff] p-2">
+            Solicitar corrección
+          </button>
+        </div>
+      )}
+      {estado === 'requiere correccion' && (
+        <div className="space-x-4 my-4">
+          <p className="p-2 bg-blue-100 text-blue-900/60 rounded">
+            Esperando la corrección del solicitante
+          </p>
+        </div>
+      )}
       {/* Información del solicitante */}
       <div className="mt-4">
         <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>

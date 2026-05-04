@@ -71,7 +71,7 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
         },
         {
           model: Tramite,
-          attributes: ['id', 'titulo'],
+          attributes: ['id', 'slug', 'titulo', 'config'],
           include: [
             {
               model: Formulario,

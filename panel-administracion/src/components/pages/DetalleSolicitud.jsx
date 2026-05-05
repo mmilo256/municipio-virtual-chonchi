@@ -1,8 +1,8 @@
 import StatusTag from '../ui/StatusTag';
 import { formatDate } from '../../utils/format';
 import Breadcrumbs from '../ui/Breadcrumbs';
-import { ToastContainer, toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import OriginTag from '../ui/OriginTag';
 import { obtenerSolicitudPorCodigo } from '../../services/solicitudes.service';
@@ -10,37 +10,33 @@ import Accordion from '../ui/Accordion';
 
 const DetalleSolicitud = () => {
   const [solicitud, setSolicitud] = useState({});
-  const [loading, setLoading] = useState(false);
   const { codigo } = useParams();
 
+  const navigate = useNavigate();
+
   const infoSolicitud = solicitud.solicitud;
-  const infoContacto = solicitud.contacto;
   const pasosFormulario = infoSolicitud?.tramite?.formulario?.pasos_formularios ?? [];
   const respuestas = Object.fromEntries(
     (infoSolicitud?.respuestas || []).map((r) => [r.campo_id, r.valor]),
   );
   const estado = infoSolicitud?.estado;
-  const aprobacionConfig = infoSolicitud?.tramite?.config;
-  console.log(aprobacionConfig);
+  const usuario = infoSolicitud?.usuario;
+
+  console.log(usuario);
 
   useEffect(() => {
     (async () => {
       try {
-        setLoading(true);
         const response = await obtenerSolicitudPorCodigo(codigo);
         setSolicitud(response.data);
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
       }
     })();
   }, [codigo]);
 
   const onAprobarSolicitud = () => {
-    if (!aprobacionConfig) {
-      alert('Ta seguro?');
-    }
+    navigate('aprobar');
   };
 
   return (
@@ -89,11 +85,11 @@ const DetalleSolicitud = () => {
         <div className="bg-[#fff] p-4 shadow rounded">
           <p>
             <strong>Nombre: </strong>
-            {infoContacto?.nombres}
+            {`${usuario?.nombres} ${usuario?.apellidos}`}
           </p>
           <p>
             <strong>RUT: </strong>
-            {infoContacto?.run}
+            {usuario?.run}
           </p>
           <p>
             <strong>Correo electrónico: </strong>

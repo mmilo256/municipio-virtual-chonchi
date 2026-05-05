@@ -52,7 +52,6 @@ export const actualizarEstadoSolicitud = async (req, res) => {
 export const obtenerSolicitudPorCodigo = async (req, res) => {
   try {
     const { codigo } = req.params;
-    const { nombres, apellidos, run } = req.user;
     const solicitud = await Solicitud.findOne({
       attributes: [
         'id',
@@ -65,6 +64,9 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
       ],
       where: { codigo },
       include: [
+        {
+          model: Usuario,
+        },
         {
           model: Respuesta,
           attributes: ['campo_id', 'valor'],
@@ -101,7 +103,7 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
     });
 
     return res.status(200).json({
-      data: { solicitud, historialEstados, contacto: { nombres, apellidos, run } },
+      data: { solicitud, historialEstados },
       message: 'Historial obtenido correctamente',
     });
   } catch (error) {

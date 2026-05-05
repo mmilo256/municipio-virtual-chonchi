@@ -1,0 +1,7 @@
+{
+  "archivo": {
+    "etiqueta": "Adjuntar decreto",
+    "mime_types": ["application/pdf"]
+  },
+  "destinatarios": true
+}

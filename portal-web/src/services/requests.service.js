@@ -51,6 +51,6 @@ export const createRequest = async (data) => {
       'Content-Type': 'application/json',
     },
   };
-  const response = await apiClient.post(`/requests`, data, config);
+  const response = await apiClient.post(`/solicitudes`, data, config);
   return response.data;
 };

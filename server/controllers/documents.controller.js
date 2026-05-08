@@ -8,9 +8,6 @@ import fs from 'fs';
 import path from 'path';
 import mime from 'mime';
 
-// Subir un archivo al servidor
-export const subirArchivo = async () => {};
-
 // Borrar un documento
 export const deleteDocument = async (req, res) => {
   const { id } = req.params;
@@ -37,18 +34,21 @@ export const getDocument = async (req, res) => {
 
 export const viewDocument = async (req, res) => {
   const { id } = req.params;
+
   try {
     const doc = await Documento.findByPk(id);
     if (!doc) return res.status(404).json({ message: 'No encontrado' });
 
-    const fullPath = path.resolve(doc.ruta); // ej: /services/munivirtual-api/uploads/...
-    const contentType = doc.mimetype || mime.getType(fullPath) || 'application/octet-stream';
+    const fullPath = path.join(process.cwd(), doc.ruta);
+    const contentType = doc.mime_type || mime.getType(fullPath) || 'application/octet-stream';
+
+    console.log(fullPath);
 
     // Mostrar en el navegador (PDF/imagen) en vez de descargar
     res.setHeader('Content-Type', contentType);
     res.setHeader(
       'Content-Disposition',
-      `inline; filename="${encodeURIComponent(doc.originalname)}"`,
+      `inline; filename="${encodeURIComponent(doc.nombre_original)}"`,
     );
     res.setHeader('Cache-Control', 'no-store');
 

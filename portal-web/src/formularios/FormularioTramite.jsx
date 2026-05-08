@@ -145,26 +145,50 @@ const FormularioTramite = () => {
     } else {
       // Enviar formulario
       const newRespuestas = [];
+      const archivos = [];
       newPasos.forEach((paso) => {
         paso.campos_formularios.forEach((campo) => {
           const valor = respuestas[campo.nombre_interno];
 
           if (valor !== undefined && valor !== null && valor !== '') {
-            newRespuestas.push({
-              campo_id: campo.id,
-              valor,
-            });
+            if (campo.tipo === 'file') {
+              archivos.push({
+                nombre: campo.nombre_interno,
+                campo_id: campo.id,
+                valor,
+              });
+            } else {
+              newRespuestas.push({
+                campo_id: campo.id,
+                valor,
+              });
+            }
           }
         });
       });
 
-      const data = {
-        tramite: slug,
-        formularioId: formulario.id,
-        canal: 'digital',
-        respuestas: newRespuestas,
-        infoContacto,
-      };
+      const data = new FormData();
+
+      data.append('tramite', slug);
+      data.append('formularioId', formulario.id);
+      data.append('canal', 'digital');
+      data.append('respuestas', JSON.stringify(newRespuestas));
+      data.append('infoContacto', JSON.stringify(infoContacto));
+
+      archivos.forEach((archivo) => {
+        console.log(archivo);
+        data.append(archivo.nombre, archivo.valor);
+      });
+
+      data.append(
+        'archivosMeta',
+        JSON.stringify(
+          archivos.map((item) => ({
+            campo_id: item.campo_id,
+            slug: item.nombre,
+          })),
+        ),
+      );
 
       try {
         setLoading(true);
@@ -180,18 +204,18 @@ const FormularioTramite = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-medium text-secondary mb-1">{formulario.titulo}</h1>
-      <p className="text-sm text-gray-600 mb-6">{formulario.descripcion}</p>
+      <h1 className="text-3xl font-medium text-secondary mb-1">{formulario?.titulo}</h1>
+      <p className="text-sm text-gray-600 mb-6">{formulario?.descripcion}</p>
       <div className="grid grid-cols-3">
         <FormStepper pasos={newPasos} pasoActual={pasoActual} />
         {newPasos?.length > 0 && (
           <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-2">
             <h2 className="text-2xl font-medium text-secondary mb-1">
-              {`${pasoActual + 1}. ${newPasos[pasoActual].titulo}`}
+              {`${pasoActual + 1}. ${newPasos[pasoActual]?.titulo}`}
             </h2>
-            <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual].descripcion}</p>
+            <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual]?.descripcion}</p>
             <form className={`flex flex-col ${pasoActual === totalPasos ? 'gap-y-2' : 'gap-y-4'}`}>
-              {paso.tipoPaso === 'contacto' &&
+              {paso?.tipoPaso === 'contacto' &&
                 camposContacto.map((campo) => (
                   <InputRenderer
                     disabled={campo.disabled}
@@ -210,12 +234,13 @@ const FormularioTramite = () => {
                     }}
                   />
                 ))}
-              {paso.tipoPaso === 'dinamico' &&
+              {paso?.tipoPaso === 'dinamico' &&
                 newPasos[pasoActual].campos_formularios.map((campo) => {
                   return (
                     <InputRenderer
                       tipo={campo.tipo}
                       key={campo.id}
+                      slug={campo.slug}
                       mostrarErrores={mostrarErroresPaso}
                       placeholder={campo.placeholder}
                       textoAyuda={campo.texto_ayuda}
@@ -225,7 +250,7 @@ const FormularioTramite = () => {
                       etiqueta={campo.etiqueta}
                       value={respuestas[campo.nombre_interno] || ''}
                       onChange={(e) => {
-                        if (campo.tipo === 'archivo') {
+                        if (campo.tipo === 'file') {
                           handleChange(campo, e.target.files[0] || null);
                         } else {
                           handleChange(campo, e.target.value);
@@ -234,7 +259,7 @@ const FormularioTramite = () => {
                     />
                   );
                 })}
-              {paso.tipoPaso === 'confirmacion' && (
+              {paso?.tipoPaso === 'confirmacion' && (
                 <>
                   <Accordion isOpen title="Información de contacto">
                     <div className="space-x-1">

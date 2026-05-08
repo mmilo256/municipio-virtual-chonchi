@@ -13,6 +13,6 @@ router.use('/email', authMiddleware, emailRoutes);
 router.use('/tramites', tramitesRoutes);
 router.use('/solicitudes', authMiddleware, solicitudesRoutes);
 3;
-router.use('/documents', authMiddleware, documentsRoutes);
+router.use('/documentos', authMiddleware, documentsRoutes);
 
 export default router;

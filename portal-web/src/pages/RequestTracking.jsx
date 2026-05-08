@@ -14,7 +14,8 @@ const RequestTracking = () => {
 
   const [solicitud, setSolicitud] = useState({});
   const [historial, setHistorial] = useState([]);
-  const [contacto, setContacto] = useState({});
+
+  const documentos = solicitud?.documentos;
 
   const pasos = solicitud.tramite?.formulario?.pasos_formularios ?? [];
 
@@ -68,7 +69,6 @@ const RequestTracking = () => {
           activo: index === rawH.length - 1 ? true : false,
         }));
         setHistorial(formattedHistorial);
-        setContacto(response.data.contacto);
       } catch (error) {
         console.error(error);
       }
@@ -110,11 +110,15 @@ const RequestTracking = () => {
             <Accordion isOpen title="Información de contacto">
               <div className="space-x-1">
                 <strong>Nombre completo:</strong>
-                <span>{renderValorRespuesta(`${contacto.nombres} ${contacto.apellidos}`)}</span>
+                <span>
+                  {renderValorRespuesta(
+                    `${solicitud?.usuario?.nombres} ${solicitud?.usuario?.apellidos}`,
+                  )}
+                </span>
               </div>
               <div className="space-x-1">
                 <strong>RUT:</strong>
-                <span>{renderValorRespuesta(contacto.run)}</span>
+                <span>{renderValorRespuesta(solicitud?.usuario?.run)}</span>
               </div>
               <div className="space-x-1">
                 <strong>Correo electrónico:</strong>
@@ -131,12 +135,26 @@ const RequestTracking = () => {
             </Accordion>
             {pasos.map((paso) => (
               <Accordion key={paso.titulo} title={paso.titulo}>
-                {paso.campos_formularios.map((campo) => (
-                  <p key={campo.id}>
-                    <strong>{campo.etiqueta}</strong>
-                    {': ' + respuestas[campo.id]}
-                  </p>
-                ))}
+                {paso.campos_formularios.map((campo) => {
+                  const documento = documentos?.find((doc) => doc.campo_id === campo.id);
+                  return (
+                    <p key={campo.id}>
+                      <strong>{campo.etiqueta}</strong>:{' '}
+                      {campo.tipo !== 'file' ? (
+                        <span>{respuestas[campo.id]}</span>
+                      ) : (
+                        <a
+                          target="_blank"
+                          href={`http://localhost:10000/api/portal/documentos/${documento.id}/view`}
+                          className="text-blue-500 underline"
+                          rel="noreferrer"
+                        >
+                          Ver documento
+                        </a>
+                      )}
+                    </p>
+                  );
+                })}
               </Accordion>
             ))}
           </div>

@@ -1,7 +1,14 @@
 {
-  "archivo": {
-    "etiqueta": "Adjuntar decreto",
-    "mime_types": ["application/pdf"]
-  },
-  "destinatarios": true
+  "archivo": [
+    {
+      "etiqueta": "Decreto",
+      "mime_types": ["application/pdf"]
+    },
+    {
+      "etiqueta": "Contrato",
+      "mime_types": ["application/pdf"]
+    }
+  ],
+  "destinatarios": true,
+  "correos": ["carabineros@gmail.com", "bomberos@gmail.com", "correo@gmail.com"]
 }

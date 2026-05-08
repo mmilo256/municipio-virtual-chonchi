@@ -7,12 +7,14 @@ const Documento = sequelize.define('documentos', {
     primaryKey: true,
     autoIncrement: true,
   },
-  numero: DataTypes.INTEGER,
-  ruta: DataTypes.STRING,
-  originalname: DataTypes.STRING,
-  estado: DataTypes.ENUM('sin firmar', 'firmado'),
+  campo_id: DataTypes.INTEGER,
+  nombre_original: DataTypes.STRING,
+  nombre_guardado: DataTypes.STRING,
   nombre: DataTypes.STRING,
-  tipo: DataTypes.ENUM('adjunto', 'subido', 'generado'),
+  ruta: DataTypes.STRING,
+  mime_type: DataTypes.STRING,
+  bytes: DataTypes.BIGINT,
+  origen: DataTypes.ENUM('solicitante', 'funcionario', 'sistema'),
 });
 
 export default Documento;

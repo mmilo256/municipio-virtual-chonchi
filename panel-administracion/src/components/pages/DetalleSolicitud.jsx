@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 import OriginTag from '../ui/OriginTag';
 import { obtenerSolicitudPorCodigo } from '../../services/solicitudes.service';
 import Accordion from '../ui/Accordion';
+import BaseTable from '../ui/BaseTable';
+import Button from '../ui/Button';
+import { API_URL } from '../../../config';
 
 const DetalleSolicitud = () => {
   const [solicitud, setSolicitud] = useState({});
@@ -21,8 +24,21 @@ const DetalleSolicitud = () => {
   );
   const estado = infoSolicitud?.estado;
   const usuario = infoSolicitud?.usuario;
-
-  console.log(usuario);
+  const documentos = solicitud?.solicitud?.documentos;
+  const documentosAsociados = documentos
+    ?.filter((documento) => documento.origen === 'funcionario')
+    .map((doc) => ({
+      nombre: (
+        <a
+          className="text-blue-500 underline"
+          target="_blank"
+          href={`${API_URL}/documents/${doc.id}/view`}
+          rel="noreferrer"
+        >
+          {doc.nombre}
+        </a>
+      ),
+    }));
 
   useEffect(() => {
     (async () => {
@@ -37,6 +53,10 @@ const DetalleSolicitud = () => {
 
   const onAprobarSolicitud = () => {
     navigate('aprobar');
+  };
+
+  const onSubirDocumentoAsociado = () => {
+    navigate('subir-documento');
   };
 
   return (
@@ -57,7 +77,7 @@ const DetalleSolicitud = () => {
         {formatDate(infoSolicitud?.createdAt, 'DD [de] MMMM [de] YYYY [a las] HH:mm')}
       </p>
       {estado === 'en revision' && (
-        <div className="space-x-4 my-4">
+        <div className="space-x-4 mt-2 mb-6">
           <button
             onClick={onAprobarSolicitud}
             className="font-bold bg-green-500 rounded text-[#fff] p-2"
@@ -106,18 +126,42 @@ const DetalleSolicitud = () => {
         </div>
       </div>
       {/* Datos de la solicitud */}
-      <div className="mt-4">
+      <div className="my-10">
         <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
         {pasosFormulario.map((paso) => (
           <Accordion init key={paso.titulo} title={paso.titulo}>
-            {paso.campos_formularios.map((campo) => (
-              <p key={campo.id}>
-                <strong>{campo.etiqueta}</strong>
-                {': ' + respuestas[campo.id]}
-              </p>
-            ))}
+            {paso.campos_formularios.map((campo) => {
+              const documento = documentos?.find((doc) => doc.campo_id === campo.id);
+              return (
+                <p key={campo.id}>
+                  <strong>{campo.etiqueta}</strong>:{' '}
+                  {campo.tipo !== 'file' ? (
+                    <span>{respuestas[campo.id]}</span>
+                  ) : (
+                    <a
+                      target="_blank"
+                      href={`http://localhost:10000/api/portal/documentos/${documento.id}/view`}
+                      className="text-blue-500 underline"
+                      rel="noreferrer"
+                    >
+                      Ver documento
+                    </a>
+                  )}
+                </p>
+              );
+            })}
           </Accordion>
         ))}
+      </div>
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold">Subir documentos asociados</h2>
+        <p className="mb-2 text-sm text-slate-500">
+          Agrega documentos relacionados con la revisión y gestión de esta solicitud.
+        </p>
+        <div className="my-4">
+          <Button onClick={onSubirDocumentoAsociado} text="Subir documento" variant="secondary" />
+        </div>
+        <BaseTable columns={['Documento']} data={documentosAsociados} />
       </div>
     </div>
   );

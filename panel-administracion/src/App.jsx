@@ -17,6 +17,7 @@ import RutasGestionFormularios from './components/routes/RutasGestionFormularios
 import Solicitudes from './components/pages/Solicitudes';
 import DetalleSolicitud from './components/pages/DetalleSolicitud';
 import AprobarSolicitud from './components/pages/AprobarSolicitud';
+import SubirDocumento from './components/pages/SubirDocumento';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData, sessionData } = useAuthStore();
@@ -79,6 +80,7 @@ const App = () => {
           {/* <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} /> */}
           <Route path="/:slug" element={<Solicitudes />} />
           <Route path="/:slug/:codigo" element={<DetalleSolicitud />} />
+          <Route path="/:slug/:codigo/subir-documento" element={<SubirDocumento />} />
           <Route path="/:slug/:codigo/aprobar" element={<AprobarSolicitud />} />
           {/* 
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />

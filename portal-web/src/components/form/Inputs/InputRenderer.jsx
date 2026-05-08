@@ -80,6 +80,7 @@ const InputRenderer = ({
           etiqueta={etiqueta}
           config={config}
           slug={slug}
+          opciones={JSON.parse(opciones)}
           value={value}
           onChange={onChange}
         />

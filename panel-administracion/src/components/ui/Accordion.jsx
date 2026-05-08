@@ -20,7 +20,7 @@ const Accordion = ({ title, children, init = false }) => {
         <span className="font-black">{title}</span>
       </button>
       <div
-        className={`bg-[#fff] ${open ? 'p-2 h-auto' : 'h-0'} shadow border-t rounded-b overflow-hidden`}
+        className={`bg-blue-50 ${open ? 'p-2 h-auto' : 'h-0'} shadow border-t rounded-b overflow-hidden`}
       >
         {children}
       </div>

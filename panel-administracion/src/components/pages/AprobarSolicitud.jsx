@@ -6,13 +6,26 @@ import { useEffect, useState } from 'react';
 import { obtenerSolicitudPorCodigo } from '../../services/solicitudes.service';
 import { useParams } from 'react-router-dom';
 import { formatDate } from '../../utils/format';
+import { IoIosAddCircleOutline } from 'react-icons/io';
+import Upload from '../ui/Upload';
 
 const AprobarSolicitud = () => {
   const { codigo } = useParams();
   const [solicitud, setSolicitud] = useState({});
+  const [destinatarios, setDestinatarios] = useState([]);
+  const [destinatarioActual, setDestinatarioActual] = useState('');
+
+  const [documentos, setDocumentos] = useState([]);
 
   const usuario = solicitud?.solicitud?.usuario;
-  const config = solicitud?.solicitud?.tramite?.config;
+  const config = solicitud?.solicitud?.tramite?.config
+    ? JSON.parse(solicitud?.solicitud?.tramite?.config)
+    : {};
+
+  console.log(config?.archivo);
+
+  const destinatariosPredeterminados =
+    config?.correos?.filter((correo) => !destinatarios.includes(correo)) || [];
 
   useEffect(() => {
     (async () => {
@@ -24,6 +37,22 @@ const AprobarSolicitud = () => {
       }
     })();
   }, [codigo]);
+
+  const agregarDestinatarioDesdeSelect = () => {
+    if (
+      destinatarioActual !== '' &&
+      destinatarioActual !== undefined &&
+      destinatarioActual !== null
+    ) {
+      setDestinatarios((prev) => [...prev, destinatarioActual]);
+      setDestinatarioActual('');
+    }
+  };
+
+  const quitarDestinatario = (dest) => {
+    const newDestinatarios = destinatarios.filter((destinatario) => destinatario !== dest);
+    setDestinatarios(newDestinatarios);
+  };
 
   return (
     <div className="max-w-[60rem] mx-auto bg-[#fff] p-6 pt-0 mt-4 rounded border">
@@ -69,29 +98,64 @@ const AprobarSolicitud = () => {
         </div>
       </div>
 
-      {/* <label className="block mb-1" htmlFor="destinatario">
-        Agregar destinatario
-      </label>
-      <form className="flex gap-2">
-        <select id="destinatario" className="block w-full border-2 rounded p-1">
-          <option value="">-- Selecciona un destinatario --</option>
-        </select>
-        <button className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40">
-          {' '}
-          <IoIosAddCircleOutline size={25} /> Agregar
-        </button>
-      </form>
-      <div className="mt-4"></div>
-      <hr className="my-4" />
-      {
-        <button
-          className="block py-1 px-4 text-blue-500 border underline font-bold"
-          target="_blank"
-          type="button"
-        >
-          DECRETO.PDF
-        </button>
-      } */}
+      {config?.archivo?.length !== 0 && (
+        <div>
+          {config?.archivo?.map((ar) => (
+            <Upload key={ar.etiqueta} label={ar.etiqueta} />
+          ))}
+          <hr className="my-4" />
+        </div>
+      )}
+
+      {config?.destinatarios && (
+        <div>
+          <label className="block mb-1" htmlFor="destinatario">
+            Agregar destinatario
+          </label>
+          <form className="flex gap-2">
+            <select
+              value={destinatarioActual}
+              onChange={(e) => {
+                setDestinatarioActual(e.target.value);
+              }}
+              id="destinatario"
+              className="block w-full border-2 rounded p-1"
+            >
+              <option disabled value="">
+                -- Selecciona un destinatario --
+              </option>
+              {destinatariosPredeterminados?.map((dest) => (
+                <option key={dest} value={dest}>
+                  {dest}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={agregarDestinatarioDesdeSelect}
+              type="button"
+              className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40"
+            >
+              {' '}
+              <IoIosAddCircleOutline size={25} /> Agregar
+            </button>
+          </form>
+          <div className="mt-4 space-x-2">
+            {destinatarios.map((dest) => (
+              <button
+                onClick={() => {
+                  quitarDestinatario(dest);
+                }}
+                key={dest}
+                className="inline bg-green-50 hover:bg-green-200 py-1 px-4 rounded text-sm font-bold space-x-4"
+              >
+                <span>{dest}</span>
+                <span className="text-green-800">X</span>
+              </button>
+            ))}
+          </div>
+          <hr className="my-4" />
+        </div>
+      )}
 
       <div className="mt-10 flex justify-end gap-2">
         <Button variant="primary" text="Volver" />

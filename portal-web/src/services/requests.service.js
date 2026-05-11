@@ -45,7 +45,7 @@ export const fetchRequestsByUserId = async (id, page = 1, pageSize = 10) => {
 };
 
 // Función para enviar una nueva solicitud con los datos proporcionados
-export const createRequest = async (data) => {
+export const enviarSolicitud = async (data) => {
   const response = await apiClient.post(`/solicitudes`, data);
   return response.data;
 };

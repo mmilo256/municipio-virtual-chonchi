@@ -6,7 +6,7 @@ import FormStepper from '../components/form/FormStepper';
 import InputRenderer from '../components/form/Inputs/InputRenderer';
 import { sanitizarValor } from '../utils/sanitizadores';
 import { validarCampo } from '../utils/validaciones';
-import { createRequest } from '../services/requests.service';
+import { enviarSolicitud } from '../services/requests.service';
 import Accordion from '../components/ui/Accordion';
 import useAuthStore from '../stores/useAuthStore';
 import { camposContacto } from '../data/camposContacto';
@@ -192,7 +192,7 @@ const FormularioTramite = () => {
 
       try {
         setLoading(true);
-        const response = await createRequest(data);
+        const response = await enviarSolicitud(data);
         navigate(`../${slug}/enviado`, { state: { solicitud: response.data } });
       } catch (error) {
         console.log(error);

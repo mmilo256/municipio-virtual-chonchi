@@ -15,14 +15,51 @@ import PasoFormulario from '../models/PasoFormulario.js';
 import CampoFormulario from '../models/CampoFormulario.js';
 import { Op } from 'sequelize';
 import Usuario from '../models/Usuario.js';
+import Funcionario from '../models/Funcionario.js';
+import { sendEmail } from '../config/nodemailer.js';
+import { templateSolicitudEnviadaSolicitante } from '../email/js/solicitudEnviadaSolicitante.js';
+import { formatDate } from '../utils/format.utils.js';
+import { templateSolicitudRecibidaFuncionario } from '../email/js/solicitudRecibidaFuncionario.js';
+
+// Aprobar solicitud
+export const aprobarSolicitud = async (req, res) => {
+  try {
+    const { codigo } = req.body;
+    const destinatarios = JSON.parse(req.body.destinatarios) ?? null;
+    const documentos = req.files;
+
+    console.log(documentos.length);
+
+    // Validar que existe la solicitud
+    const solicitudExiste = await Solicitud.findOne({
+      where: { codigo },
+      include: [{ model: Tramite }],
+    });
+
+    if (!solicitudExiste) {
+      return res.status(404).json({ error: true, message: 'No existe la solicitud' });
+    }
+
+    // Obtener parámetros de configuración del trámite
+    const config = JSON.parse(solicitudExiste.tramite.config);
+    if (config.archivos.activo) {
+      if (documentos.length === 0) {
+        return res.status(404).json({ error: true, message: 'No hay documentos adjuntos' });
+      }
+    }
+
+    return res.status(200).json({ data: config, message: 'Solicitud aprobada correctamente' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error, message: 'No se pudo aprobar la solicitud' });
+  }
+};
 
 // Subir documentos
 export const subirDocumento = async (req, res) => {
   try {
     const { codigo } = req.params;
     const documento = req.files[0];
-
-    console.log(documento);
 
     const solicitudExiste = await Solicitud.findOne({ where: { codigo } });
 
@@ -51,7 +88,7 @@ export const subirDocumento = async (req, res) => {
 };
 
 // Crear una nueva solicitud para un usuario
-export const createRequest = async (req, res) => {
+export const crearSolicitud = async (req, res) => {
   const t = await sequelize.transaction();
   try {
     const { tramite: tramiteSlug, canal } = req.body;
@@ -65,6 +102,7 @@ export const createRequest = async (req, res) => {
     const tramiteExiste = await Tramite.findOne({
       attributes: ['id', 'titulo'],
       where: { slug: tramiteSlug },
+      include: [{ model: Funcionario, attributes: ['nombres', 'apellidos', 'email'] }],
       transaction: t,
     });
     if (!tramiteExiste) {
@@ -107,8 +145,6 @@ export const createRequest = async (req, res) => {
     const documentos = req.files.map((file) => {
       const meta = archivosMeta.find((item) => item.slug === file.fieldname);
 
-      console.log(file);
-
       return {
         ruta: `/uploads/${file.filename}`,
         solicitud_id: nuevaSolicitud.id,
@@ -129,6 +165,39 @@ export const createRequest = async (req, res) => {
       solicitud_id: nuevaSolicitud.id,
     };
     await HistorialEstadosSolicitudes.create(logData, { transaction: t });
+
+    // Enviar correo de notificación al solicitante
+    await sendEmail(
+      infoContacto.email,
+      `[Municipio Virtual Chonchi] Comprobante de solicitud - ${newCodigo}`,
+      templateSolicitudEnviadaSolicitante(
+        infoContacto.nombreCompleto,
+        tramiteExiste.titulo,
+        newCodigo,
+        formatDate(nuevaSolicitud.createdAt, 'DD MMM YYYY, HH:mm'),
+      ),
+      null,
+    );
+
+    // Enviar correo de notificación a los funcionarios autorizados
+    const correosFuncionarios = tramiteExiste?.funcionarios?.map(
+      (funcionario) => funcionario.email,
+    );
+    await sendEmail(
+      correosFuncionarios,
+      `[Municipio Virtual Chonchi] Nueva solicitud recibida - ${newCodigo}`,
+      templateSolicitudRecibidaFuncionario(
+        tramiteExiste.titulo,
+        newCodigo,
+        formatDate(nuevaSolicitud.createdAt, 'DD MMM YYYY, HH:mm'),
+        infoContacto.nombreCompleto,
+        infoContacto.rut,
+        infoContacto.email,
+        infoContacto.telefono,
+        infoContacto.direccion,
+      ),
+      null,
+    );
 
     await t.commit();
     return res.status(201).json({
@@ -309,7 +378,7 @@ export const obtenerSolicitudesPorTramite = async (req, res) => {
 
     const totalPages = Math.max(1, Math.ceil(count / pageSize));
 
-    return res.status(200).json({ rows, totalPages });
+    return res.status(200).json({ rows, totalPages, tramite });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ error: e.message, mensaje: 'Error interno del servidor' });

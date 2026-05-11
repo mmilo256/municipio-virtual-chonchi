@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import Button from './Button';
 
 // Componente Upload para manejar la carga y visualización de archivos
-const Upload = ({ label, files, setFiles, name }) => {
+const Upload = ({ label, file, setFile, name }) => {
   // Referencia al input de archivo oculto para controlar su clic
   const hiddenFileInput = useRef(null);
 
@@ -11,13 +11,13 @@ const Upload = ({ label, files, setFiles, name }) => {
     hiddenFileInput.current.click();
   };
 
-  // Función para manejar el cambio en el input de archivo
+  /* // Función para manejar el cambio en el input de archivo
   const handleChange = (e) => {
     // Obtiene los archivos seleccionados como un array
     const selectedFile = e.target.files[0];
     // Actualiza el estado con los archivos seleccionados
-    setFiles(selectedFile);
-  };
+    setFile(selectedFile);
+  }; */
 
   /* // Función para eliminar un archivo específico del estado
     const handleRemove = (file) => {
@@ -28,34 +28,28 @@ const Upload = ({ label, files, setFiles, name }) => {
     } */
 
   return (
-    <div>
-      {/* Etiqueta del componente */}
-      <label className="block mb-2">{label}</label>
-      {/* Botón que simula el clic en el input de archivo */}
-      <Button variant="primary" text="Seleccionar archivo" onClick={handleClick} />
-      {/* Input de archivo oculto */}
+    <div className="mb-4">
+      <label className="block">{label}</label>
       <input
         type="file"
         multiple
         className="hidden"
         name={name}
-        onChange={handleChange}
+        onChange={setFile}
         ref={hiddenFileInput}
       />
-      {/* Lista de archivos seleccionados */}
-      <ul className="mt-5 flex flex-col gap-2">
-        {/* Mensaje si no hay archivos seleccionados */}
-        {!files && <p className="text-slate-500">No se ha subido ningún archivo</p>}
-        {/* Mapea los archivos para mostrar cada uno en una lista */}
-
-        {files && (
-          <li className="bg-blue-100 p-2 font-semibold text-blue-500 flex justify-between">
-            <span>{files.name}</span>
-            {/* Botón para eliminar un archivo específico */}
-            {/* <button onClick={() => { handleRemove(file) }} type="button">Borrar</button> */}
-          </li>
+      <div className="border flex">
+        <div>
+          <Button variant="primary" text="Seleccionar archivo" onClick={handleClick} />
+        </div>
+        {!file ? (
+          <span className="flex items-center px-4 text-slate-500">
+            No se ha subido ningún archivo
+          </span>
+        ) : (
+          <span className="flex items-center px-4">{file.name}</span>
         )}
-      </ul>
+      </div>
     </div>
   );
 };

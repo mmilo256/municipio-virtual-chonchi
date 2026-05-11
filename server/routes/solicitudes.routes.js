@@ -2,7 +2,7 @@ import e from 'express';
 import { setUpload } from '../config/multer.js';
 import {
   adjuntarDocumento,
-  createRequest,
+  crearSolicitud,
   getAllRequests,
   obtenerSolicitudesPorTramite,
   getAllRequestsByUserId,
@@ -11,6 +11,7 @@ import {
   obtenerSolicitudPorCodigo,
   actualizarEstadoSolicitud,
   subirDocumento,
+  aprobarSolicitud,
 } from '../controllers/solicitudes.controller.js';
 
 const uploadPublic = setUpload();
@@ -20,9 +21,10 @@ const uploadAdmin = setUpload('documents/');
 const router = e.Router();
 
 router.get('/', getAllRequests);
-router.post('/', uploadPublic.any(), createRequest);
+router.post('/', uploadPublic.any(), crearSolicitud);
 router.get('/:codigo', obtenerSolicitudPorCodigo);
 router.patch('/:codigo', actualizarEstadoSolicitud);
+router.post('/:codigo/aprobar', uploadAdmin.any(), aprobarSolicitud);
 router.post('/:codigo/subir-documento', uploadAdmin.any(), subirDocumento);
 router.get('/user/:id', getAllRequestsByUserId);
 router.get('/:id/documents', getUploadedDocuments);

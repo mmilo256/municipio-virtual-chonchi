@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useDebounce } from '../../hooks/useDebounce';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../../utils/format';
 import StatusTag from '../ui/StatusTag';
 import OriginTag from '../ui/OriginTag';
 import Breadcrumbs from '../ui/Breadcrumbs';
-import SearchBar from '../ui/SearchBar';
-import Button from '../ui/Button';
 import TableFilters from '../ui/TableFilters';
 import BaseTable from '../ui/BaseTable';
 import Pagination from '../ui/Pagination';
@@ -21,8 +18,7 @@ const Solicitudes = () => {
   const [paginaActual, setPaginaActual] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const pageSize = 15;
-  const [searchInput, setSearchInput] = useState('');
-  const debouncedSearch = useDebounce(searchInput, 600);
+  const [tramite, setTramite] = useState({});
 
   const [loading, setLoading] = useState(false);
 
@@ -41,13 +37,8 @@ const Solicitudes = () => {
       try {
         setLoading(true);
         const filtros = filtrosActuales.length !== 0 ? filtrosActuales.join(',') : null;
-        const response = await obtenerSolicitudesPorTramite(
-          slug,
-          paginaActual,
-          pageSize,
-          filtros,
-          debouncedSearch,
-        );
+        const response = await obtenerSolicitudesPorTramite(slug, paginaActual, pageSize, filtros);
+        setTramite(response.tramite);
         const formattedRows = response.rows.map((row) => ({
           codigo: row.codigo,
           solicitante: `${row.usuario.nombres} ${row.usuario.apellidos}`,
@@ -73,26 +64,15 @@ const Solicitudes = () => {
         setLoading(false);
       }
     })();
-  }, [slug, filtrosActuales, debouncedSearch, paginaActual, navigate]);
+  }, [slug, filtrosActuales, paginaActual, navigate]);
 
   const columns = ['Código', 'Solicitante', 'Fecha de solicitud', 'Estado', 'Origen', 'Acciones'];
-
-  /*   const breadcrumbs = [{ label: breadcrumbsData.tramite, href: breadcrumbsData.tramiteHref }]; */
-
-  const goTo = () => {
-    navigate('agregar');
-  };
 
   return (
     <div className="mb-4">
       <Breadcrumbs breadcrumbs={[]} />
-      <h1 className="text-2xl font-bold my-4">titulo</h1>
-      <div className="my-4">
-        {/* <SearchBar search={searchInput} setSearch={setSearchInput} /> */}
-        <div className="my-4">
-          <Button onClick={goTo} variant="secondary" text="Agregar solicitud física" />
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold my-4">{tramite.titulo}</h1>
+      <div className="my-4"></div>
       <TableFilters
         currentFilters={filtrosActuales}
         setCurrentFilters={setFiltrosActuales}

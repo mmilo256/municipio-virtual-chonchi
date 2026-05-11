@@ -32,7 +32,7 @@ const DetalleSolicitud = () => {
         <a
           className="text-blue-500 underline"
           target="_blank"
-          href={`${API_URL}/documents/${doc.id}/view`}
+          href={`${API_URL}/documentos/${doc.id}/view`}
           rel="noreferrer"
         >
           {doc.nombre}
@@ -140,7 +140,7 @@ const DetalleSolicitud = () => {
                   ) : (
                     <a
                       target="_blank"
-                      href={`http://localhost:10000/api/portal/documentos/${documento.id}/view`}
+                      href={`${API_URL}/documentos/${documento.id}/view`}
                       className="text-blue-500 underline"
                       rel="noreferrer"
                     >

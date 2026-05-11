@@ -1,5 +1,10 @@
 import apiClient from './apiClient';
 
+export const aprobarSolicitud = async (codigo, data) => {
+  const response = await apiClient.post(`/solicitudes/${codigo}/aprobar`, data);
+  return response.data;
+};
+
 export const subirDocumentoAsociado = async (codigo, data) => {
   const response = await apiClient.post(`/solicitudes/${codigo}/subir-documento`, data);
   return response.data;

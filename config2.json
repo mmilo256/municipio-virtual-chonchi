@@ -1,14 +1,31 @@
 {
-  "archivo": [
-    {
-      "etiqueta": "Decreto",
-      "mime_types": ["application/pdf"]
-    },
-    {
-      "etiqueta": "Contrato",
-      "mime_types": ["application/pdf"]
-    }
-  ],
-  "destinatarios": true,
-  "correos": ["carabineros@gmail.com", "bomberos@gmail.com", "correo@gmail.com"]
+  "archivos": {
+    "activo": false
+  },
+  "destinatarios": {
+    "activo": false
+  }
 }
+
+{
+  "archivos": {
+    "activo": true,
+    "archivos": [
+      {
+        "etiqueta": "Decreto firmado",
+        "nombre_interno": "decreto",
+        "mime_types": ["application/pdf"]
+      },
+      {
+        "etiqueta": "Contrato de trabajo",
+        "nombre_interno": "contrato",
+        "mime_types": ["application/pdf"]
+      }
+    ]
+  },
+  "destinatarios": {
+    "activo": true,
+    "destinatarios": ["carabineros@gmail.com", "bomberos@gmail.com", "correo@gmail.com"]
+  }
+}
+

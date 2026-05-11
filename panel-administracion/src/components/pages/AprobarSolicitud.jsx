@@ -3,29 +3,34 @@ import Breadcrumbs from '../ui/Breadcrumbs';
 import Button from '../ui/Button';
 import { ToastContainer } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { obtenerSolicitudPorCodigo } from '../../services/solicitudes.service';
-import { useParams } from 'react-router-dom';
+import { aprobarSolicitud, obtenerSolicitudPorCodigo } from '../../services/solicitudes.service';
+import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../../utils/format';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import Upload from '../ui/Upload';
+import Modal from '../ui/Modal';
 
 const AprobarSolicitud = () => {
-  const { codigo } = useParams();
+  const { codigo, slug } = useParams();
   const [solicitud, setSolicitud] = useState({});
   const [destinatarios, setDestinatarios] = useState([]);
   const [destinatarioActual, setDestinatarioActual] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
+  const [modal, setModal] = useState(false);
+
   const [documentos, setDocumentos] = useState([]);
+
+  const navigate = useNavigate();
 
   const usuario = solicitud?.solicitud?.usuario;
   const config = solicitud?.solicitud?.tramite?.config
     ? JSON.parse(solicitud?.solicitud?.tramite?.config)
     : {};
 
-  console.log(config?.archivo);
-
   const destinatariosPredeterminados =
-    config?.correos?.filter((correo) => !destinatarios.includes(correo)) || [];
+    config?.destinatarios?.destinatarios?.filter((correo) => !destinatarios.includes(correo)) || [];
 
   useEffect(() => {
     (async () => {
@@ -54,8 +59,57 @@ const AprobarSolicitud = () => {
     setDestinatarios(newDestinatarios);
   };
 
+  const onChangeDocumentos = (nombre_interno, valor) => {
+    setDocumentos((prev) => ({
+      ...prev,
+      [nombre_interno]: valor,
+    }));
+  };
+
+  const onAprobarSolicitud = async () => {
+    setLoading(true);
+    const data = new FormData();
+
+    data.append('codigo', codigo);
+
+    Object.entries(documentos).forEach(([nombreInterno, doc]) => {
+      data.append(nombreInterno, doc);
+    });
+
+    data.append('destinatarios', JSON.stringify(destinatarios));
+
+    for (const [key, value] of data.entries()) {
+      console.log(key, value);
+    }
+
+    try {
+      const response = await aprobarSolicitud(codigo, data);
+      console.log(response);
+      navigate(`../${slug}/${codigo}`);
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    } finally {
+      setLoading(false);
+      setModal(false);
+    }
+  };
+
   return (
     <div className="max-w-[60rem] mx-auto bg-[#fff] p-6 pt-0 mt-4 rounded border">
+      <Modal
+        onClick={onAprobarSolicitud}
+        btnText="Aprobar solicitud"
+        loading={loading}
+        title="Aprobar solicitud"
+        modal={modal}
+        toggleModal={() => {
+          setModal(!modal);
+        }}
+      >
+        <p>¿Está seguro que desea aprobar la solicitud?</p>
+        <p>Esta acción da por finalizado el trámite y se notificará al solicitante.</p>
+      </Modal>
       <Breadcrumbs breadcrumbs={[]} />
       <h1 className="text-2xl font-bold mt-4">Aprobar solicitud</h1>
       <p className="mb-4 text-sm text-slate-500">
@@ -98,16 +152,23 @@ const AprobarSolicitud = () => {
         </div>
       </div>
 
-      {config?.archivo?.length !== 0 && (
+      {config?.archivos?.activo && config?.archivos?.archivos?.length !== 0 && (
         <div>
-          {config?.archivo?.map((ar) => (
-            <Upload key={ar.etiqueta} label={ar.etiqueta} />
+          {config?.archivos?.archivos?.map((ar) => (
+            <Upload
+              file={documentos[ar.nombre_interno]}
+              setFile={(e) => {
+                onChangeDocumentos(ar.nombre_interno, e.target.files[0]);
+              }}
+              key={ar.etiqueta}
+              label={ar.etiqueta}
+            />
           ))}
           <hr className="my-4" />
         </div>
       )}
 
-      {config?.destinatarios && (
+      {config?.destinatarios?.activo && (
         <div>
           <label className="block mb-1" htmlFor="destinatario">
             Agregar destinatario
@@ -159,7 +220,13 @@ const AprobarSolicitud = () => {
 
       <div className="mt-10 flex justify-end gap-2">
         <Button variant="primary" text="Volver" />
-        <Button variant="secondary" text="Aprobar solicitud" />
+        <Button
+          onClick={() => {
+            setModal(true);
+          }}
+          variant="secondary"
+          text="Aprobar solicitud"
+        />
       </div>
       <ToastContainer />
     </div>

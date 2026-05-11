@@ -22,7 +22,7 @@ router.use('/pasos-formularios', authMiddleware, pasosFormulariosRoutes);
 router.use('/campos-formularios', authMiddleware, camposFormulariosRoutes);
 router.use('/direcciones-municipales', authMiddleware, direccionesRoutes);
 router.use('/solicitudes', authMiddleware, solicitudesRoutes);
-router.use('/documents', authMiddleware, documentsRoutes);
+router.use('/documentos', authMiddleware, documentsRoutes);
 router.use('/email', authMiddleware, emailRoutes);
 router.use('/permisos-transitorios', authMiddleware, permisosTransitoriosRoutes);
 

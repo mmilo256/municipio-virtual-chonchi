@@ -17,7 +17,7 @@ const SubirDocumento = () => {
 
   const [solicitud, setSolicitud] = useState({});
   const [nombreDocumento, setNombreDocumento] = useState('');
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState('');
   const infoSolicitud = solicitud.solicitud;
 
   useEffect(() => {
@@ -57,7 +57,12 @@ const SubirDocumento = () => {
       <div className="mt-4">
         <h2 className="text-xl mb-2 font-semibold">Subir documento asociado</h2>
         <Input value={nombreDocumento} onChange={setNombreDocumento} label="Nombre del documento" />
-        <Upload files={file} setFiles={setFile} />
+        <Upload
+          file={file}
+          setFile={(e) => {
+            setFile(e.target.files[0]);
+          }}
+        />
         <div className="my-4">
           <Button onClick={onSubirDocumento} variant="secondary" text="Agregar documento" />
         </div>

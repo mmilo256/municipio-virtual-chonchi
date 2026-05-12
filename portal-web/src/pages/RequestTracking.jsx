@@ -7,6 +7,7 @@ import Accordion from '../components/ui/Accordion';
 import { formatDate, renderValorRespuesta } from '../utils/utils';
 import StatusTracker from '../components/ui/StatusTracker';
 import StatusTag from '../components/ui/StatusTag';
+import { API_URL } from '../config';
 
 const RequestTracking = () => {
   // Obtiene el ID de la solicitud desde los parámetros de la URL
@@ -16,6 +17,7 @@ const RequestTracking = () => {
   const [historial, setHistorial] = useState([]);
 
   const documentos = solicitud?.documentos;
+  const documentosAprobacion = documentos?.filter((doc) => doc.origen === 'sistema');
 
   const pasos = solicitud.tramite?.formulario?.pasos_formularios ?? [];
 
@@ -37,17 +39,14 @@ const RequestTracking = () => {
       case 'en revision':
         message = 'Su solicitud está siendo revisada por un funcionario.';
         break;
-      case 'por firmar':
-        message = 'Se generó su decreto y está pendiente de firma';
+      case 'requiere correccion':
+        message = 'Se requiere una acción del usuario para poder continuar con la solicitud';
         break;
       case 'rechazada':
         message = 'Su solicitud ha sido rechazada. Por favor, revise los motivos del rechazo.';
         break;
       case 'aprobada':
-        message = 'Su solicitud ha sido aprobada y su decreto será enviado a la brevedad';
-        break;
-      case 'finalizada':
-        message = 'Su solicitud ha sido completada y finalizada correctamente.';
+        message = 'Su solicitud fue aprobada por la Municipalidad de Chonchi.';
         break;
       default:
         break;
@@ -145,7 +144,7 @@ const RequestTracking = () => {
                       ) : (
                         <a
                           target="_blank"
-                          href={`http://localhost:10000/api/portal/documentos/${documento.id}/view`}
+                          href={`${API_URL}/documentos/${documento.id}/view`}
                           className="text-blue-500 underline"
                           rel="noreferrer"
                         >
@@ -163,6 +162,25 @@ const RequestTracking = () => {
           <h2 className="text-xl font-bold">Seguimiento</h2>
           <p className="text-slate-600 mb-4">Revise el estado de su solicitud.</p>
           <StatusTracker data={historial} />
+          {documentosAprobacion && documentosAprobacion.length !== 0 && (
+            <div>
+              <h2 className="text-xl font-bold mb-2">Documentos de resolución</h2>
+              <ul className="space-y-2">
+                {documentosAprobacion.map((doc) => (
+                  <li key={doc.id}>
+                    <a
+                      className="text-blue-500 underline uppercase font-bold"
+                      target="_blank"
+                      href={`${API_URL}/documentos/${doc.id}/view`}
+                      rel="noreferrer"
+                    >
+                      {doc.nombre}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </Container>

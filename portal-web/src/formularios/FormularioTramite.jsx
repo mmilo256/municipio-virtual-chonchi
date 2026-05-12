@@ -21,6 +21,7 @@ const FormularioTramite = () => {
   const userNombreCompleto = `${user.nombres} ${user.apellidos}`;
 
   const [formulario, setFormulario] = useState({});
+  const [tramite, setTramite] = useState('');
   const [pasoActual, setPasoActual] = useState(0);
   const [respuestas, setRespuestas] = useState({});
   const [infoContacto, setInfoContacto] = useState({
@@ -40,6 +41,7 @@ const FormularioTramite = () => {
     (async () => {
       const response = await obtenerFormularioDelTramite(slug);
       setFormulario(response.data);
+      setTramite(response.tramite);
     })();
   }, [slug]);
 
@@ -204,8 +206,8 @@ const FormularioTramite = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-medium text-secondary mb-1">{formulario?.titulo}</h1>
-      <p className="text-sm text-gray-600 mb-6">{formulario?.descripcion}</p>
+      <h1 className="text-3xl font-medium text-secondary mb-1">{tramite?.titulo}</h1>
+      <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>
       <div className="grid grid-cols-3">
         <FormStepper pasos={newPasos} pasoActual={pasoActual} />
         {newPasos?.length > 0 && (

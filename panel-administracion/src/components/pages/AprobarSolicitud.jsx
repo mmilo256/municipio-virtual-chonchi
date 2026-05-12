@@ -78,13 +78,9 @@ const AprobarSolicitud = () => {
 
     data.append('destinatarios', JSON.stringify(destinatarios));
 
-    for (const [key, value] of data.entries()) {
-      console.log(key, value);
-    }
-
     try {
-      const response = await aprobarSolicitud(codigo, data);
-      console.log(response);
+      const res = await aprobarSolicitud(codigo, data);
+      console.log(res);
       navigate(`../${slug}/${codigo}`);
     } catch (error) {
       console.log(error);

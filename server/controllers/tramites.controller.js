@@ -11,13 +11,20 @@ import CampoFormulario from '../models/CampoFormulario.js';
 export const obtenerFormularioPorSlugDeTramite = async (req, res) => {
   const { slug } = req.params;
   try {
-    const { formulario_id } = await Tramite.findOne({ where: { slug } });
+    const { formulario_id, titulo, descripcion_corta } = await Tramite.findOne({ where: { slug } });
+
     const formulario = await Formulario.findByPk(formulario_id, {
       include: [{ model: PasoFormulario, include: [{ model: CampoFormulario }] }],
     });
-    res.status(200).json({ data: formulario, message: 'Formulario obtenido correctamente' });
+
+    return res.status(200).json({
+      data: formulario,
+      tramite: { titulo, descripcion_corta },
+      message: 'Formulario obtenido correctamente',
+    });
   } catch (error) {
-    res.status(500).json({ error, message: 'No se pudo obtener el formulario del trámite' });
+    console.log(error);
+    return res.status(500).json({ error, message: 'No se pudo obtener el formulario del trámite' });
   }
 };
 

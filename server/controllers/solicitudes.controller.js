@@ -20,23 +20,27 @@ import { sendEmail } from '../config/nodemailer.js';
 import { templateSolicitudEnviadaSolicitante } from '../email/js/solicitudEnviadaSolicitante.js';
 import { formatDate } from '../utils/format.utils.js';
 import { templateSolicitudRecibidaFuncionario } from '../email/js/solicitudRecibidaFuncionario.js';
+import { plantillaSolicitudAprobadaSolicitante } from '../email/js/solicitudAprobadaSolicitante.js';
+import { plantillaSolicitudAprobadaExtras } from '../email/js/solicitudAprobadaExtras.js';
+import path from 'path';
 
 // Aprobar solicitud
 export const aprobarSolicitud = async (req, res) => {
+  const t = await sequelize.transaction();
   try {
     const { codigo } = req.body;
     const destinatarios = JSON.parse(req.body.destinatarios) ?? null;
     const documentos = req.files;
 
-    console.log(documentos.length);
-
     // Validar que existe la solicitud
     const solicitudExiste = await Solicitud.findOne({
       where: { codigo },
-      include: [{ model: Tramite }],
+      include: [{ model: Tramite }, { model: Usuario }],
+      transaction: t,
     });
 
     if (!solicitudExiste) {
+      await t.rollback();
       return res.status(404).json({ error: true, message: 'No existe la solicitud' });
     }
 
@@ -44,12 +48,80 @@ export const aprobarSolicitud = async (req, res) => {
     const config = JSON.parse(solicitudExiste.tramite.config);
     if (config.archivos.activo) {
       if (documentos.length === 0) {
+        await t.rollback();
         return res.status(404).json({ error: true, message: 'No hay documentos adjuntos' });
       }
     }
 
-    return res.status(200).json({ data: config, message: 'Solicitud aprobada correctamente' });
+    // Cambiar estado de la solicitud a aprobada
+    await solicitudExiste.update({ estado: 'aprobada' }, { transaction: t });
+
+    // Guardar registro de cambio de estado de la solicitud
+    const logData = {
+      estado: 'aprobada',
+      solicitud_id: solicitudExiste.id,
+    };
+    await HistorialEstadosSolicitudes.create(logData, { transaction: t });
+
+    // Guardar documentos adjuntos en BD
+    const docsAdjuntos = req.files.map((file) => {
+      return {
+        ruta: `/documents/${file.filename}`,
+        solicitud_id: solicitudExiste.id,
+        nombre_original: file.originalname,
+        nombre_guardado: file.filename,
+        mime_type: file.mimetype,
+        bytes: file.size,
+        origen: 'sistema',
+        nombre: file.fieldname,
+      };
+    });
+
+    await Documento.bulkCreate(docsAdjuntos, { transaction: t });
+
+    // Enviar correo de notificación
+    const data = {
+      nombreUsuario: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
+      nombreTramite: solicitudExiste.tramite.titulo,
+      codigo: solicitudExiste.codigo,
+      fechaSolicitud: formatDate(solicitudExiste.createdAt, 'DD MMM YYYY, HH:mm'),
+      estado: solicitudExiste.estado,
+      correoUsuario: solicitudExiste.email_contacto,
+      telefonoUsuario: solicitudExiste.telefono_contacto,
+      domicilioUsuario: solicitudExiste.direccion_contacto,
+    };
+
+    // Formatear documentos adjuntos
+    const documentosAdjuntos = documentos.map((doc) => ({
+      filename: `${data.codigo}-${doc.fieldname}`,
+      path: path.join(process.cwd(), doc.path),
+      contentType: doc.mimetype,
+    }));
+
+    // Enviar correo de notificación al solicitante
+    await sendEmail(
+      data.correoUsuario,
+      `[Municipio Virtual Chonchi] Solicitud aprobada - ${data.codigo}`,
+      plantillaSolicitudAprobadaSolicitante(data),
+      documentosAdjuntos,
+    );
+
+    // Enviar correo de notificación a destinatarios extras
+    if (destinatarios.length !== 0) {
+      await sendEmail(
+        destinatarios,
+        `[Municipio Virtual Chonchi] Remite antecedentes de solicitud - ${data.codigo}`,
+        plantillaSolicitudAprobadaExtras(data),
+        documentosAdjuntos,
+      );
+    }
+
+    await t.commit();
+    return res
+      .status(200)
+      .json({ data: documentosAdjuntos, message: 'Solicitud aprobada correctamente' });
   } catch (error) {
+    await t.rollback();
     console.log(error);
     return res.status(500).json({ error, message: 'No se pudo aprobar la solicitud' });
   }

@@ -4,7 +4,7 @@ import {
   obtenerSolicitudPorCodigo,
   subirDocumentoAsociado,
 } from '../../services/solicitudes.service';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import StatusTag from '../ui/StatusTag';
 import OriginTag from '../ui/OriginTag';
 import { formatDate } from '../../utils/format';
@@ -13,7 +13,9 @@ import Input from '../ui/Input';
 import Button from '../ui/Button';
 
 const SubirDocumento = () => {
-  const { codigo } = useParams();
+  const { codigo, slug } = useParams();
+
+  const navigate = useNavigate();
 
   const [solicitud, setSolicitud] = useState({});
   const [nombreDocumento, setNombreDocumento] = useState('');
@@ -34,8 +36,8 @@ const SubirDocumento = () => {
   const onSubirDocumento = async () => {
     const data = new FormData();
     data.append(nombreDocumento, file);
-    const response = await subirDocumentoAsociado(codigo, data);
-    console.log(response);
+    await subirDocumentoAsociado(codigo, data);
+    navigate(`../${slug}/${codigo}`);
   };
 
   return (

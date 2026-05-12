@@ -54,6 +54,9 @@ const DetalleSolicitud = () => {
   const onAprobarSolicitud = () => {
     navigate('aprobar');
   };
+  const onRechazarSolicitud = () => {
+    navigate('rechazar');
+  };
 
   const onSubirDocumentoAsociado = () => {
     navigate('subir-documento');
@@ -84,11 +87,14 @@ const DetalleSolicitud = () => {
           >
             Aprobar solicitud
           </button>
-          <button className="font-bold bg-red-500 rounded text-[#fff] p-2">
-            Rechazar solicitud
-          </button>
           <button className="font-bold bg-amber-500 rounded text-[#fff] p-2">
             Solicitar corrección
+          </button>
+          <button
+            onClick={onRechazarSolicitud}
+            className="font-bold bg-red-500 rounded text-[#fff] p-2"
+          >
+            Rechazar solicitud
           </button>
         </div>
       )}

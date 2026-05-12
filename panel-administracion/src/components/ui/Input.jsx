@@ -8,10 +8,11 @@ const Input = ({ type = 'text', label, value, onChange, name, className, placeho
         <textarea
           name={name}
           value={value}
+          placeholder={placeholder}
           onChange={(e) => {
             onChange(e.target.value);
           }}
-          className={inputStyles}
+          className={`${inputStyles} h-32 resize-none`}
         />
       );
       break;

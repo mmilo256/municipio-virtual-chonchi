@@ -12,6 +12,7 @@ import {
   actualizarEstadoSolicitud,
   subirDocumento,
   aprobarSolicitud,
+  rechazarSolicitud,
 } from '../controllers/solicitudes.controller.js';
 
 const uploadPublic = setUpload();
@@ -25,6 +26,7 @@ router.post('/', uploadPublic.any(), crearSolicitud);
 router.get('/:codigo', obtenerSolicitudPorCodigo);
 router.patch('/:codigo', actualizarEstadoSolicitud);
 router.post('/:codigo/aprobar', uploadAdmin.any(), aprobarSolicitud);
+router.post('/:codigo/rechazar', rechazarSolicitud);
 router.post('/:codigo/subir-documento', uploadAdmin.any(), subirDocumento);
 router.get('/user/:id', getAllRequestsByUserId);
 router.get('/:id/documents', getUploadedDocuments);

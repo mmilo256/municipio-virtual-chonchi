@@ -23,6 +23,63 @@ import { templateSolicitudRecibidaFuncionario } from '../email/js/solicitudRecib
 import { plantillaSolicitudAprobadaSolicitante } from '../email/js/solicitudAprobadaSolicitante.js';
 import { plantillaSolicitudAprobadaExtras } from '../email/js/solicitudAprobadaExtras.js';
 import path from 'path';
+import { plantillaSolicitudRechazadaSolicitante } from '../email/js/solicitudRechazadaSolicitante.js';
+
+// Rechazar solicitud
+export const rechazarSolicitud = async (req, res) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const { codigo, motivo } = req.body;
+
+    // Validar que exista la solicitud
+    const solicitudExiste = await Solicitud.findOne({
+      where: { codigo },
+      include: [{ model: Usuario }, { model: Tramite }],
+      transaction,
+    });
+    if (!solicitudExiste) {
+      await transaction.rollback();
+      return res.status(404).json({ error: true, message: 'No existe la solicitud' });
+    }
+
+    // Cambiar estado de la solicitud
+    await solicitudExiste.update({ estado: 'rechazada', observacion: motivo });
+    const logData = {
+      estado: 'rechazada',
+      solicitud_id: solicitudExiste.id,
+    };
+    await HistorialEstadosSolicitudes.create(logData, { transaction });
+
+    // Enviar correo electrónico notificando al usuario
+    const data = {
+      nombreUsuario: `${solicitudExiste.usuario.nombres}`,
+      correoUsuario: solicitudExiste.email_contacto,
+      telefonoUsuario: solicitudExiste.telefono_contacto,
+      domicilioUsuario: solicitudExiste.direccion_contacto,
+      nombreTramite: solicitudExiste.tramite.titulo,
+      motivoRechazo: motivo,
+      codigo,
+      fechaSolicitud: formatDate(solicitudExiste.createdAt, 'DD MMM YYYY, HH:mm'),
+      estado: solicitudExiste.estado,
+    };
+
+    await sendEmail(
+      solicitudExiste.email_contacto,
+      `[Municipio Virtual Chonchi] Solicitud rechazada - ${solicitudExiste.codigo}`,
+      plantillaSolicitudRechazadaSolicitante(data),
+      null,
+    );
+
+    await transaction.commit();
+    return res.status(200).json({ data: data, message: 'Solicitud rechazada correctamente' });
+  } catch (error) {
+    await transaction.rollback();
+    console.log(error);
+    return res
+      .status(200)
+      .json({ error: error.message, message: 'No se pudo rechazar la solicitud' });
+  }
+};
 
 // Aprobar solicitud
 export const aprobarSolicitud = async (req, res) => {

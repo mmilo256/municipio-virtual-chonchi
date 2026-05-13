@@ -13,6 +13,7 @@ import ProcedureDetails from './pages/ProcedureDetails';
 import Login2 from './pages/Login2';
 import FormularioTramite from './formularios/FormularioTramite';
 import SolicitudEnviada from './formularios/SolicitudEnviada';
+import CorregirSolicitud from './pages/CorregirSolicitud';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
@@ -58,6 +59,14 @@ function App() {
           element={
             <PrivateRoute>
               <RequestTracking />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/solicitudes/:codigo/corregir-solicitud"
+          element={
+            <PrivateRoute>
+              <CorregirSolicitud />
             </PrivateRoute>
           }
         />

@@ -25,6 +25,51 @@ import { plantillaSolicitudAprobadaExtras } from '../email/js/solicitudAprobadaE
 import path from 'path';
 import { plantillaSolicitudRechazadaSolicitante } from '../email/js/solicitudRechazadaSolicitante.js';
 
+// Solicitar corrección de la solicitud
+export const solicitarCorreccion = async (req, res) => {
+  try {
+    const { codigo } = req.params;
+    const { observaciones, camposSeleccionados } = req.body;
+
+    // Validar que exista la solicitud
+    const solicitudExiste = await Solicitud.findOne({ where: { codigo } });
+
+    if (!solicitudExiste) {
+      return res.status(404).json({ error: true, message: 'La solicitud no existe' });
+    }
+
+    // Poner solicitud en modo "requiere correccion"
+    const data = {
+      campos_correccion: camposSeleccionados,
+      estado: 'requiere correccion',
+      fecha_solicitud_correccion: new Date(),
+      observacion: observaciones,
+      requiere_correccion: true,
+    };
+
+    await solicitudExiste.update(data);
+
+    // Guardar historial de cambio de estado para seguimiento
+    const logData = {
+      estado: 'requiere correccion',
+      solicitud_id: solicitudExiste.id,
+    };
+    await HistorialEstadosSolicitudes.create(logData);
+
+    // Notificar por correo al usuario solicitante
+
+    return res
+      .status(200)
+      .json({ data: solicitudExiste, message: 'Solicitud de corrección realizada correctamente' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error.message,
+      message: 'No se pudo solicitar la corrección de la solicitud',
+    });
+  }
+};
+
 // Rechazar solicitud
 export const rechazarSolicitud = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -395,6 +440,11 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
         'email_contacto',
         'telefono_contacto',
         'direccion_contacto',
+        'observacion',
+        'requiere_correccion',
+        'campos_correccion',
+        'fecha_solicitud_correccion',
+        'fecha_respuesta_correccion',
       ],
       where: { codigo },
       include: [
@@ -422,7 +472,17 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
                   include: [
                     {
                       model: CampoFormulario,
-                      attributes: ['id', 'etiqueta', 'tipo'],
+                      attributes: [
+                        'id',
+                        'etiqueta',
+                        'tipo',
+                        'nombre_interno',
+                        'placeholder',
+                        'opciones',
+                        'obligatorio',
+                        'texto_ayuda',
+                        'config',
+                      ],
                     },
                   ],
                 },

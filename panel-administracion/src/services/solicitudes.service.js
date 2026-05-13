@@ -1,5 +1,10 @@
 import apiClient from './apiClient';
 
+export const solicitarCorreccion = async (codigo, data) => {
+  const response = await apiClient.post(`/solicitudes/${codigo}/solicitar-correccion`, data);
+  return response.data;
+};
+
 export const rechazarSolicitud = async (codigo, data) => {
   const response = await apiClient.post(`/solicitudes/${codigo}/rechazar`, data);
   return response.data;

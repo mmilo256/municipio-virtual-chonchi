@@ -19,6 +19,7 @@ import DetalleSolicitud from './components/pages/DetalleSolicitud';
 import AprobarSolicitud from './components/pages/AprobarSolicitud';
 import SubirDocumento from './components/pages/SubirDocumento';
 import RechazarSolicitud from './components/pages/RechazarSolicitud';
+import SolicitarCorreccion from './components/pages/SolicitarCorreccion';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData, sessionData } = useAuthStore();
@@ -84,6 +85,7 @@ const App = () => {
           <Route path="/:slug/:codigo/subir-documento" element={<SubirDocumento />} />
           <Route path="/:slug/:codigo/aprobar" element={<AprobarSolicitud />} />
           <Route path="/:slug/:codigo/rechazar" element={<RechazarSolicitud />} />
+          <Route path="/:slug/:codigo/solicitar-correccion" element={<SolicitarCorreccion />} />
           {/* 
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
           <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} /> */}

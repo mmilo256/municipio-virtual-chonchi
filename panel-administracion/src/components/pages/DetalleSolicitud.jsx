@@ -57,6 +57,9 @@ const DetalleSolicitud = () => {
   const onRechazarSolicitud = () => {
     navigate('rechazar');
   };
+  const onSolicitarCorreccion = () => {
+    navigate('solicitar-correccion');
+  };
 
   const onSubirDocumentoAsociado = () => {
     navigate('subir-documento');
@@ -87,7 +90,10 @@ const DetalleSolicitud = () => {
           >
             Aprobar solicitud
           </button>
-          <button className="font-bold bg-amber-500 rounded text-[#fff] p-2">
+          <button
+            onClick={onSolicitarCorreccion}
+            className="font-bold bg-amber-500 rounded text-[#fff] p-2"
+          >
             Solicitar corrección
           </button>
           <button
@@ -100,7 +106,7 @@ const DetalleSolicitud = () => {
       )}
       {estado === 'requiere correccion' && (
         <div className="space-x-4 my-4">
-          <p className="p-2 bg-blue-100 text-blue-900/60 rounded">
+          <p className="px-2 py-4 bg-violet-50 border border-violet-300 text-violet-900/60 rounded">
             Esperando la corrección del solicitante
           </p>
         </div>

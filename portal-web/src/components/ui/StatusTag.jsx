@@ -18,13 +18,9 @@ const StatusTag = ({ status }) => {
       statusBgColor = 'bg-green-200';
       statusTextColor = 'text-green-800';
       break;
-    case 'por firmar':
+    case 'requiere correccion':
       statusBgColor = 'bg-violet-200';
       statusTextColor = 'text-violet-800';
-      break;
-    case 'finalizada':
-      statusBgColor = 'bg-slate-200';
-      statusTextColor = 'text-slate-800';
       break;
 
     default:

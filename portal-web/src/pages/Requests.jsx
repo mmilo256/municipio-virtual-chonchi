@@ -37,9 +37,8 @@ const Requests = () => {
       const formattedData = data?.solicitudes?.map((solicitud) => ({
         id: solicitud.codigo, // ID de la solicitud
         tramite: solicitud.tramite.titulo, // Título del trámite
-        estado: <StatusTag status={solicitud.estado} />, // Muestra el estado con el componente StatusTag
         fecha: formatDate(solicitud.createdAt, 3), // Fecha de la solicitud formateada
-        fechaMod: formatDate(solicitud.updatedAt, 3),
+        estado: <StatusTag status={solicitud.estado} />, // Muestra el estado con el componente StatusTag
         acciones: (
           <Link to={`${solicitud.codigo}`} className="text-blue-500 underline">
             Seguimiento
@@ -55,14 +54,7 @@ const Requests = () => {
 
   // Definición de las columnas y datos de la tabla
   const table = {
-    columns: [
-      'Código',
-      'Trámite',
-      'Estado',
-      'Fecha de solicitud',
-      'Fecha última modificación',
-      'Acciones',
-    ], // Encabezados de la tabla
+    columns: ['Código', 'Trámite', 'Fecha de solicitud', 'Estado', 'Acciones'], // Encabezados de la tabla
     data: requests, // Datos de las solicitudes
   };
 

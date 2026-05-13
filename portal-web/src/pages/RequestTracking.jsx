@@ -8,6 +8,7 @@ import { formatDate, renderValorRespuesta } from '../utils/utils';
 import StatusTracker from '../components/ui/StatusTracker';
 import StatusTag from '../components/ui/StatusTag';
 import { API_URL } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const RequestTracking = () => {
   // Obtiene el ID de la solicitud desde los parámetros de la URL
@@ -15,6 +16,11 @@ const RequestTracking = () => {
 
   const [solicitud, setSolicitud] = useState({});
   const [historial, setHistorial] = useState([]);
+
+  const navigate = useNavigate();
+
+  const observacion = solicitud?.observacion;
+  const estado = solicitud?.estado;
 
   const documentos = solicitud?.documentos;
   const documentosAprobacion = documentos?.filter((doc) => doc.origen === 'sistema');
@@ -162,6 +168,28 @@ const RequestTracking = () => {
           <h2 className="text-xl font-bold">Seguimiento</h2>
           <p className="text-slate-600 mb-4">Revise el estado de su solicitud.</p>
           <StatusTracker data={historial} />
+          {observacion && estado === 'rechazada' && (
+            <div>
+              <p className="bg-red-50 p-4 rounded border border-red-200 text-red-700">
+                <strong>Motivo del rechazo:</strong> {observacion}
+              </p>
+            </div>
+          )}
+          {observacion && estado === 'requiere correccion' && (
+            <div className="space-y-4">
+              <p className="bg-blue-50 p-4 rounded border border-blue-200 text-blue-700">
+                <strong>Observaciones:</strong> {observacion}
+              </p>
+              <button
+                onClick={() => {
+                  navigate('corregir-solicitud');
+                }}
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded text-[#fff]"
+              >
+                Corregir solicitud
+              </button>
+            </div>
+          )}
           {documentosAprobacion && documentosAprobacion.length !== 0 && (
             <div>
               <h2 className="text-xl font-bold mb-2">Documentos de resolución</h2>

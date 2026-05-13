@@ -5,18 +5,18 @@ import InputSelect from './InputSelect';
 import InputFile from './InputFile';
 
 const InputRenderer = ({
-  etiqueta,
-  value,
+  etiqueta = '',
+  value = '',
   onChange,
   disabled,
-  tipo,
-  slug,
+  tipo = 'text',
+  slug = '',
   placeholder,
-  opciones,
+  opciones = '[]',
   mostrarErrores,
   obligatorio,
   textoAyuda,
-  config,
+  config = [],
   className,
 }) => {
   switch (tipo) {

@@ -1,5 +1,11 @@
 import apiClient from './apiClient';
 
+// Enviar corrección de solicitud
+export const enviarCorreccion = async (codigo, data) => {
+  const response = await apiClient.post(`/solicitudes/${codigo}/enviar-correccion`, data);
+  return response.data;
+};
+
 // Función para obtener el historial de estados de una solicitud específica
 export const obtenerSolicitudPorCodigo = async (codigo) => {
   const response = await apiClient.get(`/solicitudes/${codigo}`);

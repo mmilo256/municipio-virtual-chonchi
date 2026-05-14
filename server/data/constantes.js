@@ -1,0 +1,15 @@
+export const ACCIONES_SOLICITUD = {
+  CREAR_SOLICITUD: 'crear_solicitud',
+  ENVIAR_SOLICITUD: 'enviar_solicitud',
+  APROBAR_SOLICITUD: 'aprobar_solicitud',
+  RECHAZAR_SOLICITUD: 'rechazar_solicitud',
+  SOLICITAR_CORRECCION: 'solicitar_correccion',
+  ENVIAR_CORRECCION: 'enviar_correccion',
+  CAMBIAR_ESTADO: 'cambiar_estado',
+  SUBIR_DOCUMENTO: 'subir_documento',
+  ELIMINAR_DOCUMENTO: 'eliminar_documento',
+  AGREGAR_OBSERVACION: 'agregar_observacion',
+  ASIGNAR_FUNCIONARIO: 'asignar_funcionario',
+  DESCARGAR_DOCUMENTO: 'descargar_documento',
+  NOTIFICAR_SOLICITANTE: 'notificar_solicitante',
+};

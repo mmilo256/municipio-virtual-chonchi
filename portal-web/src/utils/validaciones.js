@@ -12,9 +12,21 @@ export const validarCampo = (tipo, valor, config, obligatorio) => {
       return validarRut(valor, config, obligatorio);
     case 'select':
       return validarSelect(valor, config, obligatorio);
+    case 'file':
+      return validarFile(valor, config, obligatorio);
     default:
       break;
   }
+};
+
+const validarFile = (valor = '', config = {}, obligatorio) => {
+  if (obligatorio && !valor) {
+    return 'Este campo es obligatorio';
+  }
+
+  if (!valor) return null;
+  if (!config) return null;
+  return null;
 };
 
 const validarSelect = (valor = '', config = {}, obligatorio) => {

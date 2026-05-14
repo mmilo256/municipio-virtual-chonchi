@@ -1,10 +1,13 @@
 import { useRef } from 'react';
+import { validarCampo } from '../../../utils/validaciones';
 
 const InputFile = ({
   etiqueta,
   slug,
   value,
   textoAyuda,
+  tipo,
+  mostrarErrores,
   obligatorio,
   config,
   onChange,
@@ -16,6 +19,8 @@ const InputFile = ({
   const handleButtonClick = () => {
     hiddenInput.current.click();
   };
+
+  const error = validarCampo(tipo, value, config, obligatorio);
 
   return (
     <label htmlFor={slug}>
@@ -48,7 +53,11 @@ const InputFile = ({
           )}
         </div>
       </div>
-      <span className="text-xs text-slate-500">{textoAyuda}</span>
+      {mostrarErrores && error ? (
+        <span className="text-xs text-red-500">{error}</span>
+      ) : (
+        <span className="text-xs text-slate-500">{textoAyuda}</span>
+      )}
     </label>
   );
 };

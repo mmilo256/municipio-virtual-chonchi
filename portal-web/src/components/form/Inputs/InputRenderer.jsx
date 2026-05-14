@@ -75,6 +75,7 @@ const InputRenderer = ({
         <InputFile
           mostrarErrores={mostrarErrores}
           obligatorio={obligatorio}
+          tipo={tipo}
           disabled={disabled}
           textoAyuda={textoAyuda}
           etiqueta={etiqueta}

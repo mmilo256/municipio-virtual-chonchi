@@ -8,7 +8,11 @@ const HistorialEstadosSolicitudes = sequelize.define('historial_estados_solicitu
     autoIncrement: true,
   },
   estado: DataTypes.STRING,
+  accion: DataTypes.STRING,
   mensaje: DataTypes.STRING,
+  metadata: DataTypes.JSON,
+  usuario_id: DataTypes.INTEGER,
+  usuario_tipo: DataTypes.ENUM('funcionario', 'solicitante'),
 });
 
 export default HistorialEstadosSolicitudes;

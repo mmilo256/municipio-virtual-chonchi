@@ -24,6 +24,35 @@ import { plantillaSolicitudAprobadaSolicitante } from '../email/js/solicitudApro
 import { plantillaSolicitudAprobadaExtras } from '../email/js/solicitudAprobadaExtras.js';
 import path from 'path';
 import { plantillaSolicitudRechazadaSolicitante } from '../email/js/solicitudRechazadaSolicitante.js';
+import { plantillaSolicitudRequiereCorreccionSolicitante } from '../email/js/solicitudRequiereCorreccionSolicitante.js';
+
+// Enviar corrección desde el portal WEB
+export const enviarCorreccion = async (req, res) => {
+  const { respuestas, documentosMeta } = req.body;
+  const { codigo } = req.params;
+  try {
+    // Verificar que exista la solicitud
+    const solicitudExiste = await Solicitud.findOne({ where: { codigo } });
+    if (!solicitudExiste) {
+      return res.status(404).json({ error: true, message: 'La solicitud no existe' });
+    }
+
+    const data = {
+      respuestas: JSON.parse(respuestas),
+      documentosMeta: JSON.parse(documentosMeta),
+      archivos: req.files,
+    };
+
+    return res
+      .status(200)
+      .json({ data: data, message: 'Corrección de la solicitud enviada correctamente' });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: error.message, message: 'No se pudo enviar la corrección de la solicitud' });
+  }
+};
 
 // Solicitar corrección de la solicitud
 export const solicitarCorreccion = async (req, res) => {
@@ -32,7 +61,13 @@ export const solicitarCorreccion = async (req, res) => {
     const { observaciones, camposSeleccionados } = req.body;
 
     // Validar que exista la solicitud
-    const solicitudExiste = await Solicitud.findOne({ where: { codigo } });
+    const solicitudExiste = await Solicitud.findOne({
+      where: { codigo },
+      include: [
+        { model: Usuario, attributes: ['nombres', 'apellidos'] },
+        { model: Tramite, attributes: ['titulo'] },
+      ],
+    });
 
     if (!solicitudExiste) {
       return res.status(404).json({ error: true, message: 'La solicitud no existe' });
@@ -56,11 +91,26 @@ export const solicitarCorreccion = async (req, res) => {
     };
     await HistorialEstadosSolicitudes.create(logData);
 
-    // Notificar por correo al usuario solicitante
+    const correoData = {
+      nombreSolicitante: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
+      nombreTramite: solicitudExiste.tramite.titulo,
+      observacion: observaciones,
+      codigo,
+      fechaSolicitud: formatDate(solicitudExiste.createdAt, 'DD MMM YYYY, HH:mm'),
+      estado: solicitudExiste.estado,
+    };
 
-    return res
-      .status(200)
-      .json({ data: solicitudExiste, message: 'Solicitud de corrección realizada correctamente' });
+    // Notificar por correo al usuario solicitante
+    await sendEmail(
+      solicitudExiste.email_contacto,
+      `[Municipio Virtual Chonchi] Su solicitud requiere corrección - ${solicitudExiste.codigo}`,
+      plantillaSolicitudRequiereCorreccionSolicitante(correoData),
+      null,
+    );
+
+    return res.status(200).json({
+      message: 'Solicitud de corrección realizada correctamente',
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

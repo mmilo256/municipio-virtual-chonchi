@@ -177,7 +177,7 @@ const RequestTracking = () => {
           )}
           {observacion && estado === 'requiere correccion' && (
             <div className="space-y-4">
-              <p className="bg-blue-50 p-4 rounded border border-blue-200 text-blue-700">
+              <p className="bg-amber-50 p-4 rounded border border-amber-200 text-amber-700">
                 <strong>Observaciones:</strong> {observacion}
               </p>
               <button

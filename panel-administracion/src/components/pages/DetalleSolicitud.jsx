@@ -10,12 +10,24 @@ import Accordion from '../ui/Accordion';
 import BaseTable from '../ui/BaseTable';
 import Button from '../ui/Button';
 import { API_URL } from '../../../config';
+import StatusTracker from '../ui/StatusTracker';
 
 const DetalleSolicitud = () => {
   const [solicitud, setSolicitud] = useState({});
   const { codigo } = useParams();
 
   const navigate = useNavigate();
+
+  const observacion = solicitud?.solicitud?.observacion;
+
+  const historialSolicitud = solicitud?.historialEstados?.map((item, index) => ({
+    fecha: item.createdAt,
+    estado: item.estado,
+    id: item.id,
+    activo: index === solicitud?.historialEstados?.length - 1 ? true : false,
+  }));
+
+  console.log(solicitud?.historialEstados);
 
   const infoSolicitud = solicitud.solicitud;
   const pasosFormulario = infoSolicitud?.tramite?.formulario?.pasos_formularios ?? [];
@@ -82,6 +94,23 @@ const DetalleSolicitud = () => {
         <strong>Fecha de ingreso: </strong>
         {formatDate(infoSolicitud?.createdAt, 'DD [de] MMMM [de] YYYY [a las] HH:mm')}
       </p>
+      {/* MENSAJES */}
+      {estado === 'rechazada' && observacion && (
+        <p className="bg-red-50 border border-red-300 rounded p-4 mt-4 text-red-700">
+          <strong>Motivo del rechazo:</strong> {observacion}
+        </p>
+      )}
+      {estado === 'requiere correccion' && observacion && (
+        <div className="space-x-4 my-4">
+          <div className="bg-violet-50 border border-violet-300 rounded p-4 mt-4 text-violet-700">
+            <p className="mb-2">Esperando que el solicitante envíe la corrección de la solicitud</p>
+            <p>
+              <strong>Observaciones:</strong> {observacion}
+            </p>
+          </div>
+        </div>
+      )}
+      {/* BOTONES DE ACCIÓN */}
       {estado === 'en revision' && (
         <div className="space-x-4 mt-2 mb-6">
           <button
@@ -104,13 +133,7 @@ const DetalleSolicitud = () => {
           </button>
         </div>
       )}
-      {estado === 'requiere correccion' && (
-        <div className="space-x-4 my-4">
-          <p className="px-2 py-4 bg-violet-50 border border-violet-300 text-violet-900/60 rounded">
-            Esperando la corrección del solicitante
-          </p>
-        </div>
-      )}
+
       {/* Información del solicitante */}
       <div className="mt-4">
         <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>
@@ -138,33 +161,48 @@ const DetalleSolicitud = () => {
         </div>
       </div>
       {/* Datos de la solicitud */}
-      <div className="my-10">
-        <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
-        {pasosFormulario.map((paso) => (
-          <Accordion init key={paso.titulo} title={paso.titulo}>
-            {paso.campos_formularios.map((campo) => {
-              const documento = documentos?.find((doc) => doc.campo_id === campo.id);
-              return (
-                <p key={campo.id}>
-                  <strong>{campo.etiqueta}</strong>:{' '}
-                  {campo.tipo !== 'file' ? (
-                    <span>{respuestas[campo.id]}</span>
-                  ) : (
-                    <a
-                      target="_blank"
-                      href={`${API_URL}/documentos/${documento.id}/view`}
-                      className="text-blue-500 underline"
-                      rel="noreferrer"
-                    >
-                      Ver documento
-                    </a>
-                  )}
-                </p>
-              );
-            })}
-          </Accordion>
-        ))}
+      <div className="grid grid-cols-3 gap-x-4 my-6">
+        <div className="col-span-2">
+          <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
+          <div className="bg-[#fff] p-6 rounded shadow shadow-slate-400">
+            {pasosFormulario.map((paso) => (
+              <Accordion init key={paso.titulo} title={paso.titulo}>
+                {paso.campos_formularios.map((campo) => {
+                  const documento = documentos?.find((doc) => doc.campo_id === campo.id);
+                  return (
+                    <p key={campo.id}>
+                      <strong>{campo.etiqueta}</strong>:{' '}
+                      {campo.tipo !== 'file' ? (
+                        <span>{respuestas[campo.id]}</span>
+                      ) : (
+                        <a
+                          target="_blank"
+                          href={`${API_URL}/documentos/${documento.id}/view`}
+                          className="text-blue-500 underline"
+                          rel="noreferrer"
+                        >
+                          Ver documento
+                        </a>
+                      )}
+                    </p>
+                  );
+                })}
+              </Accordion>
+            ))}
+          </div>
+        </div>
+
+        {/* TRAZABILIDAD SOLICITUD */}
+        {historialSolicitud && (
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Seguimiento</h2>
+            <div className="bg-[#fff] p-6 rounded shadow shadow-slate-400">
+              <StatusTracker data={historialSolicitud} />
+            </div>
+          </div>
+        )}
       </div>
+
       <div className="mb-10">
         <h2 className="text-xl font-semibold">Subir documentos asociados</h2>
         <p className="mb-2 text-sm text-slate-500">

@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'; // Para obtener parámetros de la URL (como el ID de la solicitud)
+import { useNavigate, useParams } from 'react-router-dom'; // Para obtener parámetros de la URL (como el ID de la solicitud)
 import { useEffect, useState } from 'react'; // Hooks de React para efectos y estados
 import { enviarCorreccion, obtenerSolicitudPorCodigo } from '../services/requests.service';
 import Container from '../components/ui/Container';
@@ -13,6 +13,7 @@ import { validarCampo } from '../utils/validaciones';
 const CorregirSolicitud = () => {
   // Obtiene el ID de la solicitud desde los parámetros de la URL
   const { codigo, slug } = useParams();
+  const navigate = useNavigate();
 
   const [solicitud, setSolicitud] = useState({});
   const [respuestasNuevas, setRespuestasNuevas] = useState({});
@@ -114,6 +115,7 @@ const CorregirSolicitud = () => {
     try {
       const response = await enviarCorreccion(codigo, data);
       console.log(response);
+      navigate(`../solicitudes/${codigo}`);
     } catch (error) {
       alert(error.message);
     }

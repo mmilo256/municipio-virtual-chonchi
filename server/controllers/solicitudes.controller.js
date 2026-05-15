@@ -25,28 +25,118 @@ import { plantillaSolicitudAprobadaExtras } from '../email/js/solicitudAprobadaE
 import path from 'path';
 import { plantillaSolicitudRechazadaSolicitante } from '../email/js/solicitudRechazadaSolicitante.js';
 import { plantillaSolicitudRequiereCorreccionSolicitante } from '../email/js/solicitudRequiereCorreccionSolicitante.js';
+import { ACCIONES_SOLICITUD } from '../data/constantes.js';
+import { plantillaSolicitudCorregidaFuncionario } from '../email/js/solicitudCorregidaFuncionario.js';
 
 // Enviar corrección desde el portal WEB
 export const enviarCorreccion = async (req, res) => {
-  const { respuestas, documentosMeta } = req.body;
+  const respuestasNuevas = JSON.parse(req.body.respuestas);
+  const documentosMeta = JSON.parse(req.body.documentosMeta);
   const { codigo } = req.params;
+  const t = await sequelize.transaction();
   try {
     // Verificar que exista la solicitud
-    const solicitudExiste = await Solicitud.findOne({ where: { codigo } });
+    const solicitudExiste = await Solicitud.findOne({
+      where: { codigo },
+      include: [
+        { model: Usuario, attributes: ['nombres', 'apellidos'] },
+        {
+          model: Tramite,
+          attributes: ['titulo'],
+          include: [{ model: Funcionario, attributes: ['email'] }],
+        },
+      ],
+      transaction: t,
+    });
     if (!solicitudExiste) {
+      await t.rollback();
       return res.status(404).json({ error: true, message: 'La solicitud no existe' });
     }
 
-    const data = {
-      respuestas: JSON.parse(respuestas),
-      documentosMeta: JSON.parse(documentosMeta),
-      archivos: req.files,
-    };
+    // Buscar respuestas de la solicitud y compararlas con las nuevas
+    const respuestasActualizadas = [];
+    for (const item of Object.values(respuestasNuevas)) {
+      const respuestaActual = await Respuesta.findOne({
+        where: { campo_id: item.campo_id, solicitud_id: solicitudExiste.id },
+        transaction: t,
+      });
+      if (!respuestaActual) continue;
 
-    return res
-      .status(200)
-      .json({ data: data, message: 'Corrección de la solicitud enviada correctamente' });
+      const valorAnterior = respuestaActual.valor;
+      const valorNuevo = item.valor;
+
+      // Actualizar respuestas
+      if (valorAnterior !== valorNuevo) {
+        /* await respuestaActual.update(
+          {
+            valor: valorNuevo,
+          },
+          { transaction: t },
+        ); */
+
+        respuestasActualizadas.push({
+          campo_id: respuestaActual.campo_id,
+          nombre_interno: respuestaActual.nombre_interno,
+          valor_anterior: valorAnterior,
+          valor_nuevo: valorNuevo,
+        });
+      }
+    }
+
+    // Buscar documentos de la solicitud y compararlos con los nuevos
+    const documentosActualizados = [];
+    for (const item of Object.values(documentosMeta)) {
+      console.log(item);
+    }
+    console.log(documentosMeta);
+
+    // Guardar registro de la corrección en historial solicitudes
+    /* await HistorialEstadosSolicitudes.create(
+      {
+        solicitud_id: solicitudExiste.id,
+        estado: 'en revision',
+        accion: ACCIONES_SOLICITUD.ENVIAR_CORRECCION,
+        usuario_id: req.user.id,
+        usuario_tipo: 'solicitante',
+        metadata: { respuestas_actualizadas: respuestasActualizadas },
+      },
+      { transaction: t },
+    ); */
+
+    // Actualizar solicitud
+    /* await solicitudExiste.update(
+      {
+        estado: 'en revision',
+        requiere_correccion: false,
+        campos_correccion: null,
+        fecha_respuesta_correccion: new Date(),
+      },
+      { transaction: t },
+    ); */
+
+    // Notificar al funcionario que la solicitud fue corregida por el solicitante
+    const correosFuncionarios = solicitudExiste.tramite.funcionarios.map((fun) => fun.email);
+    const correoData = {
+      nombreSolicitante: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
+      nombreTramite: solicitudExiste.tramite.titulo,
+      codigo,
+      fechaCorreccion: formatDate(solicitudExiste.fecha_respuesta_correccion, 'DD MMM YYYY, HH:mm'),
+      estado: solicitudExiste.estado,
+    };
+    /* await sendEmail(
+      correosFuncionarios,
+      `[Municipio Virtual Chonchi] Solicitud corregida - ${codigo}`,
+      plantillaSolicitudCorregidaFuncionario(correoData),
+      null,
+    ); */
+
+    await t.commit();
+    return res.status(200).json({
+      data: solicitudExiste,
+      message: 'Corrección de la solicitud enviada correctamente',
+    });
   } catch (error) {
+    await t.rollback();
     console.log(error);
     return res
       .status(500)
@@ -56,6 +146,7 @@ export const enviarCorreccion = async (req, res) => {
 
 // Solicitar corrección de la solicitud
 export const solicitarCorreccion = async (req, res) => {
+  const t = await sequelize.transaction();
   try {
     const { codigo } = req.params;
     const { observaciones, camposSeleccionados } = req.body;
@@ -67,9 +158,11 @@ export const solicitarCorreccion = async (req, res) => {
         { model: Usuario, attributes: ['nombres', 'apellidos'] },
         { model: Tramite, attributes: ['titulo'] },
       ],
+      transaction: t,
     });
 
     if (!solicitudExiste) {
+      await t.rollback();
       return res.status(404).json({ error: true, message: 'La solicitud no existe' });
     }
 
@@ -82,14 +175,19 @@ export const solicitarCorreccion = async (req, res) => {
       requiere_correccion: true,
     };
 
-    await solicitudExiste.update(data);
+    await solicitudExiste.update(data, { transaction: t });
 
     // Guardar historial de cambio de estado para seguimiento
-    const logData = {
-      estado: 'requiere correccion',
-      solicitud_id: solicitudExiste.id,
-    };
-    await HistorialEstadosSolicitudes.create(logData);
+    await HistorialEstadosSolicitudes.create(
+      {
+        estado: 'requiere correccion',
+        solicitud_id: solicitudExiste.id,
+        accion: ACCIONES_SOLICITUD.SOLICITAR_CORRECCION,
+        usuario_id: req.user.id,
+        usuario_tipo: 'funcionario',
+      },
+      { transaction: t },
+    );
 
     const correoData = {
       nombreSolicitante: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
@@ -108,10 +206,12 @@ export const solicitarCorreccion = async (req, res) => {
       null,
     );
 
+    await t.commit();
     return res.status(200).json({
       message: 'Solicitud de corrección realizada correctamente',
     });
   } catch (error) {
+    await t.rollback();
     console.log(error);
     return res.status(500).json({
       error: error.message,
@@ -139,15 +239,21 @@ export const rechazarSolicitud = async (req, res) => {
 
     // Cambiar estado de la solicitud
     await solicitudExiste.update({ estado: 'rechazada', observacion: motivo });
-    const logData = {
-      estado: 'rechazada',
-      solicitud_id: solicitudExiste.id,
-    };
-    await HistorialEstadosSolicitudes.create(logData, { transaction });
+    await HistorialEstadosSolicitudes.create(
+      {
+        estado: 'rechazada',
+        solicitud_id: solicitudExiste.id,
+        accion: ACCIONES_SOLICITUD.RECHAZAR_SOLICITUD,
+        usuario_id: req.user.id,
+        mensaje: motivo,
+        usuario_tipo: 'funcionario',
+      },
+      { transaction },
+    );
 
     // Enviar correo electrónico notificando al usuario
     const data = {
-      nombreUsuario: `${solicitudExiste.usuario.nombres}`,
+      nombreUsuario: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
       correoUsuario: solicitudExiste.email_contacto,
       telefonoUsuario: solicitudExiste.telefono_contacto,
       domicilioUsuario: solicitudExiste.direccion_contacto,
@@ -198,7 +304,7 @@ export const aprobarSolicitud = async (req, res) => {
 
     // Obtener parámetros de configuración del trámite
     const config = JSON.parse(solicitudExiste.tramite.config);
-    if (config.archivos.activo) {
+    if (config?.archivos?.activo) {
       if (documentos.length === 0) {
         await t.rollback();
         return res.status(404).json({ error: true, message: 'No hay documentos adjuntos' });
@@ -209,11 +315,16 @@ export const aprobarSolicitud = async (req, res) => {
     await solicitudExiste.update({ estado: 'aprobada' }, { transaction: t });
 
     // Guardar registro de cambio de estado de la solicitud
-    const logData = {
-      estado: 'aprobada',
-      solicitud_id: solicitudExiste.id,
-    };
-    await HistorialEstadosSolicitudes.create(logData, { transaction: t });
+    await HistorialEstadosSolicitudes.create(
+      {
+        estado: 'aprobada',
+        solicitud_id: solicitudExiste.id,
+        accion: ACCIONES_SOLICITUD.APROBAR_SOLICITUD,
+        usuario_id: req.user.id,
+        usuario_tipo: 'funcionario',
+      },
+      { transaction: t },
+    );
 
     // Guardar documentos adjuntos en BD
     const docsAdjuntos = req.files.map((file) => {
@@ -384,11 +495,16 @@ export const crearSolicitud = async (req, res) => {
     const responseDocumentos = await Documento.bulkCreate(documentos, { transaction: t });
 
     // Guardar registro de cambio de estado de la solicitud
-    const logData = {
-      estado: 'pendiente',
-      solicitud_id: nuevaSolicitud.id,
-    };
-    await HistorialEstadosSolicitudes.create(logData, { transaction: t });
+    await HistorialEstadosSolicitudes.create(
+      {
+        estado: 'pendiente',
+        solicitud_id: nuevaSolicitud.id,
+        accion: ACCIONES_SOLICITUD.ENVIAR_SOLICITUD,
+        usuario_id: req.user.id,
+        usuario_tipo: 'solicitante',
+      },
+      { transaction: t },
+    );
 
     // Enviar correo de notificación al solicitante
     await sendEmail(
@@ -460,12 +576,13 @@ export const actualizarEstadoSolicitud = async (req, res) => {
 
     await solicitud.update({ estado });
 
-    const historialEstado = {
+    await HistorialEstadosSolicitudes.create({
       estado,
       solicitud_id: solicitud.id,
-    };
-
-    await HistorialEstadosSolicitudes.create(historialEstado);
+      accion: ACCIONES_SOLICITUD.CAMBIAR_ESTADO,
+      usuario_id: req.user.id,
+      usuario_tipo: 'funcionario',
+    });
     return res.status(200).json({
       data: { codigo, estado, solicitud },
       message: 'Estado de la solicitud actualizado correctamente',

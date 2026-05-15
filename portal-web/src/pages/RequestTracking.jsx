@@ -194,18 +194,20 @@ const RequestTracking = () => {
             <div>
               <h2 className="text-xl font-bold mb-2">Documentos de resolución</h2>
               <ul className="space-y-2">
-                {documentosAprobacion.map((doc) => (
-                  <li key={doc.id}>
-                    <a
-                      className="text-blue-500 underline uppercase font-bold"
-                      target="_blank"
-                      href={`${API_URL}/documentos/${doc.id}/view`}
-                      rel="noreferrer"
-                    >
-                      {doc.nombre}
-                    </a>
-                  </li>
-                ))}
+                {documentosAprobacion.map((doc) => {
+                  return (
+                    <li key={doc.id}>
+                      <a
+                        className="text-blue-500 underline uppercase font-bold"
+                        target="_blank"
+                        href={`${API_URL}/documentos/${doc.id}/view`}
+                        rel="noreferrer"
+                      >
+                        {doc.nombre}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}

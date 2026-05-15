@@ -52,6 +52,7 @@ export const loginUser = async (username, pass) => {
   const { jwtSecret, jwtExpiresIn } = config.oauth;
 
   const payload = {
+    id: user.id,
     nombres: user.nombres,
     apellidos: user.apellidos,
     username: user.username,

@@ -159,9 +159,23 @@ export const crearTramite = async (req, res) => {
     activo,
     direccion_id: direccionMunicipal,
     formulario_id,
+    config: {
+      archivos: {
+        activo: false,
+        archivos: [
+          {
+            etiqueta: '',
+            nombre_interno: '',
+            mime_types: [],
+          },
+        ],
+      },
+      destinatarios: {
+        activo: false,
+        destinatarios: [],
+      },
+    },
   };
-
-  console.log(tramiteData);
 
   const t = await sequelize.transaction();
 

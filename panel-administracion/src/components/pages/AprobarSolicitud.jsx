@@ -14,7 +14,8 @@ const AprobarSolicitud = () => {
   const { codigo, slug } = useParams();
   const [solicitud, setSolicitud] = useState({});
   const [destinatarios, setDestinatarios] = useState([]);
-  const [destinatarioActual, setDestinatarioActual] = useState('');
+  const [destinatarioActualSelect, setDestinatarioActualSelect] = useState('');
+  const [destinatarioActualText, setDestinatarioActualText] = useState('');
 
   const [loading, setLoading] = useState(false);
 
@@ -43,14 +44,26 @@ const AprobarSolicitud = () => {
     })();
   }, [codigo]);
 
-  const agregarDestinatarioDesdeSelect = () => {
-    if (
-      destinatarioActual !== '' &&
-      destinatarioActual !== undefined &&
-      destinatarioActual !== null
-    ) {
-      setDestinatarios((prev) => [...prev, destinatarioActual]);
-      setDestinatarioActual('');
+  const agregarDestinatario = (origen) => {
+    if (origen === 'select') {
+      if (
+        destinatarioActualSelect !== '' &&
+        destinatarioActualSelect !== undefined &&
+        destinatarioActualSelect !== null
+      ) {
+        setDestinatarios((prev) => [...prev, destinatarioActualSelect]);
+        setDestinatarioActualSelect('');
+      }
+    }
+    if (origen === 'text') {
+      if (
+        destinatarioActualText !== '' &&
+        destinatarioActualText !== undefined &&
+        destinatarioActualText !== null
+      ) {
+        setDestinatarios((prev) => [...prev, destinatarioActualText]);
+        setDestinatarioActualText('');
+      }
     }
   };
 
@@ -166,36 +179,67 @@ const AprobarSolicitud = () => {
 
       {config?.destinatarios?.activo && (
         <div>
-          <label className="block mb-1" htmlFor="destinatario">
-            Agregar destinatario
-          </label>
-          <form className="flex gap-2">
-            <select
-              value={destinatarioActual}
-              onChange={(e) => {
-                setDestinatarioActual(e.target.value);
-              }}
-              id="destinatario"
-              className="block w-full border-2 rounded p-1"
-            >
-              <option disabled value="">
-                -- Selecciona un destinatario --
-              </option>
-              {destinatariosPredeterminados?.map((dest) => (
-                <option key={dest} value={dest}>
-                  {dest}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={agregarDestinatarioDesdeSelect}
-              type="button"
-              className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40"
-            >
-              {' '}
-              <IoIosAddCircleOutline size={25} /> Agregar
-            </button>
-          </form>
+          <div className="mb-4">
+            <label className="block mb-1" htmlFor="destinatario">
+              Agregar destinatario
+            </label>
+            <form className="flex gap-2">
+              <input
+                value={destinatarioActualText}
+                onChange={(e) => {
+                  setDestinatarioActualText(e.target.value);
+                }}
+                className="block w-full border-2 rounded p-1"
+                type="text"
+              />
+              <button
+                onClick={() => {
+                  agregarDestinatario('text');
+                }}
+                type="button"
+                className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40"
+              >
+                {' '}
+                <IoIosAddCircleOutline size={25} /> Agregar
+              </button>
+            </form>
+          </div>
+          {config?.destinatarios?.destinatarios?.length !== 0 && (
+            <div>
+              <label className="block mb-1" htmlFor="destinatario">
+                Agregar destinatario predefinido
+              </label>
+              <form className="flex gap-2">
+                <select
+                  value={destinatarioActualSelect}
+                  onChange={(e) => {
+                    setDestinatarioActualSelect(e.target.value);
+                  }}
+                  id="destinatario"
+                  className="block w-full border-2 rounded p-1"
+                >
+                  <option disabled value="">
+                    -- Selecciona un destinatario --
+                  </option>
+                  {destinatariosPredeterminados?.map((dest) => (
+                    <option key={dest} value={dest}>
+                      {dest}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => {
+                    agregarDestinatario('select');
+                  }}
+                  type="button"
+                  className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primaryHover rounded py-2 w-40"
+                >
+                  {' '}
+                  <IoIosAddCircleOutline size={25} /> Agregar
+                </button>
+              </form>
+            </div>
+          )}
           <div className="mt-4 space-x-2">
             {destinatarios.map((dest) => (
               <button

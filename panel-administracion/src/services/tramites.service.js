@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 
 export const obtenerTramites = async () => {
-  const response = await apiClient.get(`/tramites`);
+  const response = await apiClient.get(`/tramites/panel`);
   return response.data;
 };
 

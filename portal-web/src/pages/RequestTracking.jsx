@@ -9,6 +9,7 @@ import StatusTracker from '../components/ui/StatusTracker';
 import StatusTag from '../components/ui/StatusTag';
 import { API_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/ui/buttons/Button';
 
 const RequestTracking = () => {
   // Obtiene el ID de la solicitud desde los parámetros de la URL
@@ -85,7 +86,7 @@ const RequestTracking = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <h1 className="text-3xl font-bold mt-4">Detalle de solicitud</h1>
       <p className="text-slate-600 mb-4">Revise el estado de su solicitud y sus respuestas.</p>
-      <div className="bg-white p-4 rounded border shadow flex justify-between mb-4">
+      <div className="bg-white p-4 rounded border shadow grid md:flex gap-2 justify-between mb-4">
         <div>
           <p className="text-sm text-slate-600">CÓDIGO</p>
           <p className="font-bold">{solicitud?.codigo}</p>
@@ -105,7 +106,7 @@ const RequestTracking = () => {
           </p>
         </div>
       </div>
-      <div className="p-4 bg-white rounded border shadow grid grid-cols-2 gap-4">
+      <div className="p-4 bg-white rounded border shadow grid md:grid-cols-2 gap-4">
         <div>
           <h2 className="text-xl font-bold">Respuestas del formulario</h2>
           <p className="text-slate-600 mb-4">
@@ -180,14 +181,14 @@ const RequestTracking = () => {
               <p className="bg-amber-50 p-4 rounded border border-amber-200 text-amber-700">
                 <strong>Observaciones:</strong> {observacion}
               </p>
-              <button
+              <Button
                 onClick={() => {
                   navigate('corregir-solicitud');
                 }}
-                className="bg-orange-500 hover:bg-orange-600 p-2 rounded text-[#fff]"
-              >
-                Corregir solicitud
-              </button>
+                label="Corregir solicitud"
+                variant="primary"
+                fullWidth
+              />
             </div>
           )}
           {documentosAprobacion && documentosAprobacion.length !== 0 && (

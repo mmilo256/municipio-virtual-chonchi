@@ -20,6 +20,8 @@ const CorregirSolicitud = () => {
   const [documentosNuevos, setDocumentosNuevos] = useState({});
   const [mostrarErroresPaso, setMostrarErroresPaso] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const pasosFormulario = solicitud?.tramite?.formulario?.pasos_formularios ?? [];
 
   const observacion = {
@@ -47,10 +49,13 @@ const CorregirSolicitud = () => {
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true);
         const response = await obtenerSolicitudPorCodigo(codigo);
         setSolicitud(response.data.solicitud);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     })();
   }, [codigo]);
@@ -92,6 +97,7 @@ const CorregirSolicitud = () => {
         [campo.nombre_interno]: {
           archivo: valor,
           campo_id: campo.id,
+          etiqueta: campo.etiqueta,
           nombre_interno: campo.nombre_interno,
         },
       }));
@@ -99,6 +105,7 @@ const CorregirSolicitud = () => {
   };
 
   const onEnviarCorreccion = async () => {
+    setLoading(true);
     const esValido = validarPasoActual();
     if (!esValido) {
       setMostrarErroresPaso(true);
@@ -113,11 +120,12 @@ const CorregirSolicitud = () => {
     });
     data.append('documentosMeta', JSON.stringify(documentosNuevos));
     try {
-      const response = await enviarCorreccion(codigo, data);
-      console.log(response);
+      await enviarCorreccion(codigo, data);
       navigate(`../solicitudes/${codigo}`);
     } catch (error) {
       alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,7 +134,7 @@ const CorregirSolicitud = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <h1 className="text-3xl font-bold mt-4">Corregir solicitud</h1>
       <p className="text-slate-600 mb-4">Revise el estado de su solicitud y sus respuestas.</p>
-      <div className="bg-white p-4 rounded border shadow flex justify-between mb-4">
+      <div className="bg-white p-4 rounded border shadow grid md:flex gap-2 justify-between mb-4">
         <div>
           <p className="text-sm text-slate-600">CÓDIGO</p>
           <p className="font-bold">{solicitud?.codigo}</p>
@@ -179,8 +187,13 @@ const CorregirSolicitud = () => {
               />
             ))}
           <div className="flex gap-4 mt-4 justify-end">
-            <Button type="button" variant="secondary" label="Volver" />
-            <Button type="button" onClick={onEnviarCorreccion} label="Enviar corrección" />
+            <Button disabled={loading} type="button" variant="secondary" label="Volver" />
+            <Button
+              isLoading={loading}
+              type="button"
+              onClick={onEnviarCorreccion}
+              label="Enviar corrección"
+            />
           </div>
         </form>
       </div>

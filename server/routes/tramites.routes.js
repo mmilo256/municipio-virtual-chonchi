@@ -5,16 +5,19 @@ import {
   obtenerFormularioPorSlugDeTramite,
   obtenerTramitePorId,
   obtenerTramitePorSlug,
-  obtenerTramites,
+  obtenerTramitesPanel,
+  obtenerTramitesPortal,
 } from '../controllers/tramites.controller.js';
+import { autorizarAdmin } from '../middlewares/roleMiddleware.js';
 
 const router = e.Router();
 
-router.get('/', obtenerTramites);
+router.get('/', obtenerTramitesPortal);
+router.get('/panel', obtenerTramitesPanel);
 router.get('/:id', obtenerTramitePorId);
 router.get('/slug/:slug', obtenerTramitePorSlug);
 router.get('/:slug/formulario', obtenerFormularioPorSlugDeTramite);
-router.post('/', crearTramite);
-router.patch('/:id', editarTramite);
+router.post('/', autorizarAdmin, crearTramite);
+router.patch('/:id', autorizarAdmin, editarTramite);
 
 export default router;

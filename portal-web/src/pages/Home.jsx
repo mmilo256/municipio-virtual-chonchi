@@ -4,9 +4,11 @@ import { obtenerTramites } from '../services/tramites.service';
 import Container from '../components/ui/Container';
 import Heading from '../components/ui/Heading';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
-import CardSkeleton from '../components/ui/Skeletons/CardSkeleton';
 import Card from '../components/ui/Card';
 import { FaInfoCircle } from 'react-icons/fa';
+import { obtenerDireccionesMunicipales } from '../services/direccionesMunicipales.service';
+import SearchBar from '../components/ui/SearchBar';
+import Dropdown from '../components/ui/Dropdown';
 
 const Home = () => {
   // Declaración del estado para almacenar los procedimientos.
@@ -14,17 +16,24 @@ const Home = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const [direccionesMunicipales, setDireccionesMunicipales] = useState([]);
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState('');
+
+  const [busqueda, setBusqueda] = useState('');
+
   const user = useAuthStore((state) => state.sessionData);
 
   // useEffect para cargar los procedimientos cuando el componente se monta.
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const response = await obtenerTramites();
+      const response = await obtenerTramites(direccionSeleccionada, busqueda);
       setTramites(response.data);
+      const responseDirecciones = await obtenerDireccionesMunicipales();
+      setDireccionesMunicipales(responseDirecciones.data);
       setLoading(false);
     })();
-  }, []); // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
+  }, [direccionSeleccionada, busqueda]); // Dependencia vacía, lo que significa que solo se ejecutará una vez cuando el componente se monte.
 
   return (
     <>
@@ -42,7 +51,8 @@ const Home = () => {
             </Heading>
             {/* Descripción corta debajo del título */}
             <p className="text-center text-slate-300">
-              Accede a nuestros servicios en línea de manera fácil y rápida.
+              Desde aquí puedes iniciar nuevos trámites y revisar el estado de tus solicitudes
+              municipales.
             </p>
           </Container>
         </div>
@@ -63,20 +73,77 @@ const Home = () => {
       </Heading>
 
       {/* Componente para mostrar los procedimientos en un grid de tarjetas */}
-      <Container className="py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {!loading ? (
-          tramites?.map((card, index) => (
-            <Card
-              key={index}
-              title={card?.titulo}
-              desc={card?.descripcion_corta}
-              href={`/${card.slug}`}
-              direccion={card?.direcciones_municipale?.nombre}
-            />
-          ))
-        ) : (
-          <CardSkeleton />
-        )}
+      <Container>
+        <div className="flex flex-col md:flex-row gap-4 mb-2 items-center">
+          <SearchBar setValue={setBusqueda} placeholder="Ej: Permisos transitorios" />
+          <Dropdown
+            className="w-full md:w-96"
+            options={direccionesMunicipales}
+            value={direccionSeleccionada}
+            onChange={(e) => {
+              setDireccionSeleccionada(e.target.value);
+            }}
+          />
+        </div>
+
+        <div className="flex gap-2">
+          {busqueda && (
+            <div
+              onClick={() => {
+                setBusqueda('');
+              }}
+              className="flex space-x-2 cursor-pointer hover:bg-sky-200 text-sm bg-sky-100 rounded w-min text-nowrap py-1 px-4"
+            >
+              <div>
+                <span>Búsqueda: </span>
+                <strong>{busqueda}</strong>
+              </div>
+              <span className="font-bold text-slate-500">x</span>
+            </div>
+          )}
+
+          {direccionSeleccionada && (
+            <div
+              onClick={() => {
+                setDireccionSeleccionada('');
+              }}
+              className="flex space-x-2 cursor-pointer hover:bg-sky-200 text-sm bg-sky-100 rounded w-min text-nowrap py-1 px-4"
+            >
+              <div>
+                <span>Dirección municipal: </span>
+                <strong>
+                  {direccionesMunicipales.find((d) => d.id == direccionSeleccionada).nombre}
+                </strong>
+              </div>
+              <span className="font-bold text-slate-500">x</span>
+            </div>
+          )}
+        </div>
+
+        <div className="py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading ? (
+            <p className="text-center col-span-full py-24 rounded text-xl font-bold text-slate-500">
+              Cargando trámites...
+            </p>
+          ) : tramites?.length === 0 ? (
+            <p className="text-center col-span-full py-24 rounded text-xl font-bold text-slate-500">
+              No se encontraron trámites
+            </p>
+          ) : (
+            tramites.map((card) => {
+              return (
+                <Card
+                  key={card.id}
+                  habilitado={true}
+                  title={card?.titulo}
+                  desc={card?.descripcion_corta}
+                  href={`/${card.slug}`}
+                  direccion={card?.direcciones_municipale?.nombre}
+                />
+              );
+            })
+          )}
+        </div>
       </Container>
     </>
   );

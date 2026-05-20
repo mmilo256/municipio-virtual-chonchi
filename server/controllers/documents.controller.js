@@ -9,7 +9,7 @@ import path from 'path';
 import mime from 'mime';
 
 // Borrar un documento
-export const deleteDocument = async (req, res) => {
+export const borrarDocumento = async (req, res) => {
   const { id } = req.params;
   try {
     const document = await deleteDocumentService(id);

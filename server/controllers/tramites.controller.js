@@ -190,16 +190,78 @@ export const crearTramite = async (req, res) => {
   }
 };
 
-// Obtener todos los trámites disponibles
-export const obtenerTramites = async (req, res) => {
+// Obtener todos los trámites disponibles para el portal web
+export const obtenerTramitesPortal = async (req, res) => {
+  const { direccion_id, busqueda } = req.query;
+  const direccionWhere = {};
+  const tramiteWhere = {
+    activo: true,
+  };
+
+  if (direccion_id) {
+    direccionWhere.id = Number(direccion_id);
+  }
+
+  if (busqueda?.trim()) {
+    const string = busqueda.trim();
+    tramiteWhere[Op.or] = [
+      {
+        titulo: {
+          [Op.like]: `%${string}%`,
+        },
+      },
+      {
+        descripcion: {
+          [Op.like]: `%${string}%`,
+        },
+      },
+    ];
+  }
+
   try {
     // Consultar todos los trámites de la base de datos
     const procedures = await Tramite.findAll({
       attributes: ['id', 'titulo', 'descripcion_corta', 'slug', 'activo'],
+      where: tramiteWhere,
       include: {
         model: Direccion,
         attributes: ['id', 'nombre'],
+        where: direccionWhere,
       },
+    });
+    console.log(direccionWhere);
+    return res.status(200).json({ data: procedures, message: 'Tramites obtenidos correctamente' }); // Enviar la lista de trámites como respuesta
+  } catch (error) {
+    // Registrar el error en caso de fallo
+    console.error(error);
+    return res.status(500).json({ message: 'No se pudo obtener los trámites' });
+  }
+};
+
+// Obtener los tramites asignados al funcionario para el panel de administración
+export const obtenerTramitesPanel = async (req, res) => {
+  const { id, rol } = req.user;
+
+  const include = [
+    {
+      model: Direccion,
+      attributes: ['id', 'nombre'],
+    },
+  ];
+
+  if (rol === 'funcionario') {
+    include.push({
+      model: Funcionario,
+      attributes: [],
+      where: { id },
+    });
+  }
+
+  try {
+    // Consultar todos los trámites de la base de datos
+    const procedures = await Tramite.findAll({
+      attributes: ['id', 'titulo', 'descripcion_corta', 'slug', 'activo'],
+      include,
     });
     res.status(200).json({ data: procedures, message: 'Tramites obtenidos correctamente' }); // Enviar la lista de trámites como respuesta
   } catch (error) {

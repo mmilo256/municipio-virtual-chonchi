@@ -26,10 +26,6 @@ const FormTramite = () => {
   const [slug, setSlug] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [descripcionCorta, setDescripcionCorta] = useState('');
-  const [infoAdicional, setInfoAdicional] = useState('');
-  const [requisitos, setRequisitos] = useState('');
-  const [costo, setCosto] = useState('');
-  const [modalidadPago, setModalidadPago] = useState('');
   const [direccion, setDireccion] = useState('');
   const [horarioAtencion, setHorarioAtencion] = useState('');
   const [email, setEmail] = useState('');
@@ -46,6 +42,8 @@ const FormTramite = () => {
   const [formularios, setFormularios] = useState([]);
   const [formularioSeleccionado, setFormularioSeleccionado] = useState('');
 
+  const [ayudaEdicion, setAyudaEdicion] = useState(false);
+
   // Cargar datos del trámite si existe el ID
   useEffect(() => {
     (async () => {
@@ -59,10 +57,6 @@ const FormTramite = () => {
         setSlug(tramite.slug);
         setDescripcion(tramite.descripcion);
         setDescripcionCorta(tramite.descripcion_corta);
-        setInfoAdicional(tramite.info_adicional);
-        setRequisitos(tramite.requisitos);
-        setCosto(tramite.costo);
-        setModalidadPago(tramite.modalidad_pago);
         setDireccion(tramite.direccion);
         setHorarioAtencion(tramite.horario_atencion);
         setEmail(tramite.email);
@@ -137,10 +131,6 @@ const FormTramite = () => {
     setSlug('');
     setDescripcion('');
     setDescripcionCorta('');
-    setInfoAdicional('');
-    setRequisitos('');
-    setCosto('');
-    setModalidadPago('');
     setDireccion('');
     setHorarioAtencion('');
     setEmail('');
@@ -181,10 +171,6 @@ const FormTramite = () => {
     if (slug !== '') values.slug = slug;
     if (descripcion !== '') values.descripcion = descripcion;
     if (descripcionCorta !== '') values.descripcionCorta = descripcionCorta;
-    if (infoAdicional !== '') values.infoAdicional = infoAdicional;
-    if (requisitos !== '') values.requisitos = requisitos;
-    if (costo !== '') values.costo = costo;
-    if (modalidadPago !== '') values.modalidadPago = modalidadPago;
     if (direccion !== '') values.direccion = direccion;
     if (horarioAtencion !== '') values.horarioAtencion = horarioAtencion;
     if (email !== '') values.email = email;
@@ -213,10 +199,6 @@ const FormTramite = () => {
       !slug ||
       !descripcion ||
       !descripcionCorta ||
-      !infoAdicional ||
-      !requisitos ||
-      !costo ||
-      !modalidadPago ||
       !direccion ||
       !horarioAtencion ||
       !email ||
@@ -231,10 +213,6 @@ const FormTramite = () => {
       slug,
       descripcion,
       descripcionCorta,
-      infoAdicional,
-      requisitos,
-      costo,
-      modalidadPago,
       direccion,
       horarioAtencion,
       email,
@@ -262,16 +240,24 @@ const FormTramite = () => {
       <ToastContainer />
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <h1 className="text-2xl font-bold my-4">{id ? 'Editar trámite' : 'Agregar trámite'}</h1>
+      <button
+        onClick={() => {
+          setAyudaEdicion(!ayudaEdicion);
+        }}
+        className="bg-blue-600 text-[#fff] py-1 px-2 mb-4 rounded-xl"
+      >
+        Mostrar ayuda
+      </button>
+      {ayudaEdicion && (
+        <div className="absolute right-10 text-sm bg-blue-100 py-2 px-6 rounded">
+          <p>
+            <span className="font-bold">{`&nbsp`}:</span> Salto de linea
+          </p>
+        </div>
+      )}
       <form className="grid grid-cols-2 gap-x-4" action="">
         <Input name="titulo" value={titulo} onChange={setTitulo} label="Nombre del trámite" />
         <Input name="slug" value={slug} onChange={setSlug} label="Slug" />
-        <Textarea
-          className="col-span-2"
-          name="descripcion"
-          value={descripcion}
-          onChange={setDescripcion}
-          label="Descripción"
-        />
         <Textarea
           className="col-span-2"
           name="descripcion-corta"
@@ -280,24 +266,12 @@ const FormTramite = () => {
           label="Descripción corta"
         />
         <Textarea
-          name="info-adicional"
-          value={infoAdicional}
-          onChange={setInfoAdicional}
-          label="Información Adicional"
-        />
-        <Textarea
-          name="requisitos"
-          value={requisitos}
-          onChange={setRequisitos}
-          label="Requisitos"
-        />
-
-        <Input name="costo" value={costo} onChange={setCosto} label="Costo del trámite" />
-        <Input
-          name="modalidad-pago"
-          value={modalidadPago}
-          onChange={setModalidadPago}
-          label="Modalidad de pago"
+          className="col-span-2"
+          name="descripcion"
+          tall
+          value={descripcion}
+          onChange={setDescripcion}
+          label="Descripción"
         />
         <Input
           name="domicilio"

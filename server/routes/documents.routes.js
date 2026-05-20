@@ -1,6 +1,6 @@
 import e from 'express';
 import {
-  deleteDocument,
+  borrarDocumento,
   downloadDocument,
   getDocument,
   viewDocument,
@@ -10,7 +10,7 @@ import {
 const router = e.Router();
 
 router.get('/:id', getDocument);
-router.delete('/:id', deleteDocument);
+router.delete('/:id', borrarDocumento);
 router.get('/:id/view', viewDocument);
 router.get('/:id/download', downloadDocument);
 /* router.post('/subir-archivo', subirArchivo); */

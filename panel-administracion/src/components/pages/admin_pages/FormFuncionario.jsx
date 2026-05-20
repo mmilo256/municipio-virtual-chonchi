@@ -23,7 +23,7 @@ const FormFuncionario = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
-  const [rol, setRol] = useState('Funcionario');
+  const [rol, setRol] = useState('funcionario');
   const [activo, setActivo] = useState(true);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const FormFuncionario = () => {
     setUsername('');
     setPassword('');
     setPassword2('');
-    setRol('Funcionario');
+    setRol('funcionario');
   };
 
   const goBack = () => {
@@ -124,8 +124,8 @@ const FormFuncionario = () => {
   };
 
   const rolOptions = [
-    { label: 'Administrador', value: 'Administrador' },
-    { label: 'Funcionario', value: 'Funcionario' },
+    { label: 'Administrador', value: 'admin' },
+    { label: 'Funcionario', value: 'funcionario' },
   ];
 
   return (

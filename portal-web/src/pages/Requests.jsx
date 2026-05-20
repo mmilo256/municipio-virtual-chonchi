@@ -65,14 +65,14 @@ const Requests = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <Heading level={2}>Solicitudes realizadas</Heading> {/* Título de la página */}
       {!loading ? (
-        <>
+        <div className="overflow-scroll">
           <BaseTable table={table} />
           <Pagination
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             totalPages={totalPages}
           />
-        </>
+        </div>
       ) : (
         <p>Cargando solicitudes...</p>
       )}

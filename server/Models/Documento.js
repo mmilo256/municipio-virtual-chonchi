@@ -15,6 +15,9 @@ const Documento = sequelize.define('documentos', {
   mime_type: DataTypes.STRING,
   bytes: DataTypes.BIGINT,
   origen: DataTypes.ENUM('solicitante', 'funcionario', 'sistema'),
+  estado: DataTypes.ENUM('activo', 'reemplazado'),
+  reemplazado_por_id: DataTypes.INTEGER,
+  fecha_reemplazo: DataTypes.DATE,
 });
 
 export default Documento;

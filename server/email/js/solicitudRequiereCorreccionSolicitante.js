@@ -202,7 +202,7 @@ export const plantillaSolicitudRequiereCorreccionSolicitante = (data) => {
             <!-- CTA -->
             <div style="margin-top: 24px">
               <a
-                href="#"
+                href="https://municipiovirtualchonchi.cl/"
                 target="_blank"
                 style="
                   display: block;

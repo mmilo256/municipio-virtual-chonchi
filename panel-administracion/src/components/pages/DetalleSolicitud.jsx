@@ -11,12 +11,22 @@ import BaseTable from '../ui/BaseTable';
 import Button from '../ui/Button';
 import { API_URL } from '../../../config';
 import StatusTracker from '../ui/StatusTracker';
+import useAuthStore from '../../stores/useAuthStore';
+import { borrarDocumento } from '../../services/documents.service';
 
 const DetalleSolicitud = () => {
   const [solicitud, setSolicitud] = useState({});
   const { codigo } = useParams();
 
+  console.log(solicitud);
+
+  const { sessionData } = useAuthStore();
+
   const navigate = useNavigate();
+
+  const documentosAprobacion = solicitud?.solicitud?.documentos?.filter(
+    (doc) => doc.origen === 'sistema',
+  );
 
   const observacion = solicitud?.solicitud?.observacion;
 
@@ -27,8 +37,6 @@ const DetalleSolicitud = () => {
     activo: index === solicitud?.historialEstados?.length - 1 ? true : false,
   }));
 
-  console.log(solicitud?.historialEstados);
-
   const infoSolicitud = solicitud.solicitud;
   const pasosFormulario = infoSolicitud?.tramite?.formulario?.pasos_formularios ?? [];
   const respuestas = Object.fromEntries(
@@ -37,20 +45,52 @@ const DetalleSolicitud = () => {
   const estado = infoSolicitud?.estado;
   const usuario = infoSolicitud?.usuario;
   const documentos = solicitud?.solicitud?.documentos;
+
+  const quitarDocumento = async (id) => {
+    try {
+      const response = await borrarDocumento(id);
+      setSolicitud((prev) => ({
+        ...prev,
+        solicitud: {
+          ...prev.solicitud,
+          documentos: prev.solicitud.documentos.filter((doc) => doc.id !== id),
+        },
+      }));
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
+
   const documentosAsociados = documentos
     ?.filter((documento) => documento.origen === 'funcionario')
-    .map((doc) => ({
-      nombre: (
-        <a
-          className="text-blue-500 underline"
-          target="_blank"
-          href={`${API_URL}/documentos/${doc.id}/view`}
-          rel="noreferrer"
-        >
-          {doc.nombre}
-        </a>
-      ),
-    }));
+    .map((doc) => {
+      return {
+        nombre: (
+          <a
+            className="text-blue-500 underline"
+            target="_blank"
+            href={`${API_URL}/documentos/${doc.id}/view`}
+            rel="noreferrer"
+          >
+            {doc.nombre}
+          </a>
+        ),
+        fecha: formatDate(doc.createdAt, 'DD [de] MMMM [de] YYYY, HH:mm'),
+        funcionario: `${sessionData.nombres} ${sessionData.apellidos}`,
+        accion: (
+          <button
+            onClick={() => {
+              quitarDocumento(doc.id);
+            }}
+            className="py-1 px-4 text-sm border border-red-600 rounded bg-red-500 hover:bg-red-400 text-[#fff] font-bold"
+          >
+            Quitar documento
+          </button>
+        ),
+      };
+    });
 
   useEffect(() => {
     (async () => {
@@ -100,6 +140,21 @@ const DetalleSolicitud = () => {
           <strong>Motivo del rechazo:</strong> {observacion}
         </p>
       )}
+      {estado === 'aprobada' && documentosAprobacion.length !== 0 && (
+        <div className="flex gap-4 my-4">
+          {documentosAprobacion.map((doc) => (
+            <a
+              key={doc.id}
+              target="_blank"
+              href={`${API_URL}/documentos/${doc.id}/view`}
+              className="block border py-1 px-6 bg-[#fff] text-blue-500 font-bold uppercase hover:bg-blue-500 hover:text-[#fff] hover:underline"
+              rel="noreferrer"
+            >
+              {doc.nombre}
+            </a>
+          ))}
+        </div>
+      )}
       {estado === 'requiere correccion' && observacion && (
         <div className="space-x-4 my-4">
           <div className="bg-violet-50 border border-violet-300 rounded p-4 mt-4 text-violet-700">
@@ -133,7 +188,6 @@ const DetalleSolicitud = () => {
           </button>
         </div>
       )}
-
       {/* Información del solicitante */}
       <div className="mt-4">
         <h2 className="text-xl mb-2 font-semibold">Información del solicitante</h2>
@@ -202,7 +256,6 @@ const DetalleSolicitud = () => {
           </div>
         )}
       </div>
-
       <div className="mb-10">
         <h2 className="text-xl font-semibold">Subir documentos asociados</h2>
         <p className="mb-2 text-sm text-slate-500">
@@ -211,7 +264,10 @@ const DetalleSolicitud = () => {
         <div className="my-4">
           <Button onClick={onSubirDocumentoAsociado} text="Subir documento" variant="secondary" />
         </div>
-        <BaseTable columns={['Documento']} data={documentosAsociados} />
+        <BaseTable
+          columns={['Documento', 'Fecha subida', 'Funcionario', 'Acciones']}
+          data={documentosAsociados}
+        />
       </div>
     </div>
   );

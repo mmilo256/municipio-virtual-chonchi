@@ -11,7 +11,7 @@ export const deleteDocumentService = async (id) => {
     }
 
     // Obtener ruta absoluta del documento
-    const documentPath = path.resolve(document.ruta);
+    const documentPath = path.join(process.cwd(), document.ruta);
 
     // Borrar documento del servidor
     await fs.unlink(documentPath);

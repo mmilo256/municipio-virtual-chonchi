@@ -1,8 +1,15 @@
 import apiClient from './apiClient';
 
 // Función para obtener todos los trámites disponibles
-export const obtenerTramites = async () => {
-  const response = await apiClient.get('/tramites');
+export const obtenerTramites = async (direccion_id, busqueda) => {
+  const params = new URLSearchParams();
+  if (direccion_id) {
+    params.append('direccion_id', direccion_id);
+  }
+  if (busqueda) {
+    params.append('busqueda', busqueda);
+  }
+  const response = await apiClient.get(`/tramites?${params.toString()}`);
   const data = response.data;
   return data;
 };

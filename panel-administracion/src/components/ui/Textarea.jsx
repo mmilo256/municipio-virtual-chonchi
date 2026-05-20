@@ -1,4 +1,4 @@
-const Textarea = ({ label, value, onChange, name, className, placeholder }) => {
+const Textarea = ({ label, value, onChange, name, className, placeholder, tall }) => {
   const inputStyles =
     'block rounded p-1 text-black outline-none border-2 focus:border-blue-300 h-28';
 
@@ -12,7 +12,7 @@ const Textarea = ({ label, value, onChange, name, className, placeholder }) => {
         }}
         id={name}
         placeholder={placeholder}
-        className={inputStyles}
+        className={`${inputStyles} ${tall && 'min-h-80'}`}
       ></textarea>
     </label>
   );

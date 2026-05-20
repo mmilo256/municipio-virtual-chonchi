@@ -11,6 +11,7 @@ import Accordion from '../components/ui/Accordion';
 import useAuthStore from '../stores/useAuthStore';
 import { camposContacto } from '../data/camposContacto';
 import { renderValorRespuesta } from '../utils/utils';
+import Button from '../components/ui/buttons/Button';
 
 const FormularioTramite = () => {
   const { slug } = useParams();
@@ -178,7 +179,6 @@ const FormularioTramite = () => {
       data.append('infoContacto', JSON.stringify(infoContacto));
 
       archivos.forEach((archivo) => {
-        console.log(archivo);
         data.append(archivo.nombre, archivo.valor);
       });
 
@@ -209,9 +209,9 @@ const FormularioTramite = () => {
       <h1 className="text-3xl font-medium text-secondary mb-1">{tramite?.titulo}</h1>
       <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>
       <div className="grid grid-cols-3">
-        <FormStepper pasos={newPasos} pasoActual={pasoActual} />
+        <FormStepper className="hidden md:block" pasos={newPasos} pasoActual={pasoActual} />
         {newPasos?.length > 0 && (
-          <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-2">
+          <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-full md:col-span-2">
             <h2 className="text-2xl font-medium text-secondary mb-1">
               {`${pasoActual + 1}. ${newPasos[pasoActual]?.titulo}`}
             </h2>
@@ -299,16 +299,28 @@ const FormularioTramite = () => {
               )}
             </form>
             <div className="flex gap-2 justify-end mt-6">
-              <button onClick={volverAlPasoAnterior} className="border border-slate-400 p-2">
+              {/* <button onClick={volverAlPasoAnterior} className="border border-slate-400 p-2">
                 Atrás
-              </button>
-              <button onClick={enviarFormulario} className="border border-slate-400 p-2">
+              </button> */}
+              <Button
+                disabled={loading}
+                onClick={volverAlPasoAnterior}
+                label="Atrás"
+                variant="secondary"
+              />
+              <Button
+                onClick={enviarFormulario}
+                isLoading={loading}
+                label={pasoActual === totalPasos ? 'Enviar formulario' : 'Siguiente'}
+                variant="primary"
+              />
+              {/* <button onClick={enviarFormulario} className="border border-slate-400 p-2">
                 {pasoActual === totalPasos
                   ? loading
                     ? 'Cargando...'
                     : 'Enviar formulario'
                   : 'Siguiente'}
-              </button>
+              </button> */}
             </div>
           </div>
         )}

@@ -161,7 +161,7 @@ export const templateSolicitudEnviadaSolicitante = (
             <!-- CTA -->
             <div style="margin-top: 24px">
               <a
-                href="https://municipiovirtualchonchi.cl/solicitudes"
+                href="https://municipiovirtualchonchi.cl/"
                 target="_blank"
                 style="
                   display: block;

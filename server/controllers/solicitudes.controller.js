@@ -34,6 +34,7 @@ export const enviarCorreccion = async (req, res) => {
   const documentosMeta = JSON.parse(req.body.documentosMeta);
   const { codigo } = req.params;
   const t = await sequelize.transaction();
+
   try {
     // Verificar que exista la solicitud
     const solicitudExiste = await Solicitud.findOne({
@@ -67,12 +68,12 @@ export const enviarCorreccion = async (req, res) => {
 
       // Actualizar respuestas
       if (valorAnterior !== valorNuevo) {
-        /* await respuestaActual.update(
+        await respuestaActual.update(
           {
             valor: valorNuevo,
           },
           { transaction: t },
-        ); */
+        );
 
         respuestasActualizadas.push({
           campo_id: respuestaActual.campo_id,
@@ -83,28 +84,93 @@ export const enviarCorreccion = async (req, res) => {
       }
     }
 
-    // Buscar documentos de la solicitud y compararlos con los nuevos
+    // Formatear documentos adjuntos
+    const documentos = req.files.map((file) => {
+      const meta = Object.values(documentosMeta).find(
+        (item) => item.nombre_interno === file.fieldname,
+      );
+
+      return {
+        ruta: `/uploads/${file.filename}`,
+        solicitud_id: solicitudExiste.id,
+        campo_id: meta.campo_id,
+        nombre_original: file.originalname,
+        nombre_guardado: file.filename,
+        mime_type: file.mimetype,
+        bytes: file.size,
+        nombre: meta.nombre_interno,
+        origen: 'solicitante',
+        estado: 'activo',
+        reemplazado_por_id: null,
+        fecha_reemplazo: null,
+      };
+    });
+
     const documentosActualizados = [];
-    for (const item of Object.values(documentosMeta)) {
-      console.log(item);
+    for (const item of documentos) {
+      // Subir documentos adjuntos nuevos
+      const documentoNuevo = await Documento.create(item, { transaction: t });
+
+      // Buscar el documento anterior
+      const documentoAnterior = await Documento.findOne({
+        where: {
+          solicitud_id: solicitudExiste.id,
+          campo_id: item.campo_id,
+          estado: 'activo',
+        },
+        transaction: t,
+      });
+
+      if (!documentoAnterior) continue;
+
+      // Actualizar info del documento anterior
+      await documentoAnterior.update({
+        estado: 'reemplazado',
+        reemplazado_por_id: documentoNuevo.id,
+        fecha_reemplazo: new Date(),
+      });
+
+      const docAnterior = {
+        id: documentoAnterior.id,
+        nombre_original: documentoAnterior.nombre_original,
+        mime_type: documentoAnterior.mime_type,
+        bytes: documentoAnterior.bytes,
+      };
+
+      const docNuevo = {
+        id: documentoNuevo.id,
+        nombre_original: documentoNuevo.nombre_original,
+        mime_type: documentoNuevo.mime_type,
+        bytes: documentoNuevo.bytes,
+      };
+
+      documentosActualizados.push({
+        campo_id: item.campo_id,
+        nombre_interno: item.nombre_interno,
+        etiqueta: item.etiqueta,
+        docAnterior,
+        docNuevo,
+      });
     }
-    console.log(documentosMeta);
 
     // Guardar registro de la corrección en historial solicitudes
-    /* await HistorialEstadosSolicitudes.create(
+    await HistorialEstadosSolicitudes.create(
       {
         solicitud_id: solicitudExiste.id,
         estado: 'en revision',
         accion: ACCIONES_SOLICITUD.ENVIAR_CORRECCION,
         usuario_id: req.user.id,
         usuario_tipo: 'solicitante',
-        metadata: { respuestas_actualizadas: respuestasActualizadas },
+        metadata: {
+          respuestas_actualizadas: respuestasActualizadas,
+          documentos_actualizados: documentosActualizados,
+        },
       },
       { transaction: t },
-    ); */
+    );
 
     // Actualizar solicitud
-    /* await solicitudExiste.update(
+    await solicitudExiste.update(
       {
         estado: 'en revision',
         requiere_correccion: false,
@@ -112,7 +178,7 @@ export const enviarCorreccion = async (req, res) => {
         fecha_respuesta_correccion: new Date(),
       },
       { transaction: t },
-    ); */
+    );
 
     // Notificar al funcionario que la solicitud fue corregida por el solicitante
     const correosFuncionarios = solicitudExiste.tramite.funcionarios.map((fun) => fun.email);
@@ -123,16 +189,18 @@ export const enviarCorreccion = async (req, res) => {
       fechaCorreccion: formatDate(solicitudExiste.fecha_respuesta_correccion, 'DD MMM YYYY, HH:mm'),
       estado: solicitudExiste.estado,
     };
-    /* await sendEmail(
+    await sendEmail(
       correosFuncionarios,
       `[Municipio Virtual Chonchi] Solicitud corregida - ${codigo}`,
       plantillaSolicitudCorregidaFuncionario(correoData),
       null,
-    ); */
+    );
 
     await t.commit();
     return res.status(200).json({
-      data: solicitudExiste,
+      documentosMeta,
+      documentos,
+      documentosActualizados,
       message: 'Corrección de la solicitud enviada correctamente',
     });
   } catch (error) {
@@ -337,6 +405,9 @@ export const aprobarSolicitud = async (req, res) => {
         bytes: file.size,
         origen: 'sistema',
         nombre: file.fieldname,
+        estado: 'activo',
+        reemplazado_por_id: null,
+        fecha_reemplazo: null,
       };
     });
 
@@ -412,6 +483,9 @@ export const subirDocumento = async (req, res) => {
       bytes: documento.size,
       origen: 'funcionario',
       nombre: documento.fieldname,
+      estado: 'activo',
+      reemplazado_por_id: null,
+      fecha_reemplazo: null,
     };
 
     const responseDocumentos = await Documento.create(documentoData);
@@ -489,6 +563,10 @@ export const crearSolicitud = async (req, res) => {
         mime_type: file.mimetype,
         bytes: file.size,
         origen: 'solicitante',
+        nombre: file.fieldname,
+        estado: 'activo',
+        reemplazado_por_id: null,
+        fecha_reemplazo: null,
       };
     });
 
@@ -505,7 +583,6 @@ export const crearSolicitud = async (req, res) => {
       },
       { transaction: t },
     );
-
     // Enviar correo de notificación al solicitante
     await sendEmail(
       infoContacto.email,
@@ -518,7 +595,6 @@ export const crearSolicitud = async (req, res) => {
       ),
       null,
     );
-
     // Enviar correo de notificación a los funcionarios autorizados
     const correosFuncionarios = tramiteExiste?.funcionarios?.map(
       (funcionario) => funcionario.email,
@@ -538,7 +614,6 @@ export const crearSolicitud = async (req, res) => {
       ),
       null,
     );
-
     await t.commit();
     return res.status(201).json({
       data: {
@@ -558,7 +633,7 @@ export const crearSolicitud = async (req, res) => {
   } catch (error) {
     await t.rollback();
     console.error(error);
-    return res.status(500).json({ message: 'No se pudo ingresar la solicitud.' });
+    return res.status(500).json({ error, message: 'No se pudo ingresar la solicitud.' });
   }
 };
 
@@ -596,6 +671,8 @@ export const actualizarEstadoSolicitud = async (req, res) => {
 };
 
 export const obtenerSolicitudPorCodigo = async (req, res) => {
+  const t = await sequelize.transaction();
+  console.log(req.user);
   try {
     const { codigo } = req.params;
     const solicitud = await Solicitud.findOne({
@@ -620,6 +697,8 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
         },
         {
           model: Documento,
+          where: { estado: 'activo' },
+          required: false,
         },
         {
           model: Respuesta,
@@ -658,20 +737,28 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
           ],
         },
       ],
+      transaction: t,
     });
+    if (!solicitud) {
+      await t.rollback();
+      return res.status(404).json({ error: true, message: 'No se pudo obtener la solicitud' });
+    }
 
     const historialEstados = await HistorialEstadosSolicitudes.findAll({
       where: {
         solicitud_id: solicitud.id,
       },
+      transaction: t,
     });
 
+    await t.commit();
     return res.status(200).json({
       data: { solicitud, historialEstados },
       message: 'Historial obtenido correctamente',
     });
   } catch (error) {
-    console.error(error);
+    await t.rollback();
+    console.log(error);
     return res
       .status(500)
       .json({ error: true, message: 'No se pudo obtener el historial de estados de la solicitud' });
@@ -692,6 +779,10 @@ export const obtenerSolicitudesPorTramite = async (req, res) => {
   }
 
   const tramite = await Tramite.findOne({ where: { slug } });
+
+  if (!tramite) {
+    return res.status(404).json({ message: 'No se encontró el trámite' });
+  }
 
   try {
     const whereClause = {

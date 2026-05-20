@@ -1,6 +1,6 @@
-const FormStepper = ({ pasos = [{ id: 1, label: 'label' }], pasoActual = 0 }) => {
+const FormStepper = ({ className, pasos = [{ id: 1, label: 'label' }], pasoActual = 0 }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className={`flex flex-col gap-4 ${className}`}>
       {pasos.map((paso, index) => {
         const isActive = index === pasoActual;
         const isCompleted = index < pasoActual;

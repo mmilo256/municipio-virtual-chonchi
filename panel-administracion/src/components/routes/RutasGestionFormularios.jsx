@@ -1,11 +1,19 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Formularios from '../pages/admin_pages/Formularios';
 import FormFormulario from '../pages/admin_pages/FormFormulario';
 import FormAgregarPasosFormulario from '../pages/admin_pages/FormAgregarPasosFormulario';
 import FormEditarPasosFormulario from '../pages/admin_pages/FormEditarPasosFormulario';
 import FormConfigurarCampos from '../pages/admin_pages/FormConfigurarCampos';
+import useAuthStore from '../../stores/useAuthStore';
+import { ROLES } from '../../constantes';
 
 const RutasGestionFormularios = () => {
+  const { sessionData } = useAuthStore();
+
+  if (sessionData.rol !== ROLES.ADMINISTRADOR) {
+    return <Navigate to="../" />;
+  }
+
   return (
     <div>
       <Routes>

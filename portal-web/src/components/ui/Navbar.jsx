@@ -6,22 +6,7 @@ import { FaTimes } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import LogoutButton from './buttons/LogoutButton';
 
-const NAVIGATION = [
-  {
-    name: 'Inicio',
-    href: '/inicio',
-  },
-  {
-    name: 'Solicitudes',
-    href: '/solicitudes',
-  },
-  {
-    name: 'Volver al sitio',
-    href: 'https://municipalidadchonchi.cl/web',
-  },
-];
-
-const Navbar = () => {
+const Navbar = ({ navegacion, logeado = false }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const handleToggleMenu = () => {
@@ -49,7 +34,7 @@ const Navbar = () => {
               <button onClick={handleToggleMenu} className="absolute right-2 top-5 z-50">
                 <FaTimes size={35} />
               </button>
-              {NAVIGATION.map((item, index) => (
+              {navegacion.map((item, index) => (
                 <li key={index}>
                   <NavLink
                     onClick={() => {
@@ -70,7 +55,7 @@ const Navbar = () => {
           {/* Menú de navegación para pantallas grandes */}
           <div className="hidden md:flex items-center gap-8">
             <ul className="flex gap-6 text-customBlack">
-              {NAVIGATION.map((item, index) => (
+              {navegacion.map((item, index) => (
                 <li key={index}>
                   <NavLink className="hover:text-primary" to={item.href}>
                     {item.name}
@@ -78,7 +63,7 @@ const Navbar = () => {
                 </li>
               ))}
             </ul>
-            <LogoutButton />
+            {logeado && <LogoutButton />}
           </div>
         </Container>
       </nav>

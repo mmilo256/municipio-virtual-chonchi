@@ -1,12 +1,9 @@
 import { API_URL } from '../../config.js';
 import apiClient from './apiClient.js';
 
-export const deleteDocumentService = async (id) => {
-  try {
-    await apiClient.delete(`/documents/${id}`);
-  } catch (error) {
-    console.log(error);
-  }
+export const borrarDocumento = async (id) => {
+  const response = await apiClient.delete(`/documentos/${id}`);
+  return response.data;
 };
 
 export const downloadDocumentService = (id) => {

@@ -1,8 +1,16 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Funcionarios from '../pages/admin_pages/Funcionarios';
 import FormFuncionario from '../pages/admin_pages/FormFuncionario';
+import useAuthStore from '../../stores/useAuthStore';
+import { ROLES } from '../../constantes';
 
 const RutasGestionFuncionarios = () => {
+  const { sessionData } = useAuthStore();
+
+  if (sessionData.rol !== ROLES.ADMINISTRADOR) {
+    return <Navigate to="../" />;
+  }
+
   return (
     <div>
       <Routes>

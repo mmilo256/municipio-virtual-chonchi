@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import Button from '../components/ui/buttons/Button';
 import Container from '../components/ui/Container';
 import { formatDate } from '../utils/utils';
@@ -6,6 +6,8 @@ import { formatDate } from '../utils/utils';
 const SolicitudEnviada = () => {
   const location = useLocation();
   const solicitud = location.state?.solicitud;
+
+  const navigate = useNavigate();
 
   if (!solicitud) {
     return <Navigate to="/inicio" />;
@@ -24,7 +26,7 @@ const SolicitudEnviada = () => {
           </p>
         </div>
         <div className="p-10">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-50 border p-2 rounded">
               <p className="mb-1 uppercase text-sm text-slate-500">Código de solicitud</p>
               <p className="font-bold">{solicitud.codigo}</p>
@@ -48,7 +50,7 @@ const SolicitudEnviada = () => {
               Esta información sera utilizada para informar sobre el estado de su solicitud
             </p>
             <hr className="my-4" />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h3 className="mb-1 uppercase text-sm text-slate-500">SOLICITANTE</h3>
                 <p className="font-bold">{solicitud.solicitante.nombre}</p>
@@ -100,9 +102,22 @@ const SolicitudEnviada = () => {
                 </ol>
               </ul>
             </div>
-            <div className="flex gap-4 mt-10 justify-end">
-              <Button label="Ver mis solicitudes" />
-              <Button variant="secondary" label="Volver al inicio" />
+            <div className="flex gap-2 mt-8 max-w-80 ml-auto">
+              <Button
+                onClick={() => {
+                  navigate('/');
+                }}
+                variant="secondary"
+                label="Volver al inicio"
+                fullWidth
+              />
+              <Button
+                onClick={() => {
+                  navigate('../solicitudes');
+                }}
+                label="Ver mis solicitudes"
+                fullWidth
+              />
             </div>
           </div>
         </div>

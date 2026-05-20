@@ -231,7 +231,7 @@ export const plantillaSolicitudAprobadaSolicitante = (data) => {
             <!-- CTA -->
             <div style="margin-top: 24px">
               <a
-                href="{{urlDetalleSolicitud}}"
+                href="https://municipiovirtualchonchi.cl/"
                 target="_blank"
                 style="
                   display: block;

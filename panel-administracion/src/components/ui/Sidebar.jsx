@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
 import { MdNavigateNext } from 'react-icons/md';
+import useAuthStore from '../../stores/useAuthStore';
 
 const Sidebar = ({ state, setState, navigation }) => {
+  const { sessionData } = useAuthStore();
+
   const onToggleSidebar = () => {
     setState((prev) => !prev);
   };
@@ -32,13 +35,17 @@ const Sidebar = ({ state, setState, navigation }) => {
                 Inicio
               </Link>
             </li>
-            {navigation.map((item) => (
-              <li key={item.href}>
-                <Link to={item.href} className="hover:underline">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {navigation.map((item) => {
+              if (item.roles.includes(sessionData.rol)) {
+                return (
+                  <li key={item.href}>
+                    <Link to={item.href} className="hover:underline">
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              }
+            })}
           </ul>
         ) : (
           <div></div>

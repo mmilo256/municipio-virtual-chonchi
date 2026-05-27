@@ -64,6 +64,10 @@ const FormConfigurarCampos = () => {
     { label: 'RUT', value: 'rut' },
     { label: 'Selección', value: 'select' },
     { label: 'Archivo', value: 'file' },
+    { label: 'Fecha', value: 'date' },
+    { label: 'Hora', value: 'time' },
+    { label: 'Radio button', value: 'radio' },
+    { label: 'Checkbox', value: 'checkbox' },
   ];
 
   const agregarCampo = () => {

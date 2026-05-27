@@ -54,7 +54,6 @@ const FormAgregarPasosFormulario = () => {
     try {
       const response = await crearPasosFormulario(data);
       toast.success(response.message);
-      console.log(response);
     } catch (error) {
       toast.error(error.message);
     }

@@ -23,7 +23,7 @@ const FormularioTramite = () => {
 
   const [formulario, setFormulario] = useState({});
   const [tramite, setTramite] = useState('');
-  const [pasoActual, setPasoActual] = useState(0);
+  const [pasoActual, setPasoActual] = useState(3);
   const [respuestas, setRespuestas] = useState({});
   const [infoContacto, setInfoContacto] = useState({
     nombreCompleto: userNombreCompleto || '',

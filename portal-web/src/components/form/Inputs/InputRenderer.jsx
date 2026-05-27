@@ -3,6 +3,7 @@ import InputText from './InputText';
 import InputTextarea from './InputTextarea';
 import InputSelect from './InputSelect';
 import InputFile from './InputFile';
+import InputDate from './InputDate';
 
 const InputRenderer = ({
   etiqueta = '',
@@ -23,6 +24,23 @@ const InputRenderer = ({
     case 'text':
       return (
         <InputText
+          mostrarErrores={mostrarErrores}
+          tipo={tipo}
+          etiqueta={etiqueta}
+          obligatorio={obligatorio}
+          disabled={disabled}
+          textoAyuda={textoAyuda}
+          value={value}
+          onChange={onChange}
+          slug={slug}
+          placeholder={placeholder}
+          config={config}
+          className={className}
+        />
+      );
+    case 'date':
+      return (
+        <InputDate
           mostrarErrores={mostrarErrores}
           tipo={tipo}
           etiqueta={etiqueta}

@@ -20,17 +20,8 @@ const DocumentosSubidos = ({ docs = [], setRefresh, status }) => {
   // Borrar un documento
   const onDeleteDocument = async () => {
     setLoading(true);
-    try {
-      await deleteDocumentService(selectedDocument.id);
-      setRefresh((prev) => !prev);
-      toast.success('Documento borrado exitosamente');
-    } catch (error) {
-      console.log(error);
-      toast.error('No se pudo borrar el documento seleccionado');
-    } finally {
-      setDeleteModal(false);
-      setLoading(false);
-    }
+
+    setLoading(false);
   };
 
   const toggleDeleteModal = (doc) => {

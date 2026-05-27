@@ -25,7 +25,6 @@ const AprobarSolicitud = () => {
 
   const navigate = useNavigate();
 
-  const usuario = solicitud?.solicitud?.usuario;
   const config = solicitud?.solicitud?.tramite?.config
     ? JSON.parse(solicitud?.solicitud?.tramite?.config)
     : {};
@@ -92,8 +91,7 @@ const AprobarSolicitud = () => {
     data.append('destinatarios', JSON.stringify(destinatarios));
 
     try {
-      const res = await aprobarSolicitud(codigo, data);
-      console.log(res);
+      await aprobarSolicitud(codigo, data);
       navigate(`../${slug}/${codigo}`);
     } catch (error) {
       console.log(error);
@@ -142,7 +140,7 @@ const AprobarSolicitud = () => {
           </div>
           <div>
             <p className="font-bold text-sm text-slate-500">SOLICITANTE</p>
-            <p className="font-bold">{`${usuario?.nombres} ${usuario?.apellidos}`}</p>
+            <p className="font-bold">{solicitud?.solicitud?.nombre_contacto}</p>
           </div>
           <div>
             <p className="font-bold text-sm text-slate-500">FECHA DE INGRESO</p>

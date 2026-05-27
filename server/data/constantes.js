@@ -12,4 +12,5 @@ export const ACCIONES_SOLICITUD = {
   ASIGNAR_FUNCIONARIO: 'asignar_funcionario',
   DESCARGAR_DOCUMENTO: 'descargar_documento',
   NOTIFICAR_SOLICITANTE: 'notificar_solicitante',
+  AGREGAR_SOLICITUD: 'agregar_solicitud',
 };

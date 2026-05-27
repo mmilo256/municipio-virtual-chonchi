@@ -65,14 +65,9 @@ export const adjuntarDocumento = async (data, solicitudId) => {
   }
 };
 
-export const crearSolicitud = async (requestData) => {
-  try {
-    const response = await apiClient.post(`/requests`, requestData);
-    const data = response.data;
-    return data;
-  } catch (e) {
-    throw e.message;
-  }
+export const agregarSolicitud = async (data) => {
+  const response = await apiClient.post(`/solicitudes/agregar`, data);
+  return response.data;
 };
 
 export const borrarDocumentoAsociado = async (solicitudId, documentoId) => {

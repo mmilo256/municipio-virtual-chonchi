@@ -20,6 +20,8 @@ const Solicitud = sequelize.define('solicitudes', {
   email_contacto: DataTypes.STRING,
   telefono_contacto: DataTypes.STRING,
   direccion_contacto: DataTypes.STRING,
+  rut_contacto: DataTypes.STRING,
+  nombre_contacto: DataTypes.STRING,
   requiere_correccion: DataTypes.BOOLEAN,
   campos_correccion: DataTypes.JSON,
   fecha_solicitud_correccion: DataTypes.DATE,

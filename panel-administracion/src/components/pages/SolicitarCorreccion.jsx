@@ -55,8 +55,7 @@ const SolicitarCorreccion = () => {
       camposSeleccionados,
     };
     try {
-      const response = await solicitarCorreccion(codigo, data);
-      console.log(response);
+      await solicitarCorreccion(codigo, data);
       navigate(`../${slug}/${codigo}`);
     } catch (error) {
       console.log(error);

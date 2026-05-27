@@ -11,6 +11,7 @@ import {
   cambiarEstadoSolicitud,
   obtenerSolicitudesPorTramite,
 } from '../../services/solicitudes.service';
+import Button from '../ui/Button';
 
 const Solicitudes = () => {
   const [filtrosActuales, setFiltrosActuales] = useState([]);
@@ -41,7 +42,7 @@ const Solicitudes = () => {
         setTramite(response.tramite);
         const formattedRows = response.rows.map((row) => ({
           codigo: row.codigo,
-          solicitante: `${row.usuario.nombres} ${row.usuario.apellidos}`,
+          solicitante: row.nombre_contacto,
           fecha: formatDate(row.createdAt, 'DD MMM YYYY, HH:mm'),
           estado: <StatusTag status={row.estado} />,
           origen: <OriginTag status={row.origen} />,
@@ -50,9 +51,9 @@ const Solicitudes = () => {
               onClick={() => {
                 revisarSolicitud(row.codigo, row.estado);
               }}
-              className="border p-2"
+              className="py-1 px-3 bg-sky-500 text-white rounded font-bold hover:bg-sky-600"
             >
-              Revisar
+              Revisar solicitud
             </button>
           ),
         }));
@@ -72,7 +73,15 @@ const Solicitudes = () => {
     <div className="mb-4">
       <Breadcrumbs breadcrumbs={[]} />
       <h1 className="text-2xl font-bold my-4">{tramite.titulo}</h1>
-      <div className="my-4"></div>
+      <div className="my-4">
+        <Button
+          onClick={() => {
+            navigate('agregar-solicitud-fisica');
+          }}
+          text="Agregar solicitud física"
+          variant="secondary"
+        />
+      </div>
       <TableFilters
         currentFilters={filtrosActuales}
         setCurrentFilters={setFiltrosActuales}

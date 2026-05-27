@@ -28,6 +28,129 @@ import { plantillaSolicitudRequiereCorreccionSolicitante } from '../email/js/sol
 import { ACCIONES_SOLICITUD } from '../data/constantes.js';
 import { plantillaSolicitudCorregidaFuncionario } from '../email/js/solicitudCorregidaFuncionario.js';
 
+// Subir solicitud física desde el panel de administración
+export const agregarSolicitud = async (req, res) => {
+  const t = await sequelize.transaction();
+  const { tramiteId } = req.body;
+  const respuestas = JSON.parse(req.body.respuestas) || [];
+  const infoSolicitante = JSON.parse(req.body.infoSolicitante) || [];
+  const documentosMeta = JSON.parse(req.body.documentosMeta) || [];
+  const { id: funcionarioId } = req.user;
+
+  let newRespuestas = {};
+  for (const item of respuestas) {
+    newRespuestas = {
+      ...newRespuestas,
+      [item.slug]: item,
+    };
+  }
+
+  let newInfoSolicitante = {};
+  for (const item of infoSolicitante) {
+    newInfoSolicitante = {
+      ...newInfoSolicitante,
+      [item.slug]: item,
+    };
+  }
+
+  const { email, telefono, rut, nombreCompleto, direccion } = newInfoSolicitante;
+
+  try {
+    // Validar que exista el trámite
+    const tramiteExiste = await Tramite.findByPk(tramiteId, {
+      attributes: ['id', 'titulo'],
+      include: [{ model: Funcionario, attributes: ['nombres', 'apellidos', 'email'] }],
+      transaction: t,
+    });
+    if (!tramiteExiste) {
+      await t.rollback();
+      return res.status(404).json({ error: true, message: 'No se encontró el trámite.' });
+    }
+
+    // Guardar solicitud en base de datos
+    const datosSolicitud = {
+      estado: 'pendiente',
+      origen: 'fisico',
+      tramite_id: tramiteExiste.id,
+      usuario_id: null,
+      funcionario_id: funcionarioId,
+      codigo: null,
+      email_contacto: email.valor || null,
+      telefono_contacto: telefono.valor || null,
+      direccion_contacto: direccion.valor || null,
+      rut_contacto: rut.valor || null,
+      nombre_contacto: nombreCompleto.valor || null,
+    };
+
+    const nuevaSolicitud = await Solicitud.create(datosSolicitud, { transaction: t });
+
+    // Crear código único de solicitud
+    const anoActual = new Date().getFullYear();
+    const newId = String(nuevaSolicitud.id).padStart(6, '0');
+    const newCodigo = `MVC-${anoActual}-${newId}`;
+
+    await nuevaSolicitud.update({ codigo: newCodigo }, { transaction: t });
+
+    // Guardar respuestas
+    const respuestasFormateadas = respuestas.map((respuesta) => {
+      if (respuesta.campo_id)
+        return {
+          valor: respuesta.valor,
+          solicitud_id: nuevaSolicitud.id,
+          campo_id: respuesta.campo_id,
+        };
+    });
+
+    await Respuesta.bulkCreate(respuestasFormateadas, { transaction: t });
+
+    // Guardar Documentos adjuntos
+    const newDocumentos = req.files.map((file) => {
+      const meta = documentosMeta.find((item) => item.slug === file.fieldname);
+
+      return {
+        ruta: `/documents/${file.filename}`,
+        solicitud_id: nuevaSolicitud.id,
+        campo_id: meta.campo_id,
+        nombre_original: file.originalname,
+        nombre_guardado: file.filename,
+        mime_type: file.mimetype,
+        bytes: file.size,
+        origen: 'solicitante',
+        nombre: file.fieldname,
+        estado: 'activo',
+        reemplazado_por_id: null,
+        fecha_reemplazo: null,
+      };
+    });
+
+    await Documento.bulkCreate(newDocumentos, { transaction: t });
+
+    // Guardar registro de cambio de estado de la solicitud
+    await HistorialEstadosSolicitudes.create(
+      {
+        estado: 'pendiente',
+        solicitud_id: nuevaSolicitud.id,
+        accion: ACCIONES_SOLICITUD.AGREGAR_SOLICITUD,
+        usuario_id: req.user.id,
+        usuario_tipo: 'funcionario',
+      },
+      { transaction: t },
+    );
+
+    await t.commit();
+    return res.status(200).json({
+      data: nuevaSolicitud,
+      message: 'Solicitud agregada correctamente',
+    });
+  } catch (error) {
+    await t.rollback();
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: error.message, message: 'No se pudo agregar la solicitud al sistema' });
+  }
+};
+
 // Enviar corrección desde el portal WEB
 export const enviarCorreccion = async (req, res) => {
   const respuestasNuevas = JSON.parse(req.body.respuestas);
@@ -297,7 +420,7 @@ export const rechazarSolicitud = async (req, res) => {
     // Validar que exista la solicitud
     const solicitudExiste = await Solicitud.findOne({
       where: { codigo },
-      include: [{ model: Usuario }, { model: Tramite }],
+      include: [{ model: Tramite }],
       transaction,
     });
     if (!solicitudExiste) {
@@ -321,7 +444,7 @@ export const rechazarSolicitud = async (req, res) => {
 
     // Enviar correo electrónico notificando al usuario
     const data = {
-      nombreUsuario: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
+      nombreUsuario: solicitudExiste.nombre_contacto,
       correoUsuario: solicitudExiste.email_contacto,
       telefonoUsuario: solicitudExiste.telefono_contacto,
       domicilioUsuario: solicitudExiste.direccion_contacto,
@@ -361,7 +484,7 @@ export const aprobarSolicitud = async (req, res) => {
     // Validar que existe la solicitud
     const solicitudExiste = await Solicitud.findOne({
       where: { codigo },
-      include: [{ model: Tramite }, { model: Usuario }],
+      include: [{ model: Tramite }],
       transaction: t,
     });
 
@@ -415,7 +538,7 @@ export const aprobarSolicitud = async (req, res) => {
 
     // Enviar correo de notificación
     const data = {
-      nombreUsuario: `${solicitudExiste.usuario.nombres} ${solicitudExiste.usuario.apellidos}`,
+      nombreUsuario: solicitudExiste.nombre_contacto,
       nombreTramite: solicitudExiste.tramite.titulo,
       codigo: solicitudExiste.codigo,
       fechaSolicitud: formatDate(solicitudExiste.createdAt, 'DD MMM YYYY, HH:mm'),
@@ -503,7 +626,12 @@ export const crearSolicitud = async (req, res) => {
     const { tramite: tramiteSlug, canal } = req.body;
     const respuestas = JSON.parse(req.body.respuestas || '[]');
     const infoContacto = JSON.parse(req.body.infoContacto || '{}');
-    const { id: usuarioId, nombres, apellidos, run } = req.user;
+    const {
+      id: usuarioId,
+      nombres: usuarioNombres,
+      apellidos: usuarioApellidos,
+      run: usuarioRun,
+    } = req.user;
 
     const archivosMeta = JSON.parse(req.body.archivosMeta || '[]');
 
@@ -530,6 +658,8 @@ export const crearSolicitud = async (req, res) => {
       email_contacto: infoContacto.email || null,
       telefono_contacto: infoContacto.telefono || null,
       direccion_contacto: infoContacto.direccion || null,
+      rut_contacto: usuarioRun || null,
+      nombre_contacto: `${usuarioNombres} ${usuarioApellidos}`,
     };
 
     const nuevaSolicitud = await Solicitud.create(datosSolicitud, { transaction: t });
@@ -622,8 +752,8 @@ export const crearSolicitud = async (req, res) => {
         fechaSolicitud: nuevaSolicitud.createdAt,
         tramite: tramiteExiste,
         solicitante: {
-          nombre: `${nombres} ${apellidos}`,
-          run,
+          nombre: `${usuarioNombres} ${usuarioApellidos}`,
+          run: usuarioRun,
           email: infoContacto.email,
           telefono: infoContacto.telefono,
         },
@@ -679,8 +809,11 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
       attributes: [
         'id',
         'codigo',
+        'origen',
         'createdAt',
         'estado',
+        'nombre_contacto',
+        'rut_contacto',
         'email_contacto',
         'telefono_contacto',
         'direccion_contacto',

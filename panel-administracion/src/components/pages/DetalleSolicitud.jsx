@@ -18,8 +18,6 @@ const DetalleSolicitud = () => {
   const [solicitud, setSolicitud] = useState({});
   const { codigo } = useParams();
 
-  console.log(solicitud);
-
   const { sessionData } = useAuthStore();
 
   const navigate = useNavigate();
@@ -43,12 +41,13 @@ const DetalleSolicitud = () => {
     (infoSolicitud?.respuestas || []).map((r) => [r.campo_id, r.valor]),
   );
   const estado = infoSolicitud?.estado;
-  const usuario = infoSolicitud?.usuario;
   const documentos = solicitud?.solicitud?.documentos;
+
+  const solicitudOrigen = solicitud?.solicitud?.origen;
 
   const quitarDocumento = async (id) => {
     try {
-      const response = await borrarDocumento(id);
+      await borrarDocumento(id);
       setSolicitud((prev) => ({
         ...prev,
         solicitud: {
@@ -56,7 +55,6 @@ const DetalleSolicitud = () => {
           documentos: prev.solicitud.documentos.filter((doc) => doc.id !== id),
         },
       }));
-      console.log(response);
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -174,12 +172,14 @@ const DetalleSolicitud = () => {
           >
             Aprobar solicitud
           </button>
-          <button
-            onClick={onSolicitarCorreccion}
-            className="font-bold bg-amber-500 rounded text-[#fff] p-2"
-          >
-            Solicitar corrección
-          </button>
+          {solicitudOrigen !== 'fisico' && (
+            <button
+              onClick={onSolicitarCorreccion}
+              className="font-bold bg-amber-500 rounded text-[#fff] p-2"
+            >
+              Solicitar corrección
+            </button>
+          )}
           <button
             onClick={onRechazarSolicitud}
             className="font-bold bg-red-500 rounded text-[#fff] p-2"
@@ -194,11 +194,11 @@ const DetalleSolicitud = () => {
         <div className="bg-[#fff] p-4 shadow rounded">
           <p>
             <strong>Nombre: </strong>
-            {`${usuario?.nombres} ${usuario?.apellidos}`}
+            {infoSolicitud?.nombre_contacto}
           </p>
           <p>
             <strong>RUT: </strong>
-            {usuario?.run}
+            {infoSolicitud?.rut_contacto}
           </p>
           <p>
             <strong>Correo electrónico: </strong>

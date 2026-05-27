@@ -15,6 +15,7 @@ import {
   rechazarSolicitud,
   solicitarCorreccion,
   enviarCorreccion,
+  agregarSolicitud,
 } from '../controllers/solicitudes.controller.js';
 
 const uploadPublic = setUpload();
@@ -25,6 +26,7 @@ const router = e.Router();
 
 router.get('/', getAllRequests);
 router.post('/', uploadPublic.any(), crearSolicitud);
+router.post('/agregar', uploadAdmin.any(), agregarSolicitud);
 router.get('/:codigo', obtenerSolicitudPorCodigo);
 router.patch('/:codigo', actualizarEstadoSolicitud);
 router.post('/:codigo/aprobar', uploadAdmin.any(), aprobarSolicitud);

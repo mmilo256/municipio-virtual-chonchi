@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Input from '../../ui/Input';
 import { rejectTemplate } from '../../../email-templates/permisos-transitorios/rejectTemplate.js';
 import { sendEmail } from '../../../services/emailServices.js';
-import { updateRequestStatus } from '../../../services/solicitudes.service.js';
+
 import { toast } from 'react-toastify';
 import { API_URL } from '../../../../config.js';
+import { cambiarEstadoSolicitud } from '../../../services/solicitudes.service.js';
 
 const AccionesPermisosTransitorios = ({
   requestId,
@@ -39,7 +40,7 @@ const AccionesPermisosTransitorios = ({
     const emailTemplate = rejectTemplate(userFullName, rejectInput);
     try {
       await sendEmail(requestEmail, rejectTitle, emailTemplate);
-      await updateRequestStatus(requestId, 'rechazada');
+      await cambiarEstadoSolicitud(requestId, 'rechazada');
       setStatus('rechazada');
       toast.success('Se ha notificado al usuario el rechazo de su solicitud');
     } catch (error) {

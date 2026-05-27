@@ -21,8 +21,6 @@ const RechazarSolicitud = () => {
 
   const navigate = useNavigate();
 
-  const usuario = solicitud?.solicitud?.usuario;
-
   useEffect(() => {
     (async () => {
       try {
@@ -95,7 +93,7 @@ const RechazarSolicitud = () => {
           </div>
           <div>
             <p className="font-bold text-sm text-slate-500">SOLICITANTE</p>
-            <p className="font-bold">{`${usuario?.nombres} ${usuario?.apellidos}`}</p>
+            <p className="font-bold">{solicitud?.solicitud?.nombre_contacto}</p>
           </div>
           <div>
             <p className="font-bold text-sm text-slate-500">FECHA DE INGRESO</p>

@@ -20,7 +20,7 @@ import AprobarSolicitud from './components/pages/AprobarSolicitud';
 import SubirDocumento from './components/pages/SubirDocumento';
 import RechazarSolicitud from './components/pages/RechazarSolicitud';
 import SolicitarCorreccion from './components/pages/SolicitarCorreccion';
-import PruebaMK from './components/pages/PruebaMK';
+import AgregarSolicitudFisica from './components/pages/AgregarSolicitudFisica';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData, sessionData } = useAuthStore();
@@ -82,12 +82,12 @@ const App = () => {
           <Route path="/formularios/*" element={<RutasGestionFormularios />} />
           {/* <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} /> */}
           <Route path="/:slug" element={<Solicitudes />} />
+          <Route path="/:slug/agregar-solicitud-fisica" element={<AgregarSolicitudFisica />} />
           <Route path="/:slug/:codigo" element={<DetalleSolicitud />} />
           <Route path="/:slug/:codigo/subir-documento" element={<SubirDocumento />} />
           <Route path="/:slug/:codigo/aprobar" element={<AprobarSolicitud />} />
           <Route path="/:slug/:codigo/rechazar" element={<RechazarSolicitud />} />
           <Route path="/:slug/:codigo/solicitar-correccion" element={<SolicitarCorreccion />} />
-          <Route path="/prueba-mk" element={<PruebaMK />} />
           {/* 
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
           <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} /> */}

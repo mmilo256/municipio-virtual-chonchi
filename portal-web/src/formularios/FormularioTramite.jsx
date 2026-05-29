@@ -10,7 +10,7 @@ import { enviarSolicitud } from '../services/requests.service';
 import Accordion from '../components/ui/Accordion';
 import useAuthStore from '../stores/useAuthStore';
 import { camposContacto } from '../data/camposContacto';
-import { renderValorRespuesta } from '../utils/utils';
+import { formatDate, renderValorRespuesta } from '../utils/utils';
 import Button from '../components/ui/buttons/Button';
 
 const FormularioTramite = () => {
@@ -23,7 +23,7 @@ const FormularioTramite = () => {
 
   const [formulario, setFormulario] = useState({});
   const [tramite, setTramite] = useState('');
-  const [pasoActual, setPasoActual] = useState(3);
+  const [pasoActual, setPasoActual] = useState(0);
   const [respuestas, setRespuestas] = useState({});
   const [infoContacto, setInfoContacto] = useState({
     nombreCompleto: userNombreCompleto || '',
@@ -91,7 +91,7 @@ const FormularioTramite = () => {
   };
 
   // Validar paso actual
-  const validarPasoActual = () => {
+  const validarPasoActual = (respuestasAValidar = respuestas) => {
     if (paso.tipoPaso === 'contacto') {
       const errores = {};
 
@@ -112,7 +112,7 @@ const FormularioTramite = () => {
       const errores = {};
 
       campos.forEach((campo) => {
-        const valor = respuestas[campo.nombre_interno];
+        const valor = respuestasAValidar[campo.nombre_interno];
         const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio);
 
         if (error) {
@@ -126,6 +126,24 @@ const FormularioTramite = () => {
     return true;
   };
 
+  const completarRespuestasVacias = () => {
+    const nuevasRespuestas = { ...respuestas };
+
+    newPasos.forEach((paso) => {
+      paso.campos_formularios.forEach((campo) => {
+        if (campo.tipo === 'file') return;
+
+        if (nuevasRespuestas[campo.nombre_interno] === undefined) {
+          nuevasRespuestas[campo.nombre_interno] = campo.tipo === 'checkboxGroup' ? [] : '';
+        }
+      });
+    });
+
+    setRespuestas(nuevasRespuestas);
+
+    return nuevasRespuestas;
+  };
+
   // Volver al paso anterior
   const volverAlPasoAnterior = () => {
     if (pasoActual > 0) {
@@ -136,8 +154,10 @@ const FormularioTramite = () => {
   };
 
   const enviarFormulario = async () => {
+    console.log(respuestas);
     // Ir al paso siguiente
-    const esValido = validarPasoActual();
+    const respuestasCompletas = completarRespuestasVacias();
+    const esValido = validarPasoActual(respuestasCompletas);
     if (!esValido) {
       setMostrarErroresPaso(true);
       return;
@@ -153,20 +173,23 @@ const FormularioTramite = () => {
         paso.campos_formularios.forEach((campo) => {
           const valor = respuestas[campo.nombre_interno];
 
-          if (valor !== undefined && valor !== null && valor !== '') {
-            if (campo.tipo === 'file') {
+          if (campo.tipo === 'file') {
+            if (valor) {
               archivos.push({
                 nombre: campo.nombre_interno,
                 campo_id: campo.id,
                 valor,
               });
-            } else {
-              newRespuestas.push({
-                campo_id: campo.id,
-                valor,
-              });
             }
+
+            return;
           }
+
+          newRespuestas.push({
+            campo_id: campo.id,
+            nombre: campo.nombre_interno,
+            valor: valor ?? '',
+          });
         });
       });
 
@@ -209,14 +232,14 @@ const FormularioTramite = () => {
       <h1 className="text-3xl font-medium text-secondary mb-1">{tramite?.titulo}</h1>
       <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>
       <div className="grid grid-cols-3">
-        <FormStepper className="hidden md:block" pasos={newPasos} pasoActual={pasoActual} />
+        <FormStepper className="hidden md:flex" pasos={newPasos} pasoActual={pasoActual} />
         {newPasos?.length > 0 && (
           <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-full md:col-span-2">
             <h2 className="text-2xl font-medium text-secondary mb-1">
               {`${pasoActual + 1}. ${newPasos[pasoActual]?.titulo}`}
             </h2>
             <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual]?.descripcion}</p>
-            <form className={`flex flex-col ${pasoActual === totalPasos ? 'gap-y-2' : 'gap-y-4'}`}>
+            <form className="flex flex-col gap-y-2">
               {paso?.tipoPaso === 'contacto' &&
                 camposContacto.map((campo) => (
                   <InputRenderer
@@ -250,13 +273,38 @@ const FormularioTramite = () => {
                       config={JSON.parse(campo.config)}
                       obligatorio={campo.obligatorio}
                       etiqueta={campo.etiqueta}
-                      value={respuestas[campo.nombre_interno] || ''}
+                      value={
+                        campo.tipo === 'checkboxGroup'
+                          ? respuestas[campo.nombre_interno] || []
+                          : respuestas[campo.nombre_interno] || ''
+                      }
                       onChange={(e) => {
                         if (campo.tipo === 'file') {
                           handleChange(campo, e.target.files[0] || null);
-                        } else {
-                          handleChange(campo, e.target.value);
+                          return;
                         }
+
+                        if (campo.tipo === 'checkbox') {
+                          handleChange(campo, e.target.checked);
+                          return;
+                        }
+
+                        if (campo.tipo === 'checkboxGroup') {
+                          const valorActual = respuestas[campo.nombre_interno] || [];
+                          const valorCheckbox = e.target.value;
+
+                          if (e.target.checked) {
+                            handleChange(campo, [...valorActual, valorCheckbox]);
+                          } else {
+                            handleChange(
+                              campo,
+                              valorActual.filter((item) => item !== valorCheckbox),
+                            );
+                          }
+
+                          return;
+                        }
+                        handleChange(campo, e.target.value);
                       }}
                     />
                   );
@@ -290,7 +338,16 @@ const FormularioTramite = () => {
                       {paso.campos_formularios.map((campo) => (
                         <div key={campo.id} className="space-x-1">
                           <strong>{campo.etiqueta}:</strong>
-                          <span>{renderValorRespuesta(respuestas[campo.nombre_interno])}</span>
+                          {campo.tipo === 'date' ? (
+                            <span>
+                              {formatDate(
+                                renderValorRespuesta(respuestas[campo.nombre_interno]),
+                                1,
+                              )}
+                            </span>
+                          ) : (
+                            <span>{renderValorRespuesta(respuestas[campo.nombre_interno])}</span>
+                          )}
                         </div>
                       ))}
                     </Accordion>
@@ -299,9 +356,6 @@ const FormularioTramite = () => {
               )}
             </form>
             <div className="flex gap-2 justify-end mt-6">
-              {/* <button onClick={volverAlPasoAnterior} className="border border-slate-400 p-2">
-                Atrás
-              </button> */}
               <Button
                 disabled={loading}
                 onClick={volverAlPasoAnterior}
@@ -314,13 +368,6 @@ const FormularioTramite = () => {
                 label={pasoActual === totalPasos ? 'Enviar formulario' : 'Siguiente'}
                 variant="primary"
               />
-              {/* <button onClick={enviarFormulario} className="border border-slate-400 p-2">
-                {pasoActual === totalPasos
-                  ? loading
-                    ? 'Cargando...'
-                    : 'Enviar formulario'
-                  : 'Siguiente'}
-              </button> */}
             </div>
           </div>
         )}

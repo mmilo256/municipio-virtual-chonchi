@@ -13,5 +13,5 @@ export const sanitizarValor = (campo, valor) => {
     return sanitizado;
   }
 
-  return valor;
+  return valor ?? '';
 };

@@ -184,6 +184,7 @@ export const enviarCorreccion = async (req, res) => {
         where: { campo_id: item.campo_id, solicitud_id: solicitudExiste.id },
         transaction: t,
       });
+
       if (!respuestaActual) continue;
 
       const valorAnterior = respuestaActual.valor;
@@ -200,7 +201,7 @@ export const enviarCorreccion = async (req, res) => {
 
         respuestasActualizadas.push({
           campo_id: respuestaActual.campo_id,
-          nombre_interno: respuestaActual.nombre_interno,
+          nombre_interno: item.nombre_interno,
           valor_anterior: valorAnterior,
           valor_nuevo: valorNuevo,
         });
@@ -231,9 +232,6 @@ export const enviarCorreccion = async (req, res) => {
 
     const documentosActualizados = [];
     for (const item of documentos) {
-      // Subir documentos adjuntos nuevos
-      const documentoNuevo = await Documento.create(item, { transaction: t });
-
       // Buscar el documento anterior
       const documentoAnterior = await Documento.findOne({
         where: {
@@ -244,21 +242,29 @@ export const enviarCorreccion = async (req, res) => {
         transaction: t,
       });
 
-      if (!documentoAnterior) continue;
+      // Subir documentos adjuntos nuevos
+      const documentoNuevo = await Documento.create(item, { transaction: t });
 
-      // Actualizar info del documento anterior
-      await documentoAnterior.update({
-        estado: 'reemplazado',
-        reemplazado_por_id: documentoNuevo.id,
-        fecha_reemplazo: new Date(),
-      });
+      if (documentoAnterior) {
+        // Actualizar info del documento anterior
+        await documentoAnterior.update(
+          {
+            estado: 'reemplazado',
+            reemplazado_por_id: documentoNuevo.id,
+            fecha_reemplazo: new Date(),
+          },
+          { transaction: t },
+        );
+      }
 
-      const docAnterior = {
-        id: documentoAnterior.id,
-        nombre_original: documentoAnterior.nombre_original,
-        mime_type: documentoAnterior.mime_type,
-        bytes: documentoAnterior.bytes,
-      };
+      const docAnterior = documentoAnterior
+        ? {
+            id: documentoAnterior.id,
+            nombre_original: documentoAnterior.nombre_original,
+            mime_type: documentoAnterior.mime_type,
+            bytes: documentoAnterior.bytes,
+          }
+        : null;
 
       const docNuevo = {
         id: documentoNuevo.id,
@@ -303,6 +309,8 @@ export const enviarCorreccion = async (req, res) => {
       { transaction: t },
     );
 
+    await t.commit();
+
     // Notificar al funcionario que la solicitud fue corregida por el solicitante
     const correosFuncionarios = solicitudExiste.tramite.funcionarios.map((fun) => fun.email);
     const correoData = {
@@ -319,7 +327,6 @@ export const enviarCorreccion = async (req, res) => {
       null,
     );
 
-    await t.commit();
     return res.status(200).json({
       documentosMeta,
       documentos,

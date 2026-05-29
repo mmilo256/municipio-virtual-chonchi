@@ -22,6 +22,7 @@ const CampoFormulario = sequelize.define('campos_formularios', {
     'time',
     'radio',
     'checkbox',
+    'checkboxGroup',
   ]),
   orden: DataTypes.INTEGER,
   opciones: DataTypes.JSON,

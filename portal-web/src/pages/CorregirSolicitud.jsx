@@ -60,21 +60,23 @@ const CorregirSolicitud = () => {
     })();
   }, [codigo]);
 
-  // Validar campos
   const validarPasoActual = () => {
     const errores = {};
 
     camposFiltrados.forEach((campo) => {
       const valor =
         campo.tipo === 'file'
-          ? documentosNuevos[campo.nombre_interno]
-          : respuestasNuevas[campo.nombre_interno];
-      const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio);
+          ? documentosNuevos[campo.nombre_interno]?.archivo
+          : respuestasNuevas[campo.nombre_interno]?.valor;
+
+      const error = validarCampo(campo.tipo, valor, campo.config, campo.obligatorio);
 
       if (error) {
         errores[campo.nombre_interno] = error;
       }
     });
+
+    console.log('Errores encontrados:', errores);
 
     return Object.keys(errores).length === 0;
   };
@@ -92,38 +94,46 @@ const CorregirSolicitud = () => {
         },
       }));
     } else {
-      setDocumentosNuevos((prev) => ({
-        ...prev,
-        [campo.nombre_interno]: {
-          archivo: valor,
-          campo_id: campo.id,
-          etiqueta: campo.etiqueta,
-          nombre_interno: campo.nombre_interno,
-        },
-      }));
+      setDocumentosNuevos((prev) => {
+        return {
+          ...prev,
+          [campo.nombre_interno]: {
+            archivo: valor,
+            campo_id: campo.id,
+            etiqueta: campo.etiqueta,
+            nombre_interno: campo.nombre_interno,
+          },
+        };
+      });
     }
   };
 
   const onEnviarCorreccion = async () => {
     setLoading(true);
+
     const esValido = validarPasoActual();
     if (!esValido) {
       setMostrarErroresPaso(true);
+      setLoading(false);
       return;
     }
 
     const data = new FormData();
 
     data.append('respuestas', JSON.stringify(respuestasNuevas));
+
     Object.values(documentosNuevos).forEach((doc) => {
       data.append(doc.nombre_interno, doc.archivo);
     });
+
     data.append('documentosMeta', JSON.stringify(documentosNuevos));
+
     try {
       await enviarCorreccion(codigo, data);
       navigate(`../solicitudes/${codigo}`);
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
+      alert('No se pudo enviar la corrección la solicitud. Inténtelo nuevamente');
     } finally {
       setLoading(false);
     }
@@ -175,14 +185,38 @@ const CorregirSolicitud = () => {
                 value={
                   campo.tipo === 'file'
                     ? documentosNuevos[campo.nombre_interno]?.archivo
-                    : respuestasNuevas[campo.nombre_interno]?.valor
+                    : campo.tipo === 'checkboxGroup'
+                      ? respuestasNuevas[campo.nombre_interno]?.valor || []
+                      : respuestasNuevas[campo.nombre_interno]?.valor || ''
                 }
                 onChange={(e) => {
                   if (campo.tipo === 'file') {
                     handleChange(campo, e.target.files[0] || null, campo.tipo);
-                  } else {
-                    handleChange(campo, e.target.value, campo.tipo);
+                    return;
                   }
+
+                  if (campo.tipo === 'checkbox') {
+                    handleChange(campo, e.target.checked, campo.tipo);
+                    return;
+                  }
+
+                  if (campo.tipo === 'checkboxGroup') {
+                    const valorActual = respuestasNuevas[campo.nombre_interno] || [];
+                    const valorCheckbox = e.target.value;
+
+                    if (e.target.checked) {
+                      handleChange(campo, [...valorActual, valorCheckbox], campo.tipo);
+                    } else {
+                      handleChange(
+                        campo,
+                        valorActual.filter((item) => item !== valorCheckbox),
+                        campo.tipo,
+                      );
+                    }
+
+                    return;
+                  }
+                  handleChange(campo, e.target.value, campo.tipo);
                 }}
               />
             ))}

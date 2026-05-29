@@ -1,12 +1,12 @@
 const FormStepper = ({ className, pasos = [{ id: 1, label: 'label' }], pasoActual = 0 }) => {
   return (
-    <div className={`flex flex-col gap-4 ${className}`}>
+    <div className={`flex flex-col gap-2 ${className}`}>
       {pasos.map((paso, index) => {
         const isActive = index === pasoActual;
         const isCompleted = index < pasoActual;
 
         const circleClasses = [
-          'w-8 min-w-8 h-8 min-h-8 flex items-center justify-center rounded-full text-sm font-semibold',
+          'w-6 min-w-6 h-6 min-h-6 flex items-center justify-center rounded-full text-sm font-semibold',
           isCompleted
             ? 'bg-[#0083F5] text-white' // azul
             : isActive

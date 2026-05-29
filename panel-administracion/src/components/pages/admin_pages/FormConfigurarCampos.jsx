@@ -68,6 +68,7 @@ const FormConfigurarCampos = () => {
     { label: 'Hora', value: 'time' },
     { label: 'Radio button', value: 'radio' },
     { label: 'Checkbox', value: 'checkbox' },
+    { label: 'Checkboxes (Múltiple)', value: 'checkboxGroup' },
   ];
 
   const agregarCampo = () => {

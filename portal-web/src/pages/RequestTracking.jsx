@@ -146,17 +146,23 @@ const RequestTracking = () => {
                   return (
                     <p key={campo.id}>
                       <strong>{campo.etiqueta}</strong>:{' '}
-                      {campo.tipo !== 'file' ? (
-                        <span>{respuestas[campo.id]}</span>
+                      {campo.tipo === 'file' ? (
+                        documento ? (
+                          <a
+                            target="_blank"
+                            href={`${API_URL}/documentos/${documento.id}/view`}
+                            className="text-blue-500 underline"
+                            rel="noreferrer"
+                          >
+                            Ver
+                          </a>
+                        ) : (
+                          <span className="italic text-slate-500">No adjuntado</span>
+                        )
+                      ) : campo.tipo === 'date' ? (
+                        <span>{formatDate(respuestas[campo.id], 1)}</span>
                       ) : (
-                        <a
-                          target="_blank"
-                          href={`${API_URL}/documentos/${documento.id}/view`}
-                          className="text-blue-500 underline"
-                          rel="noreferrer"
-                        >
-                          Ver documento
-                        </a>
+                        <span>{respuestas[campo.id]}</span>
                       )}
                     </p>
                   );

@@ -17,8 +17,8 @@ const SolicitarCorreccion = () => {
   const infoSolicitud = solicitud.solicitud;
 
   const usuario = infoSolicitud?.usuario;
-  const respuestas = solicitud?.solicitud?.respuestas;
-  const documentos = solicitud?.solicitud?.documentos;
+  const respuestas = solicitud?.solicitud?.respuestas ?? [];
+  const documentos = solicitud?.solicitud?.documentos ?? [];
   const pasosFormulario = solicitud?.solicitud?.tramite?.formulario?.pasos_formularios ?? [];
 
   const [observaciones, setObservaciones] = useState('');
@@ -151,19 +151,26 @@ const SolicitarCorreccion = () => {
                         />
                         {campo.tipo !== 'file' ? (
                           <p className="inline">
-                            <strong>{campo.etiqueta}:</strong> {respuesta}
+                            <strong>{campo.etiqueta}:</strong>{' '}
+                            {campo.tipo === 'date'
+                              ? formatDate(respuesta, 'DD [de] MMMM [de] YYYY')
+                              : respuesta}
                           </p>
                         ) : (
                           <p className="inline">
                             <strong>{campo.etiqueta}:</strong>{' '}
-                            <a
-                              target="_blank"
-                              className="text-blue-500 underline"
-                              href={`${API_URL}/documentos/${documento.id}/view`}
-                              rel="noreferrer"
-                            >
-                              Ver documento
-                            </a>
+                            {documento ? (
+                              <a
+                                target="_blank"
+                                className="text-blue-500 underline"
+                                href={`${API_URL}/documentos/${documento.id}/view`}
+                                rel="noreferrer"
+                              >
+                                Ver documento
+                              </a>
+                            ) : (
+                              <span className="text-slate-400">No adjuntado</span>
+                            )}
                           </p>
                         )}
                       </label>

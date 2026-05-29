@@ -177,6 +177,12 @@ const AprobarSolicitud = () => {
 
       {config?.destinatarios?.activo && (
         <div>
+          <h3 className="text-xl font-bold">Notificar a terceros</h3>
+          <p className="text-sm text-slate-500 mb-2">
+            Indique las instituciones, organismos o personas que deban recibir copia de la
+            resolución aprobada para fines informativos o de coordinación. El solicitante será
+            notificado automáticamente.
+          </p>
           <div className="mb-4">
             <label className="block mb-1" htmlFor="destinatario">
               Agregar destinatario

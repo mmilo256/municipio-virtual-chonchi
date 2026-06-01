@@ -13,7 +13,7 @@ import HistorialEstadosSolicitudes from '../models/HistorialEstadosSolicitudes.j
 import Formulario from '../models/Formulario.js';
 import PasoFormulario from '../models/PasoFormulario.js';
 import CampoFormulario from '../models/CampoFormulario.js';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import Usuario from '../models/Usuario.js';
 import Funcionario from '../models/Funcionario.js';
 import { sendEmail } from '../config/nodemailer.js';
@@ -129,10 +129,13 @@ export const agregarSolicitud = async (req, res) => {
     await HistorialEstadosSolicitudes.create(
       {
         estado: 'pendiente',
+        accion: ACCIONES_SOLICITUD.SOLICITUD_SUBIDA_POR_FUNCIONARIO,
         solicitud_id: nuevaSolicitud.id,
-        accion: ACCIONES_SOLICITUD.AGREGAR_SOLICITUD,
+        mensaje: null,
+        metadata: null,
         usuario_id: req.user.id,
         usuario_tipo: 'funcionario',
+        visible_para_solicitante: false,
       },
       { transaction: t },
     );
@@ -287,13 +290,14 @@ export const enviarCorreccion = async (req, res) => {
       {
         solicitud_id: solicitudExiste.id,
         estado: 'en revision',
-        accion: ACCIONES_SOLICITUD.ENVIAR_CORRECCION,
+        accion: ACCIONES_SOLICITUD.SOLICITUD_CORREGIDA,
         usuario_id: req.user.id,
         usuario_tipo: 'solicitante',
         metadata: {
           respuestas_actualizadas: respuestasActualizadas,
           documentos_actualizados: documentosActualizados,
         },
+        visible_para_solicitante: true,
       },
       { transaction: t },
     );
@@ -380,9 +384,12 @@ export const solicitarCorreccion = async (req, res) => {
       {
         estado: 'requiere correccion',
         solicitud_id: solicitudExiste.id,
-        accion: ACCIONES_SOLICITUD.SOLICITAR_CORRECCION,
         usuario_id: req.user.id,
         usuario_tipo: 'funcionario',
+        accion: ACCIONES_SOLICITUD.CORRECCION_SOLICITADA,
+        mensaje: observaciones,
+        metadata: null,
+        visible_para_solicitante: true,
       },
       { transaction: t },
     );
@@ -441,10 +448,12 @@ export const rechazarSolicitud = async (req, res) => {
       {
         estado: 'rechazada',
         solicitud_id: solicitudExiste.id,
-        accion: ACCIONES_SOLICITUD.RECHAZAR_SOLICITUD,
+        accion: ACCIONES_SOLICITUD.SOLICITUD_RECHAZADA,
         usuario_id: req.user.id,
         mensaje: motivo,
         usuario_tipo: 'funcionario',
+        metadata: null,
+        visible_para_solicitante: true,
       },
       { transaction },
     );
@@ -517,9 +526,12 @@ export const aprobarSolicitud = async (req, res) => {
       {
         estado: 'aprobada',
         solicitud_id: solicitudExiste.id,
-        accion: ACCIONES_SOLICITUD.APROBAR_SOLICITUD,
+        accion: ACCIONES_SOLICITUD.SOLICITUD_APROBADA,
         usuario_id: req.user.id,
         usuario_tipo: 'funcionario',
+        mensaje: null,
+        metadata: null,
+        visible_para_solicitante: true,
       },
       { transaction: t },
     );
@@ -713,10 +725,13 @@ export const crearSolicitud = async (req, res) => {
     await HistorialEstadosSolicitudes.create(
       {
         estado: 'pendiente',
+        accion: ACCIONES_SOLICITUD.SOLICITUD_ENVIADA,
         solicitud_id: nuevaSolicitud.id,
-        accion: ACCIONES_SOLICITUD.ENVIAR_SOLICITUD,
+        mensaje: null,
+        metadata: null,
         usuario_id: req.user.id,
         usuario_tipo: 'solicitante',
+        visible_para_solicitante: true,
       },
       { transaction: t },
     );
@@ -790,10 +805,13 @@ export const actualizarEstadoSolicitud = async (req, res) => {
 
     await HistorialEstadosSolicitudes.create({
       estado,
+      accion: ACCIONES_SOLICITUD.SOLICITUD_SUBIDA_POR_FUNCIONARIO,
       solicitud_id: solicitud.id,
-      accion: ACCIONES_SOLICITUD.CAMBIAR_ESTADO,
+      mensaje: null,
+      metadata: null,
       usuario_id: req.user.id,
       usuario_tipo: 'funcionario',
+      visible_para_solicitante: true,
     });
     return res.status(200).json({
       data: { codigo, estado, solicitud },
@@ -902,6 +920,98 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
     return res
       .status(500)
       .json({ error: true, message: 'No se pudo obtener el historial de estados de la solicitud' });
+  }
+};
+
+export const obtenerSolicitudesPermisosTransitorios = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const filters = req.query.filters;
+  const search = req.query.search;
+  const offset = (page - 1) * pageSize;
+
+  const tramite = await Tramite.findOne({
+    where: { slug: 'permisos-transitorios' },
+  });
+
+  if (!tramite) {
+    return res.status(404).json({ message: 'No se encontró el trámite' });
+  }
+
+  try {
+    const whereClause = {
+      tramite_id: tramite.id,
+    };
+
+    // Filtro por estado
+    if (filters) {
+      const statusArray = filters
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (statusArray.length) {
+        whereClause.estado = {
+          [Op.in]: statusArray,
+        };
+      }
+    }
+
+    const searchTerm = search?.trim();
+
+    if (searchTerm) {
+      whereClause[Op.or] = [
+        {
+          codigo: {
+            [Op.like]: `%${searchTerm}%`,
+          },
+        },
+        Sequelize.literal(`EXISTS (
+      SELECT 1
+      FROM respuestas r
+      INNER JOIN campos_formularios c ON c.id = r.campo_id
+      WHERE r.solicitud_id = solicitudes.id
+      AND c.nombre_interno = 'rut-organizacion_d47facbd'
+      AND r.valor LIKE '%${searchTerm}%'
+    )`),
+      ];
+    }
+
+    const { rows, count } = await Solicitud.findAndCountAll({
+      limit: pageSize,
+      offset,
+      where: whereClause,
+      include: [
+        {
+          model: Usuario,
+          attributes: ['nombres', 'apellidos', 'run'],
+        },
+        {
+          model: Respuesta,
+          required: false,
+          attributes: ['campo_id', 'id', 'valor'],
+          include: [
+            {
+              model: CampoFormulario,
+              attributes: ['id', 'nombre_interno'],
+              required: true,
+              where: {
+                nombre_interno: {
+                  [Op.in]: ['rut-organizacion_d47facbd', 'razon-social_53f3b138'],
+                },
+              },
+            },
+          ],
+        },
+      ],
+      distinct: true,
+    });
+
+    const totalPages = Math.max(1, Math.ceil(count / pageSize));
+
+    return res.status(200).json({ rows, totalPages, tramite });
+  } catch (e) {
+    console.error(e);
+    return res.status(400).json({ error: e.message, mensaje: 'Error interno del servidor' });
   }
 };
 

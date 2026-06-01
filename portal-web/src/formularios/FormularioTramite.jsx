@@ -12,6 +12,7 @@ import useAuthStore from '../stores/useAuthStore';
 import { camposContacto } from '../data/camposContacto';
 import { formatDate, renderValorRespuesta } from '../utils/utils';
 import Button from '../components/ui/buttons/Button';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 const FormularioTramite = () => {
   const { slug } = useParams();
@@ -34,15 +35,24 @@ const FormularioTramite = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState('');
 
   const [mostrarErroresPaso, setMostrarErroresPaso] = useState(false);
 
   // Cargar formulario
   useEffect(() => {
     (async () => {
-      const response = await obtenerFormularioDelTramite(slug);
-      setFormulario(response.data);
-      setTramite(response.tramite);
+      setLoadingText('Cargando formulario...');
+      setLoading(true);
+      try {
+        const response = await obtenerFormularioDelTramite(slug);
+        setFormulario(response.data);
+        setTramite(response.tramite);
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [slug]);
 
@@ -154,7 +164,6 @@ const FormularioTramite = () => {
   };
 
   const enviarFormulario = async () => {
-    console.log(respuestas);
     // Ir al paso siguiente
     const respuestasCompletas = completarRespuestasVacias();
     const esValido = validarPasoActual(respuestasCompletas);
@@ -167,6 +176,8 @@ const FormularioTramite = () => {
       setPasoActual((prev) => prev + 1);
     } else {
       // Enviar formulario
+      setLoadingText('Enviando solicitud a la Municipalidad de Chonchi...');
+      setLoading(true);
       const newRespuestas = [];
       const archivos = [];
       newPasos.forEach((paso) => {
@@ -216,7 +227,6 @@ const FormularioTramite = () => {
       );
 
       try {
-        setLoading(true);
         const response = await enviarSolicitud(data);
         navigate(`../${slug}/enviado`, { state: { solicitud: response.data } });
       } catch (error) {
@@ -228,151 +238,154 @@ const FormularioTramite = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-medium text-secondary mb-1">{tramite?.titulo}</h1>
-      <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>
-      <div className="grid grid-cols-3">
-        <FormStepper className="hidden md:flex" pasos={newPasos} pasoActual={pasoActual} />
-        {newPasos?.length > 0 && (
-          <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-full md:col-span-2">
-            <h2 className="text-2xl font-medium text-secondary mb-1">
-              {`${pasoActual + 1}. ${newPasos[pasoActual]?.titulo}`}
-            </h2>
-            <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual]?.descripcion}</p>
-            <form className="flex flex-col gap-y-2">
-              {paso?.tipoPaso === 'contacto' &&
-                camposContacto.map((campo) => (
-                  <InputRenderer
-                    disabled={campo.disabled}
-                    tipo={campo.tipo}
-                    key={campo.id}
-                    mostrarErrores={mostrarErroresPaso}
-                    placeholder={campo.placeholder}
-                    textoAyuda={campo.texto_ayuda}
-                    opciones={campo.opciones}
-                    config={campo.config}
-                    obligatorio={campo.obligatorio}
-                    etiqueta={campo.etiqueta}
-                    value={infoContacto[campo.nombre_interno] || ''}
-                    onChange={(e) => {
-                      handleChangeContacto(campo, e.target.value);
-                    }}
-                  />
-                ))}
-              {paso?.tipoPaso === 'dinamico' &&
-                newPasos[pasoActual].campos_formularios.map((campo) => {
-                  return (
+    <>
+      <LoadingOverlay show={loading} text={loadingText} />
+      <div className="w-full max-w-5xl mx-auto p-6">
+        <h1 className="text-3xl font-medium text-secondary mb-1">{tramite?.titulo}</h1>
+        <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>
+        <div className="grid grid-cols-3">
+          <FormStepper className="hidden md:flex" pasos={newPasos} pasoActual={pasoActual} />
+          {newPasos?.length > 0 && (
+            <div className="bg-white shadow shadow-slate-400 p-6 rounded col-span-full md:col-span-2">
+              <h2 className="text-2xl font-medium text-secondary mb-1">
+                {`${pasoActual + 1}. ${newPasos[pasoActual]?.titulo}`}
+              </h2>
+              <p className="text-sm text-slate-500 mb-4">{newPasos[pasoActual]?.descripcion}</p>
+              <form className="flex flex-col gap-y-2">
+                {paso?.tipoPaso === 'contacto' &&
+                  camposContacto.map((campo) => (
                     <InputRenderer
+                      disabled={campo.disabled}
                       tipo={campo.tipo}
                       key={campo.id}
-                      slug={campo.slug}
                       mostrarErrores={mostrarErroresPaso}
                       placeholder={campo.placeholder}
                       textoAyuda={campo.texto_ayuda}
                       opciones={campo.opciones}
-                      config={JSON.parse(campo.config)}
+                      config={campo.config}
                       obligatorio={campo.obligatorio}
                       etiqueta={campo.etiqueta}
-                      value={
-                        campo.tipo === 'checkboxGroup'
-                          ? respuestas[campo.nombre_interno] || []
-                          : respuestas[campo.nombre_interno] || ''
-                      }
+                      value={infoContacto[campo.nombre_interno] || ''}
                       onChange={(e) => {
-                        if (campo.tipo === 'file') {
-                          handleChange(campo, e.target.files[0] || null);
-                          return;
-                        }
-
-                        if (campo.tipo === 'checkbox') {
-                          handleChange(campo, e.target.checked);
-                          return;
-                        }
-
-                        if (campo.tipo === 'checkboxGroup') {
-                          const valorActual = respuestas[campo.nombre_interno] || [];
-                          const valorCheckbox = e.target.value;
-
-                          if (e.target.checked) {
-                            handleChange(campo, [...valorActual, valorCheckbox]);
-                          } else {
-                            handleChange(
-                              campo,
-                              valorActual.filter((item) => item !== valorCheckbox),
-                            );
-                          }
-
-                          return;
-                        }
-                        handleChange(campo, e.target.value);
+                        handleChangeContacto(campo, e.target.value);
                       }}
                     />
-                  );
-                })}
-              {paso?.tipoPaso === 'confirmacion' && (
-                <>
-                  <Accordion isOpen title="Información de contacto">
-                    <div className="space-x-1">
-                      <strong>Nombre completo:</strong>
-                      <span>{renderValorRespuesta(infoContacto.nombreCompleto)}</span>
-                    </div>
-                    <div className="space-x-1">
-                      <strong>RUT:</strong>
-                      <span>{renderValorRespuesta(infoContacto.rut)}</span>
-                    </div>
-                    <div className="space-x-1">
-                      <strong>Correo electrónico:</strong>
-                      <span>{renderValorRespuesta(infoContacto.email)}</span>
-                    </div>
-                    <div className="space-x-1">
-                      <strong>Número de teléfono:</strong>
-                      <span>{renderValorRespuesta(infoContacto.telefono)}</span>
-                    </div>
-                    <div className="space-x-1">
-                      <strong>Dirección:</strong>
-                      <span>{renderValorRespuesta(infoContacto.direccion)}</span>
-                    </div>
-                  </Accordion>
-                  {formulario?.pasos_formularios?.map((paso) => (
-                    <Accordion title={paso.titulo} key={paso.id}>
-                      {paso.campos_formularios.map((campo) => (
-                        <div key={campo.id} className="space-x-1">
-                          <strong>{campo.etiqueta}:</strong>
-                          {campo.tipo === 'date' ? (
-                            <span>
-                              {formatDate(
-                                renderValorRespuesta(respuestas[campo.nombre_interno]),
-                                1,
-                              )}
-                            </span>
-                          ) : (
-                            <span>{renderValorRespuesta(respuestas[campo.nombre_interno])}</span>
-                          )}
-                        </div>
-                      ))}
-                    </Accordion>
                   ))}
-                </>
-              )}
-            </form>
-            <div className="flex gap-2 justify-end mt-6">
-              <Button
-                disabled={loading}
-                onClick={volverAlPasoAnterior}
-                label="Atrás"
-                variant="secondary"
-              />
-              <Button
-                onClick={enviarFormulario}
-                isLoading={loading}
-                label={pasoActual === totalPasos ? 'Enviar formulario' : 'Siguiente'}
-                variant="primary"
-              />
+                {paso?.tipoPaso === 'dinamico' &&
+                  newPasos[pasoActual].campos_formularios.map((campo) => {
+                    return (
+                      <InputRenderer
+                        tipo={campo.tipo}
+                        key={campo.id}
+                        slug={campo.slug}
+                        mostrarErrores={mostrarErroresPaso}
+                        placeholder={campo.placeholder}
+                        textoAyuda={campo.texto_ayuda}
+                        opciones={campo.opciones}
+                        config={JSON.parse(campo.config)}
+                        obligatorio={campo.obligatorio}
+                        etiqueta={campo.etiqueta}
+                        value={
+                          campo.tipo === 'checkboxGroup'
+                            ? respuestas[campo.nombre_interno] || []
+                            : respuestas[campo.nombre_interno] || ''
+                        }
+                        onChange={(e) => {
+                          if (campo.tipo === 'file') {
+                            handleChange(campo, e.target.files[0] || null);
+                            return;
+                          }
+
+                          if (campo.tipo === 'checkbox') {
+                            handleChange(campo, e.target.checked);
+                            return;
+                          }
+
+                          if (campo.tipo === 'checkboxGroup') {
+                            const valorActual = respuestas[campo.nombre_interno] || [];
+                            const valorCheckbox = e.target.value;
+
+                            if (e.target.checked) {
+                              handleChange(campo, [...valorActual, valorCheckbox]);
+                            } else {
+                              handleChange(
+                                campo,
+                                valorActual.filter((item) => item !== valorCheckbox),
+                              );
+                            }
+
+                            return;
+                          }
+                          handleChange(campo, e.target.value);
+                        }}
+                      />
+                    );
+                  })}
+                {paso?.tipoPaso === 'confirmacion' && (
+                  <>
+                    <Accordion isOpen title="Información de contacto">
+                      <div className="space-x-1">
+                        <strong>Nombre completo:</strong>
+                        <span>{renderValorRespuesta(infoContacto.nombreCompleto)}</span>
+                      </div>
+                      <div className="space-x-1">
+                        <strong>RUT:</strong>
+                        <span>{renderValorRespuesta(infoContacto.rut)}</span>
+                      </div>
+                      <div className="space-x-1">
+                        <strong>Correo electrónico:</strong>
+                        <span>{renderValorRespuesta(infoContacto.email)}</span>
+                      </div>
+                      <div className="space-x-1">
+                        <strong>Número de teléfono:</strong>
+                        <span>{renderValorRespuesta(infoContacto.telefono)}</span>
+                      </div>
+                      <div className="space-x-1">
+                        <strong>Dirección:</strong>
+                        <span>{renderValorRespuesta(infoContacto.direccion)}</span>
+                      </div>
+                    </Accordion>
+                    {formulario?.pasos_formularios?.map((paso) => (
+                      <Accordion title={paso.titulo} key={paso.id}>
+                        {paso.campos_formularios.map((campo) => (
+                          <div key={campo.id} className="space-x-1">
+                            <strong>{campo.etiqueta}:</strong>
+                            {campo.tipo === 'date' ? (
+                              <span>
+                                {formatDate(
+                                  renderValorRespuesta(respuestas[campo.nombre_interno]),
+                                  1,
+                                )}
+                              </span>
+                            ) : (
+                              <span>{renderValorRespuesta(respuestas[campo.nombre_interno])}</span>
+                            )}
+                          </div>
+                        ))}
+                      </Accordion>
+                    ))}
+                  </>
+                )}
+              </form>
+              <div className="flex gap-2 justify-end mt-6">
+                <Button
+                  disabled={loading}
+                  onClick={volverAlPasoAnterior}
+                  label="Atrás"
+                  variant="secondary"
+                />
+                <Button
+                  onClick={enviarFormulario}
+                  isLoading={loading}
+                  label={pasoActual === totalPasos ? 'Enviar formulario' : 'Siguiente'}
+                  variant="primary"
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

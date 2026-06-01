@@ -26,6 +26,26 @@ export const cambiarEstadoSolicitud = async (codigo, estado) => {
 };
 
 // Obtener todas las solicitudes de un trámite en específico
+export const obtenerSolicitudesPermisosTransitorios = async (
+  page = 1,
+  pageSize = 10,
+  filters,
+  search = '',
+) => {
+  let queryString = `/solicitudes/tramite/permisos-transitorios?page=${page}&pageSize=${pageSize}`;
+
+  if (filters) {
+    queryString += `&filters=${filters}`;
+  }
+  if (search !== '') {
+    queryString += `&search=${search}`;
+  }
+
+  const response = await apiClient.get(queryString);
+  return response.data;
+};
+
+// Obtener todas las solicitudes de un trámite en específico
 export const obtenerSolicitudesPorTramite = async (
   slug,
   page = 1,

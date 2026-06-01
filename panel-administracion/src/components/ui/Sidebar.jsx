@@ -32,7 +32,7 @@ const Sidebar = ({ state, setState, navigation }) => {
           <ul className="flex flex-col gap-6">
             <li>
               <Link to="/" className="hover:underline">
-                Inicio
+                Solicitudes
               </Link>
             </li>
             {navigation.map((item) => {

@@ -16,6 +16,7 @@ import {
   solicitarCorreccion,
   enviarCorreccion,
   agregarSolicitud,
+  obtenerSolicitudesPermisosTransitorios,
 } from '../controllers/solicitudes.controller.js';
 
 const uploadPublic = setUpload();
@@ -37,6 +38,7 @@ router.post('/:codigo/subir-documento', uploadAdmin.any(), subirDocumento);
 router.get('/user/:id', getAllRequestsByUserId);
 router.get('/:id/documents', getUploadedDocuments);
 router.post('/:id/adjuntar-documento', uploadPublic.single('archivo'), adjuntarDocumento);
+router.get('/tramite/permisos-transitorios', obtenerSolicitudesPermisosTransitorios);
 router.get('/tramite/:slug', obtenerSolicitudesPorTramite);
 router.get('/:id/historial', getStatusLog);
 

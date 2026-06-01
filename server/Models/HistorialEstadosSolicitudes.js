@@ -13,6 +13,7 @@ const HistorialEstadosSolicitudes = sequelize.define('historial_estados_solicitu
   metadata: DataTypes.JSON,
   usuario_id: DataTypes.INTEGER,
   usuario_tipo: DataTypes.ENUM('funcionario', 'solicitante'),
+  visible_para_solicitante: DataTypes.BOOLEAN,
 });
 
 export default HistorialEstadosSolicitudes;

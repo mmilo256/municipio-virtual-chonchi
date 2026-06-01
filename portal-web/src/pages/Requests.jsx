@@ -9,6 +9,7 @@ import useAuthStore from '../stores/useAuthStore';
 import { fetchRequestsByUserId } from '../services/requests.service';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Pagination from '../components/ui/Pagination';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 const Requests = () => {
   // Obtener los datos del usuario desde el sessionStorage
@@ -27,28 +28,34 @@ const Requests = () => {
   // Efecto para obtener las solicitudes cuando el componente se monta
   useEffect(() => {
     (async () => {
-      // Llama al servicio para obtener las solicitudes del usuario por RUT
-      const { data } = await fetchRequestsByUserId(sessionData.id, currentPage, pageSize);
+      setLoading(true);
+      try {
+        // Llama al servicio para obtener las solicitudes del usuario por RUT
+        const { data } = await fetchRequestsByUserId(sessionData.id, currentPage, pageSize);
 
-      // Guarda el total de páginas en un estado
-      setTotalPages(data.totalPages);
+        // Guarda el total de páginas en un estado
+        setTotalPages(data.totalPages);
 
-      // Formatea los datos obtenidos para mostrarlos en la tabla
-      const formattedData = data?.solicitudes?.map((solicitud) => ({
-        id: solicitud.codigo, // ID de la solicitud
-        tramite: solicitud.tramite.titulo, // Título del trámite
-        fecha: formatDate(solicitud.createdAt, 3), // Fecha de la solicitud formateada
-        estado: <StatusTag status={solicitud.estado} />, // Muestra el estado con el componente StatusTag
-        acciones: (
-          <Link to={`${solicitud.codigo}`} className="text-blue-500 underline">
-            Seguimiento
-          </Link>
-        ), // Enlace para ver el seguimiento de la solicitud
-      }));
-      // Ordena las solicitudes por ID de forma descendente
-      formattedData.sort((a, b) => b.id - a.id);
-      setRequests(formattedData); // Guarda las solicitudes formateadas en el estado
-      setLoading(false); // Establece que la carga ha finalizado
+        // Formatea los datos obtenidos para mostrarlos en la tabla
+        const formattedData = data?.solicitudes?.map((solicitud) => ({
+          id: solicitud.codigo, // ID de la solicitud
+          tramite: solicitud.tramite.titulo, // Título del trámite
+          fecha: formatDate(solicitud.createdAt, 3), // Fecha de la solicitud formateada
+          estado: <StatusTag status={solicitud.estado} />, // Muestra el estado con el componente StatusTag
+          acciones: (
+            <Link to={`${solicitud.codigo}`} className="text-blue-500 underline">
+              Seguimiento
+            </Link>
+          ), // Enlace para ver el seguimiento de la solicitud
+        }));
+        // Ordena las solicitudes por ID de forma descendente
+        formattedData.sort((a, b) => b.id - a.id);
+        setRequests(formattedData); // Guarda las solicitudes formateadas en el estado
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setLoading(false); // Establece que la carga ha finalizado
+      }
     })();
   }, [sessionData, currentPage]); // Solo se vuelve a ejecutar cuando cambia el RUT
 
@@ -59,24 +66,27 @@ const Requests = () => {
   };
 
   return (
-    <Container>
-      {' '}
-      {/* Contenedor del componente */}
-      <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <Heading level={2}>Solicitudes realizadas</Heading> {/* Título de la página */}
-      {!loading ? (
-        <div className="overflow-scroll">
-          <BaseTable table={table} />
-          <Pagination
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            totalPages={totalPages}
-          />
-        </div>
-      ) : (
-        <p>Cargando solicitudes...</p>
-      )}
-    </Container>
+    <>
+      <LoadingOverlay show={loading} text="Cargando solicitudes..." />
+      <Container>
+        {' '}
+        {/* Contenedor del componente */}
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <Heading level={2}>Solicitudes realizadas</Heading> {/* Título de la página */}
+        {!loading ? (
+          <div className="overflow-scroll">
+            <BaseTable table={table} />
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+          </div>
+        ) : (
+          <p>Cargando solicitudes...</p>
+        )}
+      </Container>
+    </>
   );
 };
 

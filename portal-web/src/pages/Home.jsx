@@ -9,6 +9,7 @@ import { FaInfoCircle } from 'react-icons/fa';
 import { obtenerDireccionesMunicipales } from '../services/direccionesMunicipales.service';
 import SearchBar from '../components/ui/SearchBar';
 import Dropdown from '../components/ui/Dropdown';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 const Home = () => {
   // Declaración del estado para almacenar los procedimientos.
@@ -37,6 +38,7 @@ const Home = () => {
 
   return (
     <>
+      <LoadingOverlay show={loading} text="Cargando solicitudes..." />
       {/* Sección de encabezado con una imagen de fondo */}
       <div
         style={{ backgroundPosition: 'center 70%' }}

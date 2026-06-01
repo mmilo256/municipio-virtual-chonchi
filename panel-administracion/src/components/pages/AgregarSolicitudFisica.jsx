@@ -8,6 +8,7 @@ import Button from '../ui/Button';
 import { camposContacto } from '../../utils/camposContacto';
 import { sanitizarValor } from '../../utils/sanitizadores';
 import { agregarSolicitud } from '../../services/solicitudes.service';
+import LoadingOverlay from '../ui/LoadingOverlay';
 
 const AgregarSolicitudFisica = () => {
   const [tramite, setTramite] = useState({});
@@ -97,77 +98,80 @@ const AgregarSolicitudFisica = () => {
   };
 
   return (
-    <div className="max-w-[60rem] mx-auto">
-      <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <div className="my-4">
-        <h1 className="text-2xl font-bold">Agregar solicitud física</h1>
-        <h2 className="text-xl font-bold text-slate-500">Trámite: {tramite.titulo}</h2>
-      </div>
-      <form className="grid grid-cols-5 gap-x-6" action="">
-        <div className="col-span-2">
-          <h3 className="text-xl font-bold mb-2">Datos del solicitante</h3>
-          <div className="mb-4 flex flex-col gap-y-2">
-            {camposContacto?.map((campo) => (
-              <InputRenderer
-                key={campo.id}
-                obligatorio={campo.obligatorio}
-                onChange={(e) => {
-                  handleChange(campo, e.target.value);
-                }}
-                textoAyuda={campo.texto_ayuda}
-                config={campo.config}
-                placeholder={campo.placeholder}
-                opciones={campo.opciones}
-                etiqueta={campo.etiqueta}
-                slug={campo.nombre_interno}
-                tipo={campo.tipo}
-                value={respuestas[campo.nombre_interno]?.valor}
-              />
+    <>
+      <LoadingOverlay show={loading} text="Cargando formulario..." />
+      <div className="max-w-[60rem] mx-auto">
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="my-4">
+          <h1 className="text-2xl font-bold">Agregar solicitud física</h1>
+          <h2 className="text-xl font-bold text-slate-500">Trámite: {tramite.titulo}</h2>
+        </div>
+        <form className="grid grid-cols-5 gap-x-6" action="">
+          <div className="col-span-2">
+            <h3 className="text-xl font-bold mb-2">Datos del solicitante</h3>
+            <div className="mb-4 flex flex-col gap-y-2">
+              {camposContacto?.map((campo) => (
+                <InputRenderer
+                  key={campo.id}
+                  obligatorio={campo.obligatorio}
+                  onChange={(e) => {
+                    handleChange(campo, e.target.value);
+                  }}
+                  textoAyuda={campo.texto_ayuda}
+                  config={campo.config}
+                  placeholder={campo.placeholder}
+                  opciones={campo.opciones}
+                  etiqueta={campo.etiqueta}
+                  slug={campo.nombre_interno}
+                  tipo={campo.tipo}
+                  value={respuestas[campo.nombre_interno]?.valor}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="bg-[#fff] p-8 rounded border col-span-3">
+            {formulario?.pasos_formularios?.map((paso, index) => (
+              <div key={paso.id}>
+                <h3 className="text-xl font-bold mb-2">
+                  {index + 1}. {paso.titulo}
+                </h3>
+                <div className="mb-4 flex flex-col gap-y-2">
+                  {paso?.campos_formularios?.map((campo) => (
+                    <InputRenderer
+                      tipo={campo.tipo}
+                      onChange={(e) => {
+                        if (campo.tipo === 'file') {
+                          handleChange(campo, e.target.files[0] || null);
+                        } else {
+                          handleChange(campo, e.target.value);
+                        }
+                      }}
+                      config={campo.config}
+                      obligatorio={campo.obligatorio}
+                      placeholder={campo.placeholder}
+                      opciones={campo.opciones}
+                      textoAyuda={campo.textoAyuda}
+                      slug={campo.nombre_interno}
+                      etiqueta={campo.etiqueta}
+                      value={respuestas[campo.nombre_interno]?.valor}
+                      key={campo.id}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
-        </div>
-        <div className="bg-[#fff] p-8 rounded border col-span-3">
-          {formulario?.pasos_formularios?.map((paso, index) => (
-            <div key={paso.id}>
-              <h3 className="text-xl font-bold mb-2">
-                {index + 1}. {paso.titulo}
-              </h3>
-              <div className="mb-4 flex flex-col gap-y-2">
-                {paso?.campos_formularios?.map((campo) => (
-                  <InputRenderer
-                    tipo={campo.tipo}
-                    onChange={(e) => {
-                      if (campo.tipo === 'file') {
-                        handleChange(campo, e.target.files[0] || null);
-                      } else {
-                        handleChange(campo, e.target.value);
-                      }
-                    }}
-                    config={campo.config}
-                    obligatorio={campo.obligatorio}
-                    placeholder={campo.placeholder}
-                    opciones={campo.opciones}
-                    textoAyuda={campo.textoAyuda}
-                    slug={campo.nombre_interno}
-                    etiqueta={campo.etiqueta}
-                    value={respuestas[campo.nombre_interno]?.valor}
-                    key={campo.id}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-end col-span-full mt-4">
-          <Button
-            isLoading={loading}
-            onClick={onSubmit}
-            variant="secondary"
-            text="Subir solicitud"
-          />
-        </div>
-      </form>
-    </div>
+          <div className="flex justify-end col-span-full mt-4 mb-10">
+            <Button
+              isLoading={loading}
+              onClick={onSubmit}
+              variant="secondary"
+              text="Subir solicitud"
+            />
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

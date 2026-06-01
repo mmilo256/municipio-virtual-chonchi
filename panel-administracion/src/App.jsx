@@ -65,35 +65,37 @@ const App = () => {
   }
 
   return (
-    <div className="bg-white text-black min-h-dvh">
-      <Routes>
-        <Route path="login" element={<Login />} />
-        <Route
-          element={
-            <Protected>
-              <Layout procedures={procedures} />
-            </Protected>
-          }
-        >
-          <Route index element={<Home loading={loading} procedures={procedures} />} />
-          <Route path="/admin/admin" element={<Navigate to="/" replace />} />
-          <Route path="/funcionarios/*" element={<RutasGestionFuncionarios />} />
-          <Route path="/tramites/*" element={<RutasGestionTramites />} />
-          <Route path="/formularios/*" element={<RutasGestionFormularios />} />
-          {/* <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} /> */}
-          <Route path="/:slug" element={<Solicitudes />} />
-          <Route path="/:slug/agregar-solicitud-fisica" element={<AgregarSolicitudFisica />} />
-          <Route path="/:slug/:codigo" element={<DetalleSolicitud />} />
-          <Route path="/:slug/:codigo/subir-documento" element={<SubirDocumento />} />
-          <Route path="/:slug/:codigo/aprobar" element={<AprobarSolicitud />} />
-          <Route path="/:slug/:codigo/rechazar" element={<RechazarSolicitud />} />
-          <Route path="/:slug/:codigo/solicitar-correccion" element={<SolicitarCorreccion />} />
-          {/* 
+    <>
+      <div className="bg-white text-black min-h-dvh">
+        <Routes>
+          <Route path="login" element={<Login />} />
+          <Route
+            element={
+              <Protected>
+                <Layout procedures={procedures} />
+              </Protected>
+            }
+          >
+            <Route index element={<Home loading={loading} procedures={procedures} />} />
+            <Route path="/admin/admin" element={<Navigate to="/" replace />} />
+            <Route path="/funcionarios/*" element={<RutasGestionFuncionarios />} />
+            <Route path="/tramites/*" element={<RutasGestionTramites />} />
+            <Route path="/formularios/*" element={<RutasGestionFormularios />} />
+            {/* <Route path="/permisos-transitorios/*" element={<RutasPermisosTransitorios />} /> */}
+            <Route path="/:slug" element={<Solicitudes />} />
+            <Route path="/:slug/agregar-solicitud-fisica" element={<AgregarSolicitudFisica />} />
+            <Route path="/:slug/:codigo" element={<DetalleSolicitud />} />
+            <Route path="/:slug/:codigo/subir-documento" element={<SubirDocumento />} />
+            <Route path="/:slug/:codigo/aprobar" element={<AprobarSolicitud />} />
+            <Route path="/:slug/:codigo/rechazar" element={<RechazarSolicitud />} />
+            <Route path="/:slug/:codigo/solicitar-correccion" element={<SolicitarCorreccion />} />
+            {/* 
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
           <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} /> */}
-        </Route>
-      </Routes>
-    </div>
+          </Route>
+        </Routes>
+      </div>
+    </>
   );
 };
 

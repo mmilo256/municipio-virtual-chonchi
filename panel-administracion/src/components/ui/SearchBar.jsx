@@ -1,20 +1,27 @@
-const SearchBar = ({ search, setSearch }) => {
+import { useState } from 'react';
+import Button from './Button';
+
+const SearchBar = ({ setSearch, placeholder = 'Buscar...', className }) => {
+  const [inputValue, setInputValue] = useState('');
+
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(search);
+    setInputValue('');
+    setSearch(inputValue);
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex gap-2">
+    <form onSubmit={onSubmit} className="flex items-start gap-2">
       <input
-        placeholder="Buscar por nombre o RUT de la organización"
-        className="border border-slate-400 outline-none focus:border-blue-400 rounded p-1 w-[40rem]"
+        placeholder={placeholder}
+        className={`border border-slate-400 outline-none focus:border-blue-400 rounded p-2 w-[40rem] ${className}`}
         type="text"
-        value={search}
+        value={inputValue}
         onChange={(e) => {
-          setSearch(e.target.value);
+          setInputValue(e.target.value);
         }}
       />
+      <Button type="submit" text="Buscar" variant="primary" />
     </form>
   );
 };

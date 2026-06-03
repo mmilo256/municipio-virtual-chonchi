@@ -52,8 +52,6 @@ const Solicitudes = () => {
           );
           setTramite(response.tramite);
           const formattedRows = response?.rows?.map((row) => {
-            console.log(row);
-
             return {
               codigo: row.codigo,
               rut_organizacion: row?.respuestas[1]?.valor,
@@ -113,16 +111,19 @@ const Solicitudes = () => {
     })();
   }, [slug, filtrosActuales, paginaActual, navigate, search]);
 
-  const columns = [
-    'Código',
-    'RUT organización',
-    'Nombre organización',
-    'Solicitante',
-    'Fecha de solicitud',
-    'Estado',
-    'Origen',
-    'Acciones',
-  ];
+  const columns =
+    slug === 'permisos-transitorios'
+      ? [
+          'Código',
+          'RUT organización',
+          'Nombre organización',
+          'Solicitante',
+          'Fecha de solicitud',
+          'Estado',
+          'Origen',
+          'Acciones',
+        ]
+      : ['Código', 'Solicitante', 'Fecha de solicitud', 'Estado', 'Origen', 'Acciones'];
 
   return (
     <>

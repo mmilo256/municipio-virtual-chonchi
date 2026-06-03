@@ -37,12 +37,7 @@ const DetalleSolicitud = () => {
 
   const observacion = solicitud?.solicitud?.observacion;
 
-  const historialSolicitud = solicitud?.historialEstados?.map((item, index) => ({
-    fecha: item.createdAt,
-    estado: item.estado,
-    id: item.id,
-    activo: index === solicitud?.historialEstados?.length - 1 ? true : false,
-  }));
+  const historialSolicitud = solicitud?.historialEstados;
 
   const infoSolicitud = solicitud.solicitud;
   const pasosFormulario = infoSolicitud?.tramite?.formulario?.pasos_formularios ?? [];
@@ -251,8 +246,8 @@ const DetalleSolicitud = () => {
           </div>
         </div>
         {/* Datos de la solicitud */}
-        <div className="grid grid-cols-3 gap-x-4 my-6">
-          <div className="col-span-2">
+        <div className="grid grid-cols-5 gap-x-4 my-6">
+          <div className="col-span-3">
             <h2 className="text-xl font-semibold mb-2">Datos de la solicitud</h2>
             <div className="bg-[#fff] p-6 rounded shadow shadow-slate-400">
               {pasosFormulario.map((paso) => (
@@ -290,9 +285,9 @@ const DetalleSolicitud = () => {
 
           {/* TRAZABILIDAD SOLICITUD */}
           {historialSolicitud && (
-            <div>
+            <div className="col-span-2">
               <h2 className="text-xl font-semibold mb-2">Seguimiento</h2>
-              <div className="bg-[#fff] p-6 rounded shadow shadow-slate-400">
+              <div className="bg-[#fff] rounded shadow shadow-slate-400">
                 <StatusTracker data={historialSolicitud} />
               </div>
             </div>

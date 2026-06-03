@@ -77,8 +77,6 @@ const CorregirSolicitud = () => {
       }
     });
 
-    console.log('Errores encontrados:', errores);
-
     return Object.keys(errores).length === 0;
   };
 

@@ -47,8 +47,7 @@ const RechazarSolicitud = () => {
     };
 
     try {
-      const res = await rechazarSolicitud(codigo, data);
-      console.log(res);
+      await rechazarSolicitud(codigo, data);
       navigate(`../${slug}/${codigo}`);
     } catch (error) {
       console.log(error);

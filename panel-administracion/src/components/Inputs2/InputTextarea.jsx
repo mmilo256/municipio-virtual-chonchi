@@ -44,7 +44,7 @@ const InputTextarea = ({
           <span className="text-xs text-slate-500">{textoAyuda}</span>
         )}
         <span className="text-xs text-slate-500">
-          {value.length}/{config?.maxLength?.value}
+          {value.length}/{config?.maxLength?.value && JSON.parse(config?.maxLength?.value)}
         </span>
       </div>
     </label>

@@ -1,6 +1,6 @@
 const BaseTable = ({ data = [], columns = [] }) => {
   return (
-    <div className="border rounded border-slate-400">
+    <div className="border rounded border-slate-300">
       <table className="w-full overflow-hidden rounded min-w-[50rem]">
         <thead>
           <tr className="text-left bg-primary text-white text-sm">

@@ -805,7 +805,7 @@ export const actualizarEstadoSolicitud = async (req, res) => {
 
     await HistorialEstadosSolicitudes.create({
       estado,
-      accion: ACCIONES_SOLICITUD.SOLICITUD_SUBIDA_POR_FUNCIONARIO,
+      accion: ACCIONES_SOLICITUD.SOLICITUD_EN_REVISION,
       solicitud_id: solicitud.id,
       mensaje: null,
       metadata: null,
@@ -906,6 +906,7 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
       where: {
         solicitud_id: solicitud.id,
       },
+      include: [{ model: Funcionario, attributes: ['nombres', 'apellidos'] }],
       transaction: t,
     });
 

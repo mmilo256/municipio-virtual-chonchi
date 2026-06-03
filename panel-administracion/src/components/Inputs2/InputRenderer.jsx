@@ -3,10 +3,6 @@ import InputText from './InputText';
 import InputTextarea from './InputTextarea';
 import InputSelect from './InputSelect';
 import InputFile from './InputFile';
-import InputDate from './InputDate';
-import InputRadio from './InputRadio';
-import InputCheckbox from './InputCheckbox';
-import InputCheckboxGroup from './InputCheckboxGroup';
 
 const InputRenderer = ({
   etiqueta = '',
@@ -24,59 +20,9 @@ const InputRenderer = ({
   className,
 }) => {
   switch (tipo) {
-    case 'checkboxGroup':
-      return (
-        <InputCheckboxGroup
-          mostrarErrores={mostrarErrores}
-          obligatorio={obligatorio}
-          tipo={tipo}
-          disabled={disabled}
-          textoAyuda={textoAyuda}
-          etiqueta={etiqueta}
-          config={config}
-          slug={slug}
-          opciones={JSON.parse(opciones)}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case 'checkbox':
-      return (
-        <InputCheckbox
-          mostrarErrores={mostrarErrores}
-          tipo={tipo}
-          etiqueta={etiqueta}
-          obligatorio={obligatorio}
-          disabled={disabled}
-          textoAyuda={textoAyuda}
-          value={value}
-          onChange={onChange}
-          slug={slug}
-          placeholder={placeholder}
-          config={config}
-          className={className}
-        />
-      );
     case 'text':
       return (
         <InputText
-          mostrarErrores={mostrarErrores}
-          tipo={tipo}
-          etiqueta={etiqueta}
-          obligatorio={obligatorio}
-          disabled={disabled}
-          textoAyuda={textoAyuda}
-          value={value}
-          onChange={onChange}
-          slug={slug}
-          placeholder={placeholder}
-          config={config}
-          className={className}
-        />
-      );
-    case 'date':
-      return (
-        <InputDate
           mostrarErrores={mostrarErrores}
           tipo={tipo}
           etiqueta={etiqueta}
@@ -127,22 +73,6 @@ const InputRenderer = ({
     case 'file':
       return (
         <InputFile
-          mostrarErrores={mostrarErrores}
-          obligatorio={obligatorio}
-          tipo={tipo}
-          disabled={disabled}
-          textoAyuda={textoAyuda}
-          etiqueta={etiqueta}
-          config={config}
-          slug={slug}
-          opciones={JSON.parse(opciones)}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case 'radio':
-      return (
-        <InputRadio
           mostrarErrores={mostrarErrores}
           obligatorio={obligatorio}
           tipo={tipo}

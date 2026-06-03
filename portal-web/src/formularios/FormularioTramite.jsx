@@ -56,7 +56,7 @@ const FormularioTramite = () => {
     })();
   }, [slug]);
 
-  const pasosOriginales = formulario.pasos_formularios || [];
+  const pasosOriginales = formulario?.pasos_formularios || [];
 
   const newPasos = [
     {

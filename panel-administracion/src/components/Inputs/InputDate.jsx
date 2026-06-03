@@ -1,16 +1,18 @@
+import React from 'react';
 import { useState } from 'react';
 import { validarCampo } from '../../utils/validaciones';
 
-const InputTextarea = ({
+const InputDate = ({
   etiqueta,
+  disabled,
+  mostrarErrores,
   value,
+  tipo,
   onChange,
   slug,
   placeholder,
-  mostrarErrores,
-  tipo,
-  textoAyuda,
   obligatorio,
+  textoAyuda,
   config,
   className,
 }) => {
@@ -24,31 +26,28 @@ const InputTextarea = ({
         {etiqueta}{' '}
         {!obligatorio && <span className="pl-1 text-slate-400 font-normal">(opcional)</span>}
       </p>
-      <textarea
+      <input
         value={value}
+        onChange={onChange}
         onBlur={() => {
           setTouched(true);
         }}
-        onChange={onChange}
         id={slug}
         name={slug}
+        disabled={disabled}
+        type={tipo}
         placeholder={placeholder}
         minLength={config?.minLength?.value}
         maxLength={config?.maxLength?.value}
-        className={`border ${error ? 'outline-red-400' : 'outline-blue-400'} w-full mb-0 p-2 rounded border-slate-300 ${className}`}
+        className={`border ${error ? 'outline-red-400' : 'outline-blue-400'} w-full p-2 rounded border-slate-300 ${className}`}
       />
-      <div className="flex justify-between">
-        {error ? (
-          <span className="text-xs text-red-500">{error}</span>
-        ) : (
-          <span className="text-xs text-slate-500">{textoAyuda}</span>
-        )}
-        <span className="text-xs text-slate-500">
-          {value.length}/{config?.maxLength?.value}
-        </span>
-      </div>
+      {error ? (
+        <span className="text-xs text-red-500">{error}</span>
+      ) : (
+        <span className="text-xs text-slate-500">{textoAyuda}</span>
+      )}
     </label>
   );
 };
 
-export default InputTextarea;
+export default InputDate;

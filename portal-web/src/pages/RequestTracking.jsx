@@ -40,7 +40,7 @@ const RequestTracking = () => {
     { label: `Solicitud ${codigo}`, href: `/solicitudes/${slug}/${codigo}` },
   ];
 
-  const setMessage = (status) => {
+  const setMessage = (status, observacion) => {
     let message;
     switch (status) {
       case 'pendiente':
@@ -50,7 +50,14 @@ const RequestTracking = () => {
         message = 'Su solicitud está siendo revisada por un funcionario.';
         break;
       case 'requiere correccion':
-        message = 'Se requiere una acción del usuario para poder continuar con la solicitud';
+        message = (
+          <span className="flex flex-col">
+            <span className="mb-2">Se requiere corrección por parte del usuario</span>
+            <span className="text-violet-700 p-2 bg-violet-50 rounded">
+              <strong>Observaciones:</strong> {observacion}
+            </span>
+          </span>
+        );
         break;
       case 'rechazada':
         message = 'Su solicitud ha sido rechazada. Por favor, revise los motivos del rechazo.';
@@ -75,7 +82,7 @@ const RequestTracking = () => {
           fecha: item.createdAt,
           estado: item.estado,
           id: item.id,
-          mensaje: setMessage(item.estado),
+          mensaje: setMessage(item.estado, item.mensaje),
           activo: index === rawH.length - 1 ? true : false,
         }));
         setHistorial(formattedHistorial);

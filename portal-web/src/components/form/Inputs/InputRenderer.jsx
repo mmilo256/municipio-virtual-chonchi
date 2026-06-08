@@ -18,6 +18,7 @@ const InputRenderer = ({
   placeholder,
   opciones = '[]',
   mostrarErrores,
+  contexto = {},
   obligatorio,
   textoAyuda,
   config = [],
@@ -65,6 +66,7 @@ const InputRenderer = ({
           etiqueta={etiqueta}
           obligatorio={obligatorio}
           disabled={disabled}
+          contexto={contexto}
           textoAyuda={textoAyuda}
           value={value}
           onChange={onChange}
@@ -163,6 +165,7 @@ const InputRenderer = ({
           etiqueta={etiqueta}
           textoAyuda={textoAyuda}
           obligatorio={obligatorio}
+          contexto={contexto}
           disabled={disabled}
           tipo={tipo}
           value={value}

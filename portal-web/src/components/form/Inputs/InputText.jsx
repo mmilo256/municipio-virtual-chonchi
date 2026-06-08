@@ -9,6 +9,7 @@ const InputText = ({
   tipo,
   onChange,
   slug,
+  contexto,
   placeholder,
   obligatorio,
   textoAyuda,
@@ -17,7 +18,8 @@ const InputText = ({
 }) => {
   const [touched, setTouched] = useState(false);
 
-  const error = touched || mostrarErrores ? validarCampo(tipo, value, config, obligatorio) : null;
+  const error =
+    touched || mostrarErrores ? validarCampo(tipo, value, config, obligatorio, contexto) : null;
 
   return (
     <label htmlFor={slug}>

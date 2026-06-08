@@ -28,7 +28,7 @@ const FormularioTramite = () => {
   const [respuestas, setRespuestas] = useState({});
   const [infoContacto, setInfoContacto] = useState({
     nombreCompleto: userNombreCompleto || '',
-    rut: user.run || '',
+    rut: user?.run || '',
     email: '',
     telefono: '',
     direccion: '',
@@ -107,7 +107,7 @@ const FormularioTramite = () => {
 
       camposContacto.forEach((campo) => {
         const valor = infoContacto[campo.nombre_interno];
-        const error = validarCampo(campo.tipo, valor, campo.config, campo.obligatorio);
+        const error = validarCampo(campo.tipo, valor, campo.config, campo.obligatorio, { user });
 
         if (error) {
           errores[campo.nombre_interno] = error;
@@ -123,7 +123,9 @@ const FormularioTramite = () => {
 
       campos.forEach((campo) => {
         const valor = respuestasAValidar[campo.nombre_interno];
-        const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio);
+        const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio, {
+          user,
+        });
 
         if (error) {
           errores[campo.nombre_interno] = error;
@@ -263,6 +265,7 @@ const FormularioTramite = () => {
                       textoAyuda={campo.texto_ayuda}
                       opciones={campo.opciones}
                       config={campo.config}
+                      contexto={{ user }}
                       obligatorio={campo.obligatorio}
                       etiqueta={campo.etiqueta}
                       value={infoContacto[campo.nombre_interno] || ''}
@@ -281,6 +284,7 @@ const FormularioTramite = () => {
                         mostrarErrores={mostrarErroresPaso}
                         placeholder={campo.placeholder}
                         textoAyuda={campo.texto_ayuda}
+                        contexto={{ user }}
                         opciones={campo.opciones}
                         config={JSON.parse(campo.config)}
                         obligatorio={campo.obligatorio}

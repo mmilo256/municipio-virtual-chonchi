@@ -27,12 +27,11 @@ const Home = () => {
 
   return (
     <div>
-      {/* <Alert type="warning" text="Hay cosas pendientes" /> */}
       <main>
         <Breadcrumbs />
         <p className="text-4xl my-4">Bienvenido(a), {sessionData.nombres}</p>
         <HomeSection title="Solicitudes por trámite">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-2">
             {!loading ? (
               procedures.map((procedure, index) => {
                 return (

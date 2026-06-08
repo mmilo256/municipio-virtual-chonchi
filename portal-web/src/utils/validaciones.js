@@ -1,4 +1,4 @@
-export const validarCampo = (tipo, valor, config, obligatorio) => {
+export const validarCampo = (tipo, valor, config, obligatorio, contexto = {}) => {
   switch (tipo) {
     case 'text':
       return validarTexto(valor, config, obligatorio);
@@ -9,7 +9,7 @@ export const validarCampo = (tipo, valor, config, obligatorio) => {
     case 'phone':
       return validarTelefono(valor, config, obligatorio);
     case 'rut':
-      return validarRut(valor, config, obligatorio);
+      return validarRut(valor, config, obligatorio, contexto);
     case 'select':
       return validarSelect(valor, config, obligatorio);
     case 'file':
@@ -159,7 +159,7 @@ const validarSelect = (valor = '', config = {}, obligatorio) => {
   }
 };
 
-const validarRut = (valor = '', config = {}, obligatorio) => {
+const validarRut = (valor = '', config = {}, obligatorio, contexto) => {
   if (obligatorio && valor.length <= 0) {
     return 'Este campo es obligatorio';
   }
@@ -176,6 +176,14 @@ const validarRut = (valor = '', config = {}, obligatorio) => {
     const regex = new RegExp(config.regex.value);
     if (!regex.test(valor)) {
       return config.regex.mensaje;
+    }
+  }
+
+  if (config.igualUsuario?.value) {
+    const rutUsuario = contexto?.user?.run;
+
+    if (!rutUsuario || valor !== rutUsuario) {
+      return config.igualUsuario.mensaje;
     }
   }
 };

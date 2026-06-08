@@ -252,32 +252,36 @@ const DetalleSolicitud = () => {
             <div className="bg-[#fff] p-6 rounded shadow shadow-slate-400">
               {pasosFormulario.map((paso) => (
                 <Accordion init key={paso.titulo} title={paso.titulo}>
-                  {paso.campos_formularios.map((campo) => {
-                    const documento = documentos?.find((doc) => doc.campo_id === campo.id);
-                    return (
-                      <p key={campo.id}>
-                        <strong>{campo.etiqueta}</strong>:{' '}
-                        {campo.tipo === 'file' ? (
-                          documento ? (
-                            <a
-                              target="_blank"
-                              href={`${API_URL}/documentos/${documento.id}/view`}
-                              className="text-blue-500 underline"
-                              rel="noreferrer"
-                            >
-                              Ver documento
-                            </a>
+                  <div className="space-y-3">
+                    {paso.campos_formularios.map((campo) => {
+                      const documento = documentos?.find((doc) => doc.campo_id === campo.id);
+                      return (
+                        <p key={campo.id}>
+                          <strong>{campo.etiqueta}</strong>:{' '}
+                          {campo.tipo === 'file' ? (
+                            documento ? (
+                              <a
+                                target="_blank"
+                                href={`${API_URL}/documentos/${documento.id}/view`}
+                                className="text-blue-500 underline"
+                                rel="noreferrer"
+                              >
+                                Ver documento
+                              </a>
+                            ) : (
+                              <span className="text-slate-400">No adjuntado</span>
+                            )
+                          ) : campo.tipo === 'date' ? (
+                            <span>
+                              {formatDate(respuestas[campo.id], 'DD [de] MMMM [de] YYYY')}
+                            </span>
                           ) : (
-                            <span className="text-slate-400">No adjuntado</span>
-                          )
-                        ) : campo.tipo === 'date' ? (
-                          <span>{formatDate(respuestas[campo.id], 'DD [de] MMMM [de] YYYY')}</span>
-                        ) : (
-                          <span>{respuestas[campo.id]}</span>
-                        )}
-                      </p>
-                    );
-                  })}
+                            <span>{respuestas[campo.id]}</span>
+                          )}
+                        </p>
+                      );
+                    })}
+                  </div>
                 </Accordion>
               ))}
             </div>

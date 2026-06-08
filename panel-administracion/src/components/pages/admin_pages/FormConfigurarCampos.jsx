@@ -47,6 +47,16 @@ const FormConfigurarCampos = () => {
     })();
   }, [id, pasoId]);
 
+  const resetCampos = () => {
+    setEtiqueta('');
+    setSlug('');
+    setPlaceholder('');
+    setTipoCampo('');
+    setOpciones('');
+    setTextoAyuda('');
+    setObligatorio(true);
+  };
+
   // BREADCRUMBS
   let breadcrumbs;
 
@@ -84,6 +94,7 @@ const FormConfigurarCampos = () => {
         obligatorio,
       },
     ]);
+    resetCampos();
   };
 
   const guardarCambios = async () => {

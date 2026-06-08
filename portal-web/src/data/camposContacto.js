@@ -88,7 +88,7 @@ export const camposContacto = [
     etiqueta: 'Dirección',
     placeholder: 'Calle 123, Chonchi',
     texto_ayuda: '',
-    obligatorio: true,
+    obligatorio: false,
     opciones: [],
     config: {
       minLength: {

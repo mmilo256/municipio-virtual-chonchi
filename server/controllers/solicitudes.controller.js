@@ -831,6 +831,7 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
   try {
     const { codigo } = req.params;
     const solicitud = await Solicitud.findOne({
+      order: [[Tramite, Formulario, PasoFormulario, 'orden', 'ASC']],
       attributes: [
         'id',
         'codigo',

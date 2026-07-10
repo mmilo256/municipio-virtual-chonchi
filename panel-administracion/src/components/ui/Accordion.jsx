@@ -12,16 +12,14 @@ const Accordion = ({ title, children, init = false }) => {
     <div className="mb-2 border rounded">
       <button
         onClick={toggleOpen}
-        className="bg-[#fff] hover:bg-sky-50 w-full rounded text-left p-2 flex items-center gap-2"
+        className="bg-primary text-white hover:bg-primaryHover w-full rounded text-left p-2 flex items-center gap-2"
       >
         <span className={` transition-all ${open ? 'rotate-0' : '-rotate-90'}`}>
           <IoMdArrowDropdown size={20} />
         </span>
         <span className="font-black">{title}</span>
       </button>
-      <div
-        className={`bg-slate-50 border-t ${open ? 'p-2 h-auto' : 'h-0'} rounded-b overflow-hidden`}
-      >
+      <div className={`border-t ${open ? 'p-2 h-auto' : 'h-0'} rounded-b overflow-hidden`}>
         {children}
       </div>
     </div>

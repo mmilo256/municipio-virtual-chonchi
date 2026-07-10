@@ -8,6 +8,7 @@ export const obtenerFormularioPorId = async (req, res) => {
   const { id } = req.params;
   try {
     const form = await Formulario.findByPk(id, {
+      order: [[PasoFormulario, 'orden', 'ASC']],
       include: [
         {
           model: PasoFormulario,

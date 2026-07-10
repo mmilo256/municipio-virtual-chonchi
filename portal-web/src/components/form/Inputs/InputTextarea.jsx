@@ -35,7 +35,7 @@ const InputTextarea = ({
         placeholder={placeholder}
         minLength={config?.minLength?.value}
         maxLength={config?.maxLength?.value}
-        className={`border ${error ? 'outline-red-400' : 'outline-blue-400'} w-full mb-0 p-2 rounded border-slate-300 ${className}`}
+        className={`border ${error ? 'outline-red-400' : 'outline-blue-400'} w-full mb-0 p-2 h-24 rounded border-slate-300 ${className}`}
       />
       <div className="flex justify-between">
         {error ? (

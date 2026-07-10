@@ -252,11 +252,11 @@ const DetalleSolicitud = () => {
             <div className="bg-[#fff] p-6 rounded shadow shadow-slate-400">
               {pasosFormulario.map((paso) => (
                 <Accordion init key={paso.titulo} title={paso.titulo}>
-                  <div className="space-y-3">
+                  <div className="space-y-1">
                     {paso.campos_formularios.map((campo) => {
                       const documento = documentos?.find((doc) => doc.campo_id === campo.id);
                       return (
-                        <p key={campo.id}>
+                        <p key={campo.id} className="border-b border-slate-200">
                           <strong>{campo.etiqueta}</strong>:{' '}
                           {campo.tipo === 'file' ? (
                             documento ? (

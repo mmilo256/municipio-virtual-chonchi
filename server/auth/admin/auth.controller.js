@@ -1,3 +1,4 @@
+import logger from '../../config/winston.js';
 import { createEmployee, loginUser } from './auth.service.js';
 
 // Registrar un usuario
@@ -19,6 +20,7 @@ export const login = async (req, res) => {
   const { username, password } = req.body; // Obtiene el nombre de usuario y la contraseña del cuerpo de la solicitud
 
   try {
+    logger.info('Iniciando sesión...');
     const token = await loginUser(username, password);
 
     // Guardar token en cookies
@@ -29,8 +31,10 @@ export const login = async (req, res) => {
     });
 
     // Envía el token también en la respuesta JSON
+    logger.info('Sesión iniciada correctamente');
     res.status(200).json({ message: 'Usuario logueado exitosamente', token });
   } catch (error) {
+    logger.error('No se pudo iniciar sesión');
     res.status(500).json({
       error: error.message,
       message: 'No se pudo iniciar sesión', // Responde con el mensaje de error si ocurre un fallo

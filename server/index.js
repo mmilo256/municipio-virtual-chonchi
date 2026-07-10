@@ -9,6 +9,7 @@ import path from 'path'; // Utilidad para manipular rutas de archivos
 import portalApi from './api/portal.js';
 import adminApi from './api/admin.js';
 import { config } from './config/config.js';
+import logger from './config/winston.js';
 
 const port = 10000; // Definir puerto para el servidor
 const app = e(); // Crear la instancia de la aplicación Express
@@ -24,7 +25,9 @@ app.use('/documents', e.static(path.join(__dirname, 'documents')));
 //app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'documents/documentos-asociados')));
 
 // Inicializar base de datos (esto se realiza de forma asíncrona)
+logger.info('Iniciando conexión a base de datos...');
 await initializeDB();
+logger.info('Base de datos iniciada correctamente');
 
 app.use(e.json()); // Middleware para parsear el cuerpo de las solicitudes en formato JSON
 app.use(cookieParser()); // Middleware para parsear las cookies de las solicitudes
@@ -61,10 +64,24 @@ app.use(
   }),
 );
 
+logger.info('Registrando rutas...');
 app.use('/api/portal', portalApi);
 app.use('/api/admin', adminApi);
 
 // Inicializar el servidor y escuchar en el puerto configurado
+logger.info('Iniciando servidor...');
 app.listen(port, () => {
   console.log('Servidor levantado...');
+  logger.info(`Servidor iniciado correctamente en el puerto ${port}`);
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught Exception', {
+    message: err.message,
+    stack: err.stack,
+  });
+});
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled Rejection', reason);
 });

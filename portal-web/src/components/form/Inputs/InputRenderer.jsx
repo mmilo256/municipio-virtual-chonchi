@@ -7,11 +7,15 @@ import InputDate from './InputDate';
 import InputRadio from './InputRadio';
 import InputCheckbox from './InputCheckbox';
 import InputCheckboxGroup from './InputCheckboxGroup';
+import InputAgenda from './InputAgenda';
 
 const InputRenderer = ({
   etiqueta = '',
   value = '',
+  setAgenda,
+  fechas = [],
   onChange,
+  respuestas = {},
   disabled,
   tipo = 'text',
   slug = '',
@@ -21,10 +25,39 @@ const InputRenderer = ({
   contexto = {},
   obligatorio,
   textoAyuda,
-  config = [],
+  config = {},
   className,
 }) => {
+  const visibleWhen = config?.visibleWhen;
+
+  if (visibleWhen) {
+    const valorCampoRelacionado = respuestas[visibleWhen.campo_id];
+    if (valorCampoRelacionado !== visibleWhen.value) {
+      return null;
+    }
+  }
+
   switch (tipo) {
+    case 'agenda':
+      return (
+        <InputAgenda
+          mostrarErrores={mostrarErrores}
+          tipo={tipo}
+          fechas={fechas}
+          setAgenda={setAgenda}
+          etiqueta={etiqueta}
+          obligatorio={obligatorio}
+          disabled={disabled}
+          contexto={contexto}
+          textoAyuda={textoAyuda}
+          value={value}
+          onChange={onChange}
+          slug={slug}
+          placeholder={placeholder}
+          config={config}
+          className={className}
+        />
+      );
     case 'checkboxGroup':
       return (
         <InputCheckboxGroup

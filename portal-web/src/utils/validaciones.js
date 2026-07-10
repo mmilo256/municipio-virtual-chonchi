@@ -1,5 +1,7 @@
 export const validarCampo = (tipo, valor, config, obligatorio, contexto = {}) => {
   switch (tipo) {
+    case 'agenda':
+      return validarTexto(valor, config, obligatorio);
     case 'text':
       return validarTexto(valor, config, obligatorio);
     case 'textarea':

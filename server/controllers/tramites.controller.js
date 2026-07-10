@@ -14,6 +14,7 @@ export const obtenerFormularioPorSlugDeTramite = async (req, res) => {
     const { formulario_id, titulo, descripcion_corta } = await Tramite.findOne({ where: { slug } });
 
     const formulario = await Formulario.findByPk(formulario_id, {
+      order: [[PasoFormulario, 'orden', 'ASC']],
       include: [{ model: PasoFormulario, include: [{ model: CampoFormulario }] }],
     });
 

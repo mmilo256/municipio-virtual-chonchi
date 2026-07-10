@@ -83,13 +83,58 @@ const FormularioTramite = () => {
   const totalPasos = newPasos?.length - 1;
   const paso = newPasos?.[pasoActual];
 
+  const limpiarCamposOcultos = (respuestasActuales) => {
+    const nuevasRespuestas = { ...respuestasActuales };
+
+    newPasos.forEach((paso) => {
+      paso.campos_formularios.forEach((campo) => {
+        const config = parseConfig(campo.config);
+
+        if (!config.visibleWhen) return;
+
+        const { campo_id, value } = config.visibleWhen;
+
+        if (nuevasRespuestas[campo_id] !== value) {
+          nuevasRespuestas[campo.nombre_interno] = campo.tipo === 'checkboxGroup' ? [] : '';
+        }
+      });
+    });
+
+    return nuevasRespuestas;
+  };
+
+  const pasoTieneCamposVisibles = (paso, respuestas) => {
+    return paso.campos_formularios.some((campo) => {
+      const config = parseConfig(campo.config);
+
+      if (!config.visibleWhen) return true;
+
+      return respuestas[config.visibleWhen.campo_id] === config.visibleWhen.value;
+    });
+  };
+
+  useEffect(() => {
+    const paso = newPasos[pasoActual];
+
+    if (!paso || paso.tipoPaso !== 'dinamico') return;
+
+    if (!pasoTieneCamposVisibles(paso, respuestas)) {
+      setPasoActual((prev) => prev + 1);
+    }
+  }, [respuestas, pasoActual]);
+
   // Manejar cambio de estado de las respuestas
   const handleChange = (campo, valor) => {
     const nuevoValor = sanitizarValor(campo, valor);
-    setRespuestas((prev) => ({
-      ...prev,
-      [campo.nombre_interno]: nuevoValor,
-    }));
+
+    setRespuestas((prev) => {
+      const nuevasRespuestas = {
+        ...prev,
+        [campo.nombre_interno]: nuevoValor,
+      };
+
+      return limpiarCamposOcultos(nuevasRespuestas);
+    });
   };
 
   const handleChangeContacto = (campo, valor) => {
@@ -122,8 +167,20 @@ const FormularioTramite = () => {
       const errores = {};
 
       campos.forEach((campo) => {
+        const config = parseConfig(campo.config);
+
+        const visibleWhen = config?.visibleWhen;
+
+        if (visibleWhen) {
+          const valorCampoRelacionado = respuestasAValidar[visibleWhen.campo_id];
+
+          if (valorCampoRelacionado !== visibleWhen.value) {
+            return;
+          }
+        }
+
         const valor = respuestasAValidar[campo.nombre_interno];
-        const error = validarCampo(campo.tipo, valor, JSON.parse(campo.config), campo.obligatorio, {
+        const error = validarCampo(campo.tipo, valor, config, campo.obligatorio, {
           user,
         });
 
@@ -158,11 +215,24 @@ const FormularioTramite = () => {
 
   // Volver al paso anterior
   const volverAlPasoAnterior = () => {
-    if (pasoActual > 0) {
-      setPasoActual((prev) => prev - 1);
-    } else {
+    if (pasoActual === 0) {
       navigate('../' + slug);
+      return;
     }
+
+    let nuevoPaso = pasoActual - 1;
+
+    while (nuevoPaso > 0) {
+      const paso = newPasos[nuevoPaso];
+
+      if (paso.tipoPaso !== 'dinamico' || pasoTieneCamposVisibles(paso, respuestas)) {
+        break;
+      }
+
+      nuevoPaso--;
+    }
+
+    setPasoActual(nuevoPaso);
   };
 
   const enviarFormulario = async () => {
@@ -239,6 +309,199 @@ const FormularioTramite = () => {
     }
   };
 
+  // BORRAR
+  const fechas = [
+    {
+      fecha: '2026-06-15',
+      label: 'Lunes 15 de junio',
+      disponibles: 6,
+      bloques: [
+        {
+          inicio: '09:00',
+          termino: '09:20',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '09:20',
+          termino: '09:40',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '09:40',
+          termino: '10:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '10:00',
+          termino: '10:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '10:20',
+          termino: '10:40',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '10:40',
+          termino: '11:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:00',
+          termino: '11:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:20',
+          termino: '11:40',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '11:40',
+          termino: '12:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+      ],
+    },
+    {
+      fecha: '2026-06-22',
+      label: 'Lunes 22 de junio',
+      disponibles: 4,
+      bloques: [
+        {
+          inicio: '09:00',
+          termino: '09:20',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '09:20',
+          termino: '09:40',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '09:40',
+          termino: '10:00',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '10:00',
+          termino: '10:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '10:20',
+          termino: '10:40',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '10:40',
+          termino: '11:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:00',
+          termino: '11:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:20',
+          termino: '11:40',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '11:40',
+          termino: '12:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+      ],
+    },
+    {
+      fecha: '2026-06-29',
+      label: 'Lunes 29 de junio',
+      disponibles: 8,
+      bloques: [
+        {
+          inicio: '09:00',
+          termino: '09:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '09:20',
+          termino: '09:40',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '09:40',
+          termino: '10:00',
+          disponible: false,
+          estado: 'agendado',
+        },
+        {
+          inicio: '10:00',
+          termino: '10:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '10:20',
+          termino: '10:40',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '10:40',
+          termino: '11:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:00',
+          termino: '11:20',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:20',
+          termino: '11:40',
+          disponible: true,
+          estado: 'disponible',
+        },
+        {
+          inicio: '11:40',
+          termino: '12:00',
+          disponible: true,
+          estado: 'disponible',
+        },
+      ],
+    },
+  ];
+
+  const parseConfig = (config) => {
+    if (!config) return {};
+    if (typeof config !== 'object') return JSON.parse(config);
+    return config;
+  };
+
   return (
     <>
       <LoadingOverlay show={loading} text={loadingText} />
@@ -281,12 +544,14 @@ const FormularioTramite = () => {
                         tipo={campo.tipo}
                         key={campo.id}
                         slug={campo.slug}
+                        respuestas={respuestas}
+                        fechas={fechas}
                         mostrarErrores={mostrarErroresPaso}
                         placeholder={campo.placeholder}
                         textoAyuda={campo.texto_ayuda}
                         contexto={{ user }}
                         opciones={campo.opciones}
-                        config={JSON.parse(campo.config)}
+                        config={parseConfig(campo.config)}
                         obligatorio={campo.obligatorio}
                         etiqueta={campo.etiqueta}
                         value={

@@ -54,9 +54,6 @@ const defineAssociations = async () => {
   //Solicitud - Historial Estados Solicitud
   Solicitud.hasMany(HistorialEstadosSolicitudes, { foreignKey: 'solicitud_id' });
   HistorialEstadosSolicitudes.belongsTo(Solicitud, { foreignKey: 'solicitud_id' });
-  // Historial Estados Solicitud - Funcionario
-  Funcionario.hasMany(HistorialEstadosSolicitudes, { foreignKey: 'usuario_id' });
-  HistorialEstadosSolicitudes.belongsTo(Funcionario, { foreignKey: 'usuario_id' });
 };
 
 export default defineAssociations;

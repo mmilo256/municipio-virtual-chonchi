@@ -506,7 +506,14 @@ const FormularioTramite = () => {
     <>
       <LoadingOverlay show={loading} text={loadingText} />
       <div className="w-full max-w-5xl mx-auto p-6">
-        <h1 className="text-3xl font-medium text-secondary mb-1">{tramite?.titulo}</h1>
+        <h1
+          onClick={() => {
+            console.log(respuestas);
+          }}
+          className="text-3xl font-medium text-secondary mb-1"
+        >
+          {tramite?.titulo}
+        </h1>
         <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>
         <div className="grid grid-cols-3">
           <FormStepper className="hidden md:flex" pasos={newPasos} pasoActual={pasoActual} />

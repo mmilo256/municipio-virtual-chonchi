@@ -1,0 +1,8 @@
+{
+  "visibleWhen": {
+    "campo_id": "tipo-solicitante-j284i4j",
+    "value": "Persona jurídica"
+  },
+  "minLength": { "value": 3, "mensaje": "Debe tener como mínimo 3 caracteres" },
+  "maxLength": { "value": 100, "mensaje": "Debe tener máximo 100 caracteres" }
+}

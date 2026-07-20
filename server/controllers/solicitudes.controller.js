@@ -826,12 +826,12 @@ export const actualizarEstadoSolicitud = async (req, res) => {
 };
 
 export const obtenerSolicitudPorCodigo = async (req, res) => {
-  const t = await sequelize.transaction();
-  console.log(req.user);
   try {
     const { codigo } = req.params;
+
     const solicitud = await Solicitud.findOne({
-      order: [[Tramite, Formulario, PasoFormulario, 'orden', 'ASC']],
+      where: { codigo },
+
       attributes: [
         'id',
         'codigo',
@@ -849,7 +849,7 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
         'fecha_solicitud_correccion',
         'fecha_respuesta_correccion',
       ],
-      where: { codigo },
+
       include: [
         {
           model: Usuario,
@@ -896,32 +896,40 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
           ],
         },
       ],
-      transaction: t,
+
+      order: [[Tramite, Formulario, PasoFormulario, 'orden', 'ASC']],
     });
+
     if (!solicitud) {
-      await t.rollback();
-      return res.status(404).json({ error: true, message: 'No se pudo obtener la solicitud' });
+      return res.status(404).json({
+        error: true,
+        message: 'No se encontró la solicitud',
+      });
     }
 
     const historialEstados = await HistorialEstadosSolicitudes.findAll({
       where: {
         solicitud_id: solicitud.id,
       },
-      include: [{ model: Funcionario, attributes: ['nombres', 'apellidos'] }],
-      transaction: t,
+      order: [['createdAt', 'ASC']],
+      raw: true,
     });
 
-    await t.commit();
     return res.status(200).json({
-      data: { solicitud, historialEstados },
-      message: 'Historial obtenido correctamente',
+      error: false,
+      data: {
+        solicitud,
+        historialEstados,
+      },
+      message: 'Solicitud obtenida correctamente',
     });
   } catch (error) {
-    await t.rollback();
-    console.log(error);
-    return res
-      .status(500)
-      .json({ error: true, message: 'No se pudo obtener el historial de estados de la solicitud' });
+    console.error('Error al obtener la solicitud:', error);
+
+    return res.status(500).json({
+      error: true,
+      message: 'No se pudo obtener la solicitud',
+    });
   }
 };
 

@@ -628,6 +628,7 @@ export const subirDocumento = async (req, res) => {
       estado: 'activo',
       reemplazado_por_id: null,
       fecha_reemplazo: null,
+      funcionario_id: req.user.id,
     };
 
     const responseDocumentos = await Documento.create(documentoData);
@@ -858,6 +859,7 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
           model: Documento,
           where: { estado: 'activo' },
           required: false,
+          include: [{ model: Funcionario, required: false }],
         },
         {
           model: Respuesta,
@@ -915,11 +917,44 @@ export const obtenerSolicitudPorCodigo = async (req, res) => {
       raw: true,
     });
 
+    const completeInfo = await Promise.all(
+      historialEstados.map(async (item) => {
+        let usuarioNombre = 'Sistema';
+
+        if (item.usuario_id && item.usuario_tipo === 'funcionario') {
+          const funcionario = await Funcionario.findByPk(item.usuario_id, {
+            attributes: ['nombres', 'apellidos'],
+            raw: true,
+          });
+
+          if (funcionario) {
+            usuarioNombre = [funcionario.nombres, funcionario.apellidos].filter(Boolean).join(' ');
+          }
+        }
+
+        if (item.usuario_id && item.usuario_tipo === 'solicitante') {
+          const usuario = await Usuario.findByPk(item.usuario_id, {
+            attributes: ['nombres', 'apellidos'],
+            raw: true,
+          });
+
+          if (usuario) {
+            usuarioNombre = [usuario.nombres, usuario.apellidos].filter(Boolean).join(' ');
+          }
+        }
+
+        return {
+          ...item,
+          usuarioNombre,
+        };
+      }),
+    );
+
     return res.status(200).json({
       error: false,
       data: {
         solicitud,
-        historialEstados,
+        completeInfo,
       },
       message: 'Solicitud obtenida correctamente',
     });

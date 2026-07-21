@@ -32,7 +32,7 @@ const RequestTracking = () => {
   const pasos = solicitud.tramite?.formulario?.pasos_formularios ?? [];
 
   const respuestas = Object.fromEntries(
-    (solicitud.respuestas || []).map((r) => [r.campo_id, r.valor]),
+    (solicitud.respuestas || [])?.map((r) => [r.campo_id, r.valor]),
   );
 
   const breadcrumbs = [
@@ -76,9 +76,10 @@ const RequestTracking = () => {
       setLoading(true);
       try {
         const response = await obtenerSolicitudPorCodigo(codigo);
+        console.log(response);
         setSolicitud(response.data.solicitud);
-        const rawH = response.data.historialEstados;
-        const formattedHistorial = rawH.map((item, index) => ({
+        const rawH = response.data.completeInfo;
+        const formattedHistorial = rawH?.map((item, index) => ({
           fecha: item.createdAt,
           estado: item.estado,
           id: item.id,
@@ -87,6 +88,7 @@ const RequestTracking = () => {
         }));
         setHistorial(formattedHistorial);
       } catch (error) {
+        console.log(error);
         alert(error.message);
       } finally {
         setLoading(false);

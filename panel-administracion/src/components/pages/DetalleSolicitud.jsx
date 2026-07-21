@@ -11,7 +11,6 @@ import BaseTable from '../ui/BaseTable';
 import Button from '../ui/Button';
 import { API_URL } from '../../../config';
 import StatusTracker from '../ui/StatusTracker';
-import useAuthStore from '../../stores/useAuthStore';
 import { borrarDocumento } from '../../services/documents.service';
 import LoadingOverlay from '../ui/LoadingOverlay';
 import Modal from '../ui/Modal';
@@ -27,8 +26,6 @@ const DetalleSolicitud = () => {
 
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
 
-  const { sessionData } = useAuthStore();
-
   const navigate = useNavigate();
 
   const documentosAprobacion = solicitud?.solicitud?.documentos?.filter(
@@ -37,7 +34,7 @@ const DetalleSolicitud = () => {
 
   const observacion = solicitud?.solicitud?.observacion;
 
-  const historialSolicitud = solicitud?.historialEstados;
+  const historialSolicitud = solicitud?.completeInfo ?? [];
 
   const infoSolicitud = solicitud.solicitud;
   const pasosFormulario = infoSolicitud?.tramite?.formulario?.pasos_formularios ?? [];
@@ -85,7 +82,9 @@ const DetalleSolicitud = () => {
           </a>
         ),
         fecha: formatDate(doc.createdAt, 'DD [de] MMMM [de] YYYY, HH:mm'),
-        funcionario: `${sessionData.nombres} ${sessionData.apellidos}`,
+        funcionario: doc?.funcionario_id
+          ? `${doc?.funcionario?.nombres} ${doc?.funcionario?.apellidos}`
+          : '',
         accion: (
           <button
             onClick={() => {
@@ -292,7 +291,7 @@ const DetalleSolicitud = () => {
             <div className="col-span-2">
               <h2 className="text-xl font-semibold mb-2">Seguimiento</h2>
               <div className="bg-[#fff] rounded shadow shadow-slate-400">
-                <StatusTracker data={historialSolicitud} />
+                {<StatusTracker data={historialSolicitud} />}
               </div>
             </div>
           )}

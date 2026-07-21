@@ -43,11 +43,9 @@ const StatusTracker = ({ data }) => {
   return (
     <div className="flex flex-col gap-2">
       {data?.map((item) => {
-        const { titulo, mensaje } = setMensaje(item.accion);
+        const { titulo, mensaje } = setMensaje(item?.accion);
         const usuarioNombre =
-          item.usuario_tipo === 'solicitante'
-            ? 'El solicitante'
-            : `${item?.funcionario?.nombres} ${item?.funcionario?.apellidos}`;
+          item.usuario_tipo === 'solicitante' ? 'El solicitante' : `${item?.usuarioNombre}`;
 
         return (
           <article key={item.id} className="border-b rounded p-4 flex gap-2">

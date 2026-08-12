@@ -1,20 +1,6 @@
 {
-  "archivos": {
-    "activo": true,
-    "archivos": [
-      {
-        "etiqueta": "Decreto firmado",
-        "nombre_interno": "decreto",
-        "mime_types": ["application/pdf"]
-      }
-    ]
-  },
-  "destinatarios": {
-    "activo": true,
-    "destinatarios": [
-      "carabineros@gmail.com",
-      "bomberos@gmail.com",
-      "esoto@municipalidadchonchi.cl"
-    ]
+  "visibleWhen": {
+    "campo_id": "tipo-solicitante-j284i4j",
+    "value": "Personalidad jurídica"
   }
 }

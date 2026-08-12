@@ -109,6 +109,12 @@ const AprobarSolicitud = () => {
     }
   };
 
+  const breadcrumbs = [
+    { label: solicitud?.solicitud?.tramite?.titulo, href: `/${slug}` },
+    { label: codigo, href: `/${slug}/${codigo}` },
+    { label: 'Aprobar solicitud', href: `/${slug}/${codigo}/aprobar` },
+  ];
+
   return (
     <>
       <LoadingOverlay show={loading} text={loadingText} />
@@ -126,7 +132,7 @@ const AprobarSolicitud = () => {
           <p>¿Está seguro que desea aprobar la solicitud?</p>
           <p>Esta acción da por finalizado el trámite y se notificará al solicitante.</p>
         </Modal>
-        <Breadcrumbs breadcrumbs={[]} />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <h1 className="text-2xl font-bold mt-4">Aprobar solicitud</h1>
         <p className="mb-4 text-sm text-slate-500">
           Revisa la información antes de finalizar la solicitud.
@@ -272,7 +278,13 @@ const AprobarSolicitud = () => {
         )}
 
         <div className="mt-10 flex justify-end gap-2">
-          <Button variant="primary" text="Volver" />
+          <Button
+            variant="primary"
+            text="Volver"
+            onClick={() => {
+              navigate(`../${slug}/${codigo}`);
+            }}
+          />
           <Button
             onClick={() => {
               setModal(true);

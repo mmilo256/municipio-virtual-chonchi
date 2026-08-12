@@ -125,11 +125,13 @@ const Solicitudes = () => {
         ]
       : ['Código', 'Solicitante', 'Fecha de solicitud', 'Estado', 'Origen', 'Acciones'];
 
+  const breadcrumbs = [{ label: tramite.titulo, href: `/${slug}` }];
+
   return (
     <>
       <LoadingOverlay show={loading} text="Cargando solicitudes..." />
       <div className="mb-4">
-        <Breadcrumbs breadcrumbs={[]} />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <h1 className="text-2xl font-bold my-4">{tramite.titulo}</h1>
         <div className="my-4">
           <Button

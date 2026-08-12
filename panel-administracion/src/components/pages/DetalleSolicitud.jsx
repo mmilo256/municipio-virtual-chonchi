@@ -22,6 +22,8 @@ const DetalleSolicitud = () => {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
 
+  const { slug } = useParams();
+
   const [quitarDocumentoModal, setQuitarDocumentoModal] = useState(false);
 
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
@@ -128,6 +130,11 @@ const DetalleSolicitud = () => {
     navigate('subir-documento');
   };
 
+  const breadcrumbs = [
+    { label: solicitud?.solicitud?.tramite?.titulo, href: `/${slug}` },
+    { label: codigo, href: `/${slug}/${codigo}` },
+  ];
+
   return (
     <>
       <Modal
@@ -146,7 +153,7 @@ const DetalleSolicitud = () => {
       <LoadingOverlay show={loading} text={loadingText} />
       <div>
         <ToastContainer />
-        <Breadcrumbs breadcrumbs={[]} />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         {/* Encabezado con el estado de la solicitud */}
         <div className="flex items-center gap-5 mt-4">
           <h1 className="text-2xl font-bold">

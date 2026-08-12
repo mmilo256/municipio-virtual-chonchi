@@ -56,19 +56,26 @@ const SubirDocumento = () => {
     }
   };
 
+  const breadcrumbs = [
+    { label: solicitud?.solicitud?.tramite?.titulo, href: `/${slug}` },
+    { label: codigo, href: `/${slug}/${codigo}` },
+    { label: 'Subir documento', href: `/${slug}/${codigo}/subir-documento` },
+  ];
+
   return (
     <>
       <LoadingOverlay show={loading} text={loadingText} />
       <div className="bg-[#fff] max-w-[60rem] p-10 mx-auto mt-10 rounded shadow shadow-slate-400">
-        <Breadcrumbs breadcrumbs={[]} />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         {/* Encabezado con el estado de la solicitud */}
         <div className="flex items-center gap-5 mt-4">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-xl font-bold">
             {infoSolicitud?.tramite.titulo}: {infoSolicitud?.codigo}
           </h1>
           <StatusTag status={infoSolicitud?.estado} />
           <OriginTag status={infoSolicitud?.origen} />
         </div>
+
         {/* Fecha de la solicitud */}
         <p className="text-slate-500">
           <strong>Fecha de ingreso: </strong>

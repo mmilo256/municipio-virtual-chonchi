@@ -23,8 +23,8 @@ const AgregarSolicitudFisica = () => {
   const [respuestas, setRespuestas] = useState({});
 
   const breadcrumbs = [
-    { label: tramite.titulo, href: '/permisos-transitorios' },
-    { label: `Agregar solicitud`, href: '/permisos-transitorios/agregar' },
+    { label: tramite.titulo, href: `/${slug}` },
+    { label: `Agregar solicitud`, href: `/${slug}/agregar-solicitud-fisica` },
   ];
 
   useEffect(() => {

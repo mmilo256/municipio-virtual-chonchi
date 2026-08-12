@@ -58,6 +58,12 @@ const RechazarSolicitud = () => {
     }
   };
 
+  const breadcrumbs = [
+    { label: solicitud?.solicitud?.tramite?.titulo, href: `/${slug}` },
+    { label: codigo, href: `/${slug}/${codigo}` },
+    { label: 'Rechazar solicitud', href: `/${slug}/${codigo}/rechazar` },
+  ];
+
   return (
     <>
       <LoadingOverlay show={loading} text={loadingText} />
@@ -78,7 +84,7 @@ const RechazarSolicitud = () => {
             Motivo del rechazo: <strong>{motivoRechazo}</strong>
           </p>
         </Modal>
-        <Breadcrumbs breadcrumbs={[]} />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <h1 className="text-2xl font-bold mt-4">Rechazar solicitud</h1>
         <p className="mb-4 text-sm text-slate-500">
           Revisa la información antes de finalizar la solicitud.
@@ -133,7 +139,13 @@ const RechazarSolicitud = () => {
         </form>
 
         <div className="mt-10 flex justify-end gap-2">
-          <Button variant="primary" text="Volver" />
+          <Button
+            variant="primary"
+            text="Volver"
+            onClick={() => {
+              navigate(`../${slug}/${codigo}`);
+            }}
+          />
           <Button
             onClick={() => {
               if (motivoRechazo !== '') {

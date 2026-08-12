@@ -73,6 +73,12 @@ const SolicitarCorreccion = () => {
     }
   };
 
+  const breadcrumbs = [
+    { label: solicitud?.solicitud?.tramite?.titulo, href: `/${slug}` },
+    { label: codigo, href: `/${slug}/${codigo}` },
+    { label: 'Solicitar corrección', href: `/${slug}/${codigo}/solicitar-correccion` },
+  ];
+
   return (
     <>
       <LoadingOverlay show={loading} text="Cargando..." />
@@ -95,7 +101,7 @@ const SolicitarCorreccion = () => {
             respuesta del solicitante.
           </p>
         </Modal>
-        <Breadcrumbs breadcrumbs={[]} />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <h1 className="text-2xl font-bold mt-4">Solicitar corrección</h1>
         <p className="mb-4 text-sm text-slate-500">
           Solicita al usuario que corriga la información indicada
@@ -202,7 +208,13 @@ const SolicitarCorreccion = () => {
         </div>
 
         <div className="mt-10 flex justify-end gap-2">
-          <Button variant="primary" text="Volver" />
+          <Button
+            variant="primary"
+            text="Volver"
+            onClick={() => {
+              navigate(`../${slug}/${codigo}`);
+            }}
+          />
           <Button
             onClick={() => {
               if (observaciones !== '') {

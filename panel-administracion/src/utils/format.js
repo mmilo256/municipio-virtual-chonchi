@@ -1,7 +1,7 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/es'
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 
-dayjs.locale("es")
+dayjs.locale('es');
 
 /* export const formatDate = (date, format) => {
 
@@ -32,7 +32,7 @@ dayjs.locale("es")
     return dateString
 } */
 
-export const formatDate = (date, format = "DD MMM YYYY") => {
-    const formatted = dayjs(date).format(format)
-    return formatted
-}
+export const formatDate = (date, format = 'DD MMM YYYY') => {
+  const formatted = dayjs(date).format(format);
+  return formatted;
+};

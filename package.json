@@ -1,0 +1,37 @@
+{
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:server": "npm --prefix server run dev",
+    "dev:portal": "npm --prefix portal-web run dev",
+    "dev:admin": "npm --prefix panel-administracion run dev",
+    "db:migrate": "npm --prefix server run db:migrate",
+    "db:backup": "npm --prefix server run db:backup",
+    "db:restore": "npm --prefix server run db:restore --",
+    "test": "npm --prefix server test",
+    "build": "npm run build:portal && npm run build:admin",
+    "build:portal": "npm --prefix portal-web run build",
+    "build:admin": "npm --prefix panel-administracion run build",
+    "install:all": "npm install && npm --prefix server install && npm --prefix portal-web install && npm --prefix panel-administracion install",
+    "check": "npm run lint && npm test && npm run build",
+    "audit:server": "npm --prefix server audit --omit=dev --audit-level=high",
+    "audit:portal": "npm --prefix portal-web audit --omit=dev --audit-level=high",
+    "audit:admin": "npm --prefix panel-administracion audit --omit=dev --audit-level=high",
+    "audit": "npm run audit:server && npm run audit:portal && npm run audit:admin",
+    "lint": "eslint server portal-web panel-administracion --ext .js,.jsx",
+    "lint:fix": "eslint server portal-web panel-administracion --ext .js,.jsx --fix",
+    "format": "prettier . -w",
+    "check:format": "prettier . -c",
+    "check:unused": "node scripts/find-unused.mjs"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.4.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.38.0",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2"
+  }
+}

@@ -1,15 +1,23 @@
-import e from "express";
-import { deleteDocument, downloadDocument, getDocument, subirArchivo } from "../controllers/documents.controller.js";
-import { setUpload } from "../config/multer.js";
+import e from 'express';
+import {
+  borrarDocumento,
+  downloadDocument,
+  getDocument,
+  viewDocument,
+} from '../controllers/documents.controller.js';
+import {
+  authorizeDocumentAccess,
+  requireDocumentAdministrator,
+} from '../middlewares/documentAccess.js';
 
 // Router
-const router = e.Router()
+const router = e.Router();
 
-const upload = setUpload()
+router.use('/:id', authorizeDocumentAccess);
+router.get('/:id', getDocument);
+router.delete('/:id', requireDocumentAdministrator, borrarDocumento);
+router.get('/:id/view', viewDocument);
+router.get('/:id/download', downloadDocument);
+/* router.post('/subir-archivo', subirArchivo); */
 
-router.get("/:id", getDocument)
-router.delete("/:id", deleteDocument)
-router.get("/:id/download", downloadDocument)
-router.post("/subir-archivo", subirArchivo)
-
-export default router
+export default router;

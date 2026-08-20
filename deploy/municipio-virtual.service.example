@@ -1,0 +1,22 @@
+[Unit]
+Description=Municipio Virtual Chonchi API
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=municipio-virtual
+Group=municipio-virtual
+WorkingDirectory=/opt/municipio-virtual/server
+EnvironmentFile=/etc/municipio-virtual/server.env
+ExecStart=/usr/bin/node loader.cjs
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/municipio-virtual/server/uploads /opt/municipio-virtual/server/documents
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

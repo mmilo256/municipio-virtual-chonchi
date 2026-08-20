@@ -1,75 +1,152 @@
-import e from "express";
-import session from "express-session";  // Middleware para sesiones
-import cors from 'cors';  // Middleware para configurar CORS
-import cookieParser from "cookie-parser";  // Middleware para parsear cookies
-import initializeDB from "./config/db/init.js";  // Inicializar la base de datos
-import { fileURLToPath } from 'node:url';  // Utilidad para trabajar con rutas de archivos en módulos ES6
-import path from 'path';  // Utilidad para manipular rutas de archivos
+import e from 'express';
+import session from 'express-session'; // Middleware para sesiones
+import MySQLStoreFactory from 'express-mysql-session';
+import cors from 'cors'; // Middleware para configurar CORS
+import cookieParser from 'cookie-parser'; // Middleware para parsear cookies
+import helmet from 'helmet';
+import { randomUUID } from 'node:crypto';
+import initializeDB from './config/db/init.js'; // Inicializar la base de datos
 
-import portalApi from './api/portal.js'
-import adminApi from './api/admin.js'
-import { config } from "./config/config.js";
+import portalApi from './api/portal.js';
+import adminApi from './api/admin.js';
+import { config, validateConfig } from './config/config.js';
+import { sequelize } from './config/db/config.js';
+import logger from './config/winston.js';
+import { apiRateLimiter, verifyRequestOrigin } from './middlewares/security.js';
 
-const port = 10000;  // Definir puerto para el servidor
-const app = e();  // Crear la instancia de la aplicación Express
+const port = config.port;
+const app = e(); // Crear la instancia de la aplicación Express
 
-// Obtener directorio actual
-const __filename = fileURLToPath(import.meta.url);  // Obtener la ruta del archivo actual
-export const __dirname = path.dirname(__filename);  // Obtener el directorio del archivo actual
+validateConfig();
 
-// Configuración para servir archivos estáticos
-// Se define que los archivos en 'uploads' y 'documents' se sirvan como archivos estáticos
-app.use('/uploads', e.static(path.join(__dirname, 'uploads')));
-app.use('/documents', e.static(path.join(__dirname, 'documents')));
-//app.use('/documents/documentos-asociados', e.static(path.join(__dirname, 'documents/documentos-asociados')));
+if (config.trustProxy > 0) app.set('trust proxy', config.trustProxy);
+app.disable('x-powered-by');
+app.use(helmet());
+app.use((req, res, next) => {
+  req.id = req.get('x-request-id') || randomUUID();
+  res.setHeader('X-Request-Id', req.id);
+  next();
+});
 
 // Inicializar base de datos (esto se realiza de forma asíncrona)
+logger.info('Iniciando conexión a base de datos...');
 await initializeDB();
+logger.info('Base de datos iniciada correctamente');
+logger.info(
+  config.db.sync
+    ? 'Sincronización automática de esquema ACTIVADA (DB_SYNC=true)'
+    : 'Sincronización automática de esquema desactivada',
+);
 
-app.use(e.json());  // Middleware para parsear el cuerpo de las solicitudes en formato JSON
-app.use(cookieParser());  // Middleware para parsear las cookies de las solicitudes
+app.use(e.json({ limit: config.maxJsonSize })); // Limitar cuerpos JSON inesperadamente grandes
+app.use(cookieParser()); // Middleware para parsear las cookies de las solicitudes
 
 // Configuración del CORS (Cross-Origin Resource Sharing)
 // Definir los orígenes permitidos para acceder a la API (en producción y desarrollo)
-app.use(cors({
-    origin: [
-        'https://municipio-virtual.onrender.com',
-        'https://municipio-virtual-chonchi.onrender.com',
-        'http://localhost:10000',
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'https://accounts.claveunica.gob.cl/'
-    ],
-    credentials: true,  // Permitir el envío de cookies y credenciales en solicitudes
-    methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'DELETE']  // Métodos HTTP permitidos
-}));
+app.use(
+  cors({
+    origin: config.corsOrigins,
+    credentials: true, // Permitir el envío de cookies y credenciales en solicitudes
+    methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'DELETE'], // Métodos HTTP permitidos
+  }),
+);
+app.use(verifyRequestOrigin);
+app.use('/api', apiRateLimiter);
 
 // Configuración del middleware de sesión
 // Esto gestiona las sesiones del usuario utilizando cookies
 
-const { sessionSecret } = config
+const { sessionSecret } = config;
+const MySQLStore = MySQLStoreFactory(session);
+const sessionStore = new MySQLStore({
+  host: config.db.host,
+  port: Number(config.db.port || 3306),
+  user: config.db.user,
+  password: config.db.password,
+  database: config.db.name,
+  createDatabaseTable: false,
+  schema: { tableName: 'user_sessions' },
+});
 
-app.use(session({
-    secret: sessionSecret,  // Clave secreta para firmar las cookies de sesión
-    resave: false,  // No volver a guardar la sesión si no ha habido cambios
-    saveUninitialized: false,  // No guardar sesiones sin inicializar
+app.use(
+  session({
+    name: 'municipio.sid',
+    store: sessionStore,
+    secret: sessionSecret, // Clave secreta para firmar las cookies de sesión
+    resave: false, // No volver a guardar la sesión si no ha habido cambios
+    saveUninitialized: false, // No guardar sesiones sin inicializar
     cookie: {
-        secure: false,  // Cambiar a true en producción para forzar conexiones seguras (HTTPS)
-        httpOnly: true  // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
-    }
-}));
+      secure: config.cookieSecure,
+      httpOnly: true, // Hacer que las cookies no sean accesibles por JavaScript (mejor seguridad)
+      sameSite: config.cookieSecure ? 'none' : 'lax',
+      maxAge: config.sessionMaxAgeMs,
+    },
+  }),
+);
 
-// Rutas del panel de administración
-// Se definen las rutas para el panel de administración con sus respectivos middleware de autenticación
-/* app.use("/admin/auth", adminAuthRouter);
-app.use("/admin/email", verifyAdminToken, adminEmailRouter);
-app.use("/admin/requests", verifyAdminToken, adminRequestsRouter);
-app.use("/admin/procedures", verifyAdminToken, adminProceduresRouter); */
+logger.info('Registrando rutas...');
+app.get('/health/live', (_req, res) => res.status(200).json({ status: 'ok' }));
+app.get(['/health', '/health/ready'], async (_req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.status(200).json({ status: 'ok', database: 'connected' });
+  } catch (error) {
+    logger.error(`Health check de base de datos falló: ${error.message}`);
+    res.status(503).json({ status: 'degraded', database: 'disconnected' });
+  }
+});
+app.use('/api/portal', portalApi);
+app.use('/api/admin', adminApi);
 
-app.use("/api/portal", portalApi)
-app.use("/api/admin", adminApi)
+app.use((_req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Express identifica el middleware de errores por sus cuatro parámetros.
+// eslint-disable-next-line no-unused-vars
+app.use((error, req, res, _next) => {
+  logger.error(`Error no controlado [${req.id}]: ${error.message}`);
+  const status =
+    error?.type === 'entity.too.large' || error?.code?.startsWith('LIMIT_') ? 413 : 500;
+  res.status(status).json({
+    message:
+      status === 413 ? 'La solicitud o el archivo supera los límites permitidos' : 'Error interno del servidor',
+  });
+});
 
 // Inicializar el servidor y escuchar en el puerto configurado
-app.listen(port, () => {
-    console.log("Servidor levantado...");
+logger.info('Iniciando servidor...');
+const server = app.listen(port, () => {
+  logger.info(`Servidor iniciado correctamente en el puerto ${port}`);
+});
+
+let shuttingDown = false;
+const shutdown = async (signal, exitCode = 0) => {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  logger.info(`Cierre ordenado iniciado (${signal})`);
+  server.close(async () => {
+    try {
+      await sequelize.close();
+      await sessionStore.close();
+      process.exit(exitCode);
+    } catch (error) {
+      logger.error(`Error durante el cierre: ${error.message}`);
+      process.exit(1);
+    }
+  });
+  setTimeout(() => process.exit(1), 10000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+process.on('uncaughtException', (error) => {
+  logger.error(`Excepción no controlada: ${error.stack || error.message}`);
+  shutdown('uncaughtException', 1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  logger.error(`Promesa rechazada sin manejar: ${reason?.stack || reason}`);
+  shutdown('unhandledRejection', 1);
 });

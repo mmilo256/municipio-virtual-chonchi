@@ -1,15 +1,14 @@
-import useAuthStore from "../../stores/useAuthStore"
-import { Navigate } from "react-router-dom"
+import useAuthStore from '../../stores/useAuthStore';
+import { Navigate } from 'react-router-dom';
 
 const Protected = ({ children }) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-    const isAuthenticated = useAuthStore(state => state.isAuthenticated)
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" />
-    }
+  return children;
+};
 
-    return children
-}
-
-export default Protected
+export default Protected;

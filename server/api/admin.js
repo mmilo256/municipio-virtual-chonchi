@@ -1,19 +1,29 @@
-import { Router } from "express";
-import authRoutes from '../auth/admin/auth.routes.js'
-import proceduresRoutes from '../routes/procedures.routes.js'
-import requestsRoutes from '../routes/requests.routes.js'
-import documentsRoutes from '../routes/documents.routes.js'
-import emailRoutes from '../routes/email.routes.js'
-import permisosTransitoriosRoutes from '../tramites/permisos-transitorios/routes.js'
-import { authMiddleware } from "../auth/admin/auth.middleware.js";
+import { Router } from 'express';
+import authRoutes from '../auth/admin/auth.routes.js';
+import tramitesRoutes from '../routes/tramites.routes.js';
+import funcionariosRoutes from '../routes/funcionarios.routes.js';
+import direccionesRoutes from '../routes/direccionesMunicipales.routes.js';
+import solicitudesRoutes from '../routes/solicitudes.routes.js';
+import documentsRoutes from '../routes/documents.routes.js';
+import formulariosRoutes from '../routes/formularios.routes.js';
+import pasosFormulariosRoutes from '../routes/pasosFormularios.routes.js';
+import camposFormulariosRoutes from '../routes/camposFormularios.routes.js';
+import emailRoutes from '../routes/email.routes.js';
+import permisosTransitoriosRoutes from '../tramites/permisos-transitorios/routes.js';
+import { authMiddleware } from '../auth/admin/auth.middleware.js';
 
-const router = Router()
+const router = Router();
 
-router.use("/auth", authRoutes)
-router.use("/procedures", authMiddleware, proceduresRoutes)
-router.use("/requests", authMiddleware, requestsRoutes)
-router.use("/documents", authMiddleware, documentsRoutes)
-router.use("/email", authMiddleware, emailRoutes)
-router.use("/permisos-transitorios", authMiddleware, permisosTransitoriosRoutes)
+router.use('/auth', authRoutes);
+router.use('/tramites', authMiddleware, tramitesRoutes);
+router.use('/funcionarios', authMiddleware, funcionariosRoutes);
+router.use('/formularios', authMiddleware, formulariosRoutes);
+router.use('/pasos-formularios', authMiddleware, pasosFormulariosRoutes);
+router.use('/campos-formularios', authMiddleware, camposFormulariosRoutes);
+router.use('/direcciones-municipales', authMiddleware, direccionesRoutes);
+router.use('/solicitudes', authMiddleware, solicitudesRoutes);
+router.use('/documentos', authMiddleware, documentsRoutes);
+router.use('/email', authMiddleware, emailRoutes);
+router.use('/permisos-transitorios', authMiddleware, permisosTransitoriosRoutes);
 
-export default router
+export default router;

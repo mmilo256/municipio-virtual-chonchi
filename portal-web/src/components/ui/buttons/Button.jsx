@@ -1,38 +1,40 @@
-import { NavLink } from 'react-router-dom'
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner } from 'react-icons/fa';
 
 // Componente Button que puede ser un botón o un enlace estilizado
-const Button = ({ children, variant = "primary", type = "button", href, onClick, disabled, fullWidth, isLoading }) => {
-    // Determina los estilos del botón según el tipo de variante
-    let buttonStyles;
-    switch (variant) {
-        case "primary":
-            buttonStyles = `bg-primary hover:bg-primaryHover disabled:bg-blue-400 disabled:cursor-not-allowed text-white py-3 w-36 flex justify-center text-center ${fullWidth && "w-full"}`
-            break
-        case "secondary":
-            buttonStyles = `bg-secondary hover:bg-secondaryHover disabled:bg-red-400 disabled:cursor-not-allowed text-white py-3 w-36 flex justify-center text-center ${fullWidth && "w-full"}`
-            break
-        case "tertiary":
-            buttonStyles = `bg-none hover:bg-orange-50 py-3 w-36 flex justify-center text-center ${fullWidth && "w-full"}`
-            break
-        case "approval":
-            buttonStyles = `bg-green-600 hover:bg-green-500 disabled:bg-green-400 disabled:cursor-not-allowed text-white py-3 w-36 flex justify-center text-center ${fullWidth && "w-full"}`
-            break
-        case "reject":
-            buttonStyles = `bg-red-600 hover:bg-red-500 disabled:bg-red-400 disabled:cursor-not-allowed text-white py-3 w-36 flex justify-center text-center ${fullWidth && "w-full"}`
-            break
-    }
+const Button = ({
+  label,
+  variant = 'primary',
+  type = 'button',
+  onClick,
+  disabled,
+  fullWidth,
+  isLoading,
+}) => {
+  // Determina los estilos del botón según el tipo de variante
+  let buttonStyles;
+  switch (variant) {
+    case 'primary':
+      buttonStyles = `text-white shadow bg-orange-600 hover:bg-orange-500 disabled:bg-primaryDisabled`;
+      break;
+    case 'secondary':
+      buttonStyles = `text-white shadow bg-sky-900 hover:bg-sky-700 disabled:bg-secondaryDisabled`;
+      break;
+    case 'primaryGhost':
+      buttonStyles = `text-customBlack hover:bg-secondary/5 bg-none py-3 w-36 text-black`;
+      break;
+  }
 
-    // Renderiza un enlace o un botón según el tipo especificado
-    return (
-        type === "link"
-            ? <NavLink disabled={disabled || isLoading} to={href} className={`block transition-colors ${buttonStyles}`}>
-                <span className='underline'>{isLoading ? <FaSpinner /> : children}</span>
-            </NavLink>
-            : <button disabled={disabled || isLoading} onClick={onClick} type={type} className={`block transition-colors ${buttonStyles}`}>
-                <span className='underline'>{isLoading ? <FaSpinner className='animate-spin' /> : children}</span>
-            </button>
-    )
-}
+  // Renderiza un enlace o un botón según el tipo especificado
+  return (
+    <button
+      disabled={disabled || isLoading}
+      onClick={onClick}
+      type={type}
+      className={`text-base transition-colors font-medium rounded disabled:cursor-not-allowed py-3 w-36 flex justify-center text-center ${fullWidth && 'w-full'} ${buttonStyles}`}
+    >
+      <span>{isLoading ? <FaSpinner className="animate-spin" /> : label}</span>
+    </button>
+  );
+};
 
-export default Button
+export default Button;

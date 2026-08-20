@@ -2,6 +2,18 @@ import { Op } from 'sequelize';
 import Funcionario from '../models/Funcionario.js';
 import { hashPassword } from '../utils/encryption.utils.js';
 import { generateRandomToken } from '../utils/token.utils.js';
+import { validatePassword } from '../utils/passwordPolicy.js';
+
+const publicEmployee = (employee) => ({
+  id: employee.id,
+  nombres: employee.nombres,
+  apellidos: employee.apellidos,
+  username: employee.username,
+  email: employee.email,
+  run: employee.run,
+  rol: employee.rol,
+  activo: employee.activo,
+});
 
 //Obtener funcionarios
 export const obtenerFuncionarios = async (req, res) => {
@@ -36,7 +48,12 @@ export const crearFuncionario = async (req, res) => {
   const { nombres, apellidos, username, password, email, run, rol, activo } = req.body;
 
   const salt = generateRandomToken();
-  const hashedPassword = hashPassword(password, salt);
+  let hashedPassword;
+  try {
+    hashedPassword = hashPassword(validatePassword(password), salt);
+  } catch (error) {
+    return res.status(error.status || 400).json({ message: error.message });
+  }
 
   const funcionarioExiste = await Funcionario.findOne({ where: { username } });
 
@@ -58,7 +75,10 @@ export const crearFuncionario = async (req, res) => {
 
   try {
     const funcionarios = await Funcionario.create(data);
-    res.status(200).json({ data: funcionarios, message: 'El funcionario fue creado exitosamente' });
+    res.status(201).json({
+      data: publicEmployee(funcionarios),
+      message: 'El funcionario fue creado exitosamente',
+    });
   } catch (error) {
     res.status(400).json({ error, message: 'No se pudo crear el funcionario' });
   }
@@ -94,9 +114,15 @@ export const editarFuncionario = async (req, res) => {
   if (rol !== undefined && rol !== funcionarioExiste.rol) values.rol = rol;
   if (activo !== undefined && activo !== funcionarioExiste.activo) values.activo = activo;
   if (password) {
+    try {
+      validatePassword(password);
+    } catch (error) {
+      return res.status(error.status || 400).json({ message: error.message });
+    }
     const salt = generateRandomToken();
     const hashedPassword = hashPassword(password, salt);
     values.password = hashedPassword;
+    values.salt = salt;
   }
 
   if (Object.values(values).length === 0) {

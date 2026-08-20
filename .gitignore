@@ -1,4 +1,6 @@
 node_modules/
+*.zip
+*.rar
 .env
 .log
 .sqlite
@@ -7,6 +9,7 @@ combined.log
 error.log
 uploads/*
 !uploads/.gitkeep
+backups/
 chonchi-virtual/
 chonchi-virtual.rar
 Municipio Virtual Chonchi/
@@ -15,5 +18,4 @@ Backup/
 dist/
 PRODUCCION/
 .vscode/
-server.zip
 config-campos/

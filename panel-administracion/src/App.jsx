@@ -2,15 +2,11 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import Layout from './components/layouts/Layout';
-/* import RutasPermisosTransitorios from './components/routes/RutasPermisosTransitorios'; */
 import Protected from './components/common/Protected';
 import useAuthStore from './stores/useAuthStore';
 import { useEffect, useState } from 'react';
 import { verifySession } from './services/authServices';
-/* import RutasFechaEleccionDirectorio from './components/routes/RutasFechaEleccionDirectorio';
-import RutasActaDirectorio from './components/routes/RutasActaDirectorio'; */
 import { obtenerTramites } from './services/tramites.service';
-/* import RutasTramites from './components/routes/RutasTramites'; */
 import RutasGestionFuncionarios from './components/routes/RutasGestionFuncionarios';
 import RutasGestionTramites from './components/routes/RutasGestionTramites';
 import RutasGestionFormularios from './components/routes/RutasGestionFormularios';
@@ -21,24 +17,27 @@ import SubirDocumento from './components/pages/SubirDocumento';
 import RechazarSolicitud from './components/pages/RechazarSolicitud';
 import SolicitarCorreccion from './components/pages/SolicitarCorreccion';
 import AgregarSolicitudFisica from './components/pages/AgregarSolicitudFisica';
+import NotFound from './components/pages/NotFound';
+import LoadingOverlay from './components/ui/LoadingOverlay';
 
 const App = () => {
   const { setIsAuthenticated, setSessionData, sessionData } = useAuthStore();
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [proceduresLoading, setProceduresLoading] = useState(true);
 
   const [procedures, setProcedures] = useState([]);
 
   // Obtener los trámites según los permisos del usuario
   useEffect(() => {
     (async () => {
-      setLoading(true);
+      setProceduresLoading(true);
       try {
         const data = await obtenerTramites();
         setProcedures(data);
       } catch (e) {
         console.log(e);
       }
-      setLoading(false);
+      setProceduresLoading(false);
     })();
   }, [sessionData]);
 
@@ -55,13 +54,15 @@ const App = () => {
         }
       } catch (e) {
         console.log(e.message);
+        setIsAuthenticated(false);
+        setSessionData({});
       }
-      setLoading(false);
+      setAuthLoading(false);
     })();
   }, [setIsAuthenticated, setSessionData]);
 
-  if (loading) {
-    return null;
+  if (authLoading) {
+    return <LoadingOverlay show text="Verificando sesión..." />;
   }
 
   return (
@@ -76,7 +77,10 @@ const App = () => {
               </Protected>
             }
           >
-            <Route index element={<Home loading={loading} procedures={procedures} />} />
+            <Route
+              index
+              element={<Home loading={proceduresLoading} procedures={procedures} />}
+            />
             <Route path="/admin/admin" element={<Navigate to="/" replace />} />
             <Route path="/funcionarios/*" element={<RutasGestionFuncionarios />} />
             <Route path="/tramites/*" element={<RutasGestionTramites />} />
@@ -93,6 +97,7 @@ const App = () => {
           <Route path="/fecha-eleccion-directorio/*" element={<RutasFechaEleccionDirectorio />} />
           <Route path="/acta-directorio/*" element={<RutasActaDirectorio />} /> */}
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </>

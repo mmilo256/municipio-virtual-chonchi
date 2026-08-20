@@ -76,7 +76,6 @@ const RequestTracking = () => {
       setLoading(true);
       try {
         const response = await obtenerSolicitudPorCodigo(codigo);
-        console.log(response);
         setSolicitud(response.data.solicitud);
         const rawH = response.data.completeInfo;
         const formattedHistorial = rawH?.map((item, index) => ({

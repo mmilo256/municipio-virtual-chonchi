@@ -63,14 +63,14 @@ export const callback = async (req, res) => {
     res.cookie('jwt', jwt, {
       httpOnly: true,
       secure: toBool(cookieSecure),
+      sameSite: cookieSecure ? 'none' : 'lax',
+      maxAge: config.sessionMaxAgeMs,
     });
-    logger.info(
-      `INICIO DE SESIÓN PORTAL WEB - USUARIO: ${payload.nombres} ${payload.apellidos} - ID: ${payload.id}`,
-    );
+    logger.info(`Inicio de sesión en portal completado para usuario ID ${payload.id}`);
     res.redirect(homeUrl); // Redirigir al usuario a la página principal
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'No se pudo iniciar sesión', error: error.message });
+    logger.error(`No se pudo iniciar sesión con ClaveÚnica: ${error.message}`);
+    res.status(500).json({ message: 'No se pudo iniciar sesión' });
   }
 };
 
@@ -92,6 +92,7 @@ export const logout = async (req, res) => {
   res.clearCookie('jwt', {
     secure: toBool(cookieSecure),
     httpOnly: true,
+    sameSite: cookieSecure ? 'none' : 'lax',
   });
   res.json({ message: 'Se ha destruido la sesión' });
 };

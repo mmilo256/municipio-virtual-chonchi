@@ -1,6 +1,6 @@
 import Documento from '../models/Documento.js';
 import fs from 'fs/promises';
-import path from 'path';
+import { resolveStoredFile } from '../utils/storagePaths.js';
 
 // Borrar un documento asociado a una solicitud
 export const deleteDocumentService = async (id) => {
@@ -11,7 +11,7 @@ export const deleteDocumentService = async (id) => {
     }
 
     // Obtener ruta absoluta del documento
-    const documentPath = path.join(process.cwd(), document.ruta);
+    const documentPath = resolveStoredFile(document.ruta);
 
     // Borrar documento del servidor
     await fs.unlink(documentPath);
@@ -39,8 +39,8 @@ export const downloadDocumentService = async (id) => {
       throw new Error('No se encontró el documento');
     }
     // Obtener ruta absoluta del documento
-    const documentPath = path.resolve(document.ruta);
-    return { path: documentPath, name: document.originalname };
+    const documentPath = resolveStoredFile(document.ruta);
+    return { path: documentPath, name: document.nombre_original || document.nombre || 'documento' };
   } catch (error) {
     console.log(error);
     throw new Error('Error al descargar el documento');

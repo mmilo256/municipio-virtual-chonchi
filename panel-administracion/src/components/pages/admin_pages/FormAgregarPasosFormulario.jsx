@@ -31,8 +31,6 @@ const FormAgregarPasosFormulario = () => {
     })();
   }, [id]);
 
-  console.log(pasosFormulario);
-
   // BREADCRUMBS
   let breadcrumbs;
 

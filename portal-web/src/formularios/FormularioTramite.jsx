@@ -121,6 +121,8 @@ const FormularioTramite = () => {
     if (!pasoTieneCamposVisibles(paso, respuestas)) {
       setPasoActual((prev) => prev + 1);
     }
+    // newPasos y el predicado se recalculan con el formulario de este mismo render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [respuestas, pasoActual]);
 
   // Manejar cambio de estado de las respuestas
@@ -506,12 +508,7 @@ const FormularioTramite = () => {
     <>
       <LoadingOverlay show={loading} text={loadingText} />
       <div className="w-full max-w-5xl mx-auto p-6">
-        <h1
-          onClick={() => {
-            console.log(respuestas);
-          }}
-          className="text-3xl font-medium text-secondary mb-1"
-        >
+        <h1 className="text-3xl font-medium text-secondary mb-1">
           {tramite?.titulo}
         </h1>
         <p className="text-sm text-gray-600 mb-6">{tramite?.descripcion_corta}</p>

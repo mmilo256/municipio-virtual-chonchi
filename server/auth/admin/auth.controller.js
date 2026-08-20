@@ -1,18 +1,12 @@
 import logger from '../../config/winston.js';
-import { createEmployee, loginUser } from './auth.service.js';
+import { loginUser } from './auth.service.js';
+import { config } from '../../config/config.js';
 
-// Registrar un usuario
-export const register = async (req, res) => {
-  try {
-    // Responde con los datos del empleado creado
-    const employee = await createEmployee(req.body);
-    res.status(200).json({ message: 'Funcionario creado exitosamente.', employee });
-  } catch (error) {
-    res.status(500).json({
-      message: 'Error interno del servidor.',
-      error: error.message, // Responde con el mensaje de error si ocurre un fallo
-    });
-  }
+const adminCookieOptions = {
+  httpOnly: true,
+  secure: config.cookieSecure,
+  sameSite: config.cookieSecure ? 'none' : 'lax',
+  maxAge: config.sessionMaxAgeMs,
 };
 
 // Iniciar sesión
@@ -25,19 +19,15 @@ export const login = async (req, res) => {
 
     // Guardar token en cookies
     res.cookie('jwt-admin', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      ...adminCookieOptions,
     });
 
-    // Envía el token también en la respuesta JSON
     logger.info('Sesión iniciada correctamente');
-    res.status(200).json({ message: 'Usuario logueado exitosamente', token });
+    res.status(200).json({ message: 'Usuario logueado exitosamente' });
   } catch (error) {
     logger.error('No se pudo iniciar sesión');
-    res.status(500).json({
-      error: error.message,
-      message: 'No se pudo iniciar sesión', // Responde con el mensaje de error si ocurre un fallo
+    res.status(error.status >= 400 && error.status < 500 ? error.status : 500).json({
+      message: error.status >= 400 && error.status < 500 ? error.message : 'No se pudo iniciar sesión',
     });
   }
 };
@@ -47,9 +37,7 @@ export const logout = async (req, res) => {
   try {
     // Elimina la cookie que contiene el token de acceso
     res.clearCookie('jwt-admin', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      ...adminCookieOptions,
     });
     res.status(200).json({ message: 'Sesión cerrada' });
   } catch (error) {

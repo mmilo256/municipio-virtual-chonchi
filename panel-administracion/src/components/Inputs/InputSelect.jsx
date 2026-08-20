@@ -27,6 +27,7 @@ const InputSelect = ({
       <select
         value={value}
         onChange={onChange}
+        onBlur={() => setTouched(true)}
         id={slug}
         name={slug}
         type="select"

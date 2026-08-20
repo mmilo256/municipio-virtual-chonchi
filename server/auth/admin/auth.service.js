@@ -1,7 +1,8 @@
 import { config } from '../../config/config.js';
 import Funcionario from '../../models/Funcionario.js';
-import { hashPassword } from '../../utils/encryption.utils.js';
+import { hashPassword, verifyPassword } from '../../utils/encryption.utils.js';
 import { generateJWT, generateRandomToken } from '../../utils/token.utils.js';
+import { validatePassword } from '../../utils/passwordPolicy.js';
 
 export const createEmployee = async (data) => {
   // Obtiene los datos del nuevo usuario desde el cuerpo de la solicitud
@@ -11,7 +12,7 @@ export const createEmployee = async (data) => {
   const salt = generateRandomToken();
 
   // Hashea la contraseña utilizando PBKDF2
-  const hashedPassword = hashPassword(password, salt);
+  const hashedPassword = hashPassword(validatePassword(password), salt);
 
   // Crea un nuevo empleado en la base de datos
   const employee = await Funcionario.create({
@@ -37,15 +38,20 @@ export const loginUser = async (username, pass) => {
   // Verificar si el usuario existe en la base de datos
   const user = await Funcionario.findOne({ where: { username } });
 
-  if (!user) {
-    throw { status: 404, message: 'No se encontró el usuario' };
+  if (!user || !user.activo) {
+    throw { status: 401, message: 'Usuario o contraseña incorrectos' };
   }
 
   // Comparar la contraseña ingresada con la contraseña de la base de datos
   const { password, salt } = user;
-  const hashedPassword = hashPassword(pass, salt);
-  if (hashedPassword !== password) {
-    throw { status: 401, message: 'Contraseña incorrecta' };
+  const passwordCheck = verifyPassword(pass, salt, password);
+  if (!passwordCheck.valid) {
+    throw { status: 401, message: 'Usuario o contraseña incorrectos' };
+  }
+
+  if (passwordCheck.needsUpgrade) {
+    const newSalt = generateRandomToken();
+    await user.update({ password: hashPassword(pass, newSalt), salt: newSalt });
   }
 
   // Generar un token JWT

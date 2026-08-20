@@ -16,6 +16,8 @@ export const verifySession = async () => {
     const response = await apiClient.get('/auth/session');
     return response.data;
   } catch (error) {
-    throw error.message;
+    // No tener una sesión todavía es el estado normal al entrar al portal público.
+    if (error.response?.status === 401) return null;
+    throw error;
   }
 };

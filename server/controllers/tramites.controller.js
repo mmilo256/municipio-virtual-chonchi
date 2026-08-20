@@ -6,6 +6,7 @@ import { Op } from 'sequelize';
 import Formulario from '../models/Formulario.js';
 import PasoFormulario from '../models/PasoFormulario.js';
 import CampoFormulario from '../models/CampoFormulario.js';
+import { haveSameAssociationIds, normalizeAssociationIds } from '../utils/associationIds.js';
 /* import FuncionarioTramite from '../models/FuncionarioTramite.js'; */
 
 export const obtenerFormularioPorSlugDeTramite = async (req, res) => {
@@ -92,11 +93,11 @@ export const editarTramite = async (req, res) => {
   if (formulario_id !== undefined && formulario_id !== tramiteExiste.formulario_id)
     values.formulario_id = formulario_id;
 
-  const formattedFuncionarios = tramiteExiste.toJSON().funcionarios.map((fun) => fun.id);
-
-  const mismosFuncionarios =
-    JSON.stringify([...funcionariosAutorizados].sort((a, b) => a - b)) ===
-    JSON.stringify([...formattedFuncionarios].sort((a, b) => a - b));
+  const funcionariosActuales = tramiteExiste.toJSON().funcionarios.map((fun) => fun.id);
+  // Si un cliente antiguo omite el campo, se conservan las asociaciones actuales.
+  // Si envía [], Sequelize elimina todas las asociaciones del trámite.
+  const nuevosFuncionarios = normalizeAssociationIds(funcionariosAutorizados, funcionariosActuales);
+  const mismosFuncionarios = haveSameAssociationIds(nuevosFuncionarios, funcionariosActuales);
 
   const t = await sequelize.transaction();
 
@@ -108,11 +109,11 @@ export const editarTramite = async (req, res) => {
 
     await tramiteExiste.update(values, { transaction: t });
 
-    await tramiteExiste.setFuncionarios(funcionariosAutorizados, { transaction: t });
+    await tramiteExiste.setFuncionarios(nuevosFuncionarios, { transaction: t });
     await t.commit();
     res.status(200).json({ data: tramiteExiste, message: 'El trámite ha sido editado' });
   } catch (error) {
-    await t.rollback();
+    if (!t.finished) await t.rollback();
     res.status(400).json({ error, message: 'No se pudo editar el trámite' });
   }
 };
@@ -230,7 +231,6 @@ export const obtenerTramitesPortal = async (req, res) => {
         where: direccionWhere,
       },
     });
-    console.log(direccionWhere);
     return res.status(200).json({ data: procedures, message: 'Tramites obtenidos correctamente' }); // Enviar la lista de trámites como respuesta
   } catch (error) {
     // Registrar el error en caso de fallo

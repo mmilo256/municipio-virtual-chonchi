@@ -28,7 +28,7 @@ const SolicitarCorreccion = () => {
 
   const [modal, setModal] = useState(false);
 
-  const [camposSeleccionados, setCamposSeleccionados] = useState([]);
+  const [camposSeleccionados, setCamposSeleccionados] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -45,14 +45,17 @@ const SolicitarCorreccion = () => {
   }, [codigo]);
 
   const onChangeCamposSeleccionados = (nombreInterno, valor, campo_id, respuesta) => {
-    setCamposSeleccionados((prev) => ({
-      ...prev,
-      [nombreInterno]: {
-        correccion: valor,
-        campo_id,
-        respuesta,
-      },
-    }));
+    setCamposSeleccionados((prev) => {
+      if (!valor) {
+        const next = { ...prev };
+        delete next[nombreInterno];
+        return next;
+      }
+      return {
+        ...prev,
+        [nombreInterno]: { correccion: true, campo_id, respuesta },
+      };
+    });
   };
 
   const onSolicitarCorreccion = async () => {
@@ -152,7 +155,7 @@ const SolicitarCorreccion = () => {
                       <li key={campo.id}>
                         <label htmlFor={campo.id}>
                           <input
-                            value={camposSeleccionados[campo.nombre_interno]}
+                            checked={Boolean(camposSeleccionados[campo.nombre_interno])}
                             onChange={(e) => {
                               onChangeCamposSeleccionados(
                                 campo.nombre_interno,
@@ -217,10 +220,12 @@ const SolicitarCorreccion = () => {
           />
           <Button
             onClick={() => {
-              if (observaciones !== '') {
-                setModal(true);
-              } else {
+              if (!observaciones.trim()) {
                 alert('La observación es obligatoria');
+              } else if (Object.keys(camposSeleccionados).length === 0) {
+                alert('Selecciona al menos un campo que requiera corrección');
+              } else {
+                setModal(true);
               }
             }}
             variant="secondary"

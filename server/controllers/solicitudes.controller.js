@@ -16,7 +16,6 @@ import CampoFormulario from '../models/CampoFormulario.js';
 import { Op, Sequelize } from 'sequelize';
 import Usuario from '../models/Usuario.js';
 import Funcionario from '../models/Funcionario.js';
-import { sendEmail } from '../config/nodemailer.js';
 import { templateSolicitudEnviadaSolicitante } from '../email/js/solicitudEnviadaSolicitante.js';
 import { formatDate } from '../utils/format.utils.js';
 import { templateSolicitudRecibidaFuncionario } from '../email/js/solicitudRecibidaFuncionario.js';
@@ -27,6 +26,8 @@ import { plantillaSolicitudRechazadaSolicitante } from '../email/js/solicitudRec
 import { plantillaSolicitudRequiereCorreccionSolicitante } from '../email/js/solicitudRequiereCorreccionSolicitante.js';
 import { ACCIONES_SOLICITUD } from '../data/constantes.js';
 import { plantillaSolicitudCorregidaFuncionario } from '../email/js/solicitudCorregidaFuncionario.js';
+import { sendEmailSafely } from '../services/notifications.service.js';
+import { normalizeCorrectionFields } from '../utils/correctionFields.js';
 
 // Subir solicitud física desde el panel de administración
 export const agregarSolicitud = async (req, res) => {
@@ -324,12 +325,12 @@ export const enviarCorreccion = async (req, res) => {
       fechaCorreccion: formatDate(solicitudExiste.fecha_respuesta_correccion, 'DD MMM YYYY, HH:mm'),
       estado: solicitudExiste.estado,
     };
-    await sendEmail(
-      correosFuncionarios,
-      `[Municipio Virtual Chonchi] Solicitud corregida - ${codigo}`,
-      plantillaSolicitudCorregidaFuncionario(correoData),
-      null,
-    );
+    await sendEmailSafely({
+      to: correosFuncionarios,
+      subject: `[Municipio Virtual Chonchi] Solicitud corregida - ${codigo}`,
+      html: plantillaSolicitudCorregidaFuncionario(correoData),
+      context: `aviso de corrección a funcionarios ${codigo}`,
+    });
 
     return res.status(200).json({
       documentosMeta,
@@ -338,7 +339,7 @@ export const enviarCorreccion = async (req, res) => {
       message: 'Corrección de la solicitud enviada correctamente',
     });
   } catch (error) {
-    await t.rollback();
+    if (!t.finished) await t.rollback();
     console.log(error);
     return res
       .status(500)
@@ -352,6 +353,16 @@ export const solicitarCorreccion = async (req, res) => {
   try {
     const { codigo } = req.params;
     const { observaciones, camposSeleccionados } = req.body;
+    const camposCorreccion = normalizeCorrectionFields(camposSeleccionados);
+
+    if (typeof observaciones !== 'string' || !observaciones.trim() || observaciones.length > 2000) {
+      await t.rollback();
+      return res.status(400).json({ message: 'La observación es obligatoria y debe ser válida' });
+    }
+    if (Object.keys(camposCorreccion).length === 0) {
+      await t.rollback();
+      return res.status(400).json({ message: 'Selecciona al menos un campo para corregir' });
+    }
 
     // Validar que exista la solicitud
     const solicitudExiste = await Solicitud.findOne({
@@ -370,10 +381,10 @@ export const solicitarCorreccion = async (req, res) => {
 
     // Poner solicitud en modo "requiere correccion"
     const data = {
-      campos_correccion: camposSeleccionados,
+      campos_correccion: camposCorreccion,
       estado: 'requiere correccion',
       fecha_solicitud_correccion: new Date(),
-      observacion: observaciones,
+      observacion: observaciones.trim(),
       requiere_correccion: true,
     };
 
@@ -403,20 +414,20 @@ export const solicitarCorreccion = async (req, res) => {
       estado: solicitudExiste.estado,
     };
 
-    // Notificar por correo al usuario solicitante
-    await sendEmail(
-      solicitudExiste.email_contacto,
-      `[Municipio Virtual Chonchi] Su solicitud requiere corrección - ${solicitudExiste.codigo}`,
-      plantillaSolicitudRequiereCorreccionSolicitante(correoData),
-      null,
-    );
-
     await t.commit();
+
+    // Notificar después de confirmar el cambio de estado.
+    await sendEmailSafely({
+      to: solicitudExiste.email_contacto,
+      subject: `[Municipio Virtual Chonchi] Su solicitud requiere corrección - ${solicitudExiste.codigo}`,
+      html: plantillaSolicitudRequiereCorreccionSolicitante(correoData),
+      context: `solicitud de corrección ${solicitudExiste.codigo}`,
+    });
     return res.status(200).json({
       message: 'Solicitud de corrección realizada correctamente',
     });
   } catch (error) {
-    await t.rollback();
+    if (!t.finished) await t.rollback();
     console.log(error);
     return res.status(500).json({
       error: error.message,
@@ -471,17 +482,17 @@ export const rechazarSolicitud = async (req, res) => {
       estado: solicitudExiste.estado,
     };
 
-    await sendEmail(
-      solicitudExiste.email_contacto,
-      `[Municipio Virtual Chonchi] Solicitud rechazada - ${solicitudExiste.codigo}`,
-      plantillaSolicitudRechazadaSolicitante(data),
-      null,
-    );
-
     await transaction.commit();
+
+    await sendEmailSafely({
+      to: solicitudExiste.email_contacto,
+      subject: `[Municipio Virtual Chonchi] Solicitud rechazada - ${solicitudExiste.codigo}`,
+      html: plantillaSolicitudRechazadaSolicitante(data),
+      context: `rechazo de solicitud ${solicitudExiste.codigo}`,
+    });
     return res.status(200).json({ data: data, message: 'Solicitud rechazada correctamente' });
   } catch (error) {
-    await transaction.rollback();
+    if (!transaction.finished) await transaction.rollback();
     console.log(error);
     return res
       .status(200)
@@ -574,30 +585,29 @@ export const aprobarSolicitud = async (req, res) => {
       contentType: doc.mimetype,
     }));
 
-    // Enviar correo de notificación al solicitante
-    await sendEmail(
-      data.correoUsuario,
-      `[Municipio Virtual Chonchi] Solicitud aprobada - ${data.codigo}`,
-      plantillaSolicitudAprobadaSolicitante(data),
-      documentosAdjuntos,
-    );
-
-    // Enviar correo de notificación a destinatarios extras
-    if (destinatarios.length !== 0) {
-      await sendEmail(
-        destinatarios,
-        `[Municipio Virtual Chonchi] Remite antecedentes de solicitud - ${data.codigo}`,
-        plantillaSolicitudAprobadaExtras(data),
-        documentosAdjuntos,
-      );
-    }
-
     await t.commit();
+
+    await Promise.all([
+      sendEmailSafely({
+        to: data.correoUsuario,
+        subject: `[Municipio Virtual Chonchi] Solicitud aprobada - ${data.codigo}`,
+        html: plantillaSolicitudAprobadaSolicitante(data),
+        attachments: documentosAdjuntos,
+        context: `aprobación al solicitante ${data.codigo}`,
+      }),
+      sendEmailSafely({
+        to: destinatarios,
+        subject: `[Municipio Virtual Chonchi] Remite antecedentes de solicitud - ${data.codigo}`,
+        html: plantillaSolicitudAprobadaExtras(data),
+        attachments: documentosAdjuntos,
+        context: `aprobación a destinatarios adicionales ${data.codigo}`,
+      }),
+    ]);
     return res
       .status(200)
       .json({ data: documentosAdjuntos, message: 'Solicitud aprobada correctamente' });
   } catch (error) {
-    await t.rollback();
+    if (!t.finished) await t.rollback();
     console.log(error);
     return res.status(500).json({ error, message: 'No se pudo aprobar la solicitud' });
   }
@@ -736,38 +746,41 @@ export const crearSolicitud = async (req, res) => {
       },
       { transaction: t },
     );
-    // Enviar correo de notificación al solicitante
-    await sendEmail(
-      infoContacto.email,
-      `[Municipio Virtual Chonchi] Comprobante de solicitud - ${newCodigo}`,
-      templateSolicitudEnviadaSolicitante(
-        infoContacto.nombreCompleto,
-        tramiteExiste.titulo,
-        newCodigo,
-        formatDate(nuevaSolicitud.createdAt, 'DD MMM YYYY, HH:mm'),
-      ),
-      null,
-    );
-    // Enviar correo de notificación a los funcionarios autorizados
+    // Confirmar primero todos los datos de la solicitud.
+    await t.commit();
+
+    // Las notificaciones son posteriores al commit: una falla SMTP no elimina la solicitud.
     const correosFuncionarios = tramiteExiste?.funcionarios?.map(
       (funcionario) => funcionario.email,
     );
-    await sendEmail(
-      correosFuncionarios,
-      `[Municipio Virtual Chonchi] Nueva solicitud recibida - ${newCodigo}`,
-      templateSolicitudRecibidaFuncionario(
-        tramiteExiste.titulo,
-        newCodigo,
-        formatDate(nuevaSolicitud.createdAt, 'DD MMM YYYY, HH:mm'),
-        infoContacto.nombreCompleto,
-        infoContacto.rut,
-        infoContacto.email,
-        infoContacto.telefono,
-        infoContacto.direccion,
-      ),
-      null,
-    );
-    await t.commit();
+    await Promise.all([
+      sendEmailSafely({
+        to: infoContacto.email,
+        subject: `[Municipio Virtual Chonchi] Comprobante de solicitud - ${newCodigo}`,
+        html: templateSolicitudEnviadaSolicitante(
+          infoContacto.nombreCompleto,
+          tramiteExiste.titulo,
+          newCodigo,
+          formatDate(nuevaSolicitud.createdAt, 'DD MMM YYYY, HH:mm'),
+        ),
+        context: `comprobante al solicitante ${newCodigo}`,
+      }),
+      sendEmailSafely({
+        to: correosFuncionarios,
+        subject: `[Municipio Virtual Chonchi] Nueva solicitud recibida - ${newCodigo}`,
+        html: templateSolicitudRecibidaFuncionario(
+          tramiteExiste.titulo,
+          newCodigo,
+          formatDate(nuevaSolicitud.createdAt, 'DD MMM YYYY, HH:mm'),
+          infoContacto.nombreCompleto,
+          infoContacto.rut,
+          infoContacto.email,
+          infoContacto.telefono,
+          infoContacto.direccion,
+        ),
+        context: `aviso a funcionarios ${newCodigo}`,
+      }),
+    ]);
     return res.status(201).json({
       data: {
         codigo: newCodigo,
@@ -784,7 +797,7 @@ export const crearSolicitud = async (req, res) => {
       message: 'Solicitud enviada exitosamente',
     });
   } catch (error) {
-    await t.rollback();
+    if (!t.finished) await t.rollback();
     console.error(error);
     return res.status(500).json({ error, message: 'No se pudo ingresar la solicitud.' });
   }

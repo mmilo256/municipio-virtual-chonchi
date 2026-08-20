@@ -5,7 +5,6 @@ import { generarDecretoService, obtenerDecretosService } from './service.js';
 export const subirDecretoFirmado = async (req, res) => {
   const { id } = req.params; // Obtiene el ID de la solicitud desde los parámetros de la URL
   const file = req.file; // Obtiene el archivo subido en la solicitud
-  console.log(file); // Imprime el archivo para fines de depuración
 
   // Guarda la información del decreto firmado en la base de datos
   await Documento.create({
@@ -39,7 +38,6 @@ export const generarDecreto = async (req, res) => {
   const { id } = req.params;
   try {
     const dataDecreto = await generarDecretoService(id, req.body);
-    console.log(dataDecreto.dataValues);
     res.status(200).json({ message: 'Decreto generado exitosamente', dataDecreto });
   } catch (error) {
     console.log(error);

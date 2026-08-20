@@ -177,8 +177,8 @@ const FormTramite = () => {
     if (telefono !== '') values.telefono = telefono;
     if (direccionMunicipal !== '') values.direccionMunicipal = direccionMunicipal;
     if (formularioSeleccionado !== '') values.formularioSeleccionado = formularioSeleccionado;
-    if (funcionariosAutorizados.length !== 0)
-      values.funcionariosAutorizados = funcionariosAutorizados;
+    // Una lista vacía es un valor válido: significa quitar todos los funcionarios.
+    values.funcionariosAutorizados = funcionariosAutorizados;
 
     setLoading(true);
 

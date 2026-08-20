@@ -4,8 +4,6 @@ import { verifySession } from './services/auth.service';
 import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
-// import { PROCEDURES_ID } from './config';
-// import Login from './pages/Login';
 import Home from './pages/Home';
 import Requests from './pages/Requests';
 import RequestTracking from './pages/RequestTracking';
@@ -14,24 +12,49 @@ import Login2 from './pages/Login2';
 import FormularioTramite from './formularios/FormularioTramite';
 import SolicitudEnviada from './formularios/SolicitudEnviada';
 import CorregirSolicitud from './pages/CorregirSolicitud';
+import NotFound from './pages/NotFound';
+import LoadingOverlay from './components/ui/LoadingOverlay';
 
 function App() {
   const { setIsAuthenticated, setSessionData } = useAuthStore();
   const [loading, setLoading] = useState(true);
+  const [startupError, setStartupError] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const data = await verifySession();
-      if (data.payload) {
-        setIsAuthenticated(true);
-        setSessionData(data.payload);
+      try {
+        const data = await verifySession();
+        if (data?.payload) {
+          setIsAuthenticated(true);
+          setSessionData(data.payload);
+        } else {
+          setIsAuthenticated(false);
+          setSessionData({});
+        }
+      } catch {
+        setStartupError(true);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     })();
   }, [setIsAuthenticated, setSessionData]);
 
   if (loading) {
-    return null;
+    return <LoadingOverlay show text="Conectando con el municipio..." />;
+  }
+
+  if (startupError) {
+    return (
+      <main className="min-h-dvh flex items-center justify-center px-6 text-center">
+        <div>
+          <h1 className="text-2xl font-medium">No pudimos conectar con el servidor</h1>
+          <p className="mt-2 text-slate-600">Comprueba tu conexión e inténtalo nuevamente.</p>
+          <button className="mt-5 rounded bg-secondary px-4 py-2 text-white" onClick={() => location.reload()}>
+            Reintentar
+          </button>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -98,40 +121,7 @@ function App() {
           }
         />
 
-        {/* --------------------------TRÁMITES-------------------------- */}
-
-        {/* <Route
-          path="/:id/permisos-transitorios/formulario"
-          element={
-            <PrivateRoute>
-              <PermisosTransitoriosForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/:id/fecha-eleccion-directorio/formulario"
-          element={
-            <PrivateRoute>
-              <FechaEleccionDirectorioForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/:id/acta-directorio/formulario"
-          element={
-            <PrivateRoute>
-              <ActaDirectorioForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/:id/audiencias-alcalde/formulario"
-          element={
-            <PrivateRoute>
-              <AudienciasAlcaldeForm />
-            </PrivateRoute>
-          }
-        /> */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

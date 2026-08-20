@@ -1,13 +1,19 @@
-import { Router } from "express";
-import authRoutes from '../auth/portal/auth.routes.js'
-import proceduresRoutes from '../routes/procedures.routes.js'
-import requestsRoutes from '../routes/requests.routes.js'
-import { authMiddleware } from "../auth/portal/auth.middleware.js";
+import { Router } from 'express';
+import authRoutes from '../auth/portal/auth.routes.js';
+import tramitesRoutes from '../routes/tramites.routes.js';
+import solicitudesRoutes from '../routes/solicitudes.routes.js';
+import { authMiddleware } from '../auth/portal/auth.middleware.js';
+import documentsRoutes from '../routes/documents.routes.js';
+import direccionesRoutes from '../routes/direccionesMunicipales.routes.js';
+import emailRoutes from '../routes/email.routes.js';
 
-const router = Router()
+const router = Router();
 
-router.use("/auth", authRoutes)
-router.use("/procedures", authMiddleware, proceduresRoutes)
-router.use("/requests", authMiddleware, requestsRoutes)
+router.use('/auth', authRoutes);
+router.use('/email', authMiddleware, emailRoutes);
+router.use('/tramites', tramitesRoutes);
+router.use('/solicitudes', authMiddleware, solicitudesRoutes);
+router.use('/direcciones-municipales', direccionesRoutes);
+router.use('/documentos', authMiddleware, documentsRoutes);
 
-export default router
+export default router;

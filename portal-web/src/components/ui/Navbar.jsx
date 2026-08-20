@@ -1,60 +1,74 @@
 import { useState } from 'react';
-import logo from '../../assets/logo.png'
-import Container from './Container'
-import { IoMenu } from "react-icons/io5";
-import { FaTimes } from "react-icons/fa";
+import logo from '../../assets/logo.png';
+import Container from './Container';
+import { IoMenu } from 'react-icons/io5';
+import { FaTimes } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import LogoutButton from './buttons/LogoutButton';
 
-const NAVIGATION = [{
-    name: "Inicio",
-    href: "/inicio",
-}, {
-    name: "Solicitudes",
-    href: "/solicitudes"
-}]
+const Navbar = ({ navegacion, logeado = false }) => {
+  const [toggleMenu, setToggleMenu] = useState(false);
 
-const Navbar = () => {
+  const handleToggleMenu = () => {
+    setToggleMenu(!toggleMenu);
+  };
 
-    const [toggleMenu, setToggleMenu] = useState(false)
+  return (
+    <header>
+      <nav className="bg-white shadow py-2">
+        <Container className="flex justify-between items-center">
+          <a href="https://municipalidadchonchi.cl">
+            <img className="h-12" src={logo} alt="logotipo municipalidad de chonchi" />
+          </a>
+          <button
+            onClick={handleToggleMenu}
+            className="md:hidden bg-customBlack text-white rounded p-1"
+          >
+            <IoMenu size={35} />{' '}
+          </button>
+          {/* Menú de navegación para pantallas móviles */}
+          <div
+            className={`md:hidden fixed inset-0 bg-customBlack z-10 ${toggleMenu ? 'block' : 'hidden'}`}
+          >
+            <ul className="bg-customBlack bg-opacity-90 text-white pt-16 font-medium flex flex-col absolute bottom-0 top-0 w-[90%]">
+              <button onClick={handleToggleMenu} className="absolute right-2 top-5 z-50">
+                <FaTimes size={35} />
+              </button>
+              {navegacion.map((item, index) => (
+                <li key={index}>
+                  <NavLink
+                    onClick={() => {
+                      setToggleMenu(!toggleMenu);
+                    }}
+                    className="block border-b hover:bg-slate-700 active:bg-slate-500 border-b-slate-500 py-10 px-4"
+                    to={item.href}
+                  >
+                    {item.name}
+                  </NavLink>
+                </li>
+              ))}
+              <div className="mt-5 pl-3 flex items-center">
+                <LogoutButton darkMode />
+              </div>
+            </ul>
+          </div>
+          {/* Menú de navegación para pantallas grandes */}
+          <div className="hidden md:flex items-center gap-8">
+            <ul className="flex gap-6 text-customBlack">
+              {navegacion.map((item, index) => (
+                <li key={index}>
+                  <NavLink className="hover:text-primary" to={item.href}>
+                    {item.name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+            {logeado && <LogoutButton />}
+          </div>
+        </Container>
+      </nav>
+    </header>
+  );
+};
 
-    const handleToggleMenu = () => {
-        setToggleMenu(!toggleMenu)
-    }
-
-    return (
-        <header>
-            <nav className='bg-white shadow py-2'>
-                <Container className="flex justify-between items-center">
-                    <a href="https://municipalidadchonchi.cl">
-                        <img className='h-12' src={logo} alt="logotipo municipalidad de chonchi" />
-                    </a>
-                    <button onClick={handleToggleMenu} className='md:hidden bg-slate-800 text-white rounded p-1'><IoMenu size={35} /> </button>
-                    {/* Menú de navegación para pantallas móviles */}
-                    <div className={`md:hidden fixed inset-0 bg-black bg-opacity-80 z-10 ${toggleMenu ? "block" : "hidden"}`}>
-                        <ul className='bg-slate-800 bg-opacity-90 text-white pt-16 font-medium flex flex-col absolute bottom-0 top-0 w-[90%]'>
-                            <button onClick={handleToggleMenu} className='absolute right-2 top-5 z-50'><FaTimes size={35} /></button>
-                            {NAVIGATION.map((item, index) => (
-                                <li key={index}><NavLink onClick={() => { setToggleMenu(!toggleMenu) }} className="block border-b border-b-slate-500 p-3" to={item.href}>{item.name}</NavLink></li>
-                            ))}
-                            <div className='mt-5 pl-3 flex items-center'>
-                                <LogoutButton darkMode />
-                            </div>
-                        </ul>
-                    </div>
-                    {/* Menú de navegación para pantallas grandes */}
-                    <div className='hidden md:flex items-center gap-8'>
-                        <ul className='flex gap-4 text-blue-950'>
-                            {NAVIGATION.map((item, index) => (
-                                <li key={index}><NavLink className="hover:text-cyan-500" to={item.href}>{item.name}</NavLink></li>
-                            ))}
-                        </ul>
-                        <LogoutButton />
-                    </div>
-                </Container>
-            </nav>
-        </header>
-    )
-}
-
-export default Navbar
+export default Navbar;

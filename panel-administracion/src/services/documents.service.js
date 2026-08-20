@@ -1,19 +1,16 @@
-import { API_URL } from "../constants/constants.js"
-import apiClient from "./apiClient.js"
+import { API_URL } from '../../config.js';
+import apiClient from './apiClient.js';
 
-export const deleteDocumentService = async (id) => {
-    try {
-        await apiClient.delete(`/documents/${id}`)
-    } catch (error) {
-        console.log(error)
-    }
-}
+export const borrarDocumento = async (id) => {
+  const response = await apiClient.delete(`/documentos/${id}`);
+  return response.data;
+};
 
 export const downloadDocumentService = (id) => {
-    try {
-        window.open(`${API_URL}/documents/${id}/download`)
-    } catch (error) {
-        console.log(error)
-        throw error.message
-    }
-}
+  try {
+    window.open(`${API_URL}/documents/${id}/download`);
+  } catch (error) {
+    console.log(error);
+    throw error.message;
+  }
+};

@@ -1,0 +1,41 @@
+server {
+    listen 80;
+    server_name portal.ejemplo.cl admin.ejemplo.cl api.ejemplo.cl;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name api.ejemplo.cl;
+
+    # Configura aquí los certificados administrados por tu proveedor o Certbot.
+    ssl_certificate /etc/letsencrypt/live/api.ejemplo.cl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.ejemplo.cl/privkey.pem;
+
+    client_max_body_size 10m;
+    location / {
+        proxy_pass http://127.0.0.1:10000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Request-Id $request_id;
+        proxy_read_timeout 60s;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    server_name portal.ejemplo.cl;
+    root /var/www/municipio-virtual/portal;
+    index index.html;
+    location / { try_files $uri $uri/ /index.html; }
+}
+
+server {
+    listen 443 ssl http2;
+    server_name admin.ejemplo.cl;
+    root /var/www/municipio-virtual/admin;
+    index index.html;
+    location /admin/ { try_files $uri $uri/ /admin/index.html; }
+}

@@ -1,23 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: "#06163A",
-        primaryHover: "#0d2252",
-        secondary: "#ff3514",
-        secondaryHover: "#a3210b"
+        primary: '#FF680A',
+        primaryHover: '#FF8133',
+        primaryDisabled: '#FFD9C2',
+        secondary: '#1C2635',
+        secondaryHover: '#004C8F',
+        secondaryDisabled: '#99CFFF',
+        customBlack: '#1C2635',
+        customWhite: '#fafafa',
       },
       fontFamily: {
-        'roboto': ['Roboto', 'sans-serif']
+        roboto: ['Roboto', 'sans-serif'],
       },
       animation: {
         'bg-change': 'bgChange 1s infinite', // Animación personalizada
-        'fade-out': 'fadeOut 5s'
+        'fade-out': 'fadeOut 5s',
       },
       keyframes: {
         bgChange: {
@@ -28,11 +29,10 @@ export default {
         fadeOut: {
           '0%': { opacity: '1' },
           '80%': { opacity: '1' },
-          '100%': { opacity: '0' }
-        }
+          '100%': { opacity: '0' },
+        },
       },
     },
     plugins: [],
-  }
-}
-
+  },
+};

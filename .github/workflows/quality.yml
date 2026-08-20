@@ -1,0 +1,41 @@
+name: Calidad
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+            portal-web/package-lock.json
+            panel-administracion/package-lock.json
+
+      - name: Instalar herramientas
+        run: npm ci
+
+      - name: Instalar backend
+        run: npm ci --prefix server
+
+      - name: Instalar portal ciudadano
+        run: npm ci --prefix portal-web
+
+      - name: Instalar panel administrativo
+        run: npm ci --prefix panel-administracion
+
+      - name: Verificar código y compilaciones
+        run: npm run check
+
+      - name: Revisar vulnerabilidades de producción
+        run: npm run audit
